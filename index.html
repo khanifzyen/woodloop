@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Splash</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Inter dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Inline Khusus Splash Screen */
+        .splash-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .splash-container h1 {
+            color: white;
+            margin-bottom: 0;
+        }
+
+        .splash-container .tagline {
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .logo-circle {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-icon {
+            font-size: 40px;
+        }
+
+        .tagline {
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="splash-container">
+            <div class="logo-circle">
+                <span class="logo-icon">🌲</span>
+            </div>
+            <h1>WoodLoop</h1>
+            <p class="tagline">Jepara Circular Hub</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // JS Inline: Pindah ke onboarding setelah 2.5 detik
+        setTimeout(() => {
+            navigateTo('onboarding.html');
+        }, 2500);
+    </script>
+</body>
+
+</html>

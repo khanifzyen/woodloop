@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Gudang Aggregator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .inventory-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .inventory-item {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-badge {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                <button onclick="navigateTo('aggregator-dashboard.html')"
+                    style="background: none; border: none; font-size: 24px; margin-right: 16px;">←</button>
+                <h2>Gudang Saya</h2>
+            </div>
+
+            <div class="inventory-list" id="inventoryList">
+                <div class="text-center" style="padding: 20px; color: #999;">
+                    Memuat data...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wasteData = getWasteData();
+            // Filter items that are "Diangkut" or "Di Gudang"
+            const myInventory = wasteData.filter(item => ['Diangkut', 'Di Gudang', 'Siap Jual'].includes(item.status));
+
+            const container = document.getElementById('inventoryList');
+
+            if (myInventory.length === 0) {
+                container.innerHTML = '<div class="text-center" style="padding: 20px; color: #999;">Gudang kosong. Belum ada barang yang dijemput.</div>';
+            } else {
+                container.innerHTML = myInventory.map(item => `
+                    <div class="inventory-item">
+                        <div style="width: 50px; height: 50px; background: #eee; border-radius: 8px; overflow: hidden;">
+                             <img src="${item.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=100&q=80'}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 14px;">${item.type}</div>
+                            <div style="font-size: 12px; color: var(--primary-color);">${item.weight} Kg • ${formatRupiah(item.price)}</div>
+                        </div>
+                         <div class="status-badge">
+                            ${item.status}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
+    </script>
+</body>
+
+</html>

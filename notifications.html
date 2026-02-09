@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Notifikasi</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .notif-item {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .notif-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .notif-info {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        .notif-success {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .notif-warning {
+            background: #FFF8E1;
+            color: #F57F17;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                <button onclick="history.back()"
+                    style="background: none; border: none; font-size: 24px; margin-right: 16px;">←</button>
+                <h2>Notifikasi</h2>
+            </div>
+
+            <div id="notifList">
+                <!-- Content injected via JS -->
+                <div class="text-center" style="padding: 20px; color: #999;">Memuat notifikasi...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const notifs = getNotifications();
+            const container = document.getElementById('notifList');
+
+            if (notifs.length > 0) {
+                container.innerHTML = notifs.map(n => {
+                    let icon = 'ℹ️';
+                    let styleClass = 'notif-info';
+
+                    if (n.type === 'success') { icon = '✅'; styleClass = 'notif-success'; }
+                    if (n.type === 'warning') { icon = '🎉'; styleClass = 'notif-warning'; }
+
+                    return `
+                        <div class="notif-item">
+                            <div class="notif-icon ${styleClass}">
+                                ${icon}
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; font-size: 14px;">${n.title}</div>
+                                <div style="font-size: 12px; color: #666; margin-top: 4px;">${n.message}</div>
+                                <div style="font-size: 10px; color: #999; margin-top: 8px;">${n.time}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = '<div class="text-center" style="padding: 20px; color: #999;">Tidak ada notifikasi baru.</div>';
+            }
+        });
+    </script>
+</body>
+
+</html>

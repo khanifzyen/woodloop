@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .search-bar {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 10px 16px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <!-- Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div>
+                    <h2 style="margin: 0;">Marketplace</h2>
+                    <p style="font-size: 12px; color: #666;">Cari bahan baku daur ulang</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                        onclick="navigateTo('chat.html')">
+                        💬
+                    </div>
+                    <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                        onclick="navigateTo('notifications.html')">
+                        🔔
+                    </div>
+                    <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                        onclick="navigateTo('design-clinic.html')">
+                        🎨
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-bar">
+                <span style="margin-right: 8px;">🔍</span>
+                <input type="text" placeholder="Cari kayu jati, mahoni..."
+                    style="border: none; outline: none; width: 100%; font-size: 14px;">
+            </div>
+
+            <!-- Filter Categories (Horizontal Scroll) -->
+            <div style="display: flex; gap: 8px; overflow-x: auto; padding: 16px 0; scrollbar-width: none;">
+                <button class="btn"
+                    style="width: auto; padding: 8px 16px; font-size: 12px; background: var(--primary-color); color: white;">Semua</button>
+                <button class="btn"
+                    style="width: auto; padding: 8px 16px; font-size: 12px; background: white; border: 1px solid #ddd;">Jati</button>
+                <button class="btn"
+                    style="width: auto; padding: 8px 16px; font-size: 12px; background: white; border: 1px solid #ddd;">Mahoni</button>
+                <button class="btn"
+                    style="width: auto; padding: 8px 16px; font-size: 12px; background: white; border: 1px solid #ddd;">Serbuk</button>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="product-grid" id="productGrid">
+                <div class="text-center" style="grid-column: span 2; padding: 40px; color: #999;">
+                    Memuat produk...
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div
+            style="background: white; padding: 16px; display: flex; justify-content: space-around; border-top: 1px solid #eee;">
+            <div class="text-center" style="color: var(--primary-color);">
+                <div style="font-size: 20px;">🛍️</div>
+                <div style="font-size: 10px; font-weight: 600;">Shop</div>
+            </div>
+            <div class="text-center" style="opacity: 0.5;" onclick="navigateTo('design-clinic.html')">
+                <div style="font-size: 20px;">💡</div>
+                <div style="font-size: 10px;">Ide</div>
+            </div>
+            <div class="text-center" style="opacity: 0.5; cursor: pointer;" onclick="navigateTo('profile.html')">
+                <div style="font-size: 20px;">👤</div>
+                <div style="font-size: 10px;">Profil</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            seedDataIfEmpty();
+            const items = getMarketplaceItems();
+            const container = document.getElementById('productGrid');
+
+            if (items.length === 0) {
+                container.innerHTML = '<div class="text-center" style="grid-column: span 2; padding: 40px; color: #999;">Tidak ada barang tersedia saat ini.</div>';
+            } else {
+                container.innerHTML = items.map(item => `
+                    <div class="product-card" onclick="viewProduct('${item.id}')">
+                        <img src="${item.image}" class="product-image">
+                        <div class="product-info">
+                            <div style="font-size: 10px; color: var(--primary-color); font-weight: 600;">${item.status}</div>
+                            <div style="font-weight: 700; font-size: 14px; margin: 4px 0;">${item.type}</div>
+                            <div style="font-size: 12px; color: #666;">${item.weight} Kg</div>
+                            <div style="font-weight: 700; color: var(--text-dark); margin-top: 8px;">${formatRupiah(item.price)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
+
+        function viewProduct(id) {
+            localStorage.setItem('selectedProductId', id);
+            navigateTo('product-detail.html');
+        }
+    </script>
+</body>
+
+</html>

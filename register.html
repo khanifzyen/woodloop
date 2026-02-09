@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Daftar</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        .header-section {
+            margin-bottom: 24px;
+        }
+
+        .dynamic-field {
+            display: none;
+            background: #fff8e1;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px dashed #FFC107;
+        }
+
+        .role-badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <div class="header-section">
+                <h1>Daftar Akun</h1>
+                <p>Mendaftar sebagai: <br><span id="roleDisplay" class="role-badge">Loading...</span></p>
+            </div>
+
+            <form onsubmit="event.preventDefault(); navigateTo('setup-profile.html');">
+                <!-- Data Umum (Semua User) -->
+                <div class="form-group">
+                    <label class="form-label">Nama Lengkap / Perusahaan</label>
+                    <input type="text" class="form-input" placeholder="Contoh: UD Kayu Jaya">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nomor WhatsApp</label>
+                    <input type="tel" class="form-input" placeholder="0812...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kata Sandi</label>
+                    <input type="password" class="form-input" placeholder="Minimal 6 karakter">
+                </div>
+
+                <!-- Field Khusus GENERATOR (Disembunyikan via CSS, dimunculkan via JS) -->
+                <div id="field-generator" class="dynamic-field">
+                    <div class="form-label">⚡ Data Generator</div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Kapasitas Produksi (m3/bulan)">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Jenis Produk Utama (Mebel/Kusen)">
+                    </div>
+                </div>
+
+                <!-- Field Khusus AGGREGATOR -->
+                <div id="field-aggregator" class="dynamic-field">
+                    <div class="form-label">🚚 Data Logistik</div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Jumlah Armada Truk">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Luas Gudang (m2)">
+                    </div>
+                </div>
+
+                <!-- Field Khusus SUPPLIER -->
+                <div id="field-supplier" class="dynamic-field">
+                    <div class="form-label">🌲 Data Supplier</div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Sumber Kayu (Perhutani/Rakyat)">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-4">Lanjut</button>
+                <button type="button" class="btn btn-outline mt-4" onclick="history.back()">Kembali</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // JS Inline: Deteksi Role dan Tampilkan Field yang Sesuai
+        document.addEventListener("DOMContentLoaded", function () {
+            const role = localStorage.getItem('selectedRole') || 'User';
+            document.getElementById('roleDisplay').textContent = role;
+
+            // Logic Kondisional
+            if (role === 'Generator') {
+                document.getElementById('field-generator').style.display = 'block';
+            } else if (role === 'Aggregator') {
+                document.getElementById('field-aggregator').style.display = 'block';
+            } else if (role === 'Supplier') {
+                document.getElementById('field-supplier').style.display = 'block';
+            }
+            // Role lain (Enabler/Converter) pakai form standar saja
+        });
+    </script>
+</body>
+
+</html>

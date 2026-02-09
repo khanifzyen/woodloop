@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Dompet</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .balance-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1b5e20 100%);
+            color: white;
+            padding: 30px 24px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .trx-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .trx-item {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .amount-credit {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .amount-debit {
+            color: #E53935;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                <button onclick="history.back()"
+                    style="background: none; border: none; font-size: 24px; margin-right: 16px;">←</button>
+                <h2>Dompet Sampah</h2>
+            </div>
+
+            <!-- Hero Balance -->
+            <div class="balance-hero">
+                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 8px;">Total Saldo Aktif</div>
+                <div style="font-size: 32px; font-weight: 700;">Rp 500.000</div>
+                <div style="font-size: 10px; margin-top: 8px; opacity: 0.6;">Update terakhir: Baru saja</div>
+            </div>
+
+            <!-- Actions -->
+            <div class="action-row">
+                <div class="action-btn" onclick="alert('Fitur Tarik Saldo akan segera hadir!')">
+                    <div style="font-size: 20px; margin-bottom: 4px;">💸</div>
+                    Tarik Dana
+                </div>
+                <div class="action-btn" onclick="alert('Fitur QRIS akan segera hadir!')">
+                    <div style="font-size: 20px; margin-bottom: 4px;">📲</div>
+                    Scan QRIS
+                </div>
+            </div>
+
+            <!-- History -->
+            <h3 style="font-size: 16px; margin-bottom: 12px;">Riwayat Transaksi</h3>
+            <div class="trx-list" id="trxList">
+                <div class="text-center" style="padding: 20px; color: #999;">Memuat transaksi...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const trxs = getWalletTransactions();
+            const container = document.getElementById('trxList');
+
+            if (trxs.length > 0) {
+                container.innerHTML = trxs.map(t => `
+                    <div class="trx-item">
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px;">${t.title}</div>
+                            <div style="font-size: 10px; color: #999; margin-top: 4px;">${t.date}</div>
+                        </div>
+                        <div class="${t.amount > 0 ? 'amount-credit' : 'amount-debit'}">
+                            ${t.amount > 0 ? '+' : ''} ${formatRupiah(t.amount)}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
+    </script>
+</body>
+
+</html>

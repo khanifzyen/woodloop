@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Setup Profil</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .map-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #e0e0e0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #757575;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <h1>Lokasi Usaha</h1>
+            <p class="mb-4">Penting agar Aggregator bisa menjemput limbah ke tempat Anda.</p>
+
+            <form
+                onsubmit="event.preventDefault(); alert('Registrasi Selesai! Menuju Dashboard...'); navigateTo('login.html');">
+
+                <div class="form-group">
+                    <label class="form-label">Alamat Lengkap</label>
+                    <textarea class="form-input" rows="3" placeholder="Jl. Raya Tahunan No..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Titik Koordinat (GPS)</label>
+                    <!-- Mockup Peta -->
+                    <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&q=80"
+                        style="width: 100%; height: 150px; object-fit: cover; border-radius: 12px; margin-bottom: 16px;">
+                    <button type="button" class="btn btn-secondary" style="font-size: 14px;">📍 Gunakan Lokasi Saat
+                        Ini</button>
+                </div>
+
+                <div class="form-group mt-4">
+                    <label class="form-label">Upload Foto Gudang/Tempat Usaha</label>
+                    <div
+                        style="border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 8px; color: #888;">
+                        Klik untuk upload foto
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-4" style="margin-top: 40px;">Selesai & Masuk</button>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

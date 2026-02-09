@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Pilih Peran</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        .role-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .role-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .role-card:hover,
+        .role-card:active {
+            border-color: var(--primary-color);
+            background-color: #F1F8E9;
+        }
+
+        .role-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .role-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .role-desc {
+            font-size: 10px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* Enabler card full width */
+        .role-card.full-width {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <h1 class="text-center">Siapa Anda?</h1>
+            <p class="text-center">Pilih peran untuk menyesuaikan fitur aplikasi.</p>
+
+            <div class="role-grid">
+                <!-- Card 1: Supplier -->
+                <div class="role-card" onclick="selectRole('Supplier')">
+                    <span class="role-icon">🌲</span>
+                    <div class="role-title">Supplier</div>
+                    <div class="role-desc">Penyedia Kayu Mentah</div>
+                </div>
+
+                <!-- Card 2: Generator -->
+                <div class="role-card" onclick="selectRole('Generator')">
+                    <span class="role-icon">🪚</span>
+                    <div class="role-title">Generator</div>
+                    <div class="role-desc">Pengrajin / Sawmill</div>
+                </div>
+
+                <!-- Card 3: Aggregator -->
+                <div class="role-card" onclick="selectRole('Aggregator')">
+                    <span class="role-icon">🚚</span>
+                    <div class="role-title">Aggregator</div>
+                    <div class="role-desc">Logistik / Pengepul</div>
+                </div>
+
+                <!-- Card 4: Converter -->
+                <div class="role-card" onclick="selectRole('Converter')">
+                    <span class="role-icon">🎨</span>
+                    <div class="role-title">Converter</div>
+                    <div class="role-desc">Pengrajin Kreatif</div>
+                </div>
+
+                <!-- Card 5: Enabler -->
+                <div class="role-card full-width" onclick="selectRole('Enabler')">
+                    <span class="role-icon">🏛️</span>
+                    <div class="role-title">Enabler</div>
+                    <div class="role-desc">Pemerintah / Asosiasi</div>
+                </div>
+
+                <!-- Card 6: Buyer (Umum) -->
+                <div class="role-card full-width" onclick="selectRole('Buyer')">
+                    <span class="role-icon">🛍️</span>
+                    <div class="role-title">Pembeli Umum</div>
+                    <div class="role-desc">Cari Produk Jadi</div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p>Sudah punya akun? <a href="login.html" class="text-primary"
+                        style="font-weight: 600; text-decoration: none;">Masuk</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

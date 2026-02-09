@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Jejak Produk</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+            margin-top: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ddd;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -24px;
+            /* Adjust to center on line */
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px #ddd;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .impact-card {
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                <button onclick="history.back()"
+                    style="background: none; border: none; font-size: 24px; margin-right: 16px;">←</button>
+                <h2>Jejak Balak</h2>
+            </div>
+
+            <!-- Header Product Info -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img id="traceImage" src=""
+                    style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <h1 style="font-size: 20px; margin-top: 10px;" id="traceName">Nama Produk</h1>
+                <div style="font-size: 12px; color: #666;">ID: <span id="traceId">INV-000</span></div>
+            </div>
+
+            <!-- Impact -->
+            <div class="impact-card">
+                <div style="font-size: 32px; margin-bottom: 8px;">🌱</div>
+                <h3 style="color: white; margin-bottom: 8px;">Dampak Positif</h3>
+                <p style="font-size: 14px; opacity: 0.9;">
+                    Produk ini telah menyelamatkan <strong style="color: #FFC107;" id="traceWeight">0 Kg</strong> limbah
+                    kayu dan mencegah <strong style="color: #FFC107;" id="traceCo2">0 Kg</strong> emisi CO2.
+                </p>
+            </div>
+
+            <!-- Timeline -->
+            <h3 style="font-size: 16px;">Perjalanan Kayu</h3>
+            <div class="timeline">
+                <!-- Step 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">Asal Mula</div>
+                        <div style="font-weight: 700; color: var(--primary-color);">Hutan Rakyat Tahunan</div>
+                        <p style="font-size: 12px; color: #666; margin-top: 4px;">Kayu Jati (Tectona Grandis) dipanen
+                            secara legal dan lestari.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;" id="dateGenerated">Tanggal Setor
+                        </div>
+                        <div style="font-weight: 700; color: var(--primary-color);">Limbah Produksi (Generator)</div>
+                        <p style="font-size: 12px; color: #666; margin-top: 4px;">Sisa potongan mebel diselamatkan oleh
+                            <strong id="traceGenerator">Pak Slamet</strong> daripada dibakar.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">Logistik</div>
+                        <div style="font-weight: 700; color: var(--primary-color);">Diangkut Aggregator</div>
+                        <p style="font-size: 12px; color: #666; margin-top: 4px;">Dijemput dan disortir di Gudang
+                            Aggregator Sentral Jepara.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div style="font-size: 10px; color: #888; margin-bottom: 4px;">Produk Akhir</div>
+                        <div style="font-weight: 700; color: var(--primary-color);">Rebirth (Converer)</div>
+                        <p style="font-size: 12px; color: #666; margin-top: 4px;">Diolah kembali menjadi produk bernilai
+                            tinggi oleh Pengrajin Kreatif.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get ID from URL param (simulated by localStorage for this static prototype)
+            // Ideally: const urlParams = new URL(window.location.href); const id = urlParams.searchParams.get('id');
+            // But since we navigate via JS, let's use search params.
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                const items = getWasteData();
+                const item = items.find(i => i.id === id);
+
+                if (item) {
+                    document.getElementById('traceImage').src = item.image;
+                    document.getElementById('traceName').textContent = item.type;
+                    document.getElementById('traceId').textContent = item.id;
+                    document.getElementById('traceWeight').textContent = item.weight + ' Kg';
+
+                    // CO2 Calc
+                    const co2 = (item.weight * 1.5).toFixed(1);
+                    document.getElementById('traceCo2').textContent = co2 + ' Sq';
+
+                    document.getElementById('dateGenerated').textContent = new Date(item.timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Intro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        .onboarding-slide {
+            display: none;
+            /* Default hidden */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 30px;
+            animation: fadeIn 0.5s;
+        }
+
+        .onboarding-slide.active {
+            display: flex;
+        }
+
+        .illustration {
+            width: 200px;
+            height: 200px;
+            background-color: #E8F5E9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            margin-bottom: 40px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #ddd;
+            border-radius: 50%;
+        }
+
+        .dot.active {
+            background: var(--primary-color);
+            width: 20px;
+        }
+
+        .bottom-action {
+            margin-top: auto;
+            width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <!-- Slide 1 -->
+        <div class="onboarding-slide active" id="slide1">
+            <div class="illustration">🔥</div>
+            <h2>Jangan Bakar Uang</h2>
+            <p>Ubah limbah kayu menjadi pendapatan. Jangan biarkan sisa produksi hanya menjadi asap.</p>
+            <div class="dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="bottom-action">
+                <button class="btn btn-primary" onclick="nextSlide(2)">Lanjut</button>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="onboarding-slide" id="slide2">
+            <div class="illustration">♻️</div>
+            <h2>Ekosistem Sirkular</h2>
+            <p>Terhubung dengan ratusan pengrajin, pengepul, dan desainer dalam satu aplikasi.</p>
+            <div class="dots">
+                <div class="dot"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="bottom-action">
+                <button class="btn btn-primary" onclick="nextSlide(3)">Lanjut</button>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="onboarding-slide" id="slide3">
+            <div class="illustration">📸</div>
+            <h2>Foto, Jual, Cuan</h2>
+            <p>Teknologi AI kami membantu Anda menilai harga limbah dalam hitungan detik.</p>
+            <div class="dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot active"></div>
+            </div>
+            <div class="bottom-action">
+                <button class="btn btn-primary" onclick="navigateTo('role-selection.html')">Mulai Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function nextSlide(slideNum) {
+            // Hide all slides
+            document.querySelectorAll('.onboarding-slide').forEach(el => el.classList.remove('active'));
+            // Show target slide
+            document.getElementById('slide' + slideNum).classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

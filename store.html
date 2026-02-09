@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .category-pill {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 6px;
+            background: #EEE;
+            border-radius: 4px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <!-- Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div>
+                    <h2 style="margin: 0;">WoodLoop Store</h2>
+                    <p style="font-size: 12px; color: #666;">Produk Furnitur Berkelanjutan</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                        onclick="navigateTo('chat.html')">
+                        💬
+                    </div>
+                    <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                        onclick="navigateTo('notifications.html')">
+                        🔔
+                    </div>
+                    <div
+                        style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                        🛒
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promotion Banner -->
+            <div
+                style="background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%); color: white; padding: 20px; border-radius: 16px; margin-bottom: 20px; text-align: center;">
+                <h3 style="margin-bottom: 4px;">Diskon 20%</h3>
+                <p style="font-size: 12px; opacity: 0.9;">Untuk pembelian furniture daur ulang pertama Anda!</p>
+            </div>
+
+            <h3 style="font-size: 16px; margin-bottom: 12px;">Katalog Produk Jadi</h3>
+
+            <!-- Filter Categories -->
+            <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 16px; scrollbar-width: none;">
+                <button class="btn"
+                    style="width: auto; padding: 8px 16px; font-size: 12px; background: var(--primary-color); color: white;">Semua</button>
+                <button class="btn"
+                    style="width: auto; padding: 8px 16px; font-size: 12px; background: white; border: 1px solid #ddd;">Furniture</button>
+                <button class="btn"
+                    style="width: auto; padding: 8px 16px; font-size: 12px; background: white; border: 1px solid #ddd;">Dekorasi</button>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="product-grid" id="productGrid">
+                <!-- Content here -->
+                <div class="text-center" style="grid-column: span 2; padding: 40px; color: #999;">Memuat toko...</div>
+            </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div
+            style="background: white; padding: 16px; display: flex; justify-content: space-around; border-top: 1px solid #eee;">
+            <div class="text-center" style="color: var(--primary-color);">
+                <div style="font-size: 20px;">🏪</div>
+                <div style="font-size: 10px; font-weight: 600;">Store</div>
+            </div>
+            <div class="text-center" style="opacity: 0.5;">
+                <div style="font-size: 20px;">❤️</div>
+                <div style="font-size: 10px;">Wishlist</div>
+            </div>
+            <div class="text-center" style="opacity: 0.5;" onclick="navigateTo('profile.html')">
+                <div style="font-size: 20px;">👤</div>
+                <div style="font-size: 10px;">Profil</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const products = getStoreProducts();
+            // Mock function if not in script.js yet (handled by task boundary update)
+
+            const container = document.getElementById('productGrid');
+
+            if (products.length > 0) {
+                container.innerHTML = products.map(p => `
+                    <div class="product-card" style="position: relative;">
+                         <div style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10;"
+                            onclick="event.stopPropagation(); navigateTo('traceability.html?id=' + '${p.sourceWasteId}')">
+                            🌱
+                         </div>
+                         <div onclick="alert('Fitur detail produk ini akan segera hadir!')">
+                            <img src="${p.image}" class="product-image">
+                            <div class="product-info">
+                                <span class="category-pill">${p.category}</span>
+                                <div style="font-weight: 700; font-size: 14px; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</div>
+                                <div style="font-size: 10px; color: #FFC107; margin-bottom: 4px;">⭐ ${p.rating} | Terjual ${p.sold}</div>
+                                <div style="font-weight: 700; color: var(--primary-color); font-size: 15px;">${formatRupiah(p.price)}</div>
+                            </div>
+                        </div>
+                    </div>
+                 `).join('');
+            }
+        });
+    </script>
+</body>
+
+</html>

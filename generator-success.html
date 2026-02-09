@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Berhasil</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .success-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            animation: bounce 1s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-30px);
+            }
+
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="success-container">
+            <div class="success-icon">🎉</div>
+            <h2>Limbah Berhasil Diupload!</h2>
+            <p class="mb-4">Data Anda telah masuk ke sistem. Aggregator terdekat akan segera menjemput limbah Anda.</p>
+
+            <button class="btn btn-primary" onclick="navigateTo('generator-dashboard.html')">Kembali ke
+                Dashboard</button>
+            <button class="btn btn-outline mt-4" onclick="navigateTo('generator-history.html')">Lihat Riwayat</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

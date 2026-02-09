@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Checkout</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                <button onclick="history.back()"
+                    style="background: none; border: none; font-size: 24px; margin-right: 16px;">←</button>
+                <h2>Checkout</h2>
+            </div>
+
+            <div
+                style="background: white; padding: 16px; border-radius: 12px; display: flex; gap: 12px; margin-bottom: 24px;">
+                <img id="checkoutImage" src=""
+                    style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                <div>
+                    <div style="font-weight: 700;" id="checkoutName">Product Name</div>
+                    <div style="color: var(--primary-color); font-size: 14px;" id="checkoutPrice">Rp 0</div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 16px; margin-bottom: 12px;">Metode Pembayaran</h3>
+            <div
+                style="background: white; border: 1px solid var(--primary-color); padding: 16px; border-radius: 12px; color: var(--primary-color); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                💳 Transfer Bank (Virtual Account)
+            </div>
+
+            <div
+                style="margin-top: 12px; background: white; border: 1px solid #ddd; padding: 16px; border-radius: 12px; color: #666; display: flex; align-items: center; gap: 8px;">
+                💸 Bayar di Tempat (COD)
+            </div>
+
+            <h3 style="font-size: 16px; margin-bottom: 12px; margin-top: 24px;">Rincian Biaya</h3>
+            <div class="spec-item">
+                <span class="spec-label">Subtotal Produk</span>
+                <span class="spec-value" id="subtotal">Rp 0</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Biaya Layanan</span>
+                <span class="spec-value">Rp 2.500</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Ongkos Kirim</span>
+                <span class="spec-value">Rp 50.000</span>
+            </div>
+            <div class="spec-item"
+                style="border-top: 2px dashed #ddd; margin-top: 12px; padding-top: 12px; border-bottom: none;">
+                <span class="spec-label" style="color: var(--text-dark); font-weight: 700;">Total Tagihan</span>
+                <span class="spec-value" style="color: var(--primary-color); font-size: 18px;" id="total">Rp 0</span>
+            </div>
+
+            <button class="btn btn-primary" onclick="processPayment()" style="margin-top: 40px;">Bayar Sekarang</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let currentItem = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const id = localStorage.getItem('selectedProductId');
+            const items = getWasteData();
+            currentItem = items.find(item => item.id === id);
+
+            if (currentItem) {
+                document.getElementById('checkoutImage').src = currentItem.image;
+                document.getElementById('checkoutName').textContent = currentItem.type;
+                document.getElementById('checkoutPrice').textContent = formatRupiah(currentItem.price);
+
+                document.getElementById('subtotal').textContent = formatRupiah(currentItem.price);
+
+                const total = parseInt(currentItem.price) + 2500 + 50000;
+                document.getElementById('total').textContent = formatRupiah(total);
+            }
+        });
+
+        function processPayment() {
+            if (currentItem) {
+                if (confirm("Lanjutkan pembayaran?")) {
+                    buyItem(currentItem.id); // This marks it as 'Terjual' in simulated DB
+                    alert("Pembayaran Berhasil! Terima kasih telah menyelamatkan limbah kayu.");
+                    navigateTo('marketplace.html');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

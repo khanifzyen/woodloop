@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Detail Produk</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .product-hero-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: #eee;
+            margin: -24px -24px 24px -24px;
+            /* Compensate padding */
+        }
+
+        .price-tag {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .spec-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll">
+            <div style="position: absolute; top: 20px; left: 20px; z-index: 10;">
+                <button onclick="history.back()"
+                    style="background: white; border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer;">←</button>
+            </div>
+
+            <img id="productImage" src="" class="product-hero-image">
+
+            <div class="status-badge" id="productStatus" style="display: inline-block; margin-bottom: 8px;">Status</div>
+            <h1 id="productName">Nama Produk</h1>
+            <div id="productPrice" class="price-tag">Rp 0</div>
+
+            <h3 style="font-size: 16px; margin-bottom: 16px;">Spesifikasi</h3>
+            <div class="spec-item">
+                <span class="spec-label">Berat</span>
+                <span class="spec-value" id="productWeight">0 Kg</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Lokasi Gudang</span>
+                <span class="spec-value">Aggregator Jepara Pusat</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Estimasi Pengiriman</span>
+                <span class="spec-value">1-2 Hari</span>
+            </div>
+
+            <p style="margin-top: 24px; font-size: 14px; color: #666; line-height: 1.6;">
+                Kayu ini berasal dari limbah industri mebel lokal. Cocok untuk bahan baku kerajinan tangan, souvenir,
+                atau bahan bakar biomassa.
+            </p>
+
+            <button class="btn btn-primary" onclick="goToCheckout()" style="margin-top: 40px;">Beli Sekarang</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let currentItem = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const id = localStorage.getItem('selectedProductId');
+            const items = getWasteData();
+            currentItem = items.find(item => item.id === id);
+
+            if (currentItem) {
+                document.getElementById('productImage').src = currentItem.image;
+                document.getElementById('productName').textContent = currentItem.type;
+                document.getElementById('productPrice').textContent = formatRupiah(currentItem.price);
+                document.getElementById('productWeight').textContent = currentItem.weight + ' Kg';
+                document.getElementById('productStatus').textContent = currentItem.status;
+            } else {
+                alert('Produk tidak ditemukan');
+                history.back();
+            }
+        });
+
+        function goToCheckout() {
+            if (currentItem) {
+                navigateTo('checkout.html');
+            }
+        }
+    </script>
+</body>
+
+</html>

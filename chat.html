@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodLoop - Pesan</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-item {
+            background: white;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .chat-item:hover {
+            background: #f9f9f9;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .msg-preview {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .meta {
+            text-align: right;
+        }
+
+        .time {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .badge {
+            background: var(--primary-color);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="content-scroll" style="padding: 0;">
+            <div style="padding: 24px; padding-bottom: 12px; display: flex; align-items: center;">
+                <button onclick="history.back()"
+                    style="background: none; border: none; font-size: 24px; margin-right: 16px;">←</button>
+                <h2>Pesan</h2>
+            </div>
+
+            <div id="chatList" class="chat-list">
+                <div class="text-center" style="padding: 20px; color: #999;">Memuat pesan...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chats = getChats();
+            const container = document.getElementById('chatList');
+
+            if (chats.length > 0) {
+                container.innerHTML = chats.map(c => `
+                    <div class="chat-item" onclick="alert('Fitur detail chat akan segera hadir!')">
+                        <div class="avatar">👤</div>
+                        <div class="content">
+                            <div class="name">${c.name}</div>
+                            <div class="msg-preview">${c.message}</div>
+                        </div>
+                        <div class="meta">
+                            <div class="time">${c.time}</div>
+                            ${c.unread > 0 ? `<div class="badge">${c.unread}</div>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
+    </script>
+</body>
+
+</html>
