@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WoodLoop - Efficient Collection Onboarding</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", 
+                        "lg": "0.5rem", 
+                        "xl": "0.75rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>.glass-panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }@keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(19, 236, 91, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(19, 236, 91, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(19, 236, 91, 0); }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 2s infinite cubic-bezier(0.24, 0, 0.38, 1);
+        }@keyframes flow-in {
+            0% { stroke-dashoffset: 24; opacity: 0; }
+            50% { opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 1; }
+        }
+        .animate-flow {
+            stroke-dasharray: 4 4;
+            animation: flow-in 1.5s linear infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-hidden h-screen w-full flex flex-col relative antialiased selection:bg-primary selection:text-background-dark">
+<div class="absolute top-[-10%] left-[-20%] w-[80%] h-[40%] bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
+<div class="absolute bottom-[-10%] right-[-20%] w-[60%] h-[30%] bg-primary/5 blur-[80px] rounded-full pointer-events-none"></div>
+<div class="flex-1 flex flex-col justify-between max-w-md mx-auto w-full h-full p-6 relative z-10">
+<div class="flex flex-col w-full gap-6 pt-2">
+<div class="flex items-center justify-end w-full h-12">
+<button class="text-white/60 hover:text-primary transition-colors text-sm font-medium tracking-wide">
+                    Skip
+                </button>
+</div>
+<div class="flex items-center justify-center gap-2 w-full">
+<div class="h-1.5 flex-1 rounded-full bg-white/20"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary shadow-[0_0_10px_rgba(19,236,91,0.5)]"></div>
+<div class="h-1.5 flex-1 rounded-full bg-white/20"></div>
+</div>
+</div>
+<div class="flex-1 flex items-center justify-center py-6">
+<div class="relative w-full aspect-[4/5] max-h-[420px]">
+<div class="absolute inset-0 rounded-2xl glass-panel overflow-hidden">
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;">
+</div>
+<svg class="absolute inset-0 w-full h-full p-8" fill="none" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+<path class="animate-flow" d="M60 80 L150 200" stroke="#13ec5b" stroke-linecap="round" stroke-opacity="0.4" stroke-width="2"></path>
+<path class="animate-flow" d="M240 80 L150 200" stroke="#13ec5b" stroke-dasharray="4 4" stroke-linecap="round" stroke-opacity="0.4" stroke-width="2" style="animation-delay: 0.5s;"></path>
+<path class="animate-flow" d="M60 320 L150 200" stroke="#13ec5b" stroke-dasharray="4 4" stroke-linecap="round" stroke-opacity="0.4" stroke-width="2" style="animation-delay: 1s;"></path>
+<path class="animate-flow" d="M240 320 L150 200" stroke="#13ec5b" stroke-dasharray="4 4" stroke-linecap="round" stroke-opacity="0.4" stroke-width="2" style="animation-delay: 0.2s;"></path>
+<g transform="translate(60, 80)">
+<circle cx="0" cy="0" fill="#102216" r="16" stroke="#13ec5b" stroke-width="2"></circle>
+<path d="M-6 -6 L6 6 M-6 6 L6 -6" stroke="#13ec5b" stroke-linecap="round" stroke-width="2"></path>
+</g>
+<g transform="translate(240, 80)">
+<circle cx="0" cy="0" fill="#102216" r="16" stroke="#13ec5b" stroke-width="2"></circle>
+<rect fill="#13ec5b" height="12" rx="1" width="12" x="-6" y="-6"></rect>
+</g>
+<g transform="translate(60, 320)">
+<circle cx="0" cy="0" fill="#102216" r="16" stroke="#13ec5b" stroke-width="2"></circle>
+<path d="M0 -8 L6 4 L-6 4 Z" fill="#13ec5b"></path>
+</g>
+<g transform="translate(240, 320)">
+<circle cx="0" cy="0" fill="#102216" r="16" stroke="#13ec5b" stroke-width="2"></circle>
+<circle cx="0" cy="0" fill="#13ec5b" r="6"></circle>
+</g>
+<g transform="translate(150, 200)">
+<circle class="animate-pulse-ring" cx="0" cy="0" fill="#13ec5b" fill-opacity="0.2" r="45"></circle>
+<circle cx="0" cy="0" fill="#102216" r="35" stroke="#13ec5b" stroke-width="3"></circle>
+<path d="M-12 8 L12 8 L12 -4 L0 -14 L-12 -4 Z" fill="none" stroke="#13ec5b" stroke-linejoin="round" stroke-width="2"></path>
+<rect fill="#13ec5b" height="8" rx="1" width="16" x="-8" y="0"></rect>
+</g>
+</svg>
+<div class="absolute top-[50%] left-[50%] w-24 h-24 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-8 pb-4">
+<div class="flex flex-col gap-3 text-center px-2">
+<h1 class="text-3xl font-bold tracking-tight text-white leading-tight">
+                    Efficient <br/>
+<span class="text-primary">Collection</span>
+</h1>
+<p class="text-white/70 text-base leading-relaxed font-light">
+                    Aggregators bridge the gap by collecting waste from various workshops and supplying them to creative converters. We automate the pickup scheduling so you can focus on sorting and selling.
+                </p>
+</div>
+<div class="flex flex-col gap-3 w-full">
+<button class="w-full h-14 bg-primary hover:bg-primary/90 active:scale-[0.98] transition-all rounded-lg flex items-center justify-center group shadow-[0_0_20px_rgba(19,236,91,0.2)]">
+<span class="text-background-dark font-bold text-lg tracking-wide mr-2">Next Step</span>
+<span class="material-symbols-outlined text-background-dark group-hover:translate-x-1 transition-transform text-[20px] font-bold">arrow_forward</span>
+</button>
+<button class="w-full h-12 flex items-center justify-center text-white/50 hover:text-white transition-colors text-base font-medium">
+                    Go Back
+                </button>
+</div>
+</div>
+<div class="h-2 w-full shrink-0"></div>
+</div>
+</body></html>

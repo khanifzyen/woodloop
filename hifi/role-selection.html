@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>WoodLoop - Role Selection</title>
+    <link href="style.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="script.js"></script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #102216;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #243c2f;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #13ec5b;
+        }
+
+        .wood-grain-bg {
+            background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 2px, transparent 2px, transparent 12px), linear-gradient(to bottom, #102216, #0c1a11);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen flex flex-col antialiased selection:bg-primary selection:text-black">
+    <div class="relative flex flex-col w-full max-w-md mx-auto min-h-screen overflow-hidden wood-grain-bg shadow-2xl">
+        <div class="absolute top-4 right-4 z-20">
+            <div
+                class="flex items-center gap-1 bg-surface-dark/90 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/10 text-xs font-bold tracking-wide">
+                <button class="text-primary">EN</button>
+                <span class="text-slate-600">|</span>
+                <button class="text-slate-400 hover:text-white transition-colors">ID</button>
+            </div>
+        </div>
+        <header class="relative px-6 pt-12 pb-6 flex flex-col items-center text-center z-10 shrink-0">
+            <div
+                class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[80px] -z-10 pointer-events-none">
+            </div>
+            <div
+                class="relative w-20 h-20 mb-6 rounded-full bg-surface-dark border border-primary/30 flex items-center justify-center shadow-[0_0_15px_rgba(19,236,91,0.15)] group">
+                <div class="relative flex items-center justify-center">
+                    <span
+                        class="material-symbols-outlined text-[48px] text-primary absolute group-hover:scale-110 transition-transform duration-300">water_drop</span>
+                    <span
+                        class="material-symbols-outlined text-[32px] text-white absolute group-hover:rotate-180 transition-transform duration-700">sync</span>
+                </div>
+                <div class="absolute inset-1 rounded-full border border-white/5 border-dashed animate-spin-slow"
+                    style="animation-duration: 20s;"></div>
+            </div>
+            <h1 class="text-4xl font-bold tracking-tighter text-white mb-2">Wood<span class="text-primary">Loop</span>
+            </h1>
+            <p class="text-slate-400 text-sm max-w-[280px] leading-relaxed">Connecting the wood industry for a
+                sustainable future. Select your role to begin.</p>
+        </header>
+        <main class="flex-1 px-4 pb-0 overflow-y-auto z-10 custom-scrollbar">
+            <form id="roleForm" action="#" class="space-y-3 pb-24">
+                <label
+                    class="group relative flex items-center gap-4 rounded-xl border border-white/10 bg-surface-dark/80 p-4 transition-all duration-300 hover:border-primary/50 hover:bg-surface-highlight cursor-pointer backdrop-blur-sm">
+                    <input checked="" class="peer sr-only" name="role" type="radio" value="supplier" />
+                    <div
+                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/5 text-slate-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors peer-checked:bg-primary peer-checked:text-black">
+                        <span class="material-symbols-outlined text-2xl">forest</span>
+                    </div>
+                    <div class="flex flex-col grow">
+                        <span
+                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors">Supplier</span>
+                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium">Timber Trader</span>
+                        <p class="text-xs text-slate-500 mt-0.5">Source & sell raw timber materials</p>
+                    </div>
+                    <div
+                        class="h-6 w-6 rounded-full border-2 border-slate-600 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
+                        <span
+                            class="material-symbols-outlined text-[16px] text-black opacity-0 peer-checked:opacity-100 font-bold">check</span>
+                    </div>
+                    <div
+                        class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(19,236,91,0.1)]">
+                    </div>
+                </label>
+                <!-- Other roles omitted for brevity/focus as per user flow, but can include them if needed. Keeping them here for completeness based on snapshot -->
+                <label
+                    class="group relative flex items-center gap-4 rounded-xl border border-white/10 bg-surface-dark/80 p-4 transition-all duration-300 hover:border-primary/50 hover:bg-surface-highlight cursor-pointer backdrop-blur-sm">
+                    <input class="peer sr-only" name="role" type="radio" value="generator" />
+                    <div
+                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/5 text-slate-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors peer-checked:bg-primary peer-checked:text-black">
+                        <span class="material-symbols-outlined text-2xl">carpenter</span>
+                    </div>
+                    <div class="flex flex-col grow">
+                        <span
+                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors">Generator</span>
+                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium">Furniture
+                            Workshop</span>
+                    </div>
+                    <div
+                        class="h-6 w-6 rounded-full border-2 border-slate-600 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
+                        <span
+                            class="material-symbols-outlined text-[16px] text-black opacity-0 peer-checked:opacity-100 font-bold">check</span>
+                    </div>
+                    <div
+                        class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(19,236,91,0.1)]">
+                    </div>
+                </label>
+                <label
+                    class="group relative flex items-center gap-4 rounded-xl border border-white/10 bg-surface-dark/80 p-4 transition-all duration-300 hover:border-primary/50 hover:bg-surface-highlight cursor-pointer backdrop-blur-sm">
+                    <input class="peer sr-only" name="role" type="radio" value="aggregator" />
+                    <div
+                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/5 text-slate-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors peer-checked:bg-primary peer-checked:text-black">
+                        <span class="material-symbols-outlined text-2xl">local_shipping</span>
+                    </div>
+                    <div class="flex flex-col grow">
+                        <span
+                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors">Aggregator</span>
+                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium">Logistics</span>
+                    </div>
+                    <div
+                        class="h-6 w-6 rounded-full border-2 border-slate-600 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
+                        <span
+                            class="material-symbols-outlined text-[16px] text-black opacity-0 peer-checked:opacity-100 font-bold">check</span>
+                    </div>
+                    <div
+                        class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(19,236,91,0.1)]">
+                    </div>
+                </label>
+            </form>
+        </main>
+
+        <div
+            class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-dark via-background-dark/95 to-transparent z-20">
+            <button onclick="handleRoleSelection()"
+                class="w-full bg-primary hover:bg-primary-dark text-black font-bold text-lg py-4 px-6 rounded-xl shadow-lg shadow-primary/25 transition-all active:scale-[0.98] flex items-center justify-center gap-2 mb-4">
+                <span>Continue</span>
+                <span class="material-symbols-outlined text-xl">arrow_forward</span>
+            </button>
+            <footer class="text-center">
+                <div class="flex flex-col items-center gap-4">
+                    <a class="text-sm text-slate-400 hover:text-primary transition-colors cursor-pointer"
+                        onclick="navigateTo('login.html')">
+                        Already have an account? <span
+                            class="text-primary font-semibold underline decoration-2 underline-offset-4">Log in</span>
+                    </a>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script>
+        function handleRoleSelection() {
+            const form = document.getElementById('roleForm');
+            const selectedRole = form.elements['role'].value;
+            if (selectedRole === 'supplier') {
+                navigateTo('register.html');
+            } else {
+                alert('Registration flow for ' + selectedRole + ' is not implemented in this demo.');
+            }
+        }
+    </script>
+</body>
+
+</html>

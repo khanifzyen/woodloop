@@ -30,6 +30,21 @@ Kode sumber proyek telah diamankan dan diunggah ke *Version Control System*.
 *   Melakukan **Commit** untuk semua file proyek dan dokumentasi.
 *   Melakukan **Push** ke branch `master`.
 
+## 4. Implementasi Hifi & User Onboarding (18 Februari 2026)
+Kami telah mengembangkan antarmuka *High Fidelity* untuk alur masuk pengguna (*User Onboarding*) dan otentikasi.
+
+*   **Splash Screen & Onboarding:**
+    *   Halaman pembuka dengan animasi branding WoodLoop.
+    *   3 langkah onboarding interaktif ("Digitalize Waste", "Traceable Impact", "Smart Logistics").
+*   **Role Selection:** Halaman pemilihan peran pengguna (Supplier, Generator, Aggregator, dll).
+*   **Authentication:**
+    *   Halaman Registrasi Supplier dengan formulir lengkap.
+    *   Halaman Login yang aman.
+    *   Halaman Lupa Password (Recovery).
+*   **Teknis:**
+    *   Implementasi Mobile Frame Logic untuk simulasi tampilan mobile di desktop browser.
+    *   Integrasi Tailwind CSS dan aset gambar berkualitas tinggi.
+
 ---
 
 **Langkah Selanjutnya (Next Steps):**

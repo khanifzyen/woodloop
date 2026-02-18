@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WoodLoop Secure Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00ff66",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#0f2317",
+                        "surface-dark": "#162f21",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f2317; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #162f21; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ff66; 
+        }
+        .form-checkbox:checked {
+            background-color: #00ff66;
+            border-color: #00ff66;
+            color: #00ff66; /* Sets the tick color if supported or background */
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%230f2317' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col justify-center items-center p-4">
+<!-- Main Container -->
+<div class="w-full max-w-md mx-auto flex flex-col h-full justify-between">
+<!-- Header & Logo Section -->
+<div class="flex flex-col items-center pt-8 pb-6">
+<div class="relative w-24 h-24 mb-6 flex items-center justify-center">
+<!-- Abstract Logo representation -->
+<div class="absolute inset-0 bg-primary/20 rounded-full blur-xl"></div>
+<div class="relative w-20 h-20 bg-surface-dark border border-primary/30 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/10 rotate-3">
+<span class="material-symbols-outlined text-primary text-5xl" style="font-variation-settings: 'FILL' 1;">recycling</span>
+</div>
+</div>
+<h1 class="text-gray-900 dark:text-white text-[32px] font-bold leading-tight text-center tracking-tight">
+                Welcome Back!
+            </h1>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal mt-2 text-center max-w-xs">
+                Log in to manage your wood cycle.
+            </p>
+</div>
+<!-- Login Form -->
+<div class="flex flex-col gap-5 w-full">
+<!-- Email Field -->
+<div class="space-y-2 group">
+<label class="text-gray-900 dark:text-white text-sm font-medium ml-1">Email</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">mail</span>
+</div>
+<input class="form-input w-full pl-11 pr-4 py-4 rounded-xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200" placeholder="Enter your email" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2 group">
+<label class="text-gray-900 dark:text-white text-sm font-medium ml-1">Password</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">lock</span>
+</div>
+<input class="form-input w-full pl-11 pr-12 py-4 rounded-xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200" placeholder="Enter your password" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-white transition-colors focus:outline-none">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Forgot Password Link -->
+<div class="flex justify-end">
+<a class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary transition-colors" href="#">
+                    Forgot Password?
+                </a>
+</div>
+<!-- Login Button -->
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold text-lg h-14 rounded-xl transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(0,255,102,0.2)] flex items-center justify-center gap-2 mt-2">
+<span>Login</span>
+<span class="material-symbols-outlined text-xl font-bold">arrow_forward</span>
+</button>
+<!-- Social Divider -->
+<div class="relative py-4">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-gray-200 dark:border-white/10"></div>
+</div>
+<div class="relative flex justify-center text-sm">
+<span class="px-4 bg-background-light dark:bg-background-dark text-gray-500 dark:text-gray-400">Or continue with</span>
+</div>
+</div>
+<!-- Social Buttons -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center h-12 gap-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<img alt="Google Logo" class="w-5 h-5" data-alt="Google G logo in color" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUgTlWR4pRCsQi3PpI1PXDCE10CY6lb9ruDFQLRkYGWbujJKDggUAP8G-UZ9eqFZliN_WVm3CCaJIPk95q0laaxn7o3TZ0rStAZuzEzXbLvI7h8GlsmORn7N7NOr3t6-8vq-A25HSRMgka3s4-h9vAprkFFWOeYzB58KS8sm7zpNYlVJRaeB1RJjb6CIRYd_x4C2VjWEUe1VTttLUddjyDwQP8lFy3L-L4ymowRGMY2jJZgX11juqG4L-53K9V_IZWrBAo-8hODIL5"/>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-200">Google</span>
+</button>
+<button class="flex items-center justify-center h-12 gap-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-black dark:text-white text-[22px]">ios</span>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-200">Apple</span>
+</button>
+</div>
+</div>
+<!-- Footer -->
+<div class="pt-8 pb-4 text-center">
+<p class="text-gray-500 dark:text-gray-400 text-sm">
+                Don't have an account? 
+                <a class="text-primary font-bold hover:underline ml-1" href="#">Sign Up</a>
+</p>
+</div>
+</div>
+</body></html>
