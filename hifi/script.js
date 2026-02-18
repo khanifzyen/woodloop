@@ -5,18 +5,24 @@ const tailwindConfig = {
         extend: {
             colors: {
                 "primary": "#13ec5b",
+                "primary-dark": "#0ea841",
                 "background-light": "#f6f8f6",
                 "background-dark": "#102216",
-                "surface-dark": "#182d20",
+                "surface-dark": "#1a2e22",
+                "surface-highlight": "#243c2f",
             },
             fontFamily: {
                 "display": ["Space Grotesk", "sans-serif"],
                 "serif": ["Newsreader", "serif"]
             },
-            borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+            borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+            backgroundImage: {
+                'wood-pattern': "url('https://www.transparenttextures.com/patterns/wood-pattern.png')",
+            },
             animation: {
                 'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
                 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                'spin-slow': 'spin 20s linear infinite',
             },
             keyframes: {
                 fadeInUp: {

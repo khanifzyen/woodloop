@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Supplier Registration - WoodLoop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Load shared script for navigation logic -->
+    <script src="script.js"></script>
+
+    <!-- Page-specific Tailwind Config (overrides script.js defaults if loaded after) -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00FF66",
+                        "primary-dark": "#00cc52",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#121212",
+                        "surface-dark": "#1E1E1E",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .input-dark {
+            background-color: #2A2A2A;
+            border-color: #333333;
+            color: white;
+        }
+
+        .input-dark:focus {
+            border-color: #00FF66;
+            box-shadow: 0 0 0 1px #00FF66;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 flex justify-center min-h-screen">
+    <div
+        class="w-full max-w-md bg-white dark:bg-[#121212] h-full min-h-screen relative flex flex-col shadow-2xl overflow-hidden">
+        <header
+            class="sticky top-0 z-20 bg-white/95 dark:bg-[#121212]/95 backdrop-blur-md pt-4 pb-2 px-4 border-b border-gray-100 dark:border-[#2A2A2A]">
+            <div class="flex items-center justify-between mb-4">
+                <button onclick="navigateTo('role-selection.html')"
+                    class="flex items-center justify-center size-10 rounded-full text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-[#2A2A2A] transition-colors">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <div class="text-sm font-medium text-[#00FF66]">Step 1 of 3</div>
+            </div>
+            <div class="px-1">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Create Supplier Account</h1>
+                <p class="text-gray-500 dark:text-[#888888] text-sm">Connect your timber business to WoodLoop.</p>
+            </div>
+        </header>
+        <main class="flex-1 overflow-y-auto no-scrollbar p-5 pb-32">
+            <form class="space-y-6" onsubmit="event.preventDefault()">
+                <div class="space-y-5">
+                    <div class="relative group">
+                        <label
+                            class="block text-xs font-medium text-gray-500 dark:text-[#888888] mb-1.5 uppercase tracking-wider"
+                            for="fullName">Full Name</label>
+                        <div class="relative flex items-center">
+                            <span
+                                class="material-symbols-outlined absolute left-3.5 text-gray-400 dark:text-[#666666]">person</span>
+                            <input
+                                class="w-full pl-11 pr-4 py-3.5 bg-gray-50 dark:bg-[#2A2A2A] border border-gray-200 dark:border-[#333333] rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-[#666666] focus:outline-none focus:ring-1 focus:ring-[#00FF66] focus:border-[#00FF66] transition-all"
+                                id="fullName" placeholder="John Doe" type="text" />
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <label
+                            class="block text-xs font-medium text-gray-500 dark:text-[#888888] mb-1.5 uppercase tracking-wider"
+                            for="companyName">Company Name</label>
+                        <div class="relative flex items-center">
+                            <span
+                                class="material-symbols-outlined absolute left-3.5 text-gray-400 dark:text-[#666666]">factory</span>
+                            <input
+                                class="w-full pl-11 pr-4 py-3.5 bg-gray-50 dark:bg-[#2A2A2A] border border-gray-200 dark:border-[#333333] rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-[#666666] focus:outline-none focus:ring-1 focus:ring-[#00FF66] focus:border-[#00FF66] transition-all"
+                                id="companyName" placeholder="Jepara Teak Mill" type="text" />
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <label
+                            class="block text-xs font-medium text-gray-500 dark:text-[#888888] mb-1.5 uppercase tracking-wider"
+                            for="phone">Phone Number</label>
+                        <div class="relative flex items-center">
+                            <div
+                                class="absolute left-3.5 flex items-center gap-1 text-gray-500 dark:text-[#888888] border-r border-gray-300 dark:border-[#444444] pr-2 mr-2 h-6">
+                                <span class="text-sm font-medium">+62</span>
+                                <span class="material-symbols-outlined text-base">expand_more</span>
+                            </div>
+                            <input
+                                class="w-full pl-20 pr-4 py-3.5 bg-gray-50 dark:bg-[#2A2A2A] border border-gray-200 dark:border-[#333333] rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-[#666666] focus:outline-none focus:ring-1 focus:ring-[#00FF66] focus:border-[#00FF66] transition-all"
+                                id="phone" placeholder="812 3456 7890" type="tel" />
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label
+                        class="block text-xs font-medium text-gray-500 dark:text-[#888888] mb-1.5 uppercase tracking-wider">Business
+                        Address</label>
+                    <div
+                        class="relative rounded-xl overflow-hidden border border-gray-200 dark:border-[#333333] group cursor-pointer">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none">
+                        </div>
+                        <div class="h-32 w-full bg-gray-800 relative">
+                            <img alt="Map of Jepara region" class="object-cover w-full h-full opacity-60"
+                                data-location="Jepara"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfaHEshU4v03e3b4quctHpwJpqlMjww40lHDV9E-0Ti-m6osmStw-TcZwkSUNEPWRYLNJn-7vXHNnEchBYy_D98tmFH82tGjTqvCFoOtSqSD_qzwENXJ9QVdb8dA7GmqmBkm8RiKn_6G_As9b36ePucjM6EeTAAOBh4FaZAf0rfqcfk-D1yLxzrZbfpbvLMrZtli2mPCF1TeiI_YoKQyH4jz9pz_NkIZz63uTwPlvoY0fRiQhHsnXkqL24PrD2EQaxf_GZnrZxk-bA" />
+                        </div>
+                        <div class="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between">
+                            <div class="flex-1 mr-2">
+                                <p class="text-white text-sm font-medium truncate">Jl. Raya Jepara-Kudus No. 45</p>
+                                <p class="text-white/70 text-xs">Jepara, Central Java</p>
+                            </div>
+                            <button
+                                class="bg-[#00FF66] hover:bg-[#00cc52] text-black font-bold p-2 rounded-lg shadow-lg flex items-center justify-center transition-transform active:scale-95"
+                                type="button">
+                                <span class="material-symbols-outlined">pin_drop</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 dark:text-[#666666] px-1">Tap the map to pin your exact mill
+                        location.
+                    </p>
+                </div>
+                <div class="space-y-2 pt-2">
+                    <div class="flex items-center justify-between">
+                        <label
+                            class="block text-xs font-medium text-gray-500 dark:text-[#888888] uppercase tracking-wider">Legal
+                            Certifications</label>
+                        <span
+                            class="text-xs text-[#00FF66] bg-[#00FF66]/10 px-2 py-0.5 rounded-full font-medium border border-[#00FF66]/20">Required</span>
+                    </div>
+                    <div
+                        class="relative border-2 border-dashed border-gray-300 dark:border-[#333333] rounded-xl bg-gray-50 dark:bg-[#1A1A1A] hover:bg-gray-100 dark:hover:bg-[#222222] transition-colors p-6 text-center cursor-pointer group">
+                        <input class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" type="file" />
+                        <div class="flex flex-col items-center justify-center space-y-2">
+                            <div
+                                class="size-10 rounded-full bg-[#00FF66]/10 flex items-center justify-center text-[#00FF66] group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined">upload_file</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">Upload SVLK or FSC</p>
+                                <p class="text-xs text-gray-500 dark:text-[#666666]">PDF, JPG or PNG (Max 5MB)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center p-3 bg-white dark:bg-[#1E1E1E] border border-gray-100 dark:border-[#333333] rounded-lg shadow-sm animate-fade-in-up hidden">
+                        <div class="size-8 rounded bg-red-500/10 flex items-center justify-center text-red-500 mr-3">
+                            <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                svlk_certificate_2024.pdf
+                            </p>
+                            <p class="text-xs text-[#00FF66] flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[10px]">check_circle</span> Uploaded
+                            </p>
+                        </div>
+                        <button class="text-gray-400 hover:text-red-500 transition-colors">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="pt-4 pb-4">
+                    <p class="text-xs text-gray-500 dark:text-[#666666] text-center">
+                        By registering, you agree to our <a class="text-[#00FF66] hover:underline" href="#">Terms of
+                            Service</a> and <a class="text-[#00FF66] hover:underline" href="#">Privacy Policy</a>.
+                    </p>
+                </div>
+            </form>
+        </main>
+        <div
+            class="absolute bottom-0 left-0 right-0 bg-white dark:bg-[#121212] border-t border-gray-100 dark:border-[#2A2A2A] p-4 pb-8 z-30">
+            <button
+                class="w-full bg-[#00FF66] hover:bg-[#00cc52] text-black font-bold py-3.5 rounded-xl shadow-lg shadow-[#00FF66]/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                <span>Complete Registration</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+            <div class="mt-4 text-center">
+                <span class="text-sm text-gray-500 dark:text-[#888888]">Already have an account? </span>
+                <a class="text-sm font-semibold text-[#00FF66] hover:text-[#00FF66]/80 transition-colors cursor-pointer"
+                    onclick="navigateTo('login.html')">Login</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

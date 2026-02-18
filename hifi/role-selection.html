@@ -5,7 +5,10 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>WoodLoop - Role Selection</title>
-    <link href="style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="script.js"></script>
     <style>
@@ -27,7 +30,15 @@
         }
 
         .wood-grain-bg {
-            background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 2px, transparent 2px, transparent 12px), linear-gradient(to bottom, #102216, #0c1a11);
+            background-image: repeating-linear-gradient(45deg,
+                    rgba(255, 255, 255, 0.03) 0px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    transparent 2px,
+                    transparent 12px), linear-gradient(to bottom, #102216, #0c1a11);
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
         }
     </style>
 </head>
@@ -38,12 +49,13 @@
         <div class="absolute top-4 right-4 z-20">
             <div
                 class="flex items-center gap-1 bg-surface-dark/90 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/10 text-xs font-bold tracking-wide">
-                <button class="text-primary">EN</button>
+                <button id="btn-en" class="text-primary transition-colors" onclick="setLanguage('en')">EN</button>
                 <span class="text-slate-600">|</span>
-                <button class="text-slate-400 hover:text-white transition-colors">ID</button>
+                <button id="btn-id" class="text-slate-400 hover:text-white transition-colors"
+                    onclick="setLanguage('id')">ID</button>
             </div>
         </div>
-        <header class="relative px-6 pt-12 pb-6 flex flex-col items-center text-center z-10 shrink-0">
+        <header class="relative px-6 pt-12 pb-6 flex flex-col items-center text-center z-10">
             <div
                 class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[80px] -z-10 pointer-events-none">
             </div>
@@ -58,13 +70,16 @@
                 <div class="absolute inset-1 rounded-full border border-white/5 border-dashed animate-spin-slow"
                     style="animation-duration: 20s;"></div>
             </div>
-            <h1 class="text-4xl font-bold tracking-tighter text-white mb-2">Wood<span class="text-primary">Loop</span>
+            <h1 class="text-4xl font-bold tracking-tighter text-white mb-2">
+                Wood<span class="text-primary">Loop</span>
             </h1>
-            <p class="text-slate-400 text-sm max-w-[280px] leading-relaxed">Connecting the wood industry for a
-                sustainable future. Select your role to begin.</p>
+            <p class="text-slate-400 text-sm max-w-[280px] leading-relaxed" data-i18n="hero_desc">
+                Connecting the wood industry for a sustainable future. Select your role to begin.
+            </p>
         </header>
-        <main class="flex-1 px-4 pb-0 overflow-y-auto z-10 custom-scrollbar">
-            <form id="roleForm" action="#" class="space-y-3 pb-24">
+        <main class="flex-1 px-4 pb-8 overflow-y-auto z-10 custom-scrollbar">
+            <form id="roleForm" action="#" class="space-y-3">
+                <!-- Supplier -->
                 <label
                     class="group relative flex items-center gap-4 rounded-xl border border-white/10 bg-surface-dark/80 p-4 transition-all duration-300 hover:border-primary/50 hover:bg-surface-highlight cursor-pointer backdrop-blur-sm">
                     <input checked="" class="peer sr-only" name="role" type="radio" value="supplier" />
@@ -74,9 +89,12 @@
                     </div>
                     <div class="flex flex-col grow">
                         <span
-                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors">Supplier</span>
-                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium">Timber Trader</span>
-                        <p class="text-xs text-slate-500 mt-0.5">Source & sell raw timber materials</p>
+                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors"
+                            data-i18n="role_supplier">Supplier</span>
+                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium"
+                            data-i18n="role_supplier_sub">Timber Trader</span>
+                        <p class="text-xs text-slate-500 mt-0.5" data-i18n="role_supplier_desc">Source & sell raw timber
+                            materials</p>
                     </div>
                     <div
                         class="h-6 w-6 rounded-full border-2 border-slate-600 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
@@ -87,7 +105,8 @@
                         class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(19,236,91,0.1)]">
                     </div>
                 </label>
-                <!-- Other roles omitted for brevity/focus as per user flow, but can include them if needed. Keeping them here for completeness based on snapshot -->
+
+                <!-- Generator -->
                 <label
                     class="group relative flex items-center gap-4 rounded-xl border border-white/10 bg-surface-dark/80 p-4 transition-all duration-300 hover:border-primary/50 hover:bg-surface-highlight cursor-pointer backdrop-blur-sm">
                     <input class="peer sr-only" name="role" type="radio" value="generator" />
@@ -97,9 +116,13 @@
                     </div>
                     <div class="flex flex-col grow">
                         <span
-                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors">Generator</span>
-                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium">Furniture
+                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors"
+                            data-i18n="role_generator">Generator</span>
+                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium"
+                            data-i18n="role_generator_sub">Furniture
                             Workshop</span>
+                        <p class="text-xs text-slate-500 mt-0.5" data-i18n="role_generator_desc">Manage production &
+                            wood waste</p>
                     </div>
                     <div
                         class="h-6 w-6 rounded-full border-2 border-slate-600 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
@@ -110,6 +133,8 @@
                         class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(19,236,91,0.1)]">
                     </div>
                 </label>
+
+                <!-- Aggregator -->
                 <label
                     class="group relative flex items-center gap-4 rounded-xl border border-white/10 bg-surface-dark/80 p-4 transition-all duration-300 hover:border-primary/50 hover:bg-surface-highlight cursor-pointer backdrop-blur-sm">
                     <input class="peer sr-only" name="role" type="radio" value="aggregator" />
@@ -119,8 +144,12 @@
                     </div>
                     <div class="flex flex-col grow">
                         <span
-                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors">Aggregator</span>
-                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium">Logistics</span>
+                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors"
+                            data-i18n="role_aggregator">Aggregator</span>
+                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium"
+                            data-i18n="role_aggregator_sub">Logistics</span>
+                        <p class="text-xs text-slate-500 mt-0.5" data-i18n="role_aggregator_desc">Collect, transport &
+                            store materials</p>
                     </div>
                     <div
                         class="h-6 w-6 rounded-full border-2 border-slate-600 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
@@ -131,33 +160,167 @@
                         class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(19,236,91,0.1)]">
                     </div>
                 </label>
+
+                <!-- Converter -->
+                <label
+                    class="group relative flex items-center gap-4 rounded-xl border border-white/10 bg-surface-dark/80 p-4 transition-all duration-300 hover:border-primary/50 hover:bg-surface-highlight cursor-pointer backdrop-blur-sm">
+                    <input class="peer sr-only" name="role" type="radio" value="converter" />
+                    <div
+                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/5 text-slate-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors peer-checked:bg-primary peer-checked:text-black">
+                        <span class="material-symbols-outlined text-2xl">brush</span>
+                    </div>
+                    <div class="flex flex-col grow">
+                        <span
+                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors"
+                            data-i18n="role_converter">Converter</span>
+                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium"
+                            data-i18n="role_converter_sub">Creative Artisan</span>
+                        <p class="text-xs text-slate-500 mt-0.5" data-i18n="role_converter_desc">Upcycle waste into
+                            value products</p>
+                    </div>
+                    <div
+                        class="h-6 w-6 rounded-full border-2 border-slate-600 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
+                        <span
+                            class="material-symbols-outlined text-[16px] text-black opacity-0 peer-checked:opacity-100 font-bold">check</span>
+                    </div>
+                    <div
+                        class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(19,236,91,0.1)]">
+                    </div>
+                </label>
+
+                <!-- Buyer -->
+                <label
+                    class="group relative flex items-center gap-4 rounded-xl border border-white/10 bg-surface-dark/80 p-4 transition-all duration-300 hover:border-primary/50 hover:bg-surface-highlight cursor-pointer backdrop-blur-sm">
+                    <input class="peer sr-only" name="role" type="radio" value="buyer" />
+                    <div
+                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/5 text-slate-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors peer-checked:bg-primary peer-checked:text-black">
+                        <span class="material-symbols-outlined text-2xl">shopping_bag</span>
+                    </div>
+                    <div class="flex flex-col grow">
+                        <span
+                            class="text-base font-bold text-white group-hover:text-primary peer-checked:text-primary transition-colors"
+                            data-i18n="role_buyer">Buyer
+                            / End User</span>
+                        <span class="text-xs text-slate-400 uppercase tracking-wide font-medium"
+                            data-i18n="role_buyer_sub">Public Consumer</span>
+                        <p class="text-xs text-slate-500 mt-0.5" data-i18n="role_buyer_desc">Purchase unique upcycled
+                            wood products</p>
+                    </div>
+                    <div
+                        class="h-6 w-6 rounded-full border-2 border-slate-600 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center transition-all">
+                        <span
+                            class="material-symbols-outlined text-[16px] text-black opacity-0 peer-checked:opacity-100 font-bold">check</span>
+                    </div>
+                    <div
+                        class="absolute inset-0 rounded-xl border-2 border-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(19,236,91,0.1)]">
+                    </div>
+                </label>
+                <div class="pt-4 sticky bottom-0 z-20">
+                    <button type="button" onclick="handleRoleSelection()"
+                        class="w-full bg-primary hover:bg-primary-dark text-black font-bold text-lg py-4 px-6 rounded-xl shadow-lg shadow-primary/25 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                        <span data-i18n="btn_continue">Continue</span>
+                        <span class="material-symbols-outlined text-xl">arrow_forward</span>
+                    </button>
+                </div>
             </form>
         </main>
-
-        <div
-            class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-dark via-background-dark/95 to-transparent z-20">
-            <button onclick="handleRoleSelection()"
-                class="w-full bg-primary hover:bg-primary-dark text-black font-bold text-lg py-4 px-6 rounded-xl shadow-lg shadow-primary/25 transition-all active:scale-[0.98] flex items-center justify-center gap-2 mb-4">
-                <span>Continue</span>
-                <span class="material-symbols-outlined text-xl">arrow_forward</span>
-            </button>
-            <footer class="text-center">
-                <div class="flex flex-col items-center gap-4">
-                    <a class="text-sm text-slate-400 hover:text-primary transition-colors cursor-pointer"
-                        onclick="navigateTo('login.html')">
-                        Already have an account? <span
-                            class="text-primary font-semibold underline decoration-2 underline-offset-4">Log in</span>
-                    </a>
+        <footer class="py-6 px-6 text-center z-10">
+            <div class="flex flex-col items-center gap-4">
+                <a class="text-sm text-slate-400 hover:text-primary transition-colors cursor-pointer"
+                    onclick="navigateTo('login.html')">
+                    <span data-i18n="footer_login">Already have an account?</span> <span
+                        class="text-primary font-semibold underline decoration-2 underline-offset-4"
+                        data-i18n="footer_login_link">Log in</span>
+                </a>
+                <div class="flex items-center gap-4 text-[11px] text-slate-600 uppercase tracking-widest font-semibold">
+                    <a class="hover:text-slate-400 transition-colors" href="#" data-i18n="footer_terms">Terms</a>
+                    <span class="w-1 h-1 rounded-full bg-slate-700"></span>
+                    <a class="hover:text-slate-400 transition-colors" href="#" data-i18n="footer_privacy">Privacy</a>
+                    <span class="w-1 h-1 rounded-full bg-slate-700"></span>
+                    <a class="hover:text-slate-400 transition-colors" href="#" data-i18n="footer_support">Support</a>
                 </div>
-            </footer>
-        </div>
+            </div>
+        </footer>
     </div>
     <script>
+        const translations = {
+            en: {
+                hero_desc: "Connecting the wood industry for a sustainable future. Select your role to begin.",
+                role_supplier: "Supplier",
+                role_supplier_sub: "Timber Trader",
+                role_supplier_desc: "Source & sell raw timber materials",
+                role_generator: "Generator",
+                role_generator_sub: "Furniture Workshop",
+                role_generator_desc: "Manage production & wood waste",
+                role_aggregator: "Aggregator",
+                role_aggregator_sub: "Logistics",
+                role_aggregator_desc: "Collect, transport & store materials",
+                role_converter: "Converter",
+                role_converter_sub: "Creative Artisan",
+                role_converter_desc: "Upcycle waste into value products",
+                role_buyer: "Buyer / End User",
+                role_buyer_sub: "Public Consumer",
+                role_buyer_desc: "Purchase unique upcycled wood products",
+                btn_continue: "Continue",
+                footer_login: "Already have an account?",
+                footer_login_link: "Log in",
+                footer_terms: "Terms",
+                footer_privacy: "Privacy",
+                footer_support: "Support"
+            },
+            id: {
+                hero_desc: "Menghubungkan industri kayu untuk masa depan yang berkelanjutan. Pilih peran Anda untuk memulai.",
+                role_supplier: "Pemasok",
+                role_supplier_sub: "Pedagang Kayu",
+                role_supplier_desc: "Sumber & jual bahan baku kayu",
+                role_generator: "Penghasil",
+                role_generator_sub: "Bengkel Mebel",
+                role_generator_desc: "Kelola produksi & limbah kayu",
+                role_aggregator: "Pengumpul",
+                role_aggregator_sub: "Logistik",
+                role_aggregator_desc: "Kumpulkan, angkut & simpan bahan",
+                role_converter: "Pengolah",
+                role_converter_sub: "Pengrajin Kreatif",
+                role_converter_desc: "Daur ulang limbah menjadi produk bernilai",
+                role_buyer: "Pembeli / Pengguna Akhir",
+                role_buyer_sub: "Konsumen Umum",
+                role_buyer_desc: "Beli produk kayu daur ulang unik",
+                btn_continue: "Lanjut",
+                footer_login: "Sudah punya akun?",
+                footer_login_link: "Masuk",
+                footer_terms: "Ketentuan",
+                footer_privacy: "Privasi",
+                footer_support: "Bantuan"
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            // Update buttons
+            const btnEn = document.getElementById('btn-en');
+            const btnId = document.getElementById('btn-id');
+
+            if (lang === 'en') {
+                btnEn.className = "text-primary transition-colors";
+                btnId.className = "text-slate-400 hover:text-white transition-colors";
+            } else {
+                btnEn.className = "text-slate-400 hover:text-white transition-colors";
+                btnId.className = "text-primary transition-colors";
+            }
+        }
+
         function handleRoleSelection() {
             const form = document.getElementById('roleForm');
             const selectedRole = form.elements['role'].value;
             if (selectedRole === 'supplier') {
-                navigateTo('register.html');
+                navigateTo('register-supplier.html');
             } else {
                 alert('Registration flow for ' + selectedRole + ' is not implemented in this demo.');
             }

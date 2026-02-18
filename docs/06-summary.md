@@ -30,20 +30,23 @@ Kode sumber proyek telah diamankan dan diunggah ke *Version Control System*.
 *   Melakukan **Commit** untuk semua file proyek dan dokumentasi.
 *   Melakukan **Push** ke branch `master`.
 
-## 4. Implementasi Hifi & User Onboarding (18 Februari 2026)
-Kami telah mengembangkan antarmuka *High Fidelity* untuk alur masuk pengguna (*User Onboarding*) dan otentikasi.
+## 4. Implementasi Hifi & Integrasi Stitch (18 Februari 2026)
+Kami telah mengembangkan antarmuka *High Fidelity* berdasarkan desain dari Stitch dan meningkatkan fitur *User Onboarding*.
 
-*   **Splash Screen & Onboarding:**
-    *   Halaman pembuka dengan animasi branding WoodLoop.
-    *   3 langkah onboarding interaktif ("Digitalize Waste", "Traceable Impact", "Smart Logistics").
-*   **Role Selection:** Halaman pemilihan peran pengguna (Supplier, Generator, Aggregator, dll).
-*   **Authentication:**
-    *   Halaman Registrasi Supplier dengan formulir lengkap.
-    *   Halaman Login yang aman.
-    *   Halaman Lupa Password (Recovery).
+*   **Integrasi Stitch:**
+    *   Mengambil aset dan kode untul halaman "Welcome & Role Selection" dan "Supplier Registration" dari proyek Stitch.
+    *   Memastikan implementasi *pixel-perfect* sesuai desain referensi.
+*   **Role Selection (`hifi/role-selection.html`):**
+    *   Pembaruan UI total dengan desain kayu estetis dan animasi modern.
+    *   Implementasi logika pemilihan peran.
+    *   **Fitur Baru:** Penambahan *Language Switcher* (EN/ID) yang fungsional untuk mengganti bahasa antarmuka secara dinamis.
+*   **Supplier Registration (`hifi/register-supplier.html`):**
+    *   Pembuatan halaman registrasi khusus untuk role Supplier.
+    *   Integrasi navigasi yang mulus dari halaman pemilihan peran.
+    *   Tampilan formulir yang responsif dan sesuai tema aplikasi.
 *   **Teknis:**
-    *   Implementasi Mobile Frame Logic untuk simulasi tampilan mobile di desktop browser.
-    *   Integrasi Tailwind CSS dan aset gambar berkualitas tinggi.
+    *   Penyesuaian konfigurasi Tailwind CSS untuk warna dan font baru (`Public Sans`, `Space Grotesk`).
+    *   Refactoring struktur file untuk kejelasan (`register.html` -> `register-supplier.html`).
 
 ---
 
