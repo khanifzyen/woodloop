@@ -61,6 +61,9 @@ Load detailed guidance based on context:
 - Follow Material/Cupertino design guidelines
 - Profile with DevTools, fix jank
 - Test widgets with `flutter_test` and Blocs with `bloc_test`
+- **For every DTO created, it must use the `freezed` package**
+- **Run `dart run build_runner build --delete-conflicting-outputs` for each DTO created or modified**
+- **Use the `Result<T>` pattern for all `datasources` to handle success and failure gracefully**
 
 ### MUST NOT DO
 - **NEVER use Riverpod**

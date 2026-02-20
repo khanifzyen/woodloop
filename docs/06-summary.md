@@ -48,8 +48,29 @@ Kami telah mengembangkan antarmuka *High Fidelity* berdasarkan desain dari Stitc
     *   Penyesuaian konfigurasi Tailwind CSS untuk warna dan font baru (`Public Sans`, `Space Grotesk`).
     *   Refactoring struktur file untuk kejelasan (`register.html` -> `register-supplier.html`).
 
+## 5. Implementasi Core Authentication & Onboarding (Flutter) (20 Februari 2026)
+Kami telah menyelesaikan Phase 2 & 3 untuk alur Otentikasi dan Onboarding pada aplikasi Flutter WoodLoop dengan menggunakan prinsip Clean Architecture.
+
+*   **Setup Arsitektur & Dependencies:**
+    *   Menginisialisasi `flutter_bloc` untuk state management, `go_router` untuk navigasi terpusat, dan `get_it`/`injectable` untuk dependency injection.
+    *   Membuat struktur direktori *Clean Architecture* untuk `feature_auth`.
+*   **Routing & Tema:**
+    *   Menyusun konfigurasi `AppRouter` dengan rute terpusat (`/`, `/onboarding`, `/role-selection`, `/login`, `/forgot-password`).
+    *   Mengonfigurasi `AppTheme` dengan tipografi `GoogleFonts.inter` dan palet warna WoodLoop, serta menghapus properti tema yang *deprecated*.
+*   **Pengembangan UI Screens (Berdasarkan Stitch):**
+    *   `SplashPage`: Mengintegrasikan navigasi otomatis beserta *branding*.
+    *   `OnboardingPage`: Menerjemahkan 3 langkah Onboarding menggunakan widget `PageView` yang bisa di-swipe, lengkap dengan indikator aktif & fungsi tombol lewati (skip).
+    *   `RoleSelectionPage`: Mengimplementasikan antarmuka pemilihan untuk kelima mock role (Supplier, Generator, Aggregator, Converter, Buyer) menggunakan animasi state pilihan (active toggle).
+    *   `LoginPage`: Membangun antarmuka masuk yang presisi, mengatur warna fokus input, serta fitur menyembunyikan kata sandi (obscure text).
+    *   `ForgotPasswordPage`: Mendesain halaman pemulihan sandi dengan kelancaran navigasi kembali ke login.
+*   **Validasi Kualitas Kode:**
+    *   Menyelesaikan *code generation* menggunakan `dart run build_runner build -d`.
+    *   Memperbaiki semua pesan *lint* (0 errors pada `flutter analyze`), termasuk memigrasikan *API* yang telah deprecated dari versi Flutter terbaru (memperbarui `withOpacity()` menjadi `.withValues(alpha: ...)` pada seluruh proyek).
+*   **Pembaruan Dokumentasi:**
+    *   Memperbarui `docs/08-screen-plan.md` dengan daftar lengkap 45 layar aplikasi di fase selanjutnya.
+
 ---
 
 **Langkah Selanjutnya (Next Steps):**
-*   Melakukan deployment aplikasi ke hosting statis (GitHub Pages / Vercel / Netlify).
-*   Mulai mengembangkan backend untuk menggantikan `localStorage`.
+*   Melakukan deployment aplikasi statis jika diperlukan atau menguji integrasi Mock Data *backend*.
+*   Melanjutkan implementasi UI untuk dashboard utama (Dashboard Features) dan routing lanjutan berbasis role.

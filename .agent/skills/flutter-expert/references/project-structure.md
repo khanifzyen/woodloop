@@ -17,7 +17,7 @@ lib/
 │   ├── auth/
 │   │   ├── data/
 │   │   │   ├── datasources/   # Remote/Local data sources
-│   │   │   ├── models/        # DTOs (fromJson/toJson)
+│   │   │   ├── models/        # DTOs (fromJson/toJson, MUST use freezed)
 │   │   │   └── repositories/  # Repository Implementations
 │   │   ├── domain/
 │   │   │   ├── entities/      # Pure Dart Objects
@@ -79,8 +79,8 @@ dev_dependencies:
 | **Domain** | **Entities** | Pure business objects. Immutable. No Flutter code. |
 | | **Repositories** | Abstract interfaces defining data contracts. |
 | | **UseCases** | Encapsulate specific business rules. Single responsibility. |
-| **Data** | **Models** | DTOs with JSON serialization. Extends Entities. |
-| | **DataSources** | Low-level data access (API, DB). Throws Exceptions. |
+| **Data** | **Models** | DTOs with JSON serialization (MUST use `freezed` and generate with `build_runner`). Extends Entities. |
+| | **DataSources** | Low-level data access (API, DB). MUST return `Result<T>` to handle success and failure gracefully. |
 | | **Repositories** | Implements Domain Repositories. Handles data coordination & error mapping (Exception -> Failure). |
 | **Presentation** | **Bloc** | Manages State. Handles User Events. Emits new States. |
 | | **Pages/Widgets** | UI. Listens to Bloc state. Dispatches Events. |
@@ -113,6 +113,37 @@ class MyApp extends StatelessWidget {
         darkTheme: AppTheme.dark,
       ),
     );
-  }
+}
+}
+```
+
+## Result Pattern (Result.dart)
+
+For all `datasources`, use the `Result<T>` pattern to handle success and failure gracefully:
+
+```dart
+sealed class Result<T> {
+  const Result();
+
+  const factory Result.success(T value) = Success;
+  const factory Result.failed(String message) = Failed;
+
+  bool get isSuccess => this is Success;
+  bool get isFailed => this is Failed;
+
+  T? get resultValue => isSuccess ? (this as Success<T>).value : null;
+  String? get errorMessage => isFailed ? (this as Failed<T>).message : null;
+}
+
+class Success<T> extends Result<T> {
+  const Success(this.value);
+
+  final T value;
+}
+
+class Failed<T> extends Result<T> {
+  const Failed(this.message);
+
+  final String message;
 }
 ```

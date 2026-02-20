@@ -31,20 +31,31 @@ Use **Bloc/Cubit** when you need:
 
 ---
 
-## Basic Bloc Setup (with Equatable)
+## Basic Setup: Equatable vs Freezed
+
+When creating State and Event classes, you must use either `Equatable` or `freezed`.
+
+1.  **Use `Equatable`** for simple states without complex variations or when you want to avoid running build scripts continually.
+2.  **Use `freezed`** for complex states requiring robust `.copyWith` functionality or when you want strict, exhaustive compile-time safety (union types/sealed classes) to handle `Loading`, `Success`, and `Failure` states gracefully.
 
 ### Dependencies
 
 ```yaml
 dependencies:
-  flutter_bloc: ^9.0.0
-  equatable: ^2.0.7
+  flutter_bloc: ^9.0.0 # Or latest
+  equatable: ^2.0.7  # If using Equatable
+  freezed_annotation: ^3.0.0 # If using Freezed
+
+dev_dependencies:
+  build_runner: ^2.4.0
+  freezed: ^3.0.0
 ```
 
-### Event
+### Event & State Example (with Equatable)
 
-Use `equatable` to ensure events are comparable by value.
+Use `equatable` to ensure events and states are comparable by value.
 
+**Event:**
 ```dart
 import 'package:equatable/equatable.dart';
 
@@ -56,14 +67,10 @@ sealed class CounterEvent extends Equatable {
 }
 
 final class CounterIncremented extends CounterEvent {}
-
 final class CounterDecremented extends CounterEvent {}
 ```
 
-### State
-
-State **must** be immutable. Use `Equatable` to prevent unnecessary rebuilds.
-
+**State:**
 ```dart
 import 'package:equatable/equatable.dart';
 
@@ -88,6 +95,48 @@ class CounterState extends Equatable {
 
   @override
   List<Object> get props => [value, isLoading];
+}
+```
+
+### Event & State Example (with Freezed)
+
+For complex UIs, `freezed` union types are safer and auto-generate `copyWith`. Run `dart run build_runner build -d` after modifying.
+
+**Event:**
+```dart
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'counter_event.freezed.dart';
+
+@freezed
+sealed class CounterEvent with _$CounterEvent {
+  const factory CounterEvent.incremented() = CounterIncremented;
+  const factory CounterEvent.decremented() = CounterDecremented;
+}
+```
+
+**State:**
+```dart
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'counter_state.freezed.dart';
+
+@freezed
+sealed class CounterState with _$CounterState {
+  const factory CounterState.initial({
+    @Default(0) int value,
+    @Default(false) bool isLoading,
+  }) = _Initial;
+  const factory CounterState.loading({
+    required int value,
+  }) = _Loading;
+  const factory CounterState.loaded({
+    required int value,
+  }) = _Loaded;
+  const factory CounterState.error({
+    required int value,
+    required String message,
+  }) = _Error;
 }
 ```
 
@@ -301,16 +350,17 @@ on<UserRequested>((event, emit) async {
 
 ## Bloc + GoRouter (Auth Guard Example)
 
-Combine `GoRouter` redirect with `Bloc` state.
+Combine `GoRouter` redirect with `Bloc` state, usually using `BlocListener` at the root or standard listening mechanisms.
 
 ```dart
-// router_provider.dart
-final routerProvider = Provider((ref) {
-  // Watch auth state changes
-  final authState = ref.watch(authBlocProvider); 
+// main_router.dart (Example of integrating Bloc with GoRouter)
+// Note: Do not use Riverpod here. Provide the Bloc to the router setup.
 
+GoRouter createRouter(AuthBloc authBloc) {
   return GoRouter(
+    refreshListenable: GoRouterRefreshStream(authBloc.stream),
     redirect: (context, state) {
+      final authState = authBloc.state;
       final isAuthenticated = authState.status == AuthStatus.authenticated;
       
       if (!isAuthenticated && state.uri.path != '/login') {
@@ -320,7 +370,25 @@ final routerProvider = Provider((ref) {
     },
     // ... routes
   );
-});
+}
+
+// Utility class to convert Stream to Listenable for GoRouter
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+      (dynamic _) => notifyListeners(),
+    );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
 ```
 
 ---
