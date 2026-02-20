@@ -92,7 +92,9 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                              color: AppTheme.primaryColor.withValues(
+                                alpha: 0.15,
+                              ),
                               blurRadius: 15,
                             ),
                           ],
@@ -152,7 +154,9 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? const Color(0xFF243C2F)
-                                : const Color(0xFF1A2E22).withValues(alpha: 0.8),
+                                : const Color(
+                                    0xFF1A2E22,
+                                  ).withValues(alpha: 0.8),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: isSelected
@@ -266,15 +270,9 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'Continue',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                ),
-                              ),
+                              Text('Continue', style: TextStyle(fontSize: 18)),
                               SizedBox(width: 8),
-                              Icon(Icons.arrow_forward, color: Colors.black),
+                              Icon(Icons.arrow_forward),
                             ],
                           ),
                         ),
