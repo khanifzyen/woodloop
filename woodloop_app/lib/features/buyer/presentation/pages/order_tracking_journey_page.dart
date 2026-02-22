@@ -81,37 +81,43 @@ class OrderTrackingJourneyPage extends StatelessWidget {
             const SizedBox(height: 32),
 
             // Traceability Badge
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.3),
+            GestureDetector(
+              onTap: () => context.pushNamed('product_story_traceability'),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                  ),
                 ),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.qr_code_scanner, color: AppTheme.primaryColor),
-                      SizedBox(width: 12),
-                      Text(
-                        'Lacak Asal Usul Limbah Kayu',
-                        style: TextStyle(
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.qr_code_scanner,
                           color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.bold,
                         ),
-                      ),
-                    ],
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppTheme.primaryColor,
-                    size: 16,
-                  ),
-                ],
+                        SizedBox(width: 12),
+                        Text(
+                          'Lacak Asal Usul Limbah Kayu',
+                          style: TextStyle(
+                            color: AppTheme.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppTheme.primaryColor,
+                      size: 16,
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 32),
