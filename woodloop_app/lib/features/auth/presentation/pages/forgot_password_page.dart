@@ -8,7 +8,7 @@ class ForgotPasswordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F2317), // background-dark
+      backgroundColor: AppTheme.background,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -59,14 +59,16 @@ class ForgotPasswordPage extends StatelessWidget {
                         width: 64,
                         height: 64,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF152E20), // surface-dark
+                          color: AppTheme.surfaceColor,
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: AppTheme.primaryColor.withValues(alpha: 0.2),
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                              color: AppTheme.primaryColor.withValues(
+                                alpha: 0.15,
+                              ),
                               blurRadius: 20,
                               spreadRadius: -5,
                             ),
@@ -117,32 +119,11 @@ class ForgotPasswordPage extends StatelessWidget {
                           TextField(
                             style: const TextStyle(color: Colors.white),
                             keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'you@example.com',
-                              hintStyle: const TextStyle(color: Colors.white38),
-                              prefixIcon: const Icon(
+                              prefixIcon: Icon(
                                 Icons.mail_outline,
                                 color: Colors.white38,
-                              ),
-                              filled: true,
-                              fillColor: const Color(0xFF152E20),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppTheme.primaryColor,
-                                ),
                               ),
                             ),
                           ),
@@ -158,29 +139,17 @@ class ForgotPasswordPage extends StatelessWidget {
                           onPressed: () {
                             // TODO: Implement password reset logic
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 8,
-                            shadowColor: AppTheme.primaryColor.withValues(alpha: 0.3),
-                          ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 'Send Reset Link',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF0F2317),
-                                ),
+                                style: TextStyle(color: AppTheme.background),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Icon(
                                 Icons.arrow_forward,
-                                color: Color(0xFF0F2317),
+                                color: AppTheme.background,
                                 size: 20,
                               ),
                             ],

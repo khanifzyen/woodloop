@@ -53,7 +53,7 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF102216), // background-dark
+      backgroundColor: AppTheme.background,
       body: SafeArea(
         child: Stack(
           children: [
@@ -85,7 +85,7 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A2E22), // surface-dark
+                          color: AppTheme.surfaceColor,
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: AppTheme.primaryColor.withValues(alpha: 0.3),
@@ -154,9 +154,7 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? const Color(0xFF243C2F)
-                                : const Color(
-                                    0xFF1A2E22,
-                                  ).withValues(alpha: 0.8),
+                                : AppTheme.surfaceColor,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: isSelected
@@ -258,8 +256,12 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigate to login for now, or registration depending on role.
-                            context.pushNamed('login');
+                            // Navigate to login or registration depending on role.
+                            if (_selectedRole == 'supplier') {
+                              context.pushNamed('supplier_registration');
+                            } else {
+                              context.pushNamed('login');
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -270,9 +272,18 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Continue', style: TextStyle(fontSize: 18)),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward),
+                              Text(
+                                'Continue',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: AppTheme.background,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: AppTheme.background,
+                              ),
                             ],
                           ),
                         ),

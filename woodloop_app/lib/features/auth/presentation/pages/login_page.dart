@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F2317), // background-dark
+      backgroundColor: AppTheme.background,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -32,14 +32,16 @@ class _LoginPageState extends State<LoginPage> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF162F21),
+                          color: AppTheme.surfaceColor,
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
                             color: AppTheme.primaryColor.withValues(alpha: 0.3),
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                              color: AppTheme.primaryColor.withValues(
+                                alpha: 0.1,
+                              ),
                               blurRadius: 20,
                               spreadRadius: 2,
                             ),
@@ -56,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      const Text(
+                      Text(
                         'Welcome Back!',
                         style: TextStyle(
                           color: Colors.white,
@@ -90,32 +92,11 @@ class _LoginPageState extends State<LoginPage> {
                           TextField(
                             style: const TextStyle(color: Colors.white),
                             keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Enter your email',
-                              hintStyle: const TextStyle(color: Colors.white38),
-                              prefixIcon: const Icon(
+                              prefixIcon: Icon(
                                 Icons.mail_outline,
                                 color: Colors.white38,
-                              ),
-                              filled: true,
-                              fillColor: const Color(0xFF162F21),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                  color: AppTheme.primaryColor,
-                                ),
                               ),
                             ),
                           ),
@@ -143,7 +124,6 @@ class _LoginPageState extends State<LoginPage> {
                             obscureText: _obscurePassword,
                             decoration: InputDecoration(
                               hintText: 'Enter your password',
-                              hintStyle: const TextStyle(color: Colors.white38),
                               prefixIcon: const Icon(
                                 Icons.lock_outline,
                                 color: Colors.white38,
@@ -160,26 +140,6 @@ class _LoginPageState extends State<LoginPage> {
                                     _obscurePassword = !_obscurePassword;
                                   });
                                 },
-                              ),
-                              filled: true,
-                              fillColor: const Color(0xFF162F21),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                  color: AppTheme.primaryColor,
-                                ),
                               ),
                             ),
                           ),
@@ -209,31 +169,17 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () {
                             // TODO: Add actual login logic here
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            elevation: 8,
-                            shadowColor: AppTheme.primaryColor.withValues(alpha: 0.5),
-                          ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 'Login',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(
-                                    0xFF0F2317,
-                                  ), // Match background-dark
-                                ),
+                                style: TextStyle(color: AppTheme.background),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Icon(
                                 Icons.arrow_forward,
-                                color: Color(0xFF0F2317),
+                                color: AppTheme.background,
                               ),
                             ],
                           ),
@@ -293,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                backgroundColor: const Color(0xFF162F21),
+                                backgroundColor: AppTheme.surfaceColor,
                               ),
                             ),
                           ),
@@ -320,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                backgroundColor: const Color(0xFF162F21),
+                                backgroundColor: AppTheme.surfaceColor,
                               ),
                             ),
                           ),

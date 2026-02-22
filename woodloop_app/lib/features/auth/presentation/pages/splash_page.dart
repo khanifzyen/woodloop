@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class SplashPage extends StatefulWidget {
@@ -53,9 +54,11 @@ class _SplashPageState extends State<SplashPage> {
                     width: 96,
                     height: 96,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF102216),
+                      color: AppTheme.background,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.1),
+                      ),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.5),
@@ -67,7 +70,7 @@ class _SplashPageState extends State<SplashPage> {
                     child: Center(
                       child: Text(
                         'W',
-                        style: TextStyle(
+                        style: GoogleFonts.newsreader(
                           color: AppTheme.primaryColor,
                           fontSize: 48,
                           fontWeight: FontWeight.w900,
@@ -83,7 +86,7 @@ class _SplashPageState extends State<SplashPage> {
                 // Title
                 RichText(
                   text: TextSpan(
-                    style: const TextStyle(
+                    style: GoogleFonts.newsreader(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -110,9 +113,9 @@ class _SplashPageState extends State<SplashPage> {
                 const SizedBox(height: 16),
 
                 // Subtitle
-                const Text(
+                Text(
                   'Turning Waste into Wealth',
-                  style: TextStyle(
+                  style: GoogleFonts.spaceGrotesk(
                     color: Colors.white70,
                     fontSize: 20,
                     fontStyle: FontStyle.italic,

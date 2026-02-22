@@ -57,7 +57,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background, // Match light theme from Stitch
+      backgroundColor: AppTheme.background, // Dark Theme based on Stitch
       body: SafeArea(
         child: Column(
           children: [
@@ -79,16 +79,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
+                          color: Colors.white,
                         ),
                       ),
                     ],
                   ),
                   TextButton(
                     onPressed: () => context.goNamed('role_selection'),
-                    child: const Text(
-                      'Skip',
-                      style: TextStyle(color: Colors.grey),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white54,
                     ),
+                    child: const Text('Skip'),
                   ),
                 ],
               ),
@@ -115,28 +116,33 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       children: [
                         // Placeholder for the large image/graphic
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.45,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: const Color(0xFF102216),
                             borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: Colors.white10),
                             boxShadow: [
                               BoxShadow(
                                 color: AppTheme.primaryColor.withValues(
-                                  alpha: 0.1,
+                                  alpha: 0.05,
                                 ),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               ),
                             ],
                           ),
-                          child: Icon(
-                            IconData(
-                              _getIconCode(_onboardingData[index]['icon']!),
-                              fontFamily: 'MaterialIcons',
+                          child: Center(
+                            child: Icon(
+                              IconData(
+                                _getIconCode(_onboardingData[index]['icon']!),
+                                fontFamily: 'MaterialIcons',
+                              ),
+                              size: 100,
+                              color: AppTheme.primaryColor.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
-                            size: 100,
-                            color: AppTheme.primaryColor.withValues(alpha: 0.5),
                           ),
                         ),
                         const SizedBox(height: 32),
@@ -148,7 +154,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             style: const TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              height: 1.1,
+                              letterSpacing: -0.5,
+                              color: Colors.white,
                             ),
                             children: [
                               TextSpan(
@@ -184,7 +192,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.black54,
+                            color: Colors.white60,
                             height: 1.5,
                           ),
                         ),
@@ -213,7 +221,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         decoration: BoxDecoration(
                           color: _currentPageIndex == index
                               ? AppTheme.primaryColor
-                              : Colors.grey.shade300,
+                              : Colors.white24,
                           borderRadius: BorderRadius.circular(4),
                           boxShadow: _currentPageIndex == index
                               ? [
