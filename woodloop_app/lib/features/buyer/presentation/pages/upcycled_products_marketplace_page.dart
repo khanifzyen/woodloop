@@ -169,7 +169,7 @@ class UpcycledProductsMarketplacePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
-                childAspectRatio: 0.7, // Taller cards
+                childAspectRatio: 0.65, // Taller cards to accommodate text
                 children: [
                   _buildProductCard(
                     title: 'Kursi Palet Estetik',
