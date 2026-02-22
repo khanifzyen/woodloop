@@ -86,13 +86,14 @@ class MarketplaceCategoryHubPage extends StatelessWidget {
         context.pop();
       },
       child: Container(
-        height: 160,
+        constraints: const BoxConstraints(minHeight: 160),
         decoration: BoxDecoration(
           color: AppTheme.surfaceColor,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               flex: 3,
