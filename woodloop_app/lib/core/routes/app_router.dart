@@ -38,6 +38,15 @@ import '../../features/buyer/presentation/pages/your_shopping_cart_page.dart';
 import '../../features/buyer/presentation/pages/secure_checkout_payment_page.dart';
 import '../../features/buyer/presentation/pages/order_tracking_journey_page.dart';
 
+import '../../features/enabler/presentation/pages/impact_analytics_dashboard_page.dart';
+import '../../features/chat/presentation/pages/messages_list_page.dart';
+import '../../features/chat/presentation/pages/direct_message_conversation_page.dart';
+import '../../features/traceability/presentation/pages/select_wood_source_history_page.dart';
+import '../../features/traceability/presentation/pages/product_story_traceability_page.dart';
+import '../../features/profile/presentation/pages/designer_consultant_profile_page.dart';
+import '../../features/shared/presentation/pages/notification_center_page.dart';
+import '../../features/shared/presentation/pages/woodloop_digital_wallet_page.dart';
+
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
@@ -199,6 +208,46 @@ class AppRouter {
         path: '/order-tracking-journey',
         name: 'order_tracking_journey',
         builder: (context, state) => const OrderTrackingJourneyPage(),
+      ),
+      GoRoute(
+        path: '/impact-analytics-dashboard',
+        name: 'impact_analytics_dashboard',
+        builder: (context, state) => const ImpactAnalyticsDashboardPage(),
+      ),
+      GoRoute(
+        path: '/messages-list',
+        name: 'messages_list',
+        builder: (context, state) => const MessagesListPage(),
+      ),
+      GoRoute(
+        path: '/direct-message-conversation',
+        name: 'direct_message_conversation',
+        builder: (context, state) => const DirectMessageConversationPage(),
+      ),
+      GoRoute(
+        path: '/select-wood-source-history',
+        name: 'select_wood_source_history',
+        builder: (context, state) => const SelectWoodSourceHistoryPage(),
+      ),
+      GoRoute(
+        path: '/product-story-traceability',
+        name: 'product_story_traceability',
+        builder: (context, state) => const ProductStoryTraceabilityPage(),
+      ),
+      GoRoute(
+        path: '/designer-consultant-profile',
+        name: 'designer_consultant_profile',
+        builder: (context, state) => const DesignerConsultantProfilePage(),
+      ),
+      GoRoute(
+        path: '/notification-center',
+        name: 'notification_center',
+        builder: (context, state) => const NotificationCenterPage(),
+      ),
+      GoRoute(
+        path: '/woodloop-digital-wallet',
+        name: 'woodloop_digital_wallet',
+        builder: (context, state) => const WoodLoopDigitalWalletPage(),
       ),
     ],
   );

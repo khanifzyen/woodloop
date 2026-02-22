@@ -267,6 +267,8 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                               context.pushNamed('converter_registration');
                             } else if (_selectedRole == 'buyer') {
                               context.pushNamed('buyer_registration');
+                            } else if (_selectedRole == 'enabler') {
+                              context.pushNamed('impact_analytics_dashboard');
                             } else {
                               context.pushNamed('login');
                             }
