@@ -69,8 +69,27 @@ Kami telah menyelesaikan Phase 2 & 3 untuk alur Otentikasi dan Onboarding pada a
 *   **Pembaruan Dokumentasi:**
     *   Memperbarui `docs/08-screen-plan.md` dengan daftar lengkap 45 layar aplikasi di fase selanjutnya.
 
+## 6. Finalisasi UI Seluruh Role & Navigasi (Stitch Dark Theme) (22 Februari 2026)
+Kami telah menyelesaikan implementasi antarmuka (UI) WoodLoop secara menyeluruh menggunakan Flutter, mencakup 6 peran pengguna dan fitur-fitur ekosistem bersama, dengan mengadaptasi desain *dark aesthetic* dari referensi Stitch.
+
+*   **Penyelarasan Tema (Theming):**
+    *   Mengatur `AppTheme` dengan skema warna baru (`primaryColor`: `#13EC5B`, `background`: `#102216`, `surfaceColor`: `#182D20`).
+    *   Mengganti tipografi ke `Space Grotesk` untuk teks umum dan `Newsreader` khusus untuk logo.
+*   **Implementasi Flow Pengguna (26 Layar):**
+    *   **Supplier:** Registrasi, Dashboard, Form Kayu Mentah, Riwayat Penjualan.
+    *   **Generator:** Registrasi, Dashboard, Form Pelaporan Limbah, Manajemen Pesanan.
+    *   **Aggregator:** Registrasi, Dashboard, Peta Harta Karun (Treasure Map), Konfirmasi Pickup, Log Inventori.
+    *   **Converter:** Registrasi, Studio Dashboard, Marketplace Bahan Baku, Klinik Desain, Katalog Upcycle, Form Produk Baru.
+    *   **Buyer:** Registrasi, Impact Dashboard, Marketplace Produk Upcycle, Kategori Hub, Keranjang Belanja, Checkout Aman, Pelacakan Pesanan.
+    *   **Enabler & Fitur Ekosistem:** Impact Analytics Dashboard, Chat (Daftar & Direct Message), Traceability (Pilih Sumber & Product Story), Profil Desainer, Pusat Notifikasi, Dompet Digital WoodLoop.
+*   **Pengaturan Routing & Verifikasi Navigasi:**
+    *   Mendaftarkan seluruh 26 rute baru di `app_router.dart` menggunakan `go_router`.
+    *   Melakukan pemindaian menyeluruh terhadap pemanggilan `context.go` dan `context.push`, dan memperbaiki *broken links* pada *action buttons* di Dashboard Converter dan Buyer.
+    *   Memastikan semua navigasi antarlayar berjalan lancar tanpa error sintaks dengan melewati seluruh uji *widget tests* (`flutter test test/widget_test.dart`).
+
 ---
 
 **Langkah Selanjutnya (Next Steps):**
-*   Melakukan deployment aplikasi statis jika diperlukan atau menguji integrasi Mock Data *backend*.
-*   Melanjutkan implementasi UI untuk dashboard utama (Dashboard Features) dan routing lanjutan berbasis role.
+*   Mengembangkan logika status aplikasi (State Management) menggunakan BLoC.
+*   Melakukan integrasi dengan API Backend/PocketBase sungguhan.
+*   Mengimplementasikan fungsionalitas fungsional (seperti mengunggah file gambar asli, pemindaian QR code, atau peta dinamis).
