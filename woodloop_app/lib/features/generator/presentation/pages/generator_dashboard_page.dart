@@ -192,10 +192,13 @@ class GeneratorDashboardPage extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        context.go('/report-wood-waste');
+                        context.pushNamed('report_wood_waste');
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: AppTheme.primaryColor.withValues(alpha: 0.1),
                           border: Border.all(color: AppTheme.primaryColor),
@@ -206,30 +209,35 @@ class GeneratorDashboardPage extends StatelessWidget {
                             Icon(
                               Icons.camera_alt,
                               color: AppTheme.primaryColor,
-                              size: 32,
+                              size: 28,
                             ),
                             SizedBox(height: 12),
                             Text(
                               'Jual Limbah',
                               style: TextStyle(
                                 color: AppTheme.primaryColor,
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        context.go('/generator-order-management');
+                        // TODO: Implement Tambah Produk for Generator
+                        context.pushNamed('add_generator_product');
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: AppTheme.surfaceColor,
                           border: Border.all(
@@ -239,15 +247,56 @@ class GeneratorDashboardPage extends StatelessWidget {
                         ),
                         child: const Column(
                           children: [
-                            Icon(Icons.history, color: Colors.white, size: 32),
+                            Icon(
+                              Icons.add_circle_outline,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              'Tambah Produk',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        context.pushNamed('generator_order_management');
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.1),
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Column(
+                          children: [
+                            Icon(Icons.history, color: Colors.white, size: 28),
                             SizedBox(height: 12),
                             Text(
                               'Riwayat',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
@@ -320,12 +369,29 @@ class GeneratorDashboardPage extends StatelessWidget {
               // Dashboard
               break;
             case 1:
+              context.pushNamed('warehouse_inventory_log');
+              break;
+            case 2:
+              context.pushNamed('messages_list');
+              break;
+            case 3:
               context.pushNamed('b2b_profile');
               break;
           }
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.inventory_2_outlined),
+            label: 'Inventory',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble_outline),
+            label: 'Messages',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             label: 'Profil',

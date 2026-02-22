@@ -16,6 +16,7 @@ import '../../features/generator/presentation/pages/generator_registration_page.
 import '../../features/generator/presentation/pages/generator_dashboard_page.dart';
 import '../../features/generator/presentation/pages/report_wood_waste_form_page.dart';
 import '../../features/generator/presentation/pages/generator_order_management_page.dart';
+import '../../features/generator/presentation/pages/add_generator_product_page.dart';
 
 import '../../features/aggregator/presentation/pages/aggregator_registration_page.dart';
 import '../../features/aggregator/presentation/pages/aggregator_dashboard_page.dart';
@@ -119,6 +120,11 @@ class AppRouter {
         path: '/generator-order-management',
         name: 'generator_order_management',
         builder: (context, state) => const GeneratorOrderManagementPage(),
+      ),
+      GoRoute(
+        path: '/add-generator-product',
+        name: 'add_generator_product',
+        builder: (context, state) => const AddGeneratorProductPage(),
       ),
       GoRoute(
         path: '/aggregator-registration',
