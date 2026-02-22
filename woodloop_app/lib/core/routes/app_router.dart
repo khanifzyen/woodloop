@@ -30,6 +30,14 @@ import '../../features/converter/presentation/pages/design_clinic_inspiration_pa
 import '../../features/converter/presentation/pages/my_upcycled_catalog_page.dart';
 import '../../features/converter/presentation/pages/create_upcycled_product_form_page.dart';
 
+import '../../features/buyer/presentation/pages/buyer_registration_page.dart';
+import '../../features/buyer/presentation/pages/buyer_profile_impact_dashboard_page.dart';
+import '../../features/buyer/presentation/pages/upcycled_products_marketplace_page.dart';
+import '../../features/buyer/presentation/pages/marketplace_category_hub_page.dart';
+import '../../features/buyer/presentation/pages/your_shopping_cart_page.dart';
+import '../../features/buyer/presentation/pages/secure_checkout_payment_page.dart';
+import '../../features/buyer/presentation/pages/order_tracking_journey_page.dart';
+
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
@@ -156,6 +164,41 @@ class AppRouter {
         path: '/create-upcycled-product',
         name: 'create_upcycled_product',
         builder: (context, state) => const CreateUpcycledProductFormPage(),
+      ),
+      GoRoute(
+        path: '/buyer-registration',
+        name: 'buyer_registration',
+        builder: (context, state) => const BuyerRegistrationPage(),
+      ),
+      GoRoute(
+        path: '/buyer-dashboard',
+        name: 'buyer_dashboard',
+        builder: (context, state) => const BuyerProfileImpactDashboardPage(),
+      ),
+      GoRoute(
+        path: '/upcycled-products-marketplace',
+        name: 'upcycled_products_marketplace',
+        builder: (context, state) => const UpcycledProductsMarketplacePage(),
+      ),
+      GoRoute(
+        path: '/marketplace-category-hub',
+        name: 'marketplace_category_hub',
+        builder: (context, state) => const MarketplaceCategoryHubPage(),
+      ),
+      GoRoute(
+        path: '/your-shopping-cart',
+        name: 'your_shopping_cart',
+        builder: (context, state) => const YourShoppingCartPage(),
+      ),
+      GoRoute(
+        path: '/secure-checkout-payment',
+        name: 'secure_checkout_payment',
+        builder: (context, state) => const SecureCheckoutPaymentPage(),
+      ),
+      GoRoute(
+        path: '/order-tracking-journey',
+        name: 'order_tracking_journey',
+        builder: (context, state) => const OrderTrackingJourneyPage(),
       ),
     ],
   );
