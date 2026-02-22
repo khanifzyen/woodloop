@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class SupplierDashboardPage extends StatelessWidget {
@@ -60,40 +61,43 @@ class SupplierDashboardPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.1),
-                      ),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        const Icon(
-                          Icons.notifications_none,
-                          color: Colors.white54,
+                  GestureDetector(
+                    onTap: () => context.pushNamed('notification_center'),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppTheme.surfaceColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.1),
                         ),
-                        Positioned(
-                          top: 10,
-                          right: 12,
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppTheme.surfaceColor,
-                                width: 2,
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const Icon(
+                            Icons.notifications_none,
+                            color: Colors.white54,
+                          ),
+                          Positioned(
+                            top: 10,
+                            right: 12,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: AppTheme.primaryColor,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppTheme.surfaceColor,
+                                  width: 2,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -165,7 +169,7 @@ class SupplierDashboardPage extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: Navigate to list new timber
+                    context.pushNamed('list_raw_timber');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
@@ -211,7 +215,7 @@ class SupplierDashboardPage extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: View all history
+                      context.pushNamed('supplier_sales_history');
                     },
                     child: const Text(
                       'View All',
@@ -283,6 +287,23 @@ class SupplierDashboardPage extends StatelessWidget {
           fontSize: 10,
           fontWeight: FontWeight.w600,
         ),
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              // Dashboard
+              break;
+            case 1:
+              context.pushNamed('supplier_sales_history');
+              break;
+            case 2:
+              context.pushNamed('messages_list');
+              break;
+            case 3:
+              // Redirecting to profile/wallet for now
+              context.pushNamed('woodloop_digital_wallet');
+              break;
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
