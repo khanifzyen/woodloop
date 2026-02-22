@@ -132,16 +132,19 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
             // Filter Chips
             SizedBox(
               height: 36,
-              child: ListView(
+              child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  _buildFilterChip('All Orders'),
-                  _buildFilterChip('Completed'),
-                  _buildFilterChip('Processing'),
-                  _buildFilterChip('Shipped'),
-                  _buildFilterChip('Cancelled'),
-                ],
+                child: Row(
+                  children: [
+                    _buildFilterChip('All Orders'),
+                    _buildFilterChip('Completed'),
+                    _buildFilterChip('Processing'),
+                    _buildFilterChip('Shipped'),
+                    _buildFilterChip('Cancelled'),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -159,66 +162,115 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
                     top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
                   ),
                 ),
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
-                  children: [
-                    _buildDateHeader('Today'),
-                    _buildOrderTile(
-                      orderId: '#ORD-2023-8942',
-                      amount: '\$4,550.00',
-                      buyer: 'BuildCorp Industries',
-                      item: 'Pine Lumber Grade A (1200m³)',
-                      time: '14:30 PM',
-                      status: 'Processing',
-                      statusColor: Colors.yellow,
-                    ),
-                    _buildOrderTile(
-                      orderId: '#ORD-2023-8941',
-                      amount: '\$1,200.00',
-                      buyer: 'Nordic Furniture',
-                      item: 'Raw Oak Logs (500m³)',
-                      time: '09:15 AM',
-                      status: 'Shipped',
-                      statusColor: Colors.blue,
-                    ),
-                    _buildDateHeader('Yesterday, Oct 24'),
-                    _buildOrderTile(
-                      orderId: '#ORD-2023-8938',
-                      amount: '\$890.00',
-                      buyer: 'Local Carpentry',
-                      item: 'Birch Plywood (200m³)',
-                      time: '16:45 PM',
-                      status: 'Completed',
-                      statusColor: AppTheme.primaryColor,
-                    ),
-                    _buildOrderTile(
-                      orderId: '#ORD-2023-8935',
-                      amount: '\$12,100.00',
-                      buyer: 'Luxury Yachts Inc.',
-                      item: 'Mahogany Planks (50m³)',
-                      time: '11:20 AM',
-                      status: 'Cancelled',
-                      statusColor: Colors.red,
-                      isCancelled: true,
-                    ),
-                    _buildDateHeader('Oct 22, 2023'),
-                    _buildOrderTile(
-                      orderId: '#ORD-2023-8920',
-                      amount: '\$3,400.00',
-                      buyer: 'EcoBuilders LLC',
-                      item: 'Recycled Teak (400m³)',
-                      time: '10:05 AM',
-                      status: 'Completed',
-                      statusColor: AppTheme.primaryColor,
-                    ),
-                  ],
-                ),
+                child: _buildTransactionSection(),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildTransactionSection() {
+    List<Widget> children = [];
+
+    void addDateSection(String date, List<Map<String, dynamic>> orders) {
+      final filteredOrders = orders
+          .where(
+            (o) =>
+                _selectedFilter == 'All Orders' ||
+                o['status'] == _selectedFilter,
+          )
+          .toList();
+      if (filteredOrders.isNotEmpty) {
+        children.add(_buildDateHeader(date));
+        for (var o in filteredOrders) {
+          children.add(
+            _buildOrderTile(
+              orderId: o['orderId'],
+              amount: o['amount'],
+              buyer: o['buyer'],
+              item: o['item'],
+              time: o['time'],
+              status: o['status'],
+              statusColor: o['statusColor'],
+              isCancelled: o['isCancelled'] ?? false,
+            ),
+          );
+        }
+      }
+    }
+
+    addDateSection('Today', [
+      {
+        'orderId': '#ORD-2023-8942',
+        'amount': '\$4,550.00',
+        'buyer': 'BuildCorp Industries',
+        'item': 'Pine Lumber Grade A (1200m³)',
+        'time': '14:30 PM',
+        'status': 'Processing',
+        'statusColor': Colors.yellow,
+      },
+      {
+        'orderId': '#ORD-2023-8941',
+        'amount': '\$1,200.00',
+        'buyer': 'Nordic Furniture',
+        'item': 'Raw Oak Logs (500m³)',
+        'time': '09:15 AM',
+        'status': 'Shipped',
+        'statusColor': Colors.blue,
+      },
+    ]);
+
+    addDateSection('Yesterday, Oct 24', [
+      {
+        'orderId': '#ORD-2023-8938',
+        'amount': '\$890.00',
+        'buyer': 'Local Carpentry',
+        'item': 'Birch Plywood (200m³)',
+        'time': '16:45 PM',
+        'status': 'Completed',
+        'statusColor': AppTheme.primaryColor,
+      },
+      {
+        'orderId': '#ORD-2023-8935',
+        'amount': '\$12,100.00',
+        'buyer': 'Luxury Yachts Inc.',
+        'item': 'Mahogany Planks (50m³)',
+        'time': '11:20 AM',
+        'status': 'Cancelled',
+        'statusColor': Colors.red,
+        'isCancelled': true,
+      },
+    ]);
+
+    addDateSection('Oct 22, 2023', [
+      {
+        'orderId': '#ORD-2023-8920',
+        'amount': '\$3,400.00',
+        'buyer': 'EcoBuilders LLC',
+        'item': 'Recycled Teak (400m³)',
+        'time': '10:05 AM',
+        'status': 'Completed',
+        'statusColor': AppTheme.primaryColor,
+      },
+    ]);
+
+    if (children.isEmpty) {
+      children.add(
+        const Padding(
+          padding: EdgeInsets.all(40.0),
+          child: Center(
+            child: Text(
+              'No orders found for this filter.',
+              style: TextStyle(color: Colors.white54),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return ListView(padding: const EdgeInsets.all(20), children: children);
   }
 
   Widget _buildSummaryCard({
