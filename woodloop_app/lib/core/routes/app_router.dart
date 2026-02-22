@@ -23,6 +23,13 @@ import '../../features/aggregator/presentation/pages/aggregator_treasure_map_pag
 import '../../features/aggregator/presentation/pages/confirm_pickup_collection_page.dart';
 import '../../features/aggregator/presentation/pages/warehouse_inventory_log_page.dart';
 
+import '../../features/converter/presentation/pages/converter_registration_page.dart';
+import '../../features/converter/presentation/pages/converter_studio_dashboard_page.dart';
+import '../../features/converter/presentation/pages/waste_materials_marketplace_page.dart';
+import '../../features/converter/presentation/pages/design_clinic_inspiration_page.dart';
+import '../../features/converter/presentation/pages/my_upcycled_catalog_page.dart';
+import '../../features/converter/presentation/pages/create_upcycled_product_form_page.dart';
+
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
@@ -119,6 +126,36 @@ class AppRouter {
         path: '/warehouse-inventory-log',
         name: 'warehouse_inventory_log',
         builder: (context, state) => const WarehouseInventoryLogPage(),
+      ),
+      GoRoute(
+        path: '/converter-registration',
+        name: 'converter_registration',
+        builder: (context, state) => const ConverterRegistrationPage(),
+      ),
+      GoRoute(
+        path: '/converter-dashboard',
+        name: 'converter_dashboard',
+        builder: (context, state) => const ConverterStudioDashboardPage(),
+      ),
+      GoRoute(
+        path: '/waste-materials-marketplace',
+        name: 'waste_materials_marketplace',
+        builder: (context, state) => const WasteMaterialsMarketplacePage(),
+      ),
+      GoRoute(
+        path: '/design-clinic-inspiration',
+        name: 'design_clinic_inspiration',
+        builder: (context, state) => const DesignClinicInspirationPage(),
+      ),
+      GoRoute(
+        path: '/my-upcycled-catalog',
+        name: 'my_upcycled_catalog',
+        builder: (context, state) => const MyUpcycledCatalogPage(),
+      ),
+      GoRoute(
+        path: '/create-upcycled-product',
+        name: 'create_upcycled_product',
+        builder: (context, state) => const CreateUpcycledProductFormPage(),
       ),
     ],
   );
