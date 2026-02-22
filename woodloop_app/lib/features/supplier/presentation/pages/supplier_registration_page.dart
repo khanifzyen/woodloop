@@ -347,7 +347,7 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         // TODO: Implement registration and navigate
-                        context.go('/supplier_dashboard');
+                        context.go('/supplier-dashboard');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryColor,

@@ -294,7 +294,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (route.isNotEmpty) {
-          context.pushNamed(route.replaceAll('/', ''));
+          context.push(route);
         }
       },
       child: Container(

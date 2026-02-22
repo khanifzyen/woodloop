@@ -374,7 +374,7 @@ class ConverterStudioDashboardPage extends StatelessWidget {
     required String route,
   }) {
     return GestureDetector(
-      onTap: () => context.pushNamed(route.replaceAll('/', '')),
+      onTap: () => context.push(route),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         decoration: BoxDecoration(
