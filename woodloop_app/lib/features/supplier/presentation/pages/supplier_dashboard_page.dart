@@ -293,12 +293,15 @@ class SupplierDashboardPage extends StatelessWidget {
               // Dashboard
               break;
             case 1:
-              context.pushNamed('supplier_sales_history');
+              context.pushNamed('raw_timber_marketplace');
               break;
             case 2:
-              context.pushNamed('messages_list');
+              context.pushNamed('supplier_sales_history');
               break;
             case 3:
+              context.pushNamed('messages_list');
+              break;
+            case 4:
               context.pushNamed('b2b_profile');
               break;
           }
@@ -307,6 +310,10 @@ class SupplierDashboardPage extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.storefront),
+            label: 'Market',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory_2_outlined),

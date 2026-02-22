@@ -11,6 +11,7 @@ import '../../features/supplier/presentation/pages/supplier_registration_page.da
 import '../../features/supplier/presentation/pages/supplier_dashboard_page.dart';
 import '../../features/supplier/presentation/pages/list_raw_timber_form_page.dart';
 import '../../features/supplier/presentation/pages/supplier_sales_history_page.dart';
+import '../../features/supplier/presentation/pages/raw_timber_marketplace_page.dart';
 
 import '../../features/generator/presentation/pages/generator_registration_page.dart';
 import '../../features/generator/presentation/pages/generator_dashboard_page.dart';
@@ -100,6 +101,11 @@ class AppRouter {
         path: '/supplier-sales-history',
         name: 'supplier_sales_history',
         builder: (context, state) => const SupplierSalesHistoryPage(),
+      ),
+      GoRoute(
+        path: '/raw-timber-marketplace',
+        name: 'raw_timber_marketplace',
+        builder: (context, state) => const RawTimberMarketplacePage(),
       ),
       GoRoute(
         path: '/generator-registration',
