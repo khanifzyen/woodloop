@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 
-class SupplierSalesHistoryPage extends StatelessWidget {
+class SupplierSalesHistoryPage extends StatefulWidget {
   const SupplierSalesHistoryPage({super.key});
+
+  @override
+  State<SupplierSalesHistoryPage> createState() =>
+      _SupplierSalesHistoryPageState();
+}
+
+class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
+  String _selectedFilter = 'All Orders';
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +136,7 @@ class SupplierSalesHistoryPage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  _buildFilterChip('All Orders', isSelected: true),
+                  _buildFilterChip('All Orders'),
                   _buildFilterChip('Completed'),
                   _buildFilterChip('Processing'),
                   _buildFilterChip('Shipped'),
@@ -258,14 +266,15 @@ class SupplierSalesHistoryPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Row(
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 2,
             children: [
               Icon(
                 isPositive ? Icons.arrow_upward : Icons.arrow_downward,
                 color: isPositive ? AppTheme.primaryColor : Colors.red,
                 size: 12,
               ),
-              const SizedBox(width: 4),
               Text(
                 trend,
                 style: TextStyle(
@@ -285,28 +294,36 @@ class SupplierSalesHistoryPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterChip(String label, {bool isSelected = false}) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: isSelected
-            ? AppTheme.primaryColor.withValues(alpha: 0.1)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
+  Widget _buildFilterChip(String label) {
+    final bool isSelected = _selectedFilter == label;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedFilter = label;
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
           color: isSelected
-              ? AppTheme.primaryColor
-              : Colors.white.withValues(alpha: 0.2),
+              ? AppTheme.primaryColor.withValues(alpha: 0.1)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected
+                ? AppTheme.primaryColor
+                : Colors.white.withValues(alpha: 0.2),
+          ),
         ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? AppTheme.primaryColor : Colors.white70,
-          fontSize: 12,
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? AppTheme.primaryColor : Colors.white70,
+            fontSize: 12,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
         ),
       ),
     );
