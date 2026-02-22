@@ -369,6 +369,19 @@ class AggregatorDashboardPage extends StatelessWidget {
           fontSize: 10,
           fontWeight: FontWeight.w600,
         ),
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              // Dashboard
+              break;
+            case 1:
+              // Transaksi / Riwayat - Route not fully defined yet, can be empty or redirect
+              break;
+            case 2:
+              context.pushNamed('b2b_profile');
+              break;
+          }
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
           BottomNavigationBarItem(

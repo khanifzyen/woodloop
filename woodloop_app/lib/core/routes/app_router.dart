@@ -46,6 +46,7 @@ import '../../features/traceability/presentation/pages/product_story_traceabilit
 import '../../features/profile/presentation/pages/designer_consultant_profile_page.dart';
 import '../../features/shared/presentation/pages/notification_center_page.dart';
 import '../../features/shared/presentation/pages/woodloop_digital_wallet_page.dart';
+import '../../features/shared/presentation/pages/b2b_profile_page.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -248,6 +249,11 @@ class AppRouter {
         path: '/woodloop-digital-wallet',
         name: 'woodloop_digital_wallet',
         builder: (context, state) => const WoodLoopDigitalWalletPage(),
+      ),
+      GoRoute(
+        path: '/b2b-profile',
+        name: 'b2b_profile',
+        builder: (context, state) => const B2BProfilePage(),
       ),
     ],
   );

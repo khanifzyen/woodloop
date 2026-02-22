@@ -299,8 +299,7 @@ class SupplierDashboardPage extends StatelessWidget {
               context.pushNamed('messages_list');
               break;
             case 3:
-              // Redirecting to profile/wallet for now
-              context.pushNamed('woodloop_digital_wallet');
+              context.pushNamed('b2b_profile');
               break;
           }
         },

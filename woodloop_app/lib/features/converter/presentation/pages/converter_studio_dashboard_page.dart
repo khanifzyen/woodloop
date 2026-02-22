@@ -321,6 +321,22 @@ class ConverterStudioDashboardPage extends StatelessWidget {
           fontSize: 10,
           fontWeight: FontWeight.w600,
         ),
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              // Studio Dashboard
+              break;
+            case 1:
+              context.pushNamed('waste_materials_marketplace');
+              break;
+            case 2:
+              // Pesanan - not specifically defined yet
+              break;
+            case 3:
+              context.pushNamed('b2b_profile');
+              break;
+          }
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Studio'),
           BottomNavigationBarItem(

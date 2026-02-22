@@ -238,6 +238,22 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
         unselectedItemColor: Colors.white54,
         type: BottomNavigationBarType.fixed,
         currentIndex: 3, // Assuming profile is selected
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              // Home / Dashboard
+              break;
+            case 1:
+              context.pushNamed('upcycled_products_marketplace');
+              break;
+            case 2:
+              context.pushNamed('order_tracking_journey');
+              break;
+            case 3:
+              // Already here
+              break;
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
