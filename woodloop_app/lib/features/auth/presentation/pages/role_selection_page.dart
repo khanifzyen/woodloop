@@ -259,6 +259,10 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                             // Navigate to login or registration depending on role.
                             if (_selectedRole == 'supplier') {
                               context.pushNamed('supplier_registration');
+                            } else if (_selectedRole == 'generator') {
+                              context.pushNamed('generator_registration');
+                            } else if (_selectedRole == 'aggregator') {
+                              context.pushNamed('aggregator_registration');
                             } else {
                               context.pushNamed('login');
                             }
