@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class SupplierRegistrationPage extends StatefulWidget {
   const SupplierRegistrationPage({super.key});
@@ -15,6 +16,8 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -22,9 +25,9 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Step 1 of 3',
-          style: TextStyle(
+        title: Text(
+          l10n.supplierRegStep1,
+          style: const TextStyle(
             color: AppTheme.primaryColor,
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -45,39 +48,42 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Create Supplier Account',
-                        style: TextStyle(
+                      Text(
+                        l10n.supplierRegTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Connect your timber business to WoodLoop.',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      Text(
+                        l10n.supplierRegSubtitle,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 32),
 
                       // Full Name
-                      _buildLabel('FULL NAME'),
+                      _buildLabel(l10n.supplierRegFullNameLabel),
                       _buildTextField(
-                        hintText: 'John Doe',
+                        hintText: l10n.supplierRegFullNameHint,
                         icon: Icons.person_outline,
                       ),
                       const SizedBox(height: 20),
 
                       // Company Name
-                      _buildLabel('COMPANY NAME'),
+                      _buildLabel(l10n.supplierRegCompanyNameLabel),
                       _buildTextField(
-                        hintText: 'Jepara Teak Mill',
+                        hintText: l10n.supplierRegCompanyNameHint,
                         icon: Icons.factory_outlined,
                       ),
                       const SizedBox(height: 20),
 
                       // Phone Number
-                      _buildLabel('PHONE NUMBER'),
+                      _buildLabel(l10n.supplierRegPhoneLabel),
                       _buildTextField(
                         hintText: '812 3456 7890',
                         iconWidget: const Padding(
@@ -105,7 +111,7 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                       const SizedBox(height: 32),
 
                       // Business Address
-                      _buildLabel('BUSINESS ADDRESS'),
+                      _buildLabel(l10n.supplierRegAddressLabel),
                       GestureDetector(
                         onTap: () {
                           // TODO: Open map picker
@@ -191,11 +197,14 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                           ),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8, left: 4),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8, left: 4),
                         child: Text(
-                          'Tap the map to pin your exact mill location.',
-                          style: TextStyle(color: Colors.white38, fontSize: 12),
+                          l10n.supplierRegMapHint,
+                          style: const TextStyle(
+                            color: Colors.white38,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -204,7 +213,7 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildLabel('LEGAL CERTIFICATIONS'),
+                          _buildLabel(l10n.supplierRegCertLabel),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
@@ -221,9 +230,9 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                                 ),
                               ),
                             ),
-                            child: const Text(
-                              'Required',
-                              style: TextStyle(
+                            child: Text(
+                              l10n.supplierRegCertRequired,
+                              style: const TextStyle(
                                 color: AppTheme.primaryColor,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
@@ -268,18 +277,18 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                                 ),
                               ),
                               const SizedBox(height: 12),
-                              const Text(
-                                'Upload SVLK or FSC',
-                                style: TextStyle(
+                              Text(
+                                l10n.supplierRegUploadTitle,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
-                                'PDF, JPG or PNG (Max 5MB)',
-                                style: TextStyle(
+                              Text(
+                                l10n.supplierRegUploadHint,
+                                style: const TextStyle(
                                   color: Colors.white54,
                                   fontSize: 12,
                                 ),
@@ -294,31 +303,29 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                       Center(
                         child: RichText(
                           textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            style: TextStyle(
+                          text: TextSpan(
+                            style: const TextStyle(
                               color: Colors.white38,
                               fontSize: 12,
                             ),
                             children: [
+                              TextSpan(text: l10n.supplierRegTermsPrefix),
                               TextSpan(
-                                text: 'By registering, you agree to our ',
-                              ),
-                              TextSpan(
-                                text: 'Terms of Service',
-                                style: TextStyle(
+                                text: l10n.supplierRegTermsLink,
+                                style: const TextStyle(
                                   color: AppTheme.primaryColor,
                                   decoration: TextDecoration.underline,
                                 ),
                               ),
-                              TextSpan(text: '\nand '),
+                              TextSpan(text: l10n.supplierRegTermsAnd),
                               TextSpan(
-                                text: 'Privacy Policy',
-                                style: TextStyle(
+                                text: l10n.supplierRegPrivacyLink,
+                                style: const TextStyle(
                                   color: AppTheme.primaryColor,
                                   decoration: TextDecoration.underline,
                                 ),
                               ),
-                              TextSpan(text: '.'),
+                              TextSpan(text: l10n.supplierRegTermsSuffix),
                             ],
                           ),
                         ),
@@ -359,19 +366,19 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                           alpha: 0.3,
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Complete Registration',
-                            style: TextStyle(
+                            l10n.supplierRegCompleteBtn,
+                            style: const TextStyle(
                               color: AppTheme.background,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Icon(
+                          const SizedBox(width: 8),
+                          const Icon(
                             Icons.arrow_forward,
                             color: AppTheme.background,
                             size: 20,
@@ -384,13 +391,16 @@ class _SupplierRegistrationPageState extends State<SupplierRegistrationPage> {
                   GestureDetector(
                     onTap: () => context.go('/login'),
                     child: RichText(
-                      text: const TextSpan(
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      text: TextSpan(
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                         children: [
-                          TextSpan(text: 'Already have an account? '),
+                          TextSpan(text: l10n.supplierRegAlreadyHaveAccount),
                           TextSpan(
-                            text: 'Login',
-                            style: TextStyle(
+                            text: l10n.supplierRegLoginLink,
+                            style: const TextStyle(
                               color: AppTheme.primaryColor,
                               fontWeight: FontWeight.bold,
                             ),

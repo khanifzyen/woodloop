@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class B2BProfilePage extends StatelessWidget {
   const B2BProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     // Determine placeholder role based on current state/mock for now
     // Since this is a shared page, we'll design it to be flexible.
     // In a real app, this would be fetched from auth bloc.
@@ -19,9 +22,12 @@ class B2BProfilePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppTheme.background,
         elevation: 0,
-        title: const Text(
-          'Profil Bisnis',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          l10n.b2bProfileTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -107,13 +113,17 @@ class B2BProfilePage extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: _buildStatCard('Aktivitas', '128', Icons.insights),
+                    child: _buildStatCard(
+                      l10n.b2bProfileActivity,
+                      '128',
+                      Icons.insights,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: _buildStatCard(
-                      'Sertifikasi',
-                      'Lengkap',
+                      l10n.b2bProfileCertification,
+                      l10n.b2bProfileComplete,
                       Icons.verified_outlined,
                     ),
                   ),
@@ -134,13 +144,13 @@ class B2BProfilePage extends StatelessWidget {
                 children: [
                   _buildMenuItem(
                     icon: Icons.business_outlined,
-                    title: 'Informasi Perusahaan',
+                    title: l10n.b2bProfileCompanyInfo,
                     onTap: () {},
                   ),
                   _buildDivider(),
                   _buildMenuItem(
                     icon: Icons.account_balance_wallet_outlined,
-                    title: 'Dompet Digital',
+                    title: l10n.b2bProfileDigitalWallet,
                     onTap: () {
                       context.pushNamed('woodloop_digital_wallet');
                     },
@@ -148,19 +158,19 @@ class B2BProfilePage extends StatelessWidget {
                   _buildDivider(),
                   _buildMenuItem(
                     icon: Icons.document_scanner_outlined,
-                    title: 'Dokumen Legalitas',
+                    title: l10n.b2bProfileLegalDocs,
                     onTap: () {},
                   ),
                   _buildDivider(),
                   _buildMenuItem(
                     icon: Icons.security_outlined,
-                    title: 'Keamanan Akun',
+                    title: l10n.b2bProfileAccountSecurity,
                     onTap: () {},
                   ),
                   _buildDivider(),
                   _buildMenuItem(
                     icon: Icons.help_outline,
-                    title: 'Pusat Bantuan',
+                    title: l10n.b2bProfileHelpCenter,
                     onTap: () {},
                   ),
                 ],
@@ -185,14 +195,14 @@ class B2BProfilePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.logout, color: Colors.red),
-                      SizedBox(width: 8),
+                      const Icon(Icons.logout, color: Colors.red),
+                      const SizedBox(width: 8),
                       Text(
-                        'Keluar Akun',
-                        style: TextStyle(
+                        l10n.b2bProfileLogout,
+                        style: const TextStyle(
                           color: Colors.red,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

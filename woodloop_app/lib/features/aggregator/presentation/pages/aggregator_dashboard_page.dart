@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class AggregatorDashboardPage extends StatelessWidget {
   const AggregatorDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -38,20 +40,20 @@ class AggregatorDashboardPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Selamat Pagi,',
-                            style: TextStyle(
+                            l10n.aggregatorDashGreeting,
+                            style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           Text(
-                            'Budi Logistik',
-                            style: TextStyle(
+                            l10n.aggregatorDashMockName,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -147,9 +149,9 @@ class AggregatorDashboardPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Estimasi Pendapatan Hari Ini',
-                          style: TextStyle(
+                        Text(
+                          l10n.aggregatorDashEstIncome,
+                          style: const TextStyle(
                             color: Colors.black54,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -164,9 +166,9 @@ class AggregatorDashboardPage extends StatelessWidget {
                             color: Colors.black.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text(
-                            '09 Nov 2023',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.aggregatorDashMockDate,
+                            style: const TextStyle(
                               color: Colors.black87,
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -176,11 +178,11 @@ class AggregatorDashboardPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Row(
+                    Row(
                       children: [
                         Text(
-                          'Rp 650.000',
-                          style: TextStyle(
+                          l10n.aggregatorDashMockIncome,
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -191,7 +193,11 @@ class AggregatorDashboardPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        _buildStatItem('3', 'Tugas', Icons.task_alt),
+                        _buildStatItem(
+                          '3',
+                          l10n.aggregatorDashTaskCount,
+                          Icons.task_alt,
+                        ),
                         Container(
                           width: 1,
                           height: 24,
@@ -231,17 +237,17 @@ class AggregatorDashboardPage extends StatelessWidget {
                           border: Border.all(color: AppTheme.primaryColor),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Column(
+                        child: Column(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.map_outlined,
                               color: AppTheme.primaryColor,
                               size: 32,
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Text(
-                              'Peta Rute',
-                              style: TextStyle(
+                              l10n.aggregatorDashRouteMap,
+                              style: const TextStyle(
                                 color: AppTheme.primaryColor,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -267,17 +273,17 @@ class AggregatorDashboardPage extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Column(
+                        child: Column(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.warehouse_outlined,
                               color: Colors.white,
                               size: 32,
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Text(
-                              'Gudang',
-                              style: TextStyle(
+                              l10n.aggregatorDashWarehouse,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -299,16 +305,16 @@ class AggregatorDashboardPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Jadwal Penjemputan',
-                    style: TextStyle(
+                  Text(
+                    l10n.aggregatorDashPickupSchedule,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'Lihat Semua',
+                    l10n.aggregatorDashViewAll,
                     style: TextStyle(
                       color: AppTheme.primaryColor.withValues(alpha: 0.8),
                       fontSize: 12,
@@ -325,8 +331,8 @@ class AggregatorDashboardPage extends StatelessWidget {
                 children: [
                   _buildRouteItem(
                     time: '09:00',
-                    title: 'Jepara Artisans',
-                    subtitle: 'Serbuk Kayu Jati • 50 Kg',
+                    title: l10n.aggregatorDashMockRouteDesc1Title,
+                    subtitle: l10n.aggregatorDashMockRouteDesc1Sub,
                     distance: '2.5 km',
                     isFirst: true,
                     isLast: false,
@@ -334,8 +340,8 @@ class AggregatorDashboardPage extends StatelessWidget {
                   ),
                   _buildRouteItem(
                     time: '10:30',
-                    title: 'Bapak Slamet Workshop',
-                    subtitle: 'Potongan Mahoni • 120 Kg',
+                    title: l10n.aggregatorDashMockRouteDesc2Title,
+                    subtitle: l10n.aggregatorDashMockRouteDesc2Sub,
                     distance: '4.2 km',
                     isFirst: false,
                     isLast: false,
@@ -343,8 +349,8 @@ class AggregatorDashboardPage extends StatelessWidget {
                   ),
                   _buildRouteItem(
                     time: '13:00',
-                    title: 'UD. Kayu Makmur',
-                    subtitle: 'Pallet Bekas • 15 Pcs',
+                    title: l10n.aggregatorDashMockRouteDesc3Title,
+                    subtitle: l10n.aggregatorDashMockRouteDesc3Sub,
                     distance: '7.8 km',
                     isFirst: false,
                     isLast: true,
@@ -382,15 +388,18 @@ class AggregatorDashboardPage extends StatelessWidget {
               break;
           }
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Transaksi',
+            icon: const Icon(Icons.home),
+            label: l10n.aggregatorDashNavHome,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profil',
+            icon: const Icon(Icons.receipt_long),
+            label: l10n.aggregatorDashNavTransaction,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person_outline),
+            label: l10n.aggregatorDashNavProfile,
           ),
         ],
       ),

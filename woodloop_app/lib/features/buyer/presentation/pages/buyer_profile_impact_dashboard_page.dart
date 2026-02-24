@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class BuyerProfileImpactDashboardPage extends StatelessWidget {
   const BuyerProfileImpactDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -42,20 +44,20 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 16),
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Selamat Datang,',
-                              style: TextStyle(
+                              l10n.buyerProfileWelcome,
+                              style: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             Text(
-                              'Sarah Wijaya',
-                              style: TextStyle(
+                              l10n.buyerProfileMockName,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -99,13 +101,13 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                      Row(
                         children: [
-                          Icon(Icons.eco, color: Colors.black87),
-                          SizedBox(width: 8),
+                          const Icon(Icons.eco, color: Colors.black87),
+                          const SizedBox(width: 8),
                           Text(
-                            'Jejak Kebaikan Anda',
-                            style: TextStyle(
+                            l10n.buyerProfileImpactTitle,
+                            style: const TextStyle(
                               color: Colors.black87,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -119,7 +121,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                         children: [
                           _buildImpactStat(
                             '4',
-                            'Produk\nDibeli',
+                            l10n.buyerProfileImpactProducts,
                             Icons.shopping_bag_outlined,
                           ),
                           Container(
@@ -129,7 +131,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                           ),
                           _buildImpactStat(
                             '12.5',
-                            'Kg Kayu\nDiselamatkan',
+                            l10n.buyerProfileImpactWood,
                             Icons.nature_people_outlined,
                           ),
                           Container(
@@ -139,7 +141,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                           ),
                           _buildImpactStat(
                             '25',
-                            'Kg CO2\nDitekan',
+                            l10n.buyerProfileImpactCO2,
                             Icons.cloud_done_outlined,
                           ),
                         ],
@@ -158,7 +160,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                     Expanded(
                       child: _buildActionTile(
                         context,
-                        title: 'Toko\nUpcycle',
+                        title: l10n.buyerProfileMenuStore,
                         icon: Icons.storefront,
                         color: Colors.blue,
                         route: '/upcycled-products-marketplace',
@@ -168,7 +170,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                     Expanded(
                       child: _buildActionTile(
                         context,
-                        title: 'Lacak\nPesanan',
+                        title: l10n.buyerProfileMenuTrack,
                         icon: Icons.local_shipping_outlined,
                         color: Colors.orange,
                         route: '/order-tracking-journey',
@@ -178,7 +180,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                     Expanded(
                       child: _buildActionTile(
                         context,
-                        title: 'Koleksi\nFavorit',
+                        title: l10n.buyerProfileMenuFavorites,
                         icon: Icons.favorite_border,
                         color: Colors.pink,
                         route: '', // Placeholder
@@ -190,11 +192,11 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
               const SizedBox(height: 32),
 
               // Recent Purchases
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  'Pembelian Terakhir',
-                  style: TextStyle(
+                  l10n.buyerProfileSectionRecent,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -209,20 +211,22 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   _buildOrderCard(
-                    status: 'Dalam Pengiriman',
+                    l10n: l10n,
+                    status: l10n.buyerProfileStatusShipping,
                     statusColor: Colors.orange,
                     date: '12 Nov 2023',
-                    title: 'Meja Kopi Resin Serbuk',
-                    subtitle: 'Jepara Eco Art',
+                    title: l10n.buyerProfileMockOrderTitle1,
+                    subtitle: l10n.buyerProfileMockOrderStore1,
                     price: 'Rp 1.200.000',
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildOrderCard(
-                    status: 'Selesai',
+                    l10n: l10n,
+                    status: l10n.buyerProfileStatusDone,
                     statusColor: AppTheme.primaryColor,
                     date: '05 Okt 2023',
-                    title: 'Set Asbak Kayu Mahoni',
-                    subtitle: 'Studio Hijau',
+                    title: l10n.buyerProfileMockOrderTitle2,
+                    subtitle: l10n.buyerProfileMockOrderStore2,
                     price: 'Rp 85.000',
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
@@ -254,20 +258,23 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
               break;
           }
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            icon: const Icon(Icons.home_outlined),
+            label: l10n.buyerProfileNavHome,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.storefront),
-            label: 'Market',
+            icon: const Icon(Icons.storefront),
+            label: l10n.buyerProfileNavMarket,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long_outlined),
-            label: 'Pesanan',
+            icon: const Icon(Icons.receipt_long_outlined),
+            label: l10n.buyerProfileNavOrders,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person),
+            label: l10n.buyerProfileNavProfile,
+          ),
         ],
       ),
     );
@@ -348,6 +355,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
   }
 
   Widget _buildOrderCard({
+    required AppLocalizations l10n,
     required String status,
     required Color statusColor,
     required String date,
@@ -442,9 +450,9 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Total Belanja',
-                style: TextStyle(color: Colors.white54, fontSize: 12),
+              Text(
+                l10n.buyerProfileOrderTotal,
+                style: const TextStyle(color: Colors.white54, fontSize: 12),
               ),
               Text(
                 price,

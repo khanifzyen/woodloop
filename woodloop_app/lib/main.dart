@@ -4,9 +4,14 @@ import 'core/routes/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'injection_container.dart';
 
-void main() {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
+import 'core/presentation/bloc/language/language_cubit.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
+  await configureDependencies();
   runApp(const WoodLoopApp());
 }
 
@@ -15,11 +20,26 @@ class WoodLoopApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'WoodLoop',
-      theme: AppTheme.lightTheme,
-      routerConfig: AppRouter.router,
-      debugShowCheckedModeBanner: false,
+    return BlocProvider(
+      create: (context) => getIt<LanguageCubit>(),
+      child: BlocBuilder<LanguageCubit, LanguageState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            title: 'WoodLoop',
+            theme: AppTheme.lightTheme,
+            routerConfig: AppRouter.router,
+            debugShowCheckedModeBanner: false,
+            locale: state.locale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+          );
+        },
+      ),
     );
   }
 }

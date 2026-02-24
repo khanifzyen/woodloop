@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class WarehouseInventoryLogPage extends StatelessWidget {
   const WarehouseInventoryLogPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class WarehouseInventoryLogPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Gudang Pengepul',
-          style: TextStyle(
+        title: Text(
+          l10n.aggregatorWarehouseTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -46,19 +48,19 @@ class WarehouseInventoryLogPage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Kapasitas Gudang',
-                          style: TextStyle(
+                          l10n.aggregatorWarehouseCapacity,
+                          style: const TextStyle(
                             color: Colors.white70,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
-                          '850 Kg / 2000 Kg',
-                          style: TextStyle(
+                          l10n.aggregatorWarehouseMockCapacity,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -87,13 +89,22 @@ class WarehouseInventoryLogPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  _buildFilterChip('Semua Material', true),
+                  _buildFilterChip(l10n.aggregatorWarehouseFilterAll, true),
                   const SizedBox(width: 8),
-                  _buildFilterChip('Serbuk', false),
+                  _buildFilterChip(
+                    l10n.aggregatorWarehouseFilterSawdust,
+                    false,
+                  ),
                   const SizedBox(width: 8),
-                  _buildFilterChip('Potongan', false),
+                  _buildFilterChip(
+                    l10n.aggregatorWarehouseFilterOffcuts,
+                    false,
+                  ),
                   const SizedBox(width: 8),
-                  _buildFilterChip('Palet Bekas', false),
+                  _buildFilterChip(
+                    l10n.aggregatorWarehouseFilterPallets,
+                    false,
+                  ),
                 ],
               ),
             ),
@@ -108,21 +119,21 @@ class WarehouseInventoryLogPage extends StatelessWidget {
                 ),
                 children: [
                   _buildInventoryItem(
-                    title: 'Serbuk Kayu Campur',
-                    subtitle: 'Dominan Jati & Mahoni',
-                    weight: '500 Kg',
+                    title: l10n.aggregatorWarehouseMockItem1Title,
+                    subtitle: l10n.aggregatorWarehouseMockItem1Sub,
+                    weight: l10n.aggregatorWarehouseMockItem1Weight,
                     colorId: Colors.orange,
                   ),
                   _buildInventoryItem(
-                    title: 'Potongan Mahoni',
-                    subtitle: 'Blok kecil ex-mebel',
-                    weight: '250 Kg',
+                    title: l10n.aggregatorWarehouseMockItem2Title,
+                    subtitle: l10n.aggregatorWarehouseMockItem2Sub,
+                    weight: l10n.aggregatorWarehouseMockItem2Weight,
                     colorId: Colors.blue,
                   ),
                   _buildInventoryItem(
-                    title: 'Pallet Rusak',
-                    subtitle: 'Pinus ex-packaging',
-                    weight: '100 Kg',
+                    title: l10n.aggregatorWarehouseMockItem3Title,
+                    subtitle: l10n.aggregatorWarehouseMockItem3Sub,
+                    weight: l10n.aggregatorWarehouseMockItem3Weight,
                     colorId: Colors.green,
                   ),
                 ],
@@ -137,9 +148,9 @@ class WarehouseInventoryLogPage extends StatelessWidget {
         },
         backgroundColor: AppTheme.primaryColor,
         icon: const Icon(Icons.storefront, color: AppTheme.background),
-        label: const Text(
-          'Jual ke Pabrik (Converter)',
-          style: TextStyle(
+        label: Text(
+          l10n.aggregatorWarehouseSellBtn,
+          style: const TextStyle(
             color: AppTheme.background,
             fontWeight: FontWeight.bold,
           ),

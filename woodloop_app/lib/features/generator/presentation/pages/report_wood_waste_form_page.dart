@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class ReportWoodWasteFormPage extends StatefulWidget {
   const ReportWoodWasteFormPage({super.key});
@@ -11,12 +12,16 @@ class ReportWoodWasteFormPage extends StatefulWidget {
 }
 
 class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
-  String _selectedForm = 'Offcut';
-  String _selectedCondition = 'Dry';
+  String? _selectedForm;
+  String? _selectedCondition;
   String _selectedUnit = 'kg';
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    _selectedForm ??= l10n.generatorReportFormOffcut;
+    _selectedCondition ??= l10n.generatorReportConditionDry;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -24,9 +29,9 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Log Wood Waste',
-          style: TextStyle(
+        title: Text(
+          l10n.generatorReportTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -36,9 +41,9 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
+            child: Text(
+              l10n.generatorReportCancel,
+              style: const TextStyle(
                 color: Colors.white54,
                 fontWeight: FontWeight.bold,
               ),
@@ -57,7 +62,10 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ─── Step 1: Capture Waste ────────────────────────────
-                  _buildSectionHeader('1', 'Capture Waste'),
+                  _buildSectionHeader(
+                    l10n.generatorReportStep1,
+                    l10n.generatorReportStep1Title,
+                  ),
                   const SizedBox(height: 12),
                   GestureDetector(
                     onTap: () {
@@ -74,18 +82,18 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                           style: BorderStyle.solid,
                         ),
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.add_a_photo,
                             color: Colors.white54,
                             size: 32,
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
-                            'Upload photo for verification',
-                            style: TextStyle(
+                            l10n.generatorReportUploadPhoto,
+                            style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -98,7 +106,10 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                   const SizedBox(height: 28),
 
                   // ─── Step 2: Waste Information ────────────────────────
-                  _buildSectionHeader('2', 'Waste Information'),
+                  _buildSectionHeader(
+                    l10n.generatorReportStep2,
+                    l10n.generatorReportStep2Title,
+                  ),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -112,9 +123,9 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Waste Form',
-                          style: TextStyle(
+                        Text(
+                          l10n.generatorReportWasteForm,
+                          style: const TextStyle(
                             color: Colors.white54,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
@@ -129,10 +140,22 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                           mainAxisSpacing: 12,
                           childAspectRatio: 2.5,
                           children: [
-                            _buildWasteFormOption('Offcut', Icons.content_cut),
-                            _buildWasteFormOption('Sawdust', Icons.grain),
-                            _buildWasteFormOption('Shaving', Icons.carpenter),
-                            _buildWasteFormOption('Log End', Icons.forest),
+                            _buildWasteFormOption(
+                              l10n.generatorReportFormOffcut,
+                              Icons.content_cut,
+                            ),
+                            _buildWasteFormOption(
+                              l10n.generatorReportFormSawdust,
+                              Icons.grain,
+                            ),
+                            _buildWasteFormOption(
+                              l10n.generatorReportFormShaving,
+                              Icons.carpenter,
+                            ),
+                            _buildWasteFormOption(
+                              l10n.generatorReportFormLogEnd,
+                              Icons.forest,
+                            ),
                           ],
                         ),
                       ],
@@ -151,9 +174,9 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Wood Condition',
-                          style: TextStyle(
+                        Text(
+                          l10n.generatorReportWoodCondition,
+                          style: const TextStyle(
                             color: Colors.white54,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
@@ -162,11 +185,23 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            Expanded(child: _buildConditionOption('Dry')),
+                            Expanded(
+                              child: _buildConditionOption(
+                                l10n.generatorReportConditionDry,
+                              ),
+                            ),
                             const SizedBox(width: 8),
-                            Expanded(child: _buildConditionOption('Wet')),
+                            Expanded(
+                              child: _buildConditionOption(
+                                l10n.generatorReportConditionWet,
+                              ),
+                            ),
                             const SizedBox(width: 8),
-                            Expanded(child: _buildConditionOption('Mixed')),
+                            Expanded(
+                              child: _buildConditionOption(
+                                l10n.generatorReportConditionMixed,
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -175,7 +210,10 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                   const SizedBox(height: 28),
 
                   // ─── Step 3: Waste Details ────────────────────────────
-                  _buildSectionHeader('3', 'Waste Details'),
+                  _buildSectionHeader(
+                    l10n.generatorReportStep3,
+                    l10n.generatorReportStep3Title,
+                  ),
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -197,9 +235,9 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Quantity',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.generatorReportQuantity,
+                                    style: const TextStyle(
                                       color: Colors.white54,
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
@@ -247,9 +285,9 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Unit',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.generatorReportUnit,
+                                    style: const TextStyle(
                                       color: Colors.white54,
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
@@ -285,17 +323,17 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        const Row(
+                        Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.info_outline,
                               color: Colors.white38,
                               size: 14,
                             ),
-                            SizedBox(width: 6),
+                            const SizedBox(width: 6),
                             Text(
-                              'Estimated density for teak is ~650kg/m³',
-                              style: TextStyle(
+                              l10n.generatorReportDensityHint,
+                              style: const TextStyle(
                                 color: Colors.white38,
                                 fontSize: 11,
                               ),
@@ -335,22 +373,22 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                           color: Colors.white.withValues(alpha: 0.08),
                         ),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Current Location',
-                                style: TextStyle(
+                                l10n.generatorReportCurrentLocation,
+                                style: const TextStyle(
                                   color: AppTheme.primaryColor,
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 2),
+                              const SizedBox(height: 2),
                               Text(
-                                'Jepara Workshop A, Jl. Pemuda No. 45',
-                                style: TextStyle(
+                                l10n.generatorReportMockLocation,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 13,
                                 ),
@@ -395,9 +433,9 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'EST. VALUE (IDR)',
-                            style: TextStyle(
+                          Text(
+                            l10n.generatorReportEstValue,
+                            style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -414,20 +452,22 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                                 color: Colors.white.withValues(alpha: 0.08),
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
                                   child: Text(
-                                    'Rp',
-                                    style: TextStyle(
+                                    l10n.generatorReportCurrency,
+                                    style: const TextStyle(
                                       color: Colors.white54,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                     ),
                                   ),
                                 ),
-                                Expanded(
+                                const Expanded(
                                   child: TextField(
                                     keyboardType: TextInputType.number,
                                     style: TextStyle(
@@ -457,9 +497,9 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const Text(
-                            'POINTS',
-                            style: TextStyle(
+                          Text(
+                            l10n.generatorReportPoints,
+                            style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -502,11 +542,7 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Limbah berhasil dilaporkan ke Marketplace!',
-                          ),
-                        ),
+                        SnackBar(content: Text(l10n.generatorReportSuccessMsg)),
                       );
                       context.pop();
                     },
@@ -517,18 +553,18 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                         borderRadius: BorderRadius.circular(14),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Submit to Marketplace',
-                          style: TextStyle(
+                          l10n.generatorReportSubmitBtn,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Icon(Icons.send, size: 20),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.send, size: 20),
                       ],
                     ),
                   ),

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class YourShoppingCartPage extends StatelessWidget {
   const YourShoppingCartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class YourShoppingCartPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Keranjang Belanja',
-          style: TextStyle(
+        title: Text(
+          l10n.buyerCartTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -33,18 +35,18 @@ class YourShoppingCartPage extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
-                  _buildCartStoreHeader('Jepara Eco Art'),
+                  _buildCartStoreHeader(l10n.buyerCartMockStore1),
                   _buildCartItem(
-                    title: 'Kursi Palet Estetik',
+                    title: l10n.buyerCartMockProduct1,
                     price: 'Rp 450.000',
                     quantity: 1,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   const SizedBox(height: 16),
 
-                  _buildCartStoreHeader('Woodie Studio'),
+                  _buildCartStoreHeader(l10n.buyerCartMockStore2),
                   _buildCartItem(
-                    title: 'Tatakan Gelas Resin Serbuk (Set 4)',
+                    title: l10n.buyerCartMockProduct2,
                     price: 'Rp 120.000',
                     quantity: 2,
                     imageUrl: 'assets/images/map_jepara.jpg',
@@ -72,9 +74,12 @@ class YourShoppingCartPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Total Item (3)',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      Text(
+                        l10n.buyerCartTotalItems('3'),
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
                       const Text(
                         'Rp 690.000',
@@ -98,9 +103,9 @@ class YourShoppingCartPage extends StatelessWidget {
                             size: 16,
                           ),
                           const SizedBox(width: 4),
-                          const Text(
-                            'Total Dampak Positif',
-                            style: TextStyle(
+                          Text(
+                            l10n.buyerCartTotalImpact,
+                            style: const TextStyle(
                               color: AppTheme.primaryColor,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -108,9 +113,9 @@ class YourShoppingCartPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Text(
-                        '13.5 Kg Kayu',
-                        style: TextStyle(
+                      Text(
+                        l10n.buyerCartTotalImpactValueMock,
+                        style: const TextStyle(
                           color: AppTheme.primaryColor,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -132,9 +137,9 @@ class YourShoppingCartPage extends StatelessWidget {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        'Lanjut ke Pembayaran',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.buyerCartBtnCheckout,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class DesignerConsultantProfilePage extends StatelessWidget {
   const DesignerConsultantProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -106,9 +109,9 @@ class DesignerConsultantProfilePage extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Text(
-                                  ' (120 Ulasan)',
-                                  style: TextStyle(color: Colors.white54),
+                                Text(
+                                  l10n.designerReviews('120'),
+                                  style: const TextStyle(color: Colors.white54),
                                 ),
                               ],
                             ),
@@ -127,13 +130,23 @@ class DesignerConsultantProfilePage extends StatelessWidget {
                   // Stats
                   Row(
                     children: [
-                      Expanded(child: _buildStatItem('Produk', '45')),
-                      Container(width: 1, height: 30, color: Colors.white10),
                       Expanded(
-                        child: _buildStatItem('Terselamatkan', '2.5 Ton'),
+                        child: _buildStatItem(l10n.designerStatProducts, '45'),
                       ),
                       Container(width: 1, height: 30, color: Colors.white10),
-                      Expanded(child: _buildStatItem('Proyek Custom', '12')),
+                      Expanded(
+                        child: _buildStatItem(
+                          l10n.designerStatSaved,
+                          '2.5 Ton',
+                        ),
+                      ),
+                      Container(width: 1, height: 30, color: Colors.white10),
+                      Expanded(
+                        child: _buildStatItem(
+                          l10n.designerStatCustomProjects,
+                          '12',
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 32),
@@ -151,9 +164,9 @@ class DesignerConsultantProfilePage extends StatelessWidget {
                             color: AppTheme.background,
                             size: 18,
                           ),
-                          label: const Text(
-                            'Konsultasi Desain',
-                            style: TextStyle(
+                          label: Text(
+                            l10n.designerConsultButton,
+                            style: const TextStyle(
                               color: AppTheme.background,
                               fontWeight: FontWeight.bold,
                             ),
@@ -189,9 +202,9 @@ class DesignerConsultantProfilePage extends StatelessWidget {
                   const SizedBox(height: 32),
 
                   // Portfolio Grid Header
-                  const Text(
-                    'Karya Upcycle',
-                    style: TextStyle(
+                  Text(
+                    l10n.designerPortfolioTitle,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

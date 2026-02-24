@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class MessagesListPage extends StatelessWidget {
   const MessagesListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class MessagesListPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Pesan',
-          style: TextStyle(
+        title: Text(
+          l10n.chatMessagesTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -38,11 +40,11 @@ class MessagesListPage extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _buildTabItem('Semua', true),
+                  _buildTabItem(l10n.chatMessagesTabAll, true),
                   const SizedBox(width: 8),
-                  _buildTabItem('Belum Dibaca', false),
+                  _buildTabItem(l10n.chatMessagesTabUnread, false),
                   const SizedBox(width: 8),
-                  _buildTabItem('Sistem', false),
+                  _buildTabItem(l10n.chatMessagesTabSystem, false),
                 ],
               ),
             ),
@@ -54,30 +56,27 @@ class MessagesListPage extends StatelessWidget {
                 children: [
                   _buildMessageItem(
                     context: context,
-                    name: 'Budi Logistics (Aggregator)',
-                    message:
-                        'Halo, saya sudah sampai di lokasi penjemputan limbah...',
-                    time: '10:30',
+                    name: l10n.chatMockSender1,
+                    message: l10n.chatMockMessage1,
+                    time: l10n.chatMockTime1,
                     unreadCount: 2,
                     isOnline: true,
                   ),
                   const Divider(color: Colors.white10, height: 1),
                   _buildMessageItem(
                     context: context,
-                    name: 'Dian (Studio Ekowood)',
-                    message:
-                        'Siap, model kursi paletnya akan kami revisi sesuai dengan...',
-                    time: 'Kemarin',
+                    name: l10n.chatMockSender2,
+                    message: l10n.chatMockMessage2,
+                    time: l10n.chatMockTime2,
                     unreadCount: 0,
                     isOnline: false,
                   ),
                   const Divider(color: Colors.white10, height: 1),
                   _buildMessageItem(
                     context: context,
-                    name: 'WoodLoop CS',
-                    message:
-                        '[Sistem] Verifikasi akun Supplier Anda telah berhasil...',
-                    time: 'Senin',
+                    name: l10n.chatMockSender3,
+                    message: l10n.chatMockMessage3,
+                    time: l10n.chatMockTime3,
                     unreadCount: 0,
                     isOnline: true,
                   ),

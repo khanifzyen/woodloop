@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -13,32 +14,32 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPageIndex = 0;
 
-  final List<Map<String, String>> _onboardingData = [
-    {
-      'title': 'Capture & Sell',
-      'subtitle':
-          'Simply take a photo of your wood waste to list it on the marketplace. No more burning—turn your leftovers into resources.',
-      'icon': 'recycling',
-      'highlight': 'Sell',
-    },
-    {
-      'title': 'Efficient Collection',
-      'subtitle':
-          'Aggregators bridge the gap by collecting waste from various workshops and supplying them to creative converters. We automate the pickup scheduling so you can focus on sorting and selling.',
-      'icon': 'local_shipping',
-      'highlight': 'Collection',
-    },
-    {
-      'title': 'Traceable Impact',
-      'subtitle':
-          'Every piece of wood has a story. Track your environmental impact and showcase the sustainable journey of your products to eco-conscious buyers worldwide.',
-      'icon': 'eco',
-      'highlight': 'Impact',
-    },
-  ];
+  List<Map<String, String>> _getOnboardingData(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      {
+        'title': l10n.onboardingCaptureSellTitle,
+        'subtitle': l10n.onboardingCaptureSellSubtitle,
+        'icon': 'recycling',
+        'highlight': l10n.onboardingCaptureSellHighlight,
+      },
+      {
+        'title': l10n.onboardingEfficientCollectionTitle,
+        'subtitle': l10n.onboardingEfficientCollectionSubtitle,
+        'icon': 'local_shipping',
+        'highlight': l10n.onboardingEfficientCollectionHighlight,
+      },
+      {
+        'title': l10n.onboardingTraceableImpactTitle,
+        'subtitle': l10n.onboardingTraceableImpactSubtitle,
+        'icon': 'eco',
+        'highlight': l10n.onboardingTraceableImpactHighlight,
+      },
+    ];
+  }
 
-  void _nextPage() {
-    if (_currentPageIndex < _onboardingData.length - 1) {
+  void _nextPage(int totalLength) {
+    if (_currentPageIndex < totalLength - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -56,6 +57,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final onboardingData = _getOnboardingData(context);
+
     return Scaffold(
       backgroundColor: AppTheme.background, // Dark Theme based on Stitch
       body: SafeArea(
@@ -89,7 +93,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white54,
                     ),
-                    child: const Text('Skip'),
+                    child: Text(l10n.onboardingSkip),
                   ),
                 ],
               ),
@@ -104,7 +108,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     _currentPageIndex = index;
                   });
                 },
-                itemCount: _onboardingData.length,
+                itemCount: onboardingData.length,
                 itemBuilder: (context, index) {
                   return SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
@@ -135,7 +139,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           child: Center(
                             child: Icon(
                               IconData(
-                                _getIconCode(_onboardingData[index]['icon']!),
+                                _getIconCode(onboardingData[index]['icon']!),
                                 fontFamily: 'MaterialIcons',
                               ),
                               size: 100,
@@ -160,24 +164,24 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                             children: [
                               TextSpan(
-                                text: _onboardingData[index]['title']!.split(
-                                  _onboardingData[index]['highlight']!,
+                                text: onboardingData[index]['title']!.split(
+                                  onboardingData[index]['highlight']!,
                                 )[0],
                               ),
                               TextSpan(
-                                text: _onboardingData[index]['highlight'],
+                                text: onboardingData[index]['highlight'],
                                 style: TextStyle(color: AppTheme.primaryColor),
                               ),
                               TextSpan(
                                 text:
-                                    _onboardingData[index]['title']!
+                                    onboardingData[index]['title']!
                                             .split(
-                                              _onboardingData[index]['highlight']!,
+                                              onboardingData[index]['highlight']!,
                                             )
                                             .length >
                                         1
-                                    ? _onboardingData[index]['title']!.split(
-                                        _onboardingData[index]['highlight']!,
+                                    ? onboardingData[index]['title']!.split(
+                                        onboardingData[index]['highlight']!,
                                       )[1]
                                     : '',
                               ),
@@ -188,7 +192,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
                         // Subtitle
                         Text(
-                          _onboardingData[index]['subtitle']!,
+                          onboardingData[index]['subtitle']!,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 16,
@@ -212,7 +216,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
-                      _onboardingData.length,
+                      onboardingData.length,
                       (index) => AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -243,7 +247,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _nextPage,
+                      onPressed: () => _nextPage(onboardingData.length),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -257,9 +261,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Next',
-                            style: TextStyle(
+                          Text(
+                            l10n.onboardingNext,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF102216),

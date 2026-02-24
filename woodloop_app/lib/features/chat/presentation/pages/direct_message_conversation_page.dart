@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class DirectMessageConversationPage extends StatelessWidget {
   const DirectMessageConversationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -29,20 +31,23 @@ class DirectMessageConversationPage extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Budi Logistics',
-                  style: TextStyle(
+                  l10n.chatDmSenderName,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Online',
-                  style: TextStyle(color: AppTheme.primaryColor, fontSize: 12),
+                  l10n.chatDmStatusOnline,
+                  style: const TextStyle(
+                    color: AppTheme.primaryColor,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -65,30 +70,32 @@ class DirectMessageConversationPage extends StatelessWidget {
                 reverse: true, // Start from bottom
                 children: [
                   _buildChatBubble(
-                    message:
-                        'Halo, saya sudah sampai di lokasi penjemputan limbah. Bisa dibantu tunjukkan tumpukannya?',
-                    time: '10:30',
+                    message: l10n.chatDmMessage1,
+                    time: l10n.chatDmTime1,
                     isMe: false,
                   ),
                   const SizedBox(height: 16),
                   _buildChatBubble(
-                    message: 'Siap Pak Budi. Sebentar saya keluar ya.',
-                    time: '10:32',
+                    message: l10n.chatDmMessage2,
+                    time: l10n.chatDmTime2,
                     isMe: true,
                     isRead: true,
                   ),
                   const SizedBox(height: 16),
                   _buildChatBubble(
-                    message: 'Ini kode booking penjemputannya: PKP-8921-A',
-                    time: '10:33',
+                    message: l10n.chatDmMessage3,
+                    time: l10n.chatDmTime3,
                     isMe: true,
                     isRead: true,
                   ),
                   const SizedBox(height: 32),
-                  const Center(
+                  Center(
                     child: Text(
-                      'Hari ini',
-                      style: TextStyle(color: Colors.white24, fontSize: 12),
+                      l10n.chatDmToday,
+                      style: const TextStyle(
+                        color: Colors.white24,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -120,11 +127,11 @@ class DirectMessageConversationPage extends StatelessWidget {
                           color: Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
-                      child: const TextField(
-                        style: TextStyle(color: Colors.white),
+                      child: TextField(
+                        style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Ketik pesan...',
-                          hintStyle: TextStyle(color: Colors.white38),
+                          hintText: l10n.chatDmInputHint,
+                          hintStyle: const TextStyle(color: Colors.white38),
                           border: InputBorder.none,
                         ),
                       ),

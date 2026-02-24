@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class MarketplaceCategoryHubPage extends StatelessWidget {
   const MarketplaceCategoryHubPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class MarketplaceCategoryHubPage extends StatelessWidget {
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Kategori Produk',
-          style: TextStyle(
+        title: Text(
+          l10n.buyerMarketCatTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -32,9 +34,8 @@ class MarketplaceCategoryHubPage extends StatelessWidget {
           children: [
             _buildCategoryBanner(
               context: context,
-              title: 'Furnitur Besar',
-              subtitle:
-                  'Sofa, Meja Makan, Lemari dari sisa log dan palet pilihan.',
+              title: l10n.buyerMarketCat1Title,
+              subtitle: l10n.buyerMarketCat1Subtitle,
               icon: Icons.chair_alt,
               color: AppTheme.primaryColor,
               imageUrl: 'assets/images/map_jepara.jpg',
@@ -42,8 +43,8 @@ class MarketplaceCategoryHubPage extends StatelessWidget {
             const SizedBox(height: 16),
             _buildCategoryBanner(
               context: context,
-              title: 'Dekorasi & Kerajinan',
-              subtitle: 'Panel dinding, jam meja, ornamen dari potongan kayu.',
+              title: l10n.buyerMarketCat2Title,
+              subtitle: l10n.buyerMarketCat2Subtitle,
               icon: Icons.format_paint_outlined,
               color: Colors.orange,
               imageUrl: 'assets/images/map_jepara.jpg',
@@ -51,8 +52,8 @@ class MarketplaceCategoryHubPage extends StatelessWidget {
             const SizedBox(height: 16),
             _buildCategoryBanner(
               context: context,
-              title: 'Komposit Resin & Serbuk',
-              subtitle: 'Tatakan gelas, asbak, meja resin transparan inovatif.',
+              title: l10n.buyerMarketCat3Title,
+              subtitle: l10n.buyerMarketCat3Subtitle,
               icon: Icons.grain,
               color: Colors.blue,
               imageUrl: 'assets/images/map_jepara.jpg',
@@ -60,8 +61,8 @@ class MarketplaceCategoryHubPage extends StatelessWidget {
             const SizedBox(height: 16),
             _buildCategoryBanner(
               context: context,
-              title: 'Aksesoris Harian',
-              subtitle: 'Gantungan kunci, penyangga HP, rak buku portabel.',
+              title: l10n.buyerMarketCat4Title,
+              subtitle: l10n.buyerMarketCat4Subtitle,
               icon: Icons.watch_outlined,
               color: Colors.pink,
               imageUrl: 'assets/images/map_jepara.jpg',

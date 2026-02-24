@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class RawTimberMarketplacePage extends StatefulWidget {
   const RawTimberMarketplacePage({super.key});
@@ -11,10 +12,13 @@ class RawTimberMarketplacePage extends StatefulWidget {
 }
 
 class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
-  String _selectedFilter = 'All';
+  String? _selectedFilter;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    _selectedFilter ??= l10n.supplierMarketFilterAll;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -45,9 +49,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                         icon: const Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () => context.pop(),
                       ),
-                      const Text(
-                        'Raw Timber Market',
-                        style: TextStyle(
+                      Text(
+                        l10n.supplierMarketTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -105,7 +109,7 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                           child: TextField(
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
-                              hintText: 'Search logs, ID, or species...',
+                              hintText: l10n.supplierMarketSearchHint,
                               hintStyle: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 14,
@@ -173,11 +177,13 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
-                                _buildFilterPill('All', true),
-                                _buildFilterPill('Teak (Jati)', false),
-                                _buildFilterPill('Mahogany', false),
-                                _buildFilterPill('Logs', false),
-                                _buildFilterPill('FSC Only', false),
+                                _buildFilterPill(l10n.supplierMarketFilterAll),
+                                _buildFilterPill(l10n.supplierMarketFilterTeak),
+                                _buildFilterPill(
+                                  l10n.supplierMarketFilterMahogany,
+                                ),
+                                _buildFilterPill(l10n.supplierMarketFilterLogs),
+                                _buildFilterPill(l10n.supplierMarketFilterFsc),
                               ],
                             ),
                           ),
@@ -195,9 +201,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    'Available Stock',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.supplierMarketAvailableStock,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -205,16 +211,16 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                                   ),
                                   Row(
                                     children: [
-                                      const Text(
-                                        'Sort by: ',
-                                        style: TextStyle(
+                                      Text(
+                                        l10n.supplierMarketSortBy,
+                                        style: const TextStyle(
                                           color: Colors.white54,
                                           fontSize: 12,
                                         ),
                                       ),
-                                      const Text(
-                                        'Volume (High)',
-                                        style: TextStyle(
+                                      Text(
+                                        l10n.supplierMarketSortVolumeHigh,
+                                        style: const TextStyle(
                                           color: AppTheme.primaryColor,
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold,
@@ -231,9 +237,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text(
-                                'Showing 142 listings from verified suppliers in Jepara',
-                                style: TextStyle(
+                              Text(
+                                l10n.supplierMarketShowingListings,
+                                style: const TextStyle(
                                   color: Colors.white54,
                                   fontSize: 12,
                                 ),
@@ -317,9 +323,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                         Icons.edit_note,
                         color: AppTheme.background,
                       ),
-                      label: const Text(
-                        'Bulk Inquiry',
-                        style: TextStyle(
+                      label: Text(
+                        l10n.supplierMarketBulkInquiry,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontWeight: FontWeight.bold,
                         ),
@@ -402,7 +408,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
     );
   }
 
-  Widget _buildFilterPill(String text, bool isSelected) {
+  Widget _buildFilterPill(String text) {
+    final isSelected = _selectedFilter == text;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -467,6 +475,8 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
     required String volumeLeft,
     required double volumePercent,
   }) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.surfaceColor,
@@ -599,7 +609,7 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Supplier: $supplier',
+                            l10n.supplierMarketSupplierPrefix(supplier),
                             style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 12,
@@ -634,7 +644,7 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Min. Order: $minOrder',
+                          l10n.supplierMarketMinOrder(minOrder),
                           style: const TextStyle(
                             color: Colors.white54,
                             fontSize: 10,
@@ -663,9 +673,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'THICK',
-                              style: TextStyle(
+                            Text(
+                              l10n.supplierMarketSpecThick,
+                              style: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
@@ -708,9 +718,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'WIDTH',
-                                style: TextStyle(
+                              Text(
+                                l10n.supplierMarketSpecWidth,
+                                style: const TextStyle(
                                   color: Colors.white54,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -754,9 +764,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'PROCESS',
-                                style: TextStyle(
+                              Text(
+                                l10n.supplierMarketSpecProcess,
+                                style: const TextStyle(
                                   color: Colors.white54,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -777,9 +787,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                                     ),
                                   ),
                                   if (process == 'KD')
-                                    const Text(
-                                      ' Dry',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.supplierMarketSpecDry,
+                                      style: const TextStyle(
                                         color: Colors.white54,
                                         fontSize: 10,
                                       ),
@@ -803,9 +813,12 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Available Volume',
-                          style: TextStyle(color: Colors.white54, fontSize: 10),
+                        Text(
+                          l10n.supplierMarketAvailableVol,
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 10,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Container(
@@ -850,9 +863,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text(
-                        'Add to Quote',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      child: Text(
+                        l10n.supplierMarketAddToQuote,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -873,6 +886,8 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
     required String unit,
     required String badge1Text,
   }) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.surfaceColor,
@@ -909,9 +924,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Text(
-                        'Out of Stock',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.supplierMarketOutOfStock,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -971,7 +986,7 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Supplier: $supplier',
+                              l10n.supplierMarketSupplierPrefix(supplier),
                               style: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 12,
@@ -1018,7 +1033,7 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text('Notify When Available'),
+                      child: Text(l10n.supplierMarketNotifyAvailable),
                     ),
                   ),
                 ],

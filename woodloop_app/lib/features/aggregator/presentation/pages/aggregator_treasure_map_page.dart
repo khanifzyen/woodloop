@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class AggregatorTreasureMapPage extends StatelessWidget {
   const AggregatorTreasureMapPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: Stack(
@@ -97,17 +99,17 @@ class AggregatorTreasureMapPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.location_on,
                             color: AppTheme.primaryColor,
                             size: 16,
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
-                            'Jepara, ID',
-                            style: TextStyle(
+                            l10n.aggregatorMapLocation,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -166,22 +168,22 @@ class AggregatorTreasureMapPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Serbuk Kayu Jati',
-                              style: TextStyle(
+                              l10n.aggregatorMapMockTitle,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
-                              'Generator: Jepara Artisans',
-                              style: TextStyle(
+                              l10n.aggregatorMapMockGenerator,
+                              style: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 12,
                               ),
@@ -201,9 +203,9 @@ class AggregatorTreasureMapPage extends StatelessWidget {
                             color: AppTheme.primaryColor.withValues(alpha: 0.3),
                           ),
                         ),
-                        child: const Text(
-                          '2.5 km',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.aggregatorMapMockDistance,
+                          style: const TextStyle(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -225,21 +227,21 @@ class AggregatorTreasureMapPage extends StatelessWidget {
                               color: Colors.white.withValues(alpha: 0.05),
                             ),
                           ),
-                          child: const Column(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'BERAT EST.',
-                                style: TextStyle(
+                                l10n.aggregatorMapEstWeight,
+                                style: const TextStyle(
                                   color: Colors.white54,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
-                                '50 Kg',
-                                style: TextStyle(
+                                l10n.aggregatorMapMockWeight,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -262,21 +264,21 @@ class AggregatorTreasureMapPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          child: const Column(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'POTENSI PROFIT',
-                                style: TextStyle(
+                                l10n.aggregatorMapEstProfit,
+                                style: const TextStyle(
                                   color: AppTheme.primaryColor,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
-                                'Rp 25.000',
-                                style: TextStyle(
+                                l10n.aggregatorMapMockProfit,
+                                style: const TextStyle(
                                   color: AppTheme.primaryColor,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -303,9 +305,9 @@ class AggregatorTreasureMapPage extends StatelessWidget {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        'Ambil Tugas Pickup',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.aggregatorMapTakeTaskBtn,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

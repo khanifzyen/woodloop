@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class AddGeneratorProductPage extends StatefulWidget {
   const AddGeneratorProductPage({super.key});
@@ -11,28 +12,37 @@ class AddGeneratorProductPage extends StatefulWidget {
 }
 
 class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
-  String _selectedCategory = 'Furniture';
-  String _selectedWoodSource = '';
-  final Set<String> _selectedSpecies = {'Teak (Jati)'};
-
-  final List<String> _categories = ['Furniture', 'Souvenir', 'Decor'];
-  final List<String> _woodSpecies = [
-    'Teak (Jati)',
-    'Mahogany',
-    'Pine (Pinus)',
-    'Sonokeling',
-  ];
-  final List<String> _woodSources = [
-    'Log #TR-204 – Teak dari Perhutani',
-    'Log #TR-198 – Mahogany dari Blora',
-    'Log #TR-155 – Pine dari Lembang',
-  ];
+  String? _selectedCategory;
+  String? _selectedWoodSource;
+  Set<String>? _selectedSpecies;
 
   // Image placeholder slots
   final List<String?> _images = [null, null, null, null, null];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    _selectedCategory ??= l10n.generatorAddCategoryFurniture;
+    _selectedSpecies ??= {l10n.generatorAddSpeciesTeak};
+
+    final List<String> categories = [
+      l10n.generatorAddCategoryFurniture,
+      l10n.generatorAddCategorySouvenir,
+      l10n.generatorAddCategoryDecor,
+    ];
+    final List<String> woodSpecies = [
+      l10n.generatorAddSpeciesTeak,
+      l10n.generatorAddSpeciesMahogany,
+      l10n.generatorAddSpeciesPine,
+      l10n.generatorAddSpeciesSonokeling,
+    ];
+    final List<String> woodSources = [
+      l10n.generatorAddSourceMock1,
+      l10n.generatorAddSourceMock2,
+      l10n.generatorAddSourceMock3,
+    ];
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -40,9 +50,9 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Tambah Produk Baru',
-          style: TextStyle(
+        title: Text(
+          l10n.generatorAddProductTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -61,7 +71,7 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Photo Upload Section
-                  _buildSectionLabel('Foto Produk'),
+                  _buildSectionLabel(l10n.generatorAddProductPhoto),
                   const SizedBox(height: 8),
                   SizedBox(
                     height: 100,
@@ -101,9 +111,9 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                                         size: 28,
                                       ),
                                       const SizedBox(height: 6),
-                                      const Text(
-                                        'Tambah',
-                                        style: TextStyle(
+                                      Text(
+                                        l10n.generatorAddProductAddPhotoBtn,
+                                        style: const TextStyle(
                                           color: AppTheme.primaryColor,
                                           fontSize: 11,
                                           fontWeight: FontWeight.bold,
@@ -118,25 +128,23 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Unggah foto berkualitas tinggi. Maks 5 gambar.',
-                    style: TextStyle(color: Colors.white38, fontSize: 11),
+                  Text(
+                    l10n.generatorAddProductPhotoHint,
+                    style: const TextStyle(color: Colors.white38, fontSize: 11),
                   ),
                   const SizedBox(height: 24),
 
                   // Product Name
-                  _buildSectionLabel('Nama Produk'),
+                  _buildSectionLabel(l10n.generatorAddProductName),
                   const SizedBox(height: 8),
-                  _buildTextField(
-                    hint: 'Contoh: Meja Kopi Kayu Jati Reclaimed',
-                  ),
+                  _buildTextField(hint: l10n.generatorAddProductNameHint),
                   const SizedBox(height: 20),
 
                   // Category
-                  _buildSectionLabel('Kategori'),
+                  _buildSectionLabel(l10n.generatorAddProductCategory),
                   const SizedBox(height: 10),
                   Row(
-                    children: _categories
+                    children: categories
                         .map(
                           (cat) => Expanded(
                             child: GestureDetector(
@@ -144,7 +152,7 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                                   setState(() => _selectedCategory = cat),
                               child: Container(
                                 margin: EdgeInsets.only(
-                                  right: cat != _categories.last ? 10 : 0,
+                                  right: cat != categories.last ? 10 : 0,
                                 ),
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 12,
@@ -184,7 +192,7 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                   const SizedBox(height: 20),
 
                   // Price
-                  _buildSectionLabel('Harga'),
+                  _buildSectionLabel(l10n.generatorAddProductPrice),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
@@ -236,19 +244,19 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                   const SizedBox(height: 20),
 
                   // Wood Species Used
-                  _buildSectionLabel('Jenis Kayu yang Digunakan'),
+                  _buildSectionLabel(l10n.generatorAddProductWoodSpecies),
                   const SizedBox(height: 10),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      ..._woodSpecies.map(
+                      ...woodSpecies.map(
                         (sp) => GestureDetector(
                           onTap: () => setState(() {
-                            if (_selectedSpecies.contains(sp)) {
-                              _selectedSpecies.remove(sp);
+                            if (_selectedSpecies!.contains(sp)) {
+                              _selectedSpecies!.remove(sp);
                             } else {
-                              _selectedSpecies.add(sp);
+                              _selectedSpecies!.add(sp);
                             }
                           }),
                           child: Container(
@@ -257,12 +265,12 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: _selectedSpecies.contains(sp)
+                              color: _selectedSpecies!.contains(sp)
                                   ? AppTheme.primaryColor.withValues(alpha: 0.1)
                                   : AppTheme.surfaceColor,
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: _selectedSpecies.contains(sp)
+                                color: _selectedSpecies!.contains(sp)
                                     ? AppTheme.primaryColor
                                     : Colors.white.withValues(alpha: 0.15),
                               ),
@@ -273,16 +281,16 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                                 Text(
                                   sp,
                                   style: TextStyle(
-                                    color: _selectedSpecies.contains(sp)
+                                    color: _selectedSpecies!.contains(sp)
                                         ? AppTheme.primaryColor
                                         : Colors.white70,
                                     fontSize: 12,
-                                    fontWeight: _selectedSpecies.contains(sp)
+                                    fontWeight: _selectedSpecies!.contains(sp)
                                         ? FontWeight.bold
                                         : FontWeight.normal,
                                   ),
                                 ),
-                                if (_selectedSpecies.contains(sp)) ...[
+                                if (_selectedSpecies!.contains(sp)) ...[
                                   const SizedBox(width: 4),
                                   const Icon(
                                     Icons.check,
@@ -310,14 +318,18 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                               style: BorderStyle.solid,
                             ),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.add, color: Colors.white38, size: 14),
-                              SizedBox(width: 4),
+                              const Icon(
+                                Icons.add,
+                                color: Colors.white38,
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
                               Text(
-                                'Lainnya',
-                                style: TextStyle(
+                                l10n.generatorAddProductOther,
+                                style: const TextStyle(
                                   color: Colors.white38,
                                   fontSize: 12,
                                 ),
@@ -331,11 +343,10 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                   const SizedBox(height: 20),
 
                   // Description
-                  _buildSectionLabel('Deskripsi'),
+                  _buildSectionLabel(l10n.generatorAddProductDesc),
                   const SizedBox(height: 8),
                   _buildTextField(
-                    hint:
-                        'Deskripsikan keahlian pengerjaan, finishing, dan dimensi...',
+                    hint: l10n.generatorAddProductDescHint,
                     maxLines: 4,
                   ),
                   const SizedBox(height: 20),
@@ -370,9 +381,9 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Sumber Kayu',
-                              style: TextStyle(
+                            Text(
+                              l10n.generatorAddProductWoodSource,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -381,9 +392,12 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        const Text(
-                          'Pilih dari Riwayat Pembelian',
-                          style: TextStyle(color: Colors.white54, fontSize: 12),
+                        Text(
+                          l10n.generatorAddProductWoodSourceSub,
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 12,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Container(
@@ -397,18 +411,20 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                           ),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
-                              value: _selectedWoodSource.isEmpty
+                              value:
+                                  _selectedWoodSource == null ||
+                                      _selectedWoodSource!.isEmpty
                                   ? null
                                   : _selectedWoodSource,
-                              hint: const Text(
-                                'Pilih sumber kayu...',
-                                style: TextStyle(color: Colors.white54),
+                              hint: Text(
+                                l10n.generatorAddProductWoodSourceHint,
+                                style: const TextStyle(color: Colors.white54),
                               ),
                               isExpanded: true,
                               dropdownColor: AppTheme.surfaceColor,
                               iconEnabledColor: Colors.white54,
                               style: const TextStyle(color: Colors.white),
-                              items: _woodSources
+                              items: woodSources
                                   .map(
                                     (src) => DropdownMenuItem<String>(
                                       value: src,
@@ -432,9 +448,9 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
                               color: AppTheme.primaryColor,
                               size: 14,
                             ),
-                            label: const Text(
-                              'Tambah Sumber Manual',
-                              style: TextStyle(
+                            label: Text(
+                              l10n.generatorAddProductAddSourceManual,
+                              style: const TextStyle(
                                 color: AppTheme.primaryColor,
                                 fontSize: 11,
                               ),
@@ -466,16 +482,14 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
           child: ElevatedButton.icon(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Produk berhasil diterbitkan ke Marketplace!'),
-                ),
+                SnackBar(content: Text(l10n.generatorAddProductSuccessMsg)),
               );
               context.pop();
             },
             icon: const Icon(Icons.storefront, size: 20),
-            label: const Text(
-              'Terbitkan ke Marketplace',
-              style: TextStyle(
+            label: Text(
+              l10n.generatorAddProductPublishBtn,
+              style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.3,

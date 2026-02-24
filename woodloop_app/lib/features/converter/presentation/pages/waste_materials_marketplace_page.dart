@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class WasteMaterialsMarketplacePage extends StatelessWidget {
   const WasteMaterialsMarketplacePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class WasteMaterialsMarketplacePage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Bursa Limbah Kayu',
-          style: TextStyle(
+        title: Text(
+          l10n.converterMarketTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -49,14 +51,14 @@ class WasteMaterialsMarketplacePage extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
-                child: const TextField(
-                  style: TextStyle(color: Colors.white),
+                child: TextField(
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: 'Cari limbah (misal: Serbuk Jati)',
-                    hintStyle: TextStyle(color: Colors.white38),
-                    prefixIcon: Icon(Icons.search, color: Colors.white54),
+                    hintText: l10n.converterMarketSearchHint,
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white54),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 16),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                 ),
               ),
@@ -68,15 +70,15 @@ class WasteMaterialsMarketplacePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Row(
                 children: [
-                  _buildCategoryChip('Semua', true),
+                  _buildCategoryChip(l10n.converterMarketTabAll, true),
                   const SizedBox(width: 8),
-                  _buildCategoryChip('Serbuk', false),
+                  _buildCategoryChip(l10n.converterMarketTabSawdust, false),
                   const SizedBox(width: 8),
-                  _buildCategoryChip('Potongan', false),
+                  _buildCategoryChip(l10n.converterMarketTabCutout, false),
                   const SizedBox(width: 8),
-                  _buildCategoryChip('Pallet', false),
+                  _buildCategoryChip(l10n.converterMarketTabPallet, false),
                   const SizedBox(width: 8),
-                  _buildCategoryChip('Sortiran Gudang', false),
+                  _buildCategoryChip(l10n.converterMarketTabSort, false),
                 ],
               ),
             ),
@@ -87,24 +89,24 @@ class WasteMaterialsMarketplacePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   _buildMarketItem(
-                    title: 'Serbuk Jati Murni (Gudang A)',
-                    seller: 'Budi Logistics (Aggregator)',
-                    stock: 'Tersedia: 850 Kg',
-                    price: 'Rp 600 / Kg',
+                    title: l10n.converterMarketMockTitle1,
+                    seller: l10n.converterMarketMockSeller1,
+                    stock: l10n.converterMarketMockStock1,
+                    price: l10n.converterMarketMockPrice1,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildMarketItem(
-                    title: 'Potongan Mahoni Kecil',
-                    seller: 'Jepara Artisans (Generator)',
-                    stock: 'Tersedia: 120 Kg',
-                    price: 'Rp 1.500 / Kg',
+                    title: l10n.converterMarketMockTitle2,
+                    seller: l10n.converterMarketMockSeller2,
+                    stock: l10n.converterMarketMockStock2,
+                    price: l10n.converterMarketMockPrice2,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildMarketItem(
-                    title: 'Pallet Pinus Bekas Impor',
-                    seller: 'Gudang Pusat WoodLoop',
-                    stock: 'Tersedia: 45 Pcs',
-                    price: 'Rp 15.000 / Pcs',
+                    title: l10n.converterMarketMockTitle3,
+                    seller: l10n.converterMarketMockSeller3,
+                    stock: l10n.converterMarketMockStock3,
+                    price: l10n.converterMarketMockPrice3,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                 ],

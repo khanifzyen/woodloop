@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class ConverterStudioDashboardPage extends StatelessWidget {
   const ConverterStudioDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -38,20 +40,20 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Studio Aktif,',
-                            style: TextStyle(
+                            l10n.converterDashActiveStudio,
+                            style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           Text(
-                            'Jepara Eco Art',
-                            style: TextStyle(
+                            l10n.converterDashMockStudioName,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -146,9 +148,9 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Pendapatan Bulan Ini',
-                          style: TextStyle(
+                        Text(
+                          l10n.converterDashRevenueThisMonth,
+                          style: const TextStyle(
                             color: Colors.black54,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -163,9 +165,9 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                             color: Colors.black.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text(
-                            'Nov 2023',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.converterDashMockMonth,
+                            style: const TextStyle(
                               color: Colors.black87,
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -175,11 +177,11 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Row(
+                    Row(
                       children: [
                         Text(
-                          'Rp 12.450.000',
-                          style: TextStyle(
+                          l10n.converterDashMockRevenue,
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -191,8 +193,8 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                     Row(
                       children: [
                         _buildStatItem(
-                          '14',
-                          'Terjual',
+                          l10n.converterDashMockSold,
+                          l10n.converterDashSoldLabel,
                           Icons.shopping_bag_outlined,
                         ),
                         Container(
@@ -201,7 +203,11 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                           color: Colors.black12,
                           margin: const EdgeInsets.symmetric(horizontal: 16),
                         ),
-                        _buildStatItem('350', 'Kg Diolah', Icons.recycling),
+                        _buildStatItem(
+                          l10n.converterDashMockProcessed,
+                          l10n.converterDashProcessedLabel,
+                          Icons.recycling,
+                        ),
                       ],
                     ),
                   ],
@@ -218,7 +224,7 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                   Expanded(
                     child: _buildActionCard(
                       context: context,
-                      title: 'Marketplace\nBahan Baku',
+                      title: l10n.converterDashMenuMarketplace,
                       icon: Icons.storefront,
                       color: AppTheme.primaryColor,
                       route: '/waste-materials-marketplace',
@@ -228,7 +234,7 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                   Expanded(
                     child: _buildActionCard(
                       context: context,
-                      title: 'Katalog\nProduk Saya',
+                      title: l10n.converterDashMenuCatalog,
                       icon: Icons.inventory_2_outlined,
                       color: Colors.blue,
                       route: '/my-upcycled-catalog',
@@ -238,7 +244,7 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                   Expanded(
                     child: _buildActionCard(
                       context: context,
-                      title: 'Klinik\nDesain',
+                      title: l10n.converterDashMenuClinic,
                       icon: Icons.design_services_outlined,
                       color: Colors.orange,
                       route: '/design-clinic-inspiration',
@@ -255,16 +261,16 @@ class ConverterStudioDashboardPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Produk Terbaru di Etalase',
-                    style: TextStyle(
+                  Text(
+                    l10n.converterDashNewProducts,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'Lihat Semua',
+                    l10n.converterDashSeeAll,
                     style: TextStyle(
                       color: AppTheme.primaryColor.withValues(alpha: 0.8),
                       fontSize: 12,
@@ -280,19 +286,21 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   _buildProductListItem(
-                    title: 'Kursi Santai Palet Jati',
-                    subtitle: 'Upcycled 100% Pallet Bekas',
-                    price: 'Rp 450.000',
-                    sales: '3',
+                    title: l10n.converterDashMockProd1Title,
+                    subtitle: l10n.converterDashMockProd1Sub,
+                    price: l10n.converterDashMockProd1Price,
+                    sales: l10n.converterDashMockProd1Sales,
                     imageUrl:
                         'assets/images/map_jepara.jpg', // Map Placeholder acting as product image
+                    l10n: l10n,
                   ),
                   _buildProductListItem(
-                    title: 'Meja Kopi Resin & Serbuk',
-                    subtitle: 'Bahan Baku: Serbuk Campur',
-                    price: 'Rp 1.200.000',
-                    sales: '1',
+                    title: l10n.converterDashMockProd2Title,
+                    subtitle: l10n.converterDashMockProd2Sub,
+                    price: l10n.converterDashMockProd2Price,
+                    sales: l10n.converterDashMockProd2Sales,
                     imageUrl: 'assets/images/map_jepara.jpg',
+                    l10n: l10n,
                   ),
                 ],
               ),
@@ -337,19 +345,22 @@ class ConverterStudioDashboardPage extends StatelessWidget {
               break;
           }
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Studio'),
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.store),
-            label: 'Marketplace',
+            icon: const Icon(Icons.home),
+            label: l10n.converterDashNavStudio,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Pesanan',
+            icon: const Icon(Icons.store),
+            label: l10n.converterDashNavMarketplace,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profil',
+            icon: const Icon(Icons.receipt_long),
+            label: l10n.converterDashNavOrders,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person_outline),
+            label: l10n.converterDashNavProfile,
           ),
         ],
       ),
@@ -432,6 +443,7 @@ class ConverterStudioDashboardPage extends StatelessWidget {
     required String price,
     required String sales,
     required String imageUrl,
+    required AppLocalizations l10n,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -489,7 +501,7 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '$sales Terjual',
+                      l10n.converterDashSalesCount(sales),
                       style: const TextStyle(
                         color: Colors.white38,
                         fontSize: 10,

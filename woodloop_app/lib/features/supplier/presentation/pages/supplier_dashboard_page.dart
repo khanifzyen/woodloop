@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class SupplierDashboardPage extends StatelessWidget {
   const SupplierDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -38,18 +41,18 @@ class SupplierDashboardPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Welcome back,',
-                            style: TextStyle(
+                            l10n.supplierDashWelcome,
+                            style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Text(
+                          const Text(
                             'WoodLoop Supply',
                             style: TextStyle(
                               color: Colors.white,
@@ -104,11 +107,11 @@ class SupplierDashboardPage extends StatelessWidget {
               ),
             ),
 
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
-                'Dashboard Overview',
-                style: TextStyle(
+                l10n.supplierDashOverviewTitle,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -130,7 +133,7 @@ class SupplierDashboardPage extends StatelessWidget {
                     iconColor: AppTheme.primaryColor,
                     badgeText: '12%',
                     badgeIcon: Icons.trending_up,
-                    title: 'Monthly Revenue',
+                    title: l10n.supplierDashMonthlyRevenue,
                     value: '\$34,200',
                     bgIcon: Icons.payments_outlined,
                   ),
@@ -141,7 +144,7 @@ class SupplierDashboardPage extends StatelessWidget {
                     iconColor: Colors.blue[400]!,
                     badgeText: '5%',
                     badgeIcon: Icons.trending_up,
-                    title: 'Total Timber Stock',
+                    title: l10n.supplierDashTotalStock,
                     value: '4,520 m³',
                     bgIcon: Icons.forest_outlined,
                   ),
@@ -152,7 +155,7 @@ class SupplierDashboardPage extends StatelessWidget {
                     iconColor: Colors.orange[400]!,
                     badgeText: null,
                     badgeIcon: null,
-                    title: 'Active Listings',
+                    title: l10n.supplierDashActiveListings,
                     value: '12',
                     bgIcon: Icons.list_alt,
                   ),
@@ -179,14 +182,18 @@ class SupplierDashboardPage extends StatelessWidget {
                     elevation: 8,
                     shadowColor: AppTheme.primaryColor.withValues(alpha: 0.3),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add, color: AppTheme.background, size: 24),
-                      SizedBox(width: 8),
+                      const Icon(
+                        Icons.add,
+                        color: AppTheme.background,
+                        size: 24,
+                      ),
+                      const SizedBox(width: 8),
                       Text(
-                        'List New Timber',
-                        style: TextStyle(
+                        l10n.supplierDashListNewTimber,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -205,9 +212,9 @@ class SupplierDashboardPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Recent Sales',
-                    style: TextStyle(
+                  Text(
+                    l10n.supplierDashRecentSales,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -217,9 +224,9 @@ class SupplierDashboardPage extends StatelessWidget {
                     onPressed: () {
                       context.pushNamed('supplier_sales_history');
                     },
-                    child: const Text(
-                      'View All',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.supplierDashViewAll,
+                      style: const TextStyle(
                         color: AppTheme.primaryColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -306,26 +313,26 @@ class SupplierDashboardPage extends StatelessWidget {
               break;
           }
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            icon: const Icon(Icons.dashboard),
+            label: l10n.navDashboard,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.storefront),
-            label: 'Market',
+            icon: const Icon(Icons.storefront),
+            label: l10n.navMarket,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.inventory_2_outlined),
-            label: 'Inventory',
+            icon: const Icon(Icons.inventory_2_outlined),
+            label: l10n.navInventory,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: 'Messages',
+            icon: const Icon(Icons.chat_bubble_outline),
+            label: l10n.navMessages,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
+            icon: const Icon(Icons.person_outline),
+            label: l10n.navProfile,
           ),
         ],
       ),

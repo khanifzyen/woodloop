@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class SelectWoodSourceHistoryPage extends StatelessWidget {
   const SelectWoodSourceHistoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class SelectWoodSourceHistoryPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Pilih Sumber Kayu',
-          style: TextStyle(
+        title: Text(
+          l10n.traceabilitySelectSourceTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -39,14 +41,14 @@ class SelectWoodSourceHistoryPage extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
-                child: const TextField(
-                  style: TextStyle(color: Colors.white),
+                child: TextField(
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: 'Cari berdasarkan ID Batch atau Jenis...',
-                    hintStyle: TextStyle(color: Colors.white38),
-                    prefixIcon: Icon(Icons.search, color: Colors.white54),
+                    hintText: l10n.traceabilitySelectSourceSearchHint,
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white54),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                 ),
               ),
@@ -59,32 +61,35 @@ class SelectWoodSourceHistoryPage extends StatelessWidget {
                 children: [
                   _buildSourceItem(
                     context: context,
-                    date: '10 Nov 2023',
-                    type: 'Serbuk Kayu Jati',
-                    volume: '50 Kg',
-                    supplier: 'UD Sukses Makmur',
-                    batchId: 'BATCH-20231110-01',
+                    date: l10n.traceabilitySelectSourceMockDate1,
+                    type: l10n.traceabilitySelectSourceMockType1,
+                    volume: l10n.traceabilitySelectSourceMockVol1,
+                    supplier: l10n.traceabilitySelectSourceMockSupplier1,
+                    batchId: l10n.traceabilitySelectSourceMockBatch1,
                     isSelected: true,
+                    l10n: l10n,
                   ),
                   const SizedBox(height: 12),
                   _buildSourceItem(
                     context: context,
-                    date: '02 Nov 2023',
-                    type: 'Potongan Mangga',
-                    volume: '120 Kg',
-                    supplier: 'Penggergajian H. Toni',
-                    batchId: 'BATCH-20231102-05',
+                    date: l10n.traceabilitySelectSourceMockDate2,
+                    type: l10n.traceabilitySelectSourceMockType2,
+                    volume: l10n.traceabilitySelectSourceMockVol2,
+                    supplier: l10n.traceabilitySelectSourceMockSupplier2,
+                    batchId: l10n.traceabilitySelectSourceMockBatch2,
                     isSelected: false,
+                    l10n: l10n,
                   ),
                   const SizedBox(height: 12),
                   _buildSourceItem(
                     context: context,
-                    date: '28 Okt 2023',
-                    type: 'Palet Pinus Bekas',
-                    volume: '85 Kg',
-                    supplier: 'Logistik Maju Jaya',
-                    batchId: 'BATCH-20231028-12',
+                    date: l10n.traceabilitySelectSourceMockDate3,
+                    type: l10n.traceabilitySelectSourceMockType3,
+                    volume: l10n.traceabilitySelectSourceMockVol3,
+                    supplier: l10n.traceabilitySelectSourceMockSupplier3,
+                    batchId: l10n.traceabilitySelectSourceMockBatch3,
                     isSelected: false,
+                    l10n: l10n,
                   ),
                 ],
               ),
@@ -113,9 +118,9 @@ class SelectWoodSourceHistoryPage extends StatelessWidget {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Gunakan Sumber Ini',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.traceabilitySelectSourceBtnUse,
+                    style: const TextStyle(
                       color: AppTheme.background,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -138,6 +143,7 @@ class SelectWoodSourceHistoryPage extends StatelessWidget {
     required String supplier,
     required String batchId,
     required bool isSelected,
+    required AppLocalizations l10n,
   }) {
     return GestureDetector(
       onTap: () {
@@ -223,7 +229,7 @@ class SelectWoodSourceHistoryPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'ID: $batchId',
+                    l10n.traceabilitySelectSourceIdFormat(batchId),
                     style: const TextStyle(color: Colors.white38, fontSize: 10),
                   ),
                 ],

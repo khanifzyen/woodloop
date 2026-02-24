@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class ImpactAnalyticsDashboardPage extends StatelessWidget {
   const ImpactAnalyticsDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Impact Analytics',
-          style: TextStyle(
+        title: Text(
+          l10n.enablerAnalyticsTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -40,9 +42,9 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Region: Jepara',
-                  style: TextStyle(
+                Text(
+                  l10n.enablerAnalyticsRegion,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -60,13 +62,16 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
                       color: Colors.white.withValues(alpha: 0.1),
                     ),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Text(
-                        'Bulan Ini',
-                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                        l10n.enablerAnalyticsFilterMonth,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.arrow_drop_down,
                         color: Colors.white70,
                         size: 16,
@@ -83,22 +88,22 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildKpiCard(
-                    title: 'Limbah Diselamatkan',
-                    value: '1.240',
-                    unit: 'Ton',
+                    title: l10n.enablerAnalyticsKpiWaste,
+                    value: l10n.enablerAnalyticsKpiWasteMockValue,
+                    unit: l10n.enablerAnalyticsKpiWasteMockUnit,
                     icon: Icons.recycling,
-                    trend: '+12%',
+                    trend: l10n.enablerAnalyticsKpiWasteMockTrend,
                     isPositive: true,
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildKpiCard(
-                    title: 'Emisi Karbon Ditekan',
-                    value: '850',
-                    unit: 'kg CO2e',
+                    title: l10n.enablerAnalyticsKpiCarbon,
+                    value: l10n.enablerAnalyticsKpiCarbonMockValue,
+                    unit: l10n.enablerAnalyticsKpiCarbonMockUnit,
                     icon: Icons.cloud_outlined,
-                    trend: '+5%',
+                    trend: l10n.enablerAnalyticsKpiCarbonMockTrend,
                     isPositive: true,
                   ),
                 ),
@@ -109,22 +114,22 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildKpiCard(
-                    title: 'Nilai Ekonomi Mutiplier',
-                    value: 'Rp 45M',
+                    title: l10n.enablerAnalyticsKpiEconomy,
+                    value: l10n.enablerAnalyticsKpiEconomyMockValue,
                     unit: '',
                     icon: Icons.account_balance_wallet_outlined,
-                    trend: '+18%',
+                    trend: l10n.enablerAnalyticsKpiEconomyMockTrend,
                     isPositive: true,
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildKpiCard(
-                    title: 'Partikel Aktif',
-                    value: '3.402',
-                    unit: 'User',
+                    title: l10n.enablerAnalyticsKpiActiveUsers,
+                    value: l10n.enablerAnalyticsKpiActiveUsersMockValue,
+                    unit: l10n.enablerAnalyticsKpiActiveUsersMockUnit,
                     icon: Icons.groups_outlined,
-                    trend: '+2%',
+                    trend: l10n.enablerAnalyticsKpiActiveUsersMockTrend,
                     isPositive: true,
                   ),
                 ),
@@ -133,9 +138,9 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
             const SizedBox(height: 32),
 
             // Chart Placeholder (Traceability Volume)
-            const Text(
-              'Volume Kayu Terdokumentasi (Traceability)',
-              style: TextStyle(
+            Text(
+              l10n.enablerAnalyticsChartTitle,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -160,7 +165,7 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Grafik Pertumbuhan Volume (Mock)',
+                    l10n.enablerAnalyticsChartMockLegend,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.5),
                     ),
@@ -171,9 +176,9 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
             const SizedBox(height: 32),
 
             // Active Aggregators/Contributors List
-            const Text(
-              'Top Kontributor (Minggu Ini)',
-              style: TextStyle(
+            Text(
+              l10n.enablerAnalyticsTopContributors,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -182,18 +187,18 @@ class ImpactAnalyticsDashboardPage extends StatelessWidget {
             const SizedBox(height: 16),
             _buildContributorRow(
               '1',
-              'Budi Logistics (Aggregator)',
-              '450 Kg Kayu Terselamatkan',
+              l10n.enablerAnalyticsTopMockName1,
+              l10n.enablerAnalyticsTopMockStat1,
             ),
             _buildContributorRow(
               '2',
-              'Jepara Eco Art (Converter)',
-              '120 Kg Kayu Terselamatkan',
+              l10n.enablerAnalyticsTopMockName2,
+              l10n.enablerAnalyticsTopMockStat2,
             ),
             _buildContributorRow(
               '3',
-              'UD Sukses Makmur (Generator)',
-              '90 Kg Kayu Terdokumentasi',
+              l10n.enablerAnalyticsTopMockName3,
+              l10n.enablerAnalyticsTopMockStat3,
             ),
 
             const SizedBox(height: 32),

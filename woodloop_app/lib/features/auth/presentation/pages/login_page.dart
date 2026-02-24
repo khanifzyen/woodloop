@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,6 +15,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -59,8 +62,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        'Welcome Back!',
-                        style: TextStyle(
+                        l10n.loginWelcomeBack,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -68,9 +71,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Log in to manage your wood cycle.',
-                        style: TextStyle(color: Colors.white54, fontSize: 16),
+                      Text(
+                        l10n.loginSubtitle,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 48),
 
@@ -78,11 +84,14 @@ class _LoginPageState extends State<LoginPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 4.0,
+                              bottom: 8.0,
+                            ),
                             child: Text(
-                              'Email',
-                              style: TextStyle(
+                              l10n.loginEmailLabel,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -92,9 +101,9 @@ class _LoginPageState extends State<LoginPage> {
                           TextField(
                             style: const TextStyle(color: Colors.white),
                             keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              hintText: 'Enter your email',
-                              prefixIcon: Icon(
+                            decoration: InputDecoration(
+                              hintText: l10n.loginEmailHint,
+                              prefixIcon: const Icon(
                                 Icons.mail_outline,
                                 color: Colors.white38,
                               ),
@@ -108,11 +117,14 @@ class _LoginPageState extends State<LoginPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 4.0,
+                              bottom: 8.0,
+                            ),
                             child: Text(
-                              'Password',
-                              style: TextStyle(
+                              l10n.loginPasswordLabel,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -123,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: const TextStyle(color: Colors.white),
                             obscureText: _obscurePassword,
                             decoration: InputDecoration(
-                              hintText: 'Enter your password',
+                              hintText: l10n.loginPasswordHint,
                               prefixIcon: const Icon(
                                 Icons.lock_outline,
                                 color: Colors.white38,
@@ -156,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                             foregroundColor: Colors.white54,
                             padding: EdgeInsets.zero,
                           ),
-                          child: const Text('Forgot Password?'),
+                          child: Text(l10n.loginForgotPasswordLink),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -173,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Login',
+                                l10n.loginButton,
                                 style: TextStyle(color: AppTheme.background),
                               ),
                               const SizedBox(width: 8),
@@ -195,11 +207,11 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.white.withValues(alpha: 0.1),
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
-                              'Or continue with',
-                              style: TextStyle(
+                              l10n.loginOrContinueWith,
+                              style: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 14,
                               ),
@@ -225,9 +237,9 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white,
                                 size: 28,
                               ), // Placeholder for Google
-                              label: const Text(
-                                'Google',
-                                style: TextStyle(color: Colors.white),
+                              label: Text(
+                                l10n.loginGoogle,
+                                style: const TextStyle(color: Colors.white),
                               ),
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
@@ -252,9 +264,9 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white,
                                 size: 24,
                               ),
-                              label: const Text(
-                                'Apple',
-                                style: TextStyle(color: Colors.white),
+                              label: Text(
+                                l10n.loginApple,
+                                style: const TextStyle(color: Colors.white),
                               ),
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
@@ -281,16 +293,16 @@ class _LoginPageState extends State<LoginPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
-                              "Don't have an account? ",
-                              style: TextStyle(color: Colors.white54),
+                            Text(
+                              l10n.loginDontHaveAccount,
+                              style: const TextStyle(color: Colors.white54),
                             ),
                             GestureDetector(
                               onTap: () {
                                 // Navigate to sign up
                               },
                               child: Text(
-                                'Sign Up',
+                                l10n.loginSignUp,
                                 style: TextStyle(
                                   color: AppTheme.primaryColor,
                                   fontWeight: FontWeight.bold,

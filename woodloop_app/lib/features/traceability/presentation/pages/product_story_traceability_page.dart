@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class ProductStoryTraceabilityPage extends StatelessWidget {
   const ProductStoryTraceabilityPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: Stack(
@@ -22,9 +24,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () => context.pop(),
                 ),
-                title: const Text(
-                  'Traceability',
-                  style: TextStyle(
+                title: Text(
+                  l10n.traceabilityTitle,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -112,9 +114,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                       ),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: const Text(
-                                      'UPCYCLED TEAK',
-                                      style: TextStyle(
+                                    child: Text(
+                                      l10n.traceabilityCategoryMock,
+                                      style: const TextStyle(
                                         color: AppTheme.primaryColor,
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
@@ -123,9 +125,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 8),
-                                  const Text(
-                                    'Teak Wall Panel',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.traceabilityMockProduct,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 28,
                                       fontWeight: FontWeight.bold,
@@ -141,9 +143,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                         size: 16,
                                       ),
                                       const SizedBox(width: 4),
-                                      const Text(
-                                        'Model X-24',
-                                        style: TextStyle(
+                                      Text(
+                                        l10n.traceabilityMockModel,
+                                        style: const TextStyle(
                                           color: Colors.white70,
                                           fontSize: 12,
                                         ),
@@ -165,9 +167,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text(
-                                  'In Stock',
-                                  style: TextStyle(
+                                Text(
+                                  l10n.traceabilityInStock,
+                                  style: const TextStyle(
                                     color: AppTheme.primaryColor,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
@@ -232,18 +234,18 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'CRAFTED BY',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.traceabilityCraftedBy,
+                                      style: const TextStyle(
                                         color: Colors.white54,
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                         letterSpacing: 0.5,
                                       ),
                                     ),
-                                    const Text(
-                                      'Sari Studio',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.traceabilityMockStudio,
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -278,9 +280,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
-                                const Text(
-                                  'Impact Metrics',
-                                  style: TextStyle(
+                                Text(
+                                  l10n.traceabilityImpactMetrics,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -319,9 +321,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const Text(
-                                          'CO2 OFFSET',
-                                          style: TextStyle(
+                                        Text(
+                                          l10n.traceabilityCO2Offset,
+                                          style: const TextStyle(
                                             color: Colors.white54,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
@@ -361,9 +363,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const Text(
-                                          'WASTE DIVERTED',
-                                          style: TextStyle(
+                                        Text(
+                                          l10n.traceabilityWasteDiverted,
+                                          style: const TextStyle(
                                             color: Colors.white54,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
@@ -394,16 +396,16 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    'Material Composition',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.traceabilityMaterialComposition,
+                                    style: const TextStyle(
                                       color: Colors.white70,
                                       fontSize: 13,
                                     ),
                                   ),
-                                  const Text(
-                                    '100% Upcycled Wood',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.traceabilityMaterialMock,
+                                    style: const TextStyle(
                                       color: AppTheme.primaryColor,
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
@@ -425,9 +427,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Product Journey',
-                                  style: TextStyle(
+                                Text(
+                                  l10n.traceabilityJourney,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -457,9 +459,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                                         size: 14,
                                       ),
                                       const SizedBox(width: 4),
-                                      const Text(
-                                        'Blockchain Verified',
-                                        style: TextStyle(
+                                      Text(
+                                        l10n.traceabilityVerifiedBlockchain,
+                                        style: const TextStyle(
                                           color: AppTheme.primaryColor,
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
@@ -474,39 +476,43 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                             // Timeline Steps
                             _buildTimelineStep(
                               icon: Icons.forest,
-                              label: 'Origin',
+                              label: l10n.traceabilityStep1Label,
                               date: '2023-08-15',
-                              title: 'Raw Wood Sourcing',
-                              description: 'Sourced sustainably from ',
-                              entityName: 'Perhutani Forest',
+                              title: l10n.traceabilityStep1Title,
+                              description: l10n.traceabilityStep1Desc,
+                              entityName: l10n.traceabilityStep1Entity,
                               showVerified: true,
+                              l10n: l10n,
                             ),
                             _buildTimelineStep(
                               icon: Icons.carpenter,
-                              label: 'Waste Gen',
+                              label: l10n.traceabilityStep2Label,
                               date: '2023-09-02',
-                              title: 'Production Scrap',
-                              description: 'Offcuts collected from ',
-                              entityName: 'Budi Workshop',
+                              title: l10n.traceabilityStep2Title,
+                              description: l10n.traceabilityStep2Desc,
+                              entityName: l10n.traceabilityStep2Entity,
+                              l10n: l10n,
                             ),
                             _buildTimelineStep(
                               icon: Icons.local_shipping,
-                              label: 'Aggregation',
+                              label: l10n.traceabilityStep3Label,
                               date: '2023-09-10',
-                              title: 'Waste Collection',
-                              description: 'Transported and sorted by ',
-                              entityName: 'Mas Joko Logistics',
+                              title: l10n.traceabilityStep3Title,
+                              description: l10n.traceabilityStep3Desc,
+                              entityName: l10n.traceabilityStep3Entity,
+                              l10n: l10n,
                             ),
                             _buildTimelineStep(
                               icon: Icons.handyman,
-                              label: 'Final Product',
+                              label: l10n.traceabilityStep4Label,
                               date: '2023-10-01',
-                              title: 'Upcycled Creation',
-                              description: 'Handcrafted into panel by ',
-                              entityName: 'Sari Studio',
+                              title: l10n.traceabilityStep4Title,
+                              description: l10n.traceabilityStep4Desc,
+                              entityName: l10n.traceabilityStep4Entity,
                               isLast: true,
                               isActive:
                                   true, // Highlights the last step according to design
+                              l10n: l10n,
                             ),
                           ],
                         ),
@@ -574,9 +580,9 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                             children: [
                               const Icon(Icons.shopping_cart, size: 20),
                               const SizedBox(width: 8),
-                              const Text(
-                                'Add to Cart',
-                                style: TextStyle(
+                              Text(
+                                l10n.traceabilityAddToCart,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -606,6 +612,7 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
     bool showVerified = false,
     bool isLast = false,
     bool isActive = false,
+    required AppLocalizations l10n,
   }) {
     return IntrinsicHeight(
       child: Row(
@@ -734,18 +741,18 @@ class ProductStoryTraceabilityPage extends StatelessWidget {
                         color: Colors.green.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.check_circle,
                             color: Colors.green,
                             size: 12,
                           ),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           Text(
-                            'Verified',
-                            style: TextStyle(
+                            l10n.traceabilityVerifiedBadge,
+                            style: const TextStyle(
                               color: Colors.green,
                               fontSize: 10,
                               fontWeight: FontWeight.w600,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class SupplierSalesHistoryPage extends StatefulWidget {
   const SupplierSalesHistoryPage({super.key});
@@ -11,10 +12,13 @@ class SupplierSalesHistoryPage extends StatefulWidget {
 }
 
 class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
-  String _selectedFilter = 'All Orders';
+  String? _selectedFilter;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    _selectedFilter ??= l10n.supplierSalesHistoryFilterAll;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -22,9 +26,9 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Sales History',
-          style: TextStyle(
+        title: Text(
+          l10n.supplierSalesHistoryTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -52,7 +56,7 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
                 children: [
                   Expanded(
                     child: _buildSummaryCard(
-                      title: 'Total Revenue',
+                      title: l10n.supplierSalesHistoryTotalRevenue,
                       value: '\$145,800',
                       icon: Icons.account_balance_wallet_outlined,
                       trend: '+15.3%',
@@ -62,7 +66,7 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: _buildSummaryCard(
-                      title: 'Orders Completed',
+                      title: l10n.supplierSalesHistoryOrdersCompleted,
                       value: '128',
                       icon: Icons.check_circle_outline,
                       trend: '+4.2%',
@@ -88,14 +92,17 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
                           color: Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
-                      child: const TextField(
-                        style: TextStyle(color: Colors.white),
+                      child: TextField(
+                        style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Search orders...',
-                          hintStyle: TextStyle(color: Colors.white38),
-                          prefixIcon: Icon(Icons.search, color: Colors.white38),
+                          hintText: l10n.supplierSalesHistorySearchHint,
+                          hintStyle: const TextStyle(color: Colors.white38),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.white38,
+                          ),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 14,
                           ),
@@ -138,11 +145,11 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    _buildFilterChip('All Orders'),
-                    _buildFilterChip('Completed'),
-                    _buildFilterChip('Processing'),
-                    _buildFilterChip('Shipped'),
-                    _buildFilterChip('Cancelled'),
+                    _buildFilterChip(l10n.supplierSalesHistoryFilterAll),
+                    _buildFilterChip(l10n.supplierSalesHistoryFilterCompleted),
+                    _buildFilterChip(l10n.supplierSalesHistoryFilterProcessing),
+                    _buildFilterChip(l10n.supplierSalesHistoryFilterShipped),
+                    _buildFilterChip(l10n.supplierSalesHistoryFilterCancelled),
                   ],
                 ),
               ),
@@ -172,13 +179,15 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
   }
 
   Widget _buildTransactionSection() {
+    final l10n = AppLocalizations.of(context)!;
+
     List<Widget> children = [];
 
     void addDateSection(String date, List<Map<String, dynamic>> orders) {
       final filteredOrders = orders
           .where(
             (o) =>
-                _selectedFilter == 'All Orders' ||
+                _selectedFilter == l10n.supplierSalesHistoryFilterAll ||
                 o['status'] == _selectedFilter,
           )
           .toList();
@@ -201,14 +210,14 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
       }
     }
 
-    addDateSection('Today', [
+    addDateSection(l10n.supplierSalesHistoryToday, [
       {
         'orderId': '#ORD-2023-8942',
         'amount': '\$4,550.00',
         'buyer': 'BuildCorp Industries',
         'item': 'Pine Lumber Grade A (1200m³)',
         'time': '14:30 PM',
-        'status': 'Processing',
+        'status': l10n.supplierSalesHistoryFilterProcessing,
         'statusColor': Colors.yellow,
       },
       {
@@ -217,19 +226,19 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
         'buyer': 'Nordic Furniture',
         'item': 'Raw Oak Logs (500m³)',
         'time': '09:15 AM',
-        'status': 'Shipped',
+        'status': l10n.supplierSalesHistoryFilterShipped,
         'statusColor': Colors.blue,
       },
     ]);
 
-    addDateSection('Yesterday, Oct 24', [
+    addDateSection(l10n.supplierSalesHistoryYesterdayMock, [
       {
         'orderId': '#ORD-2023-8938',
         'amount': '\$890.00',
         'buyer': 'Local Carpentry',
         'item': 'Birch Plywood (200m³)',
         'time': '16:45 PM',
-        'status': 'Completed',
+        'status': l10n.supplierSalesHistoryFilterCompleted,
         'statusColor': AppTheme.primaryColor,
       },
       {
@@ -238,32 +247,32 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
         'buyer': 'Luxury Yachts Inc.',
         'item': 'Mahogany Planks (50m³)',
         'time': '11:20 AM',
-        'status': 'Cancelled',
+        'status': l10n.supplierSalesHistoryFilterCancelled,
         'statusColor': Colors.red,
         'isCancelled': true,
       },
     ]);
 
-    addDateSection('Oct 22, 2023', [
+    addDateSection(l10n.supplierSalesHistoryDateMock, [
       {
         'orderId': '#ORD-2023-8920',
         'amount': '\$3,400.00',
         'buyer': 'EcoBuilders LLC',
         'item': 'Recycled Teak (400m³)',
         'time': '10:05 AM',
-        'status': 'Completed',
+        'status': l10n.supplierSalesHistoryFilterCompleted,
         'statusColor': AppTheme.primaryColor,
       },
     ]);
 
     if (children.isEmpty) {
       children.add(
-        const Padding(
-          padding: EdgeInsets.all(40.0),
+        Padding(
+          padding: const EdgeInsets.all(40.0),
           child: Center(
             child: Text(
-              'No orders found for this filter.',
-              style: TextStyle(color: Colors.white54),
+              l10n.supplierSalesHistoryNoOrders,
+              style: const TextStyle(color: Colors.white54),
             ),
           ),
         ),
@@ -280,6 +289,8 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
     required String trend,
     required bool isPositive,
   }) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -335,9 +346,9 @@ class _SupplierSalesHistoryPageState extends State<SupplierSalesHistoryPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Text(
-                ' vs last month',
-                style: TextStyle(color: Colors.white38, fontSize: 10),
+              Text(
+                l10n.supplierSalesHistoryVsLastMonth,
+                style: const TextStyle(color: Colors.white38, fontSize: 10),
               ),
             ],
           ),

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class GeneratorOrderManagementPage extends StatelessWidget {
   const GeneratorOrderManagementPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class GeneratorOrderManagementPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Kelola Pesanan & Riwayat', // Manage Orders & History
-          style: TextStyle(
+        title: Text(
+          l10n.generatorOrderMgmtTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -51,9 +53,9 @@ class GeneratorOrderManagementPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         alignment: Alignment.center,
-                        child: const Text(
-                          'Aktif',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.generatorOrderMgmtTabActive,
+                          style: const TextStyle(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
@@ -64,9 +66,9 @@ class GeneratorOrderManagementPage extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         alignment: Alignment.center,
-                        child: const Text(
-                          'Selesai',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.generatorOrderMgmtTabCompleted,
+                          style: const TextStyle(
                             color: Colors.white54,
                             fontWeight: FontWeight.bold,
                           ),
@@ -86,7 +88,8 @@ class GeneratorOrderManagementPage extends StatelessWidget {
                 children: [
                   _buildOrderCard(
                     context,
-                    statusText: 'Menunggu Penjemputan', // Waiting Pickup
+                    l10n: l10n,
+                    statusText: l10n.generatorOrderMgmtStatusWaiting,
                     statusColor: Colors.orange,
                     targetDate: '10 Nov 2023',
                     title: 'Serbuk Kayu Jati',
@@ -98,7 +101,8 @@ class GeneratorOrderManagementPage extends StatelessWidget {
                   ),
                   _buildOrderCard(
                     context,
-                    statusText: 'Sedang Diangkut', // En Route
+                    l10n: l10n,
+                    statusText: l10n.generatorOrderMgmtStatusEnRoute,
                     statusColor: Colors.blue,
                     targetDate: '09 Nov 2023',
                     title: 'Potongan Mahoni',
@@ -119,6 +123,7 @@ class GeneratorOrderManagementPage extends StatelessWidget {
 
   Widget _buildOrderCard(
     BuildContext context, {
+    required AppLocalizations l10n,
     required String statusText,
     required Color statusColor,
     required String targetDate,
@@ -278,18 +283,18 @@ class GeneratorOrderManagementPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.qr_code_scanner,
                             color: AppTheme.primaryColor,
                             size: 18,
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
-                            'Scan QR Pengepul',
-                            style: TextStyle(
+                            l10n.generatorOrderMgmtScanQRBtn,
+                            style: const TextStyle(
                               color: AppTheme.primaryColor,
                               fontWeight: FontWeight.bold,
                             ),

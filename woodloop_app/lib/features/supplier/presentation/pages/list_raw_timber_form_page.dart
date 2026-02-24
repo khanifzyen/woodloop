@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class ListRawTimberFormPage extends StatefulWidget {
   const ListRawTimberFormPage({super.key});
@@ -15,14 +16,16 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         leading: TextButton(
           onPressed: () => context.pop(),
-          child: const Text(
-            'Cancel',
-            style: TextStyle(
+          child: Text(
+            l10n.supplierListTimberCancel,
+            style: const TextStyle(
               color: Colors.white54,
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -30,9 +33,9 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
           ),
         ),
         leadingWidth: 80,
-        title: const Text(
-          'New Listing',
-          style: TextStyle(
+        title: Text(
+          l10n.supplierListTimberTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -89,19 +92,19 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              const Text(
-                                'Capture Timber',
-                                style: TextStyle(
+                              Text(
+                                l10n.supplierListTimberCaptureTitle,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
-                                'Tap to add photos of log ends and bark texture',
+                              Text(
+                                l10n.supplierListTimberCaptureSubtitle,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white54,
                                   fontSize: 14,
                                 ),
@@ -113,9 +116,12 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                       const SizedBox(height: 32),
 
                       // Specifications Section
-                      _buildSectionTitle('Specifications', Icons.forest),
+                      _buildSectionTitle(
+                        l10n.supplierListTimberSpecsTitle,
+                        Icons.forest,
+                      ),
                       const SizedBox(height: 16),
-                      _buildLabel('Wood Species'),
+                      _buildLabel(l10n.supplierListTimberSpecsSpecies),
                       DropdownButtonFormField<String>(
                         dropdownColor: AppTheme.surfaceColor,
                         style: const TextStyle(color: Colors.white),
@@ -124,36 +130,36 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                           Icons.expand_more,
                           color: Colors.white54,
                         ),
-                        hint: const Text(
-                          'Select species (e.g. Jati)',
-                          style: TextStyle(color: Colors.white38),
+                        hint: Text(
+                          l10n.supplierListTimberSpecsSpeciesHint,
+                          style: const TextStyle(color: Colors.white38),
                         ),
-                        items: const [
+                        items: [
                           DropdownMenuItem(
                             value: 'jati',
-                            child: Text('Jati (Teak)'),
+                            child: Text(l10n.supplierListTimberSpeciesJati),
                           ),
                           DropdownMenuItem(
                             value: 'mahoni',
-                            child: Text('Mahoni (Mahogany)'),
+                            child: Text(l10n.supplierListTimberSpeciesMahoni),
                           ),
                           DropdownMenuItem(
                             value: 'merbau',
-                            child: Text('Merbau'),
+                            child: Text(l10n.supplierListTimberSpeciesMerbau),
                           ),
                           DropdownMenuItem(
                             value: 'sengon',
-                            child: Text('Sengon'),
+                            child: Text(l10n.supplierListTimberSpeciesSengon),
                           ),
                           DropdownMenuItem(
                             value: 'ulin',
-                            child: Text('Ulin (Ironwood)'),
+                            child: Text(l10n.supplierListTimberSpeciesUlin),
                           ),
                         ],
                         onChanged: (value) {},
                       ),
                       const SizedBox(height: 16),
-                      _buildLabel('Quality Grade'),
+                      _buildLabel(l10n.supplierListTimberSpecsGrade),
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
@@ -174,7 +180,10 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                       const SizedBox(height: 32),
 
                       // Dimensions Section
-                      _buildSectionTitle('Dimensions', Icons.straighten),
+                      _buildSectionTitle(
+                        l10n.supplierListTimberDimTitle,
+                        Icons.straighten,
+                      ),
                       const SizedBox(height: 16),
                       Row(
                         children: [
@@ -182,7 +191,7 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildLabel('Diameter (cm)'),
+                                _buildLabel(l10n.supplierListTimberDimDiameter),
                                 _buildNumberField(suffix: 'CM'),
                               ],
                             ),
@@ -192,7 +201,7 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildLabel('Length (m)'),
+                                _buildLabel(l10n.supplierListTimberDimLength),
                                 _buildNumberField(suffix: 'M'),
                               ],
                             ),
@@ -216,7 +225,7 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'EST. VOLUME',
+                                  l10n.supplierListTimberDimEstVolume,
                                   style: TextStyle(
                                     color: AppTheme.primaryColor.withValues(
                                       alpha: 0.8,
@@ -252,9 +261,12 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                       const SizedBox(height: 32),
 
                       // Financials Section
-                      _buildSectionTitle('Financials', Icons.payments),
+                      _buildSectionTitle(
+                        l10n.supplierListTimberFinTitle,
+                        Icons.payments,
+                      ),
                       const SizedBox(height: 16),
-                      _buildLabel('Price per m³'),
+                      _buildLabel(l10n.supplierListTimberFinPrice),
                       TextFormField(
                         style: const TextStyle(
                           color: Colors.white,
@@ -303,17 +315,23 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                           ),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 8, top: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, top: 8),
                         child: Text(
-                          'Based on volume, total approx: Rp 0',
-                          style: TextStyle(color: Colors.white54, fontSize: 12),
+                          l10n.supplierListTimberFinTotalApprox,
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
 
                       // Compliance Section
-                      _buildSectionTitle('Compliance', Icons.verified),
+                      _buildSectionTitle(
+                        l10n.supplierListTimberCompTitle,
+                        Icons.verified,
+                      ),
                       const SizedBox(height: 16),
                       Container(
                         decoration: BoxDecoration(
@@ -350,21 +368,21 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                                         ),
                                       ),
                                       const SizedBox(width: 12),
-                                      const Column(
+                                      Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Legal Certification',
-                                            style: TextStyle(
+                                            l10n.supplierListTimberCompLegalCert,
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
-                                            'SVLK or FSC Document',
-                                            style: TextStyle(
+                                            l10n.supplierListTimberCompSvlkorFsc,
+                                            style: const TextStyle(
                                               color: Colors.white54,
                                               fontSize: 12,
                                             ),
@@ -415,9 +433,9 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                                   Icons.upload_file,
                                   color: Colors.white54,
                                 ),
-                                label: const Text(
-                                  'Upload PDF / Image',
-                                  style: TextStyle(color: Colors.white54),
+                                label: Text(
+                                  l10n.supplierListTimberCompUpload,
+                                  style: const TextStyle(color: Colors.white54),
                                 ),
                               ),
                             ),
@@ -455,18 +473,18 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
                     ),
                     elevation: 4,
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Publish to Marketplace',
-                        style: TextStyle(
+                        l10n.supplierListTimberPublishBtn,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Icon(
                         Icons.arrow_forward,
                         color: AppTheme.background,
@@ -561,7 +579,7 @@ class _ListRawTimberFormPageState extends State<ListRawTimberFormPage> {
           ),
           alignment: Alignment.center,
           child: Text(
-            'Grade $grade',
+            AppLocalizations.of(context)!.supplierListTimberGrade(grade),
             style: TextStyle(
               color: isSelected ? AppTheme.primaryColor : Colors.white54,
               fontSize: 14,

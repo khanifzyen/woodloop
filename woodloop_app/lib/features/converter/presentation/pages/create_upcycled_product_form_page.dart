@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class CreateUpcycledProductFormPage extends StatefulWidget {
   const CreateUpcycledProductFormPage({super.key});
@@ -16,6 +17,7 @@ class _CreateUpcycledProductFormPageState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -23,9 +25,9 @@ class _CreateUpcycledProductFormPageState
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Tambah Produk Upcycle',
-          style: TextStyle(
+        title: Text(
+          l10n.converterAddProductTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -47,9 +49,9 @@ class _CreateUpcycledProductFormPageState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Image Upload Section
-                      const Text(
-                        'Foto Produk Utama',
-                        style: TextStyle(
+                      Text(
+                        l10n.converterAddProductMainPhoto,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -81,7 +83,7 @@ class _CreateUpcycledProductFormPageState
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Tambah Foto',
+                                  l10n.converterAddProductAddPhoto,
                                   style: TextStyle(
                                     color: AppTheme.primaryColor.withValues(
                                       alpha: 0.8,
@@ -104,11 +106,11 @@ class _CreateUpcycledProductFormPageState
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: Text(
-                                  'Slot Foto 2\n(Opsional)',
+                                  l10n.converterAddProductPhotoSlot2,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white38,
                                     fontSize: 12,
                                   ),
@@ -121,26 +123,27 @@ class _CreateUpcycledProductFormPageState
                       const SizedBox(height: 32),
 
                       // Input Fields
+                      // Input Fields
                       _buildInputField(
-                        label: 'Nama Produk',
-                        hint: 'Contoh: Kursi Minimalis Eks Pallet',
+                        label: l10n.converterAddProductName,
+                        hint: l10n.converterAddProductNameHint,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Deskripsi Produk & Cerita Dampak',
-                        hint: 'Ceritakan proses upcycle...',
+                        label: l10n.converterAddProductDesc,
+                        hint: l10n.converterAddProductDescHint,
                         maxLines: 4,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Harga Jual (Rp)',
-                        hint: 'Contoh: 450000',
+                        label: l10n.converterAddProductPrice,
+                        hint: l10n.converterAddProductPriceHint,
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Stok Tersedia',
-                        hint: 'Contoh: 5',
+                        label: l10n.converterAddProductStock,
+                        hint: l10n.converterAddProductStockHint,
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 32),
@@ -158,17 +161,17 @@ class _CreateUpcycledProductFormPageState
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Row(
+                            Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.receipt_long,
                                   color: AppTheme.primaryColor,
                                   size: 20,
                                 ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Text(
-                                  'Traceability / Bahan Baku',
-                                  style: TextStyle(
+                                  l10n.converterAddProductTraceability,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -177,9 +180,9 @@ class _CreateUpcycledProductFormPageState
                               ],
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Pilih transaksi limbah kayu yang Anda gunakan untuk produk ini. Ini akan membuat QR Code Tracebility untuk pembeli.',
-                              style: TextStyle(
+                            Text(
+                              l10n.converterAddProductTraceabilityDesc,
+                              style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 12,
                                 height: 1.5,
@@ -198,15 +201,17 @@ class _CreateUpcycledProductFormPageState
                                   color: Colors.white.withValues(alpha: 0.1),
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Pilih Transaksi Suplai...',
-                                    style: TextStyle(color: Colors.white54),
+                                    l10n.converterAddProductSelectTransaction,
+                                    style: const TextStyle(
+                                      color: Colors.white54,
+                                    ),
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.arrow_drop_down,
                                     color: Colors.white54,
                                   ),
@@ -249,9 +254,9 @@ class _CreateUpcycledProductFormPageState
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Simpan & Terbitkan Produk',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.converterAddProductSubmitBtn,
+                    style: const TextStyle(
                       color: AppTheme.background,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -312,7 +317,9 @@ class _CreateUpcycledProductFormPageState
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Kolom ini wajib diisi';
+              return AppLocalizations.of(
+                context,
+              )!.converterRegRequiredValidation; // reusing required validation from previous translation
             }
             return null;
           },

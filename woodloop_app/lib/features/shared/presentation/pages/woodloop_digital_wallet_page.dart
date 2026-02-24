@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class WoodLoopDigitalWalletPage extends StatelessWidget {
   const WoodLoopDigitalWalletPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +17,9 @@ class WoodLoopDigitalWalletPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Dompet WoodLoop',
-          style: TextStyle(
+        title: Text(
+          l10n.walletTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -46,18 +49,18 @@ class WoodLoopDigitalWalletPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Total Saldo Aktif',
-                          style: TextStyle(
+                          l10n.walletTotalBalance,
+                          style: const TextStyle(
                             color: AppTheme.background,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Icon(
+                        const Icon(
                           Icons.visibility_off_outlined,
                           color: AppTheme.background,
                           size: 20,
@@ -77,10 +80,16 @@ class WoodLoopDigitalWalletPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildActionIcon(Icons.add, 'Top Up'),
-                        _buildActionIcon(Icons.arrow_upward, 'Transfer'),
-                        _buildActionIcon(Icons.account_balance, 'Tarik Dana'),
-                        _buildActionIcon(Icons.history, 'Riwayat'),
+                        _buildActionIcon(Icons.add, l10n.walletTopUp),
+                        _buildActionIcon(
+                          Icons.arrow_upward,
+                          l10n.walletTransfer,
+                        ),
+                        _buildActionIcon(
+                          Icons.account_balance,
+                          l10n.walletWithdraw,
+                        ),
+                        _buildActionIcon(Icons.history, l10n.walletHistoryIcon),
                       ],
                     ),
                   ],
@@ -105,11 +114,11 @@ class WoodLoopDigitalWalletPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(24.0),
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
                       child: Text(
-                        'Riwayat Transaksi Terakhir',
-                        style: TextStyle(
+                        l10n.walletRecentTransactions,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

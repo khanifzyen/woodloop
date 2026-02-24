@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../../../core/presentation/bloc/language/language_cubit.dart';
 
 class RoleSelectionPage extends StatefulWidget {
   const RoleSelectionPage({super.key});
@@ -11,55 +14,59 @@ class RoleSelectionPage extends StatefulWidget {
 
 class _RoleSelectionPageState extends State<RoleSelectionPage> {
   String? _selectedRole = 'supplier'; // default
-  String _selectedLang = 'EN';
-
-  final List<Map<String, dynamic>> _roles = [
-    {
-      'id': 'supplier',
-      'title': 'Supplier',
-      'subtitle': 'Timber Trader',
-      'description': 'Source & sell raw timber materials',
-      'icon': Icons.forest,
-    },
-    {
-      'id': 'generator',
-      'title': 'Generator',
-      'subtitle': 'Furniture Workshop',
-      'description': 'Manage production & wood waste',
-      'icon': Icons.handyman,
-    },
-    {
-      'id': 'aggregator',
-      'title': 'Aggregator',
-      'subtitle': 'Logistics',
-      'description': 'Collect, transport & store materials',
-      'icon': Icons.local_shipping,
-    },
-    {
-      'id': 'converter',
-      'title': 'Converter',
-      'subtitle': 'Creative Artisan',
-      'description': 'Upcycle waste into value products',
-      'icon': Icons.brush,
-    },
-    {
-      'id': 'designer',
-      'title': 'Designer',
-      'subtitle': 'Creative Consultant',
-      'description': 'Offer design services and waste upcycling consulting',
-      'icon': Icons.architecture,
-    },
-    {
-      'id': 'buyer',
-      'title': 'Buyer / End User',
-      'subtitle': 'Public Consumer',
-      'description': 'Purchase unique upcycled wood products',
-      'icon': Icons.shopping_bag,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final currentLang = context
+        .select((LanguageCubit cubit) => cubit.state.locale.languageCode)
+        .toUpperCase();
+
+    final List<Map<String, dynamic>> roles = [
+      {
+        'id': 'supplier',
+        'title': l10n.roleSupplierTitle,
+        'subtitle': l10n.roleSupplierSubtitle,
+        'description': l10n.roleSupplierDesc,
+        'icon': Icons.forest,
+      },
+      {
+        'id': 'generator',
+        'title': l10n.roleGeneratorTitle,
+        'subtitle': l10n.roleGeneratorSubtitle,
+        'description': l10n.roleGeneratorDesc,
+        'icon': Icons.handyman,
+      },
+      {
+        'id': 'aggregator',
+        'title': l10n.roleAggregatorTitle,
+        'subtitle': l10n.roleAggregatorSubtitle,
+        'description': l10n.roleAggregatorDesc,
+        'icon': Icons.local_shipping,
+      },
+      {
+        'id': 'converter',
+        'title': l10n.roleConverterTitle,
+        'subtitle': l10n.roleConverterSubtitle,
+        'description': l10n.roleConverterDesc,
+        'icon': Icons.brush,
+      },
+      {
+        'id': 'designer',
+        'title': l10n.roleDesignerTitle,
+        'subtitle': l10n.roleDesignerSubtitle,
+        'description': l10n.roleDesignerDesc,
+        'icon': Icons.architecture,
+      },
+      {
+        'id': 'buyer',
+        'title': l10n.roleBuyerTitle,
+        'subtitle': l10n.roleBuyerSubtitle,
+        'description': l10n.roleBuyerDesc,
+        'icon': Icons.shopping_bag,
+      },
+    ];
+
     return Scaffold(
       backgroundColor: const Color(0xFF102216), // background-dark
       body: SafeArea(
@@ -102,11 +109,12 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     GestureDetector(
-                      onTap: () => setState(() => _selectedLang = 'EN'),
+                      onTap: () =>
+                          context.read<LanguageCubit>().changeLanguage('en'),
                       child: Text(
                         'EN',
                         style: TextStyle(
-                          color: _selectedLang == 'EN'
+                          color: currentLang == 'EN'
                               ? AppTheme.primaryColor
                               : Colors.white54,
                           fontSize: 12,
@@ -122,11 +130,12 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => setState(() => _selectedLang = 'ID'),
+                      onTap: () =>
+                          context.read<LanguageCubit>().changeLanguage('id'),
                       child: Text(
                         'ID',
                         style: TextStyle(
-                          color: _selectedLang == 'ID'
+                          color: currentLang == 'ID'
                               ? AppTheme.primaryColor
                               : Colors.white54,
                           fontSize: 12,
@@ -194,10 +203,13 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Connecting the wood industry for a sustainable future. Select your role to begin.',
+                      Text(
+                        l10n.roleSelectionWelcome,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
                     ],
                   ),
@@ -207,9 +219,9 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    itemCount: _roles.length,
+                    itemCount: roles.length,
                     itemBuilder: (context, index) {
-                      final role = _roles[index];
+                      final role = roles[index];
                       final isSelected = _selectedRole == role['id'];
                       return GestureDetector(
                         onTap: () {
@@ -338,7 +350,30 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            context.pushNamed('login');
+                            switch (_selectedRole) {
+                              case 'supplier':
+                                context.pushNamed('supplier_registration');
+                                break;
+                              case 'generator':
+                                context.pushNamed('generator_registration');
+                                break;
+                              case 'aggregator':
+                                context.pushNamed('aggregator_registration');
+                                break;
+                              case 'converter':
+                                context.pushNamed('converter_registration');
+                                break;
+                              case 'designer':
+                                context.pushNamed(
+                                  'designer_consultant_profile',
+                                );
+                                break;
+                              case 'buyer':
+                                context.pushNamed('buyer_registration');
+                                break;
+                              default:
+                                context.pushNamed('login');
+                            }
                           },
                           // Applying styling required by user to global theme:
                           // Elevated button defaults handle text coloring
@@ -349,18 +384,18 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Continue',
-                                style: TextStyle(
+                                l10n.continueButton,
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.arrow_forward),
                             ],
                           ),
                         ),
@@ -375,9 +410,9 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                               fontSize: 14,
                             ),
                             children: [
-                              const TextSpan(text: 'Already have an account? '),
+                              TextSpan(text: l10n.alreadyHaveAccount),
                               TextSpan(
-                                text: 'Log in',
+                                text: l10n.logInButton,
                                 style: TextStyle(
                                   color: AppTheme.primaryColor,
                                   fontWeight: FontWeight.bold,

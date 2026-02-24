@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class NotificationCenterPage extends StatelessWidget {
   const NotificationCenterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +17,9 @@ class NotificationCenterPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Notifikasi',
-          style: TextStyle(
+        title: Text(
+          l10n.notificationTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -28,9 +31,9 @@ class NotificationCenterPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {},
-            child: const Text(
-              'Tandai Dibaca',
-              style: TextStyle(color: AppTheme.primaryColor),
+            child: Text(
+              l10n.notificationMarkRead,
+              style: const TextStyle(color: AppTheme.primaryColor),
             ),
           ),
         ],
@@ -39,11 +42,11 @@ class NotificationCenterPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 16.0),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
               child: Text(
-                'Baru',
-                style: TextStyle(
+                l10n.notificationNew,
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -68,11 +71,11 @@ class NotificationCenterPage extends StatelessWidget {
               isUnread: true,
             ),
 
-            const Padding(
-              padding: EdgeInsets.only(top: 24.0, bottom: 16.0),
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0, bottom: 16.0),
               child: Text(
-                'Sebelumnya',
-                style: TextStyle(
+                l10n.notificationEarlier,
+                style: const TextStyle(
                   color: Colors.white54,
                   fontWeight: FontWeight.bold,
                 ),

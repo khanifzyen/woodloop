@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class SecureCheckoutPaymentPage extends StatefulWidget {
   const SecureCheckoutPaymentPage({super.key});
@@ -15,6 +16,7 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -22,9 +24,9 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Checkout',
-          style: TextStyle(
+        title: Text(
+          l10n.buyerCheckoutTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -42,16 +44,16 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
                 padding: const EdgeInsets.all(24.0),
                 children: [
                   // Alamat Pengiriman
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.location_on_outlined,
                         color: AppTheme.primaryColor,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        'Alamat Pengiriman',
-                        style: TextStyle(
+                        l10n.buyerCheckoutShippingAddress,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -69,32 +71,35 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
                         color: Colors.white.withValues(alpha: 0.1),
                       ),
                     ),
-                    child: const Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Sarah Wijaya | 081234567890',
-                              style: TextStyle(
+                              l10n.buyerCheckoutMockUser,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              'Ubah',
-                              style: TextStyle(
+                              l10n.buyerCheckoutBtnChange,
+                              style: const TextStyle(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
-                          'Jl. Jend. Sudirman No. 45, Gedung Graha Lantai 12\nJakarta Pusat, 10210\nIndonesia',
-                          style: TextStyle(color: Colors.white54, height: 1.5),
+                          l10n.buyerCheckoutMockAddress,
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            height: 1.5,
+                          ),
                         ),
                       ],
                     ),
@@ -102,16 +107,16 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
                   const SizedBox(height: 32),
 
                   // Rincian Pesanan
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.receipt_long_outlined,
                         color: AppTheme.primaryColor,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        'Rincian Pesanan',
-                        style: TextStyle(
+                        l10n.buyerCheckoutOrderDetails,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -132,25 +137,31 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
                     child: Column(
                       children: [
                         _buildOrderItem(
-                          'Kursi Palet Estetik',
+                          l10n.buyerCheckoutMockProduct1,
                           '1x',
                           'Rp 450.000',
                         ),
                         const SizedBox(height: 12),
                         _buildOrderItem(
-                          'Tatakan Gelas Resin Set 4',
+                          l10n.buyerCheckoutMockProduct2,
                           '2x',
                           'Rp 240.000',
                         ),
                         const SizedBox(height: 16),
                         const Divider(color: Colors.white10),
                         const SizedBox(height: 16),
-                        _buildOrderSummaryRow('Subtotal', 'Rp 690.000'),
-                        const SizedBox(height: 8),
-                        _buildOrderSummaryRow('Biaya Pengiriman', 'Rp 150.000'),
+                        _buildOrderSummaryRow(
+                          l10n.buyerCheckoutSubtotal,
+                          'Rp 690.000',
+                        ),
                         const SizedBox(height: 8),
                         _buildOrderSummaryRow(
-                          'Diskon Eco-Warrior',
+                          l10n.buyerCheckoutShippingFee,
+                          'Rp 150.000',
+                        ),
+                        const SizedBox(height: 8),
+                        _buildOrderSummaryRow(
+                          l10n.buyerCheckoutEcoWarriorDiscount,
                           '- Rp 25.000',
                           color: AppTheme.primaryColor,
                         ),
@@ -160,16 +171,16 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
                   const SizedBox(height: 32),
 
                   // Metode Pembayaran
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.payment_outlined,
                         color: AppTheme.primaryColor,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
-                        'Metode Pembayaran',
-                        style: TextStyle(
+                        l10n.buyerCheckoutPaymentMethod,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -179,14 +190,17 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
                   ),
                   const SizedBox(height: 16),
                   _buildPaymentMethodOption(
-                    'Virtual Account BCA',
+                    l10n.buyerCheckoutPaymentBCA,
                     Icons.account_balance,
                   ),
                   const SizedBox(height: 12),
-                  _buildPaymentMethodOption('QRIS', Icons.qr_code_2),
+                  _buildPaymentMethodOption(
+                    l10n.buyerCheckoutPaymentQRIS,
+                    Icons.qr_code_2,
+                  ),
                   const SizedBox(height: 12),
                   _buildPaymentMethodOption(
-                    'Kartu Kredit / Debit',
+                    l10n.buyerCheckoutPaymentCard,
                     Icons.credit_card,
                   ),
 
@@ -207,14 +221,17 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Total Belanja',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                        l10n.buyerCheckoutTotal,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
-                      Text(
+                      const Text(
                         'Rp 815.000',
                         style: TextStyle(
                           color: AppTheme.primaryColor,
@@ -240,9 +257,9 @@ class _SecureCheckoutPaymentPageState extends State<SecureCheckoutPaymentPage> {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        'Bayar Sekarang',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.buyerCheckoutBtnPay,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

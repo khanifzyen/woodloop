@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class GeneratorDashboardPage extends StatefulWidget {
   const GeneratorDashboardPage({super.key});
@@ -14,6 +15,7 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -75,9 +77,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'WELCOME BACK',
-                        style: TextStyle(
+                      Text(
+                        l10n.generatorDashWelcome,
+                        style: const TextStyle(
                           color: Colors.white54,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -157,9 +159,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'Total Limbah Didaur Ulang',
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.generatorDashTotalWaste,
+                                      style: const TextStyle(
                                         color: Colors.white54,
                                         fontSize: 13,
                                       ),
@@ -245,14 +247,14 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                             children: [
                               Expanded(
                                 child: _buildStatItem(
-                                  label: 'PRODUK TERJUAL',
+                                  label: l10n.generatorDashProductsSold,
                                   value: '24',
                                   valueColor: Colors.white,
                                 ),
                               ),
                               Expanded(
                                 child: _buildStatItem(
-                                  label: 'KONVERSI',
+                                  label: l10n.generatorDashConversion,
                                   value: '85%',
                                   valueColor: AppTheme.primaryColor,
                                   align: CrossAxisAlignment.end,
@@ -273,7 +275,7 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                             icon: Icons.payments_outlined,
                             iconBg: Colors.green.withValues(alpha: 0.12),
                             iconColor: Colors.green,
-                            label: 'Pendapatan',
+                            label: l10n.generatorDashRevenue,
                             value: 'Rp 4,5jt',
                           ),
                         ),
@@ -283,7 +285,7 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                             icon: Icons.local_shipping_outlined,
                             iconBg: Colors.blue.withValues(alpha: 0.12),
                             iconColor: Colors.blue,
-                            label: 'Pengambilan',
+                            label: l10n.generatorDashPickup,
                             value: '3 Aktif',
                           ),
                         ),
@@ -292,9 +294,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                     const SizedBox(height: 16),
 
                     // ─── Raw Materials horizontal scroll ────────────────
-                    const Text(
-                      'Stok Bahan Baku',
-                      style: TextStyle(
+                    Text(
+                      l10n.generatorDashRawMatStock,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -310,19 +312,19 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                             label: 'Jati',
                             amount: '120 m³',
                             dotColor: Colors.brown,
-                            tag: 'Hardwood',
+                            tag: l10n.generatorDashHardwood,
                           ),
                           _buildRawMaterialCard(
                             label: 'Mahoni',
                             amount: '80 m³',
                             dotColor: Colors.red,
-                            tag: 'Hardwood',
+                            tag: l10n.generatorDashHardwood,
                           ),
                           _buildRawMaterialCard(
                             label: 'Pinus',
                             amount: '45 m³',
                             dotColor: Colors.yellow,
-                            tag: 'Softwood',
+                            tag: l10n.generatorDashSoftwood,
                           ),
                         ],
                       ),
@@ -346,19 +348,19 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                       ),
                       child: Column(
                         children: [
-                          const Text(
-                            'Kelola Output Anda',
-                            style: TextStyle(
+                          Text(
+                            l10n.generatorDashManageOutput,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Daftarkan limbah untuk diambil kolektor atau tambahkan produk jadi ke marketplace.',
+                          Text(
+                            l10n.generatorDashManageOutputSub,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 13,
                             ),
@@ -370,9 +372,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                               onPressed: () =>
                                   context.pushNamed('report_wood_waste'),
                               icon: const Icon(Icons.add_a_photo, size: 20),
-                              label: const Text(
-                                'Lapor / Jual Limbah',
-                                style: TextStyle(
+                              label: Text(
+                                l10n.generatorDashReportWasteBtn,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                 ),
@@ -397,9 +399,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                               onPressed: () =>
                                   context.pushNamed('add_generator_product'),
                               icon: const Icon(Icons.chair_outlined, size: 20),
-                              label: const Text(
-                                'Tambah Produk Baru',
-                                style: TextStyle(
+                              label: Text(
+                                l10n.generatorDashAddProductBtn,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                 ),
@@ -427,9 +429,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Produk Jadi',
-                          style: TextStyle(
+                        Text(
+                          l10n.generatorDashFinishedProducts,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -437,9 +439,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                         ),
                         TextButton(
                           onPressed: () {},
-                          child: const Text(
-                            'Lihat Semua',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.generatorDashSeeAll,
+                            style: const TextStyle(
                               color: AppTheme.primaryColor,
                               fontSize: 13,
                             ),
@@ -457,13 +459,13 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                             name: 'Kursi Makan Jati',
                             subtitle: 'Minimalist Design',
                             price: 'Rp 450rb',
-                            status: 'In Stock',
+                            status: l10n.generatorDashInStock,
                           ),
                           _buildProductCard(
                             name: 'Meja Samping Mahoni',
                             subtitle: 'Reclaimed Wood',
                             price: 'Rp 320rb',
-                            status: 'In Stock',
+                            status: l10n.generatorDashInStock,
                           ),
                         ],
                       ),
@@ -474,9 +476,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Posting Limbah Terbaru',
-                          style: TextStyle(
+                        Text(
+                          l10n.generatorDashRecentWaste,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -485,9 +487,9 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                         TextButton(
                           onPressed: () =>
                               context.pushNamed('generator_order_management'),
-                          child: const Text(
-                            'Lihat Semua',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.generatorDashSeeAll,
+                            style: const TextStyle(
                               color: AppTheme.primaryColor,
                               fontSize: 13,
                             ),
@@ -502,7 +504,7 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                       iconColor: Colors.amber,
                       title: 'Teak Offcuts',
                       subtitle: 'Hari ini • 50kg • Grade B',
-                      status: 'Pending',
+                      status: l10n.generatorDashStatusPending,
                       statusColor: Colors.amber,
                       price: 'Rp 150rb',
                     ),
@@ -513,7 +515,7 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                       iconColor: Colors.blue,
                       title: 'Serbuk Mahoni',
                       subtitle: 'Kemarin • 200kg • Bulk',
-                      status: 'Diambil',
+                      status: l10n.generatorDashStatusPickedUp,
                       statusColor: Colors.blue,
                       price: 'Rp 400rb',
                     ),
@@ -524,7 +526,7 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                       iconColor: AppTheme.primaryColor,
                       title: 'Serutan Campuran',
                       subtitle: '2 hari lalu • 100kg',
-                      status: 'Terjual',
+                      status: l10n.generatorDashStatusSold,
                       statusColor: AppTheme.primaryColor,
                       price: 'Rp 250rb',
                     ),

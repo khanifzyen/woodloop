@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class AggregatorRegistrationPage extends StatefulWidget {
   const AggregatorRegistrationPage({super.key});
@@ -17,6 +18,7 @@ class _AggregatorRegistrationPageState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -24,9 +26,9 @@ class _AggregatorRegistrationPageState
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Step 1 of 2',
-          style: TextStyle(
+        title: Text(
+          l10n.aggregatorRegStepInfo,
+          style: const TextStyle(
             color: AppTheme.primaryColor,
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -47,42 +49,45 @@ class _AggregatorRegistrationPageState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Daftar Sebagai Pengepul',
-                        style: TextStyle(
+                      Text(
+                        l10n.aggregatorRegTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Masukkan data diri dan armada untuk mulai mengambil limbah dan mendapatkan profit.',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      Text(
+                        l10n.aggregatorRegSubtitle,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 32),
 
                       // Personal Name
-                      _buildLabel('NAMA LENGKAP'),
+                      _buildLabel(l10n.aggregatorRegFullName),
                       _buildTextField(
-                        hintText: 'Budi Logistik',
+                        hintText: l10n.aggregatorRegFullNameHint,
                         icon: Icons.person_outline,
                       ),
                       const SizedBox(height: 20),
 
                       // NIK / KTP
-                      _buildLabel('NOMOR KTP (NIK)'),
+                      _buildLabel(l10n.aggregatorRegIdCard),
                       _buildTextField(
-                        hintText: '3320...',
+                        hintText: l10n.aggregatorRegIdCardHint,
                         icon: Icons.badge_outlined,
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 20),
 
                       // Phone Number
-                      _buildLabel('NOMOR HP'),
+                      _buildLabel(l10n.aggregatorRegPhone),
                       _buildTextField(
-                        hintText: '812 3456 7890',
+                        hintText: l10n.aggregatorRegPhoneHint,
                         iconWidget: const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12.0),
                           child: Row(
@@ -108,18 +113,21 @@ class _AggregatorRegistrationPageState
                       const SizedBox(height: 32),
 
                       // Vehicle Type Selection
-                      const Text(
-                        'Tipe Armada',
-                        style: TextStyle(
+                      Text(
+                        l10n.aggregatorRegVehicleType,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        'Pilih armada utama yang Anda gunakan',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      Text(
+                        l10n.aggregatorRegVehicleTypeHint,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -127,8 +135,8 @@ class _AggregatorRegistrationPageState
                           Expanded(
                             child: _buildVehicleOption(
                               id: 'motor',
-                              title: 'Motor Gerobak',
-                              subtitle: '< 100 kg',
+                              title: l10n.aggregatorRegVehicleMotorcart,
+                              subtitle: l10n.aggregatorRegVehicleMotorcartCap,
                               icon: Icons.motorcycle,
                             ),
                           ),
@@ -136,8 +144,8 @@ class _AggregatorRegistrationPageState
                           Expanded(
                             child: _buildVehicleOption(
                               id: 'pickup',
-                              title: 'Mobil Pick-up',
-                              subtitle: '100 - 800 kg',
+                              title: l10n.aggregatorRegVehiclePickup,
+                              subtitle: l10n.aggregatorRegVehiclePickupCap,
                               icon: Icons.local_shipping,
                             ),
                           ),
@@ -149,8 +157,8 @@ class _AggregatorRegistrationPageState
                           Expanded(
                             child: _buildVehicleOption(
                               id: 'truk',
-                              title: 'Truk Engkel',
-                              subtitle: '> 800 kg',
+                              title: l10n.aggregatorRegVehicleTruck,
+                              subtitle: l10n.aggregatorRegVehicleTruckCap,
                               icon: Icons.fire_truck,
                             ),
                           ),
@@ -163,9 +171,9 @@ class _AggregatorRegistrationPageState
                       const SizedBox(height: 32),
 
                       // License Plate
-                      _buildLabel('PLAT NOMOR KENDARAAN'),
+                      _buildLabel(l10n.aggregatorRegLicensePlate),
                       _buildTextField(
-                        hintText: 'K 1234 XY',
+                        hintText: l10n.aggregatorRegLicensePlateHint,
                         icon: Icons.directions_car_outlined,
                       ),
                       const SizedBox(height: 32),
@@ -198,18 +206,18 @@ class _AggregatorRegistrationPageState
                     ),
                     elevation: 4,
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Selesaikan Pendaftaran',
-                        style: TextStyle(
+                        l10n.aggregatorRegSubmitBtn,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Icon(
                         Icons.arrow_forward,
                         color: AppTheme.background,

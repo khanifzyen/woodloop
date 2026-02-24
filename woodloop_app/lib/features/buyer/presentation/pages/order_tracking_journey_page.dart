@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class OrderTrackingJourneyPage extends StatelessWidget {
   const OrderTrackingJourneyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class OrderTrackingJourneyPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(), // Pop back to dashboard/home
         ),
-        title: const Text(
-          'Lacak Pengiriman',
-          style: TextStyle(
+        title: Text(
+          l10n.buyerOrderTrackTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -54,23 +56,26 @@ class OrderTrackingJourneyPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Kursi Palet Estetik (+1 lain)',
-                          style: TextStyle(
+                          l10n.buyerOrderTrackMockProduct,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                           maxLines: 2,
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
-                          'Jepara Eco Art',
-                          style: TextStyle(color: Colors.white54, fontSize: 12),
+                          l10n.buyerOrderTrackMockStore,
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
@@ -92,7 +97,7 @@ class OrderTrackingJourneyPage extends StatelessWidget {
                     color: AppTheme.primaryColor.withValues(alpha: 0.3),
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
@@ -103,8 +108,8 @@ class OrderTrackingJourneyPage extends StatelessWidget {
                         ),
                         SizedBox(width: 12),
                         Text(
-                          'Lacak Asal Usul Limbah Kayu',
-                          style: TextStyle(
+                          l10n.buyerOrderTrackOrigin,
+                          style: const TextStyle(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
@@ -123,9 +128,9 @@ class OrderTrackingJourneyPage extends StatelessWidget {
             const SizedBox(height: 32),
 
             // Delivery Status Timeline
-            const Text(
-              'Status Pengiriman',
-              style: TextStyle(
+            Text(
+              l10n.buyerOrderTrackStatusHeader,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -133,31 +138,31 @@ class OrderTrackingJourneyPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             _buildTimelineStep(
-              title: 'Pesanan Diterima',
+              title: l10n.buyerOrderTrackStep1Title,
               date: '12 Nov 2023, 10:00',
-              description: 'Pembayaran terverifikasi.',
+              description: l10n.buyerOrderTrackStep1Desc,
               isActive: true,
               isCompleted: true,
             ),
             _buildTimelineStep(
-              title: 'Dikemas oleh Studio',
+              title: l10n.buyerOrderTrackStep2Title,
               date: '13 Nov 2023, 14:30',
-              description: 'Menunggu penjemputan mitra logistik.',
+              description: l10n.buyerOrderTrackStep2Desc,
               isActive: true,
               isCompleted: true,
             ),
             _buildTimelineStep(
-              title: 'Dalam Perjalanan Menuju Anda',
+              title: l10n.buyerOrderTrackStep3Title,
               date: '14 Nov 2023, 08:15',
-              description: 'Kurir menuju lokasi Anda (Resi: WX-998821).',
+              description: l10n.buyerOrderTrackStep3Desc,
               isActive: true,
               isCompleted: false, // Arrived at this step
               isLast: false,
             ),
             _buildTimelineStep(
-              title: 'Pesanan Selesai',
+              title: l10n.buyerOrderTrackStep4Title,
               date: '-',
-              description: 'Barang telah diterima dengan baik.',
+              description: l10n.buyerOrderTrackStep4Desc,
               isActive: false,
               isCompleted: false,
               isLast: true,
@@ -180,9 +185,9 @@ class OrderTrackingJourneyPage extends StatelessWidget {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  'Konfirmasi Pesanan Diterima',
-                  style: TextStyle(
+                child: Text(
+                  l10n.buyerOrderTrackBtnConfirm,
+                  style: const TextStyle(
                     color: AppTheme.background,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

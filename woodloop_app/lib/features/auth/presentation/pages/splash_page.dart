@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -114,7 +115,7 @@ class _SplashPageState extends State<SplashPage> {
 
                 // Subtitle
                 Text(
-                  'Turning Waste into Wealth',
+                  AppLocalizations.of(context)!.splashSubtitle,
                   style: GoogleFonts.spaceGrotesk(
                     color: Colors.white70,
                     fontSize: 20,
@@ -153,7 +154,7 @@ class _SplashPageState extends State<SplashPage> {
                 const SizedBox(height: 12),
 
                 Text(
-                  'INITIALIZING...',
+                  AppLocalizations.of(context)!.splashInitializing,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.4),
                     fontSize: 12,

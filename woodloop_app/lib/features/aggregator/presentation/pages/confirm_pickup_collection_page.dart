@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class ConfirmPickupCollectionPage extends StatelessWidget {
   const ConfirmPickupCollectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class ConfirmPickupCollectionPage extends StatelessWidget {
           icon: const Icon(Icons.close),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Konfirmasi Pengambilan',
-          style: TextStyle(
+        title: Text(
+          l10n.aggregatorPickupTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -73,10 +75,10 @@ class ConfirmPickupCollectionPage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              const Text(
-                                'Arahkan kamera ke QR\nGenerator untuk konfirmasi',
+                              Text(
+                                l10n.aggregatorPickupCameraHint,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -90,9 +92,9 @@ class ConfirmPickupCollectionPage extends StatelessWidget {
                     const SizedBox(height: 32),
 
                     // Detail Information
-                    const Text(
-                      'Rincian Penjemputan',
-                      style: TextStyle(
+                    Text(
+                      l10n.aggregatorPickupDetailInfo,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -100,16 +102,25 @@ class ConfirmPickupCollectionPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     _buildDetailRow(
-                      'Kode Tiket',
-                      'PKP-8921-A',
+                      l10n.aggregatorPickupTicketCode,
+                      l10n.aggregatorPickupMockTicket,
                       isHighlight: true,
                     ),
                     const Divider(color: Colors.white10, height: 24),
-                    _buildDetailRow('Generator', 'Jepara Artisans'),
+                    _buildDetailRow(
+                      l10n.aggregatorPickupGenerator,
+                      l10n.aggregatorPickupMockGenName,
+                    ),
                     const Divider(color: Colors.white10, height: 24),
-                    _buildDetailRow('Material', 'Serbuk Kayu Jati'),
+                    _buildDetailRow(
+                      l10n.aggregatorPickupMaterial,
+                      l10n.aggregatorPickupMockMaterial,
+                    ),
                     const Divider(color: Colors.white10, height: 24),
-                    _buildDetailRow('Estimasi Berat', '50.0 Kg'),
+                    _buildDetailRow(
+                      l10n.aggregatorPickupEstWeight,
+                      l10n.aggregatorPickupMockWeight,
+                    ),
                     const Divider(color: Colors.white10, height: 24),
 
                     // Final Profit info
@@ -126,16 +137,16 @@ class ConfirmPickupCollectionPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Potensi Pembayaran',
-                            style: TextStyle(
+                          Text(
+                            l10n.aggregatorPickupEstPayment,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
-                            'Rp 25.000',
-                            style: TextStyle(
+                            l10n.aggregatorPickupMockPayment,
+                            style: const TextStyle(
                               color: AppTheme.primaryColor,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -154,9 +165,9 @@ class ConfirmPickupCollectionPage extends StatelessWidget {
                           color: Colors.white54,
                           size: 18,
                         ),
-                        label: const Text(
-                          'Input Manual/Edit Berat Aktual',
-                          style: TextStyle(
+                        label: Text(
+                          l10n.aggregatorPickupManualInput,
+                          style: const TextStyle(
                             color: Colors.white54,
                             decoration: TextDecoration.underline,
                           ),
@@ -194,19 +205,19 @@ class ConfirmPickupCollectionPage extends StatelessWidget {
                     ),
                     elevation: 4,
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Konfirmasi Selesai',
-                        style: TextStyle(
+                        l10n.aggregatorPickupConfirmBtn,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Icon(
+                      const SizedBox(width: 8),
+                      const Icon(
                         Icons.check_circle,
                         color: AppTheme.background,
                         size: 20,

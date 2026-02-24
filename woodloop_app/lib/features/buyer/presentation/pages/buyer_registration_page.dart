@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class BuyerRegistrationPage extends StatefulWidget {
   const BuyerRegistrationPage({super.key});
@@ -14,6 +15,7 @@ class _BuyerRegistrationPageState extends State<BuyerRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -21,9 +23,9 @@ class _BuyerRegistrationPageState extends State<BuyerRegistrationPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Daftar Pembeli',
-          style: TextStyle(
+        title: Text(
+          l10n.buyerRegTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -45,18 +47,18 @@ class _BuyerRegistrationPageState extends State<BuyerRegistrationPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Form Header
-                      const Text(
-                        'Bergabung dengan Circular Economy',
-                        style: TextStyle(
+                      Text(
+                        l10n.buyerRegHeader,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Temukan furnitur dan kerajinan upcycle estetis sekaligus mengurangi emisi karbon bumi.',
-                        style: TextStyle(
+                      Text(
+                        l10n.buyerRegSubheader,
+                        style: const TextStyle(
                           color: Colors.white54,
                           fontSize: 14,
                           height: 1.5,
@@ -66,35 +68,40 @@ class _BuyerRegistrationPageState extends State<BuyerRegistrationPage> {
 
                       // Input Fields
                       _buildInputField(
-                        label: 'Nama Lengkap',
-                        hint: 'Sesuai KTP',
+                        context: context,
+                        label: l10n.buyerRegNameLabel,
+                        hint: l10n.buyerRegNameHint,
                         icon: Icons.person_outline,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Email',
-                        hint: 'email@domain.com',
+                        context: context,
+                        label: l10n.buyerRegEmailLabel,
+                        hint: l10n.buyerRegEmailHint,
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Nomor WhatsApp',
-                        hint: '081234567890',
+                        context: context,
+                        label: l10n.buyerRegPhoneLabel,
+                        hint: l10n.buyerRegPhoneHint,
                         icon: Icons.phone_outlined,
                         keyboardType: TextInputType.phone,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Kata Sandi',
-                        hint: 'Minimal 8 karakter',
+                        context: context,
+                        label: l10n.buyerRegPasswordLabel,
+                        hint: l10n.buyerRegPasswordHint,
                         icon: Icons.lock_outline,
                         isPassword: true,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Alamat Pengiriman Utama (Opsional)',
-                        hint: 'Alamat rumah atau kantor',
+                        context: context,
+                        label: l10n.buyerRegAddressLabel,
+                        hint: l10n.buyerRegAddressHint,
                         icon: Icons.home_outlined,
                         maxLines: 3,
                       ),
@@ -131,9 +138,9 @@ class _BuyerRegistrationPageState extends State<BuyerRegistrationPage> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Daftar & Eksplor Produk',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.buyerRegBtnSubmit,
+                    style: const TextStyle(
                       color: AppTheme.background,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -149,6 +156,7 @@ class _BuyerRegistrationPageState extends State<BuyerRegistrationPage> {
   }
 
   Widget _buildInputField({
+    required BuildContext context,
     required String label,
     required String hint,
     required IconData icon,
@@ -201,7 +209,7 @@ class _BuyerRegistrationPageState extends State<BuyerRegistrationPage> {
           validator: (value) {
             // Optional field logic if needed, simplify for now
             if (maxLines == 1 && (value == null || value.isEmpty)) {
-              return 'Kolom ini wajib diisi';
+              return AppLocalizations.of(context)!.buyerRegRequiredValidation;
             }
             return null;
           },

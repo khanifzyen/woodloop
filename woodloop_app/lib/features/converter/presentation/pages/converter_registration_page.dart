@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class ConverterRegistrationPage extends StatefulWidget {
   const ConverterRegistrationPage({super.key});
@@ -16,6 +17,7 @@ class _ConverterRegistrationPageState extends State<ConverterRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -23,9 +25,9 @@ class _ConverterRegistrationPageState extends State<ConverterRegistrationPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Daftar Sebagai Pengolah',
-          style: TextStyle(
+        title: Text(
+          l10n.converterRegTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -47,46 +49,49 @@ class _ConverterRegistrationPageState extends State<ConverterRegistrationPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Form Header
-                      const Text(
-                        'Profil Studio/Pabrik Anda',
-                        style: TextStyle(
+                      Text(
+                        l10n.converterRegHeader,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Lengkapi data untuk mulai mencari suplai limbah kayu atau menjual produk upcycled Anda.',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      Text(
+                        l10n.converterRegSubHeader,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 32),
 
                       // Input Fields
                       _buildInputField(
-                        label: 'Nama Studio / Bisnis',
-                        hint: 'Contoh: Jepara Eco Art',
+                        label: l10n.converterRegStudioName,
+                        hint: l10n.converterRegStudioNameHint,
                         icon: Icons.storefront,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Nama Pemilik / Penanggung Jawab',
-                        hint: 'Contoh: Budi Santoso',
+                        label: l10n.converterRegOwnerName,
+                        hint: l10n.converterRegOwnerNameHint,
                         icon: Icons.person_outline,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
-                        label: 'Nomor WhatsApp Aktif',
-                        hint: '081234567890',
+                        label: l10n.converterRegWhatsApp,
+                        hint: l10n.converterRegWhatsAppHint,
                         icon: Icons.phone_outlined,
                         keyboardType: TextInputType.phone,
                       ),
                       const SizedBox(height: 24),
 
                       // Map Placeholder
-                      const Text(
-                        'Lokasi Workshop / Gudang Tujuan',
-                        style: TextStyle(
+                      Text(
+                        l10n.converterRegLocation,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -135,9 +140,9 @@ class _ConverterRegistrationPageState extends State<ConverterRegistrationPage> {
                       const SizedBox(height: 32),
 
                       // Specialty Selection
-                      const Text(
-                        'Fokus / Spesialisasi Olahan',
-                        style: TextStyle(
+                      Text(
+                        l10n.converterRegSpecialty,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -149,30 +154,33 @@ class _ConverterRegistrationPageState extends State<ConverterRegistrationPage> {
                         runSpacing: 12,
                         children: [
                           _buildSpecialtyChip(
-                            'Furniture Ramah Lingkungan',
+                            l10n.converterRegSpecEcoFurniture,
                             Icons.chair_alt,
                           ),
                           _buildSpecialtyChip(
-                            'Handicraft & Seni',
+                            l10n.converterRegSpecHandicraft,
                             Icons.palette_outlined,
                           ),
                           _buildSpecialtyChip(
-                            'Briket / Pelet Kayu',
+                            l10n.converterRegSpecBriquette,
                             Icons.local_fire_department_outlined,
                           ),
                           _buildSpecialtyChip(
-                            'Kompos / Pertanian',
+                            l10n.converterRegSpecCompost,
                             Icons.eco_outlined,
                           ),
-                          _buildSpecialtyChip('Lainnya', Icons.more_horiz),
+                          _buildSpecialtyChip(
+                            l10n.converterRegSpecOther,
+                            Icons.more_horiz,
+                          ),
                         ],
                       ),
                       const SizedBox(height: 24),
 
                       // Estimated Volume Need
                       _buildInputField(
-                        label: 'Kebutuhan Raw Material (Kg/Bulan)',
-                        hint: 'Contoh: 1000',
+                        label: l10n.converterRegRawMaterialNeed,
+                        hint: l10n.converterRegRawMaterialHint,
                         icon: Icons.inventory_2_outlined,
                         keyboardType: TextInputType.number,
                       ),
@@ -209,9 +217,9 @@ class _ConverterRegistrationPageState extends State<ConverterRegistrationPage> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Daftar & Masuk Studio',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.converterRegSubmitBtn,
+                    style: const TextStyle(
                       color: AppTheme.background,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -272,7 +280,9 @@ class _ConverterRegistrationPageState extends State<ConverterRegistrationPage> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Kolom ini wajib diisi';
+              return AppLocalizations.of(
+                context,
+              )!.converterRegRequiredValidation;
             }
             return null;
           },

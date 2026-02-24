@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class MyUpcycledCatalogPage extends StatelessWidget {
   const MyUpcycledCatalogPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class MyUpcycledCatalogPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Katalog Produk Anda',
-          style: TextStyle(
+        title: Text(
+          l10n.converterCatalogTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -38,13 +40,17 @@ class MyUpcycledCatalogPage extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: _buildSummaryCard('12', 'Aktif', Colors.green),
+                    child: _buildSummaryCard(
+                      '12',
+                      l10n.converterCatalogStatusActive,
+                      Colors.green,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: _buildSummaryCard(
                       '3',
-                      'Terjual Habis',
+                      l10n.converterCatalogStatusSoldOut,
                       Colors.orange,
                     ),
                   ),
@@ -63,27 +69,31 @@ class MyUpcycledCatalogPage extends StatelessWidget {
                 childAspectRatio: 0.75, // Adjust height-width ratio
                 children: [
                   _buildCatalogGridItem(
-                    title: 'Kursi Jati Palet',
+                    context: context,
+                    title: l10n.converterCatalogMockTitle1,
                     price: 'Rp 450.000',
-                    stock: 'Stok: 5',
+                    stock: l10n.converterCatalogStock('5'),
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildCatalogGridItem(
-                    title: 'Meja Resin Serbuk',
+                    context: context,
+                    title: l10n.converterCatalogMockTitle2,
                     price: 'Rp 1.200.000',
-                    stock: 'Stok: 2',
+                    stock: l10n.converterCatalogStock('2'),
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildCatalogGridItem(
-                    title: 'Asbak Potongan Mahoni',
+                    context: context,
+                    title: l10n.converterCatalogMockTitle3,
                     price: 'Rp 45.000',
-                    stock: 'Stok: 12',
+                    stock: l10n.converterCatalogStock('12'),
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildCatalogGridItem(
-                    title: 'Rak Bunga Minimalis',
+                    context: context,
+                    title: l10n.converterCatalogMockTitle4,
                     price: 'Rp 180.000',
-                    stock: 'Stok: 0',
+                    stock: l10n.converterCatalogStock('0'),
                     isSoldOut: true,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
@@ -99,9 +109,9 @@ class MyUpcycledCatalogPage extends StatelessWidget {
         },
         backgroundColor: AppTheme.primaryColor,
         icon: const Icon(Icons.add, color: AppTheme.background),
-        label: const Text(
-          'Tambah Produk',
-          style: TextStyle(
+        label: Text(
+          l10n.converterCatalogBtnAdd,
+          style: const TextStyle(
             color: AppTheme.background,
             fontWeight: FontWeight.bold,
           ),
@@ -153,6 +163,7 @@ class MyUpcycledCatalogPage extends StatelessWidget {
   }
 
   Widget _buildCatalogGridItem({
+    required BuildContext context,
     required String title,
     required String price,
     required String stock,
@@ -187,10 +198,12 @@ class MyUpcycledCatalogPage extends StatelessWidget {
                 ),
               ),
               child: isSoldOut
-                  ? const Center(
+                  ? Center(
                       child: Text(
-                        'HABIS',
-                        style: TextStyle(
+                        AppLocalizations.of(
+                          context,
+                        )!.converterCatalogStatusSoldOutBadge,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 2,

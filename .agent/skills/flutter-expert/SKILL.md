@@ -64,10 +64,12 @@ Load detailed guidance based on context:
 - **For every DTO created, it must use the `freezed` package**
 - **Run `dart run build_runner build --delete-conflicting-outputs` for each DTO created or modified**
 - **Use the `Result<T>` pattern for all `datasources` to handle success and failure gracefully**
+- **Use GoRouter for all navigation between pages, DO NOT use the default Navigator**
 
 ### MUST NOT DO
 - **NEVER use Riverpod**
 - **NEVER put business logic in UI**
+- **NEVER use the default Navigator for page routing**
 - Mutate state directly (always create new instances)
 - Use `setState` for complex state (local UI toggles are okay)
 - Skip const on static widgets

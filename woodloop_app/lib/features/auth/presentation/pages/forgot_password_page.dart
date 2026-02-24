@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -81,19 +84,19 @@ class ForgotPasswordPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        'Forgot Password?',
-                        style: TextStyle(
+                      Text(
+                        l10n.forgotPasswordTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Enter your email address to receive a password reset link.',
+                      Text(
+                        l10n.forgotPasswordSubtitle,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white54,
                           fontSize: 16,
                           height: 1.5,
@@ -105,11 +108,14 @@ class ForgotPasswordPage extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 4.0,
+                              bottom: 8.0,
+                            ),
                             child: Text(
-                              'Email Address',
-                              style: TextStyle(
+                              l10n.forgotPasswordEmailLabel,
+                              style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -119,9 +125,9 @@ class ForgotPasswordPage extends StatelessWidget {
                           TextField(
                             style: const TextStyle(color: Colors.white),
                             keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              hintText: 'you@example.com',
-                              prefixIcon: Icon(
+                            decoration: InputDecoration(
+                              hintText: l10n.forgotPasswordEmailHint,
+                              prefixIcon: const Icon(
                                 Icons.mail_outline,
                                 color: Colors.white38,
                               ),
@@ -143,7 +149,7 @@ class ForgotPasswordPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Send Reset Link',
+                                l10n.forgotPasswordSendLink,
                                 style: TextStyle(color: AppTheme.background),
                               ),
                               const SizedBox(width: 8),
@@ -169,9 +175,9 @@ class ForgotPasswordPage extends StatelessWidget {
                             color: Colors.white54,
                             size: 18,
                           ),
-                          label: const Text(
-                            'Back to Login',
-                            style: TextStyle(
+                          label: Text(
+                            l10n.forgotPasswordBackToLogin,
+                            style: const TextStyle(
                               color: Colors.white54,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

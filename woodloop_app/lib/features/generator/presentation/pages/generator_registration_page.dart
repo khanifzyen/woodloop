@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class GeneratorRegistrationPage extends StatefulWidget {
   const GeneratorRegistrationPage({super.key});
@@ -26,6 +27,7 @@ class _GeneratorRegistrationPageState extends State<GeneratorRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -33,9 +35,9 @@ class _GeneratorRegistrationPageState extends State<GeneratorRegistrationPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Step 1 of 2',
-          style: TextStyle(
+        title: Text(
+          l10n.generatorRegStep,
+          style: const TextStyle(
             color: AppTheme.primaryColor,
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -56,41 +58,44 @@ class _GeneratorRegistrationPageState extends State<GeneratorRegistrationPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Register Workshop',
-                        style: TextStyle(
+                      Text(
+                        l10n.generatorRegTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Enter your workshop information to join the circular economy network.',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      Text(
+                        l10n.generatorRegSubtitle,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 32),
 
                       // Business/Workshop Name
-                      _buildLabel('WORKSHOP NAME'),
+                      _buildLabel(l10n.generatorRegWorkshopName),
                       _buildTextField(
-                        hintText: 'Jepara Artisans',
+                        hintText: l10n.generatorRegWorkshopHint,
                         icon: Icons.handyman_outlined,
                       ),
                       const SizedBox(height: 20),
 
                       // Owner Name
-                      _buildLabel('OWNER FULL NAME'),
+                      _buildLabel(l10n.generatorRegOwnerName),
                       _buildTextField(
-                        hintText: 'Budi Santoso',
+                        hintText: l10n.generatorRegOwnerHint,
                         icon: Icons.person_outline,
                       ),
                       const SizedBox(height: 20),
 
                       // Phone Number
-                      _buildLabel('PHONE NUMBER'),
+                      _buildLabel(l10n.generatorRegPhone),
                       _buildTextField(
-                        hintText: '812 3456 7890',
+                        hintText: l10n.generatorRegPhoneHint,
                         iconWidget: const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12.0),
                           child: Row(
@@ -116,7 +121,7 @@ class _GeneratorRegistrationPageState extends State<GeneratorRegistrationPage> {
                       const SizedBox(height: 32),
 
                       // Location
-                      _buildLabel('WORKSHOP LOCATION'),
+                      _buildLabel(l10n.generatorRegLocation),
                       GestureDetector(
                         onTap: () {
                           // TODO: Implement map selection
@@ -159,14 +164,14 @@ class _GeneratorRegistrationPageState extends State<GeneratorRegistrationPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Expanded(
+                                    Expanded(
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Set Exact Location via Map',
-                                            style: TextStyle(
+                                            l10n.generatorRegSetMap,
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
@@ -175,8 +180,8 @@ class _GeneratorRegistrationPageState extends State<GeneratorRegistrationPage> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           Text(
-                                            'For pickup route optimization',
-                                            style: TextStyle(
+                                            l10n.generatorRegMapSub,
+                                            style: const TextStyle(
                                               color: Colors.white70,
                                               fontSize: 12,
                                             ),
@@ -205,37 +210,40 @@ class _GeneratorRegistrationPageState extends State<GeneratorRegistrationPage> {
                       const SizedBox(height: 32),
 
                       // Waste Output Focus
-                      const Text(
-                        'Typical Waste Output',
-                        style: TextStyle(
+                      Text(
+                        l10n.generatorRegWasteFocus,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        'Select all that apply to your production',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      Text(
+                        l10n.generatorRegWasteSub,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Wrap(
                         spacing: 8,
                         runSpacing: 12,
                         children: [
-                          _buildWasteChip('Sawdust (Serbuk)'),
-                          _buildWasteChip('Offcuts (Potongan)'),
-                          _buildWasteChip('Wood Chips'),
-                          _buildWasteChip('Pallets'),
-                          _buildWasteChip('Bark'),
+                          _buildWasteChip(l10n.generatorRegWasteSawdust),
+                          _buildWasteChip(l10n.generatorRegWasteOffcuts),
+                          _buildWasteChip(l10n.generatorRegWasteChips),
+                          _buildWasteChip(l10n.generatorRegWastePallets),
+                          _buildWasteChip(l10n.generatorRegWasteBark),
                         ],
                       ),
                       const SizedBox(height: 32),
 
                       // Output volume
-                      _buildLabel('EST. MONTHLY VOLUME (KG)'),
+                      _buildLabel(l10n.generatorRegVolLabel),
                       _buildTextField(
-                        hintText: 'e.g. 500',
+                        hintText: l10n.generatorRegVolHint,
                         keyboardType: TextInputType.number,
                         iconWidget: const Padding(
                           padding: EdgeInsets.only(left: 16, right: 8),
@@ -284,18 +292,18 @@ class _GeneratorRegistrationPageState extends State<GeneratorRegistrationPage> {
                     ),
                     elevation: 4,
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Complete Registration',
-                        style: TextStyle(
+                        l10n.generatorRegCompleteBtn,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Icon(
                         Icons.arrow_forward,
                         color: AppTheme.background,

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class UpcycledProductsMarketplacePage extends StatelessWidget {
   const UpcycledProductsMarketplacePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class UpcycledProductsMarketplacePage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Marketplace Upcycle',
-          style: TextStyle(
+        title: Text(
+          l10n.buyerUpcycledMarketTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -52,12 +54,15 @@ class UpcycledProductsMarketplacePage extends StatelessWidget {
                           color: Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
-                      child: const TextField(
-                        style: TextStyle(color: Colors.white),
+                      child: TextField(
+                        style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Cari furnitur estetik...',
-                          hintStyle: TextStyle(color: Colors.white38),
-                          prefixIcon: Icon(Icons.search, color: Colors.white54),
+                          hintText: l10n.buyerUpcycledMarketSearchHint,
+                          hintStyle: const TextStyle(color: Colors.white38),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.white54,
+                          ),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 14),
                         ),
@@ -112,9 +117,9 @@ class UpcycledProductsMarketplacePage extends StatelessWidget {
                         color: AppTheme.primaryColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text(
-                        'Koleksi Baru',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.buyerUpcycledMarketHighlightNew,
+                        style: const TextStyle(
                           color: AppTheme.background,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -122,18 +127,18 @@ class UpcycledProductsMarketplacePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'Estetika Palet Jati\nKolaborasi Studio X',
-                      style: TextStyle(
+                    Text(
+                      l10n.buyerUpcycledMarketHighlightTitle,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'Lihat Koleksi ->',
-                      style: TextStyle(
+                    Text(
+                      l10n.buyerUpcycledMarketHighlightAction,
+                      style: const TextStyle(
                         color: AppTheme.primaryColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
@@ -150,13 +155,19 @@ class UpcycledProductsMarketplacePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  _buildCategoryChip('Semua', true),
+                  _buildCategoryChip(l10n.buyerUpcycledMarketCatAll, true),
                   const SizedBox(width: 8),
-                  _buildCategoryChip('Dekorasi', false),
+                  _buildCategoryChip(l10n.buyerUpcycledMarketCatDecor, false),
                   const SizedBox(width: 8),
-                  _buildCategoryChip('Furnitur', false),
+                  _buildCategoryChip(
+                    l10n.buyerUpcycledMarketCatFurniture,
+                    false,
+                  ),
                   const SizedBox(width: 8),
-                  _buildCategoryChip('Aksesoris', false),
+                  _buildCategoryChip(
+                    l10n.buyerUpcycledMarketCatAccessories,
+                    false,
+                  ),
                 ],
               ),
             ),
@@ -172,31 +183,31 @@ class UpcycledProductsMarketplacePage extends StatelessWidget {
                 childAspectRatio: 0.65, // Taller cards to accommodate text
                 children: [
                   _buildProductCard(
-                    title: 'Kursi Palet Estetik',
-                    studio: 'Jepara Eco Art',
+                    title: l10n.buyerUpcycledMarketMockTitle1,
+                    studio: l10n.buyerUpcycledMarketMockStudio1,
                     price: 'Rp 450.000',
-                    impact: '🌳 Selamatkan 12kg Kayu',
+                    impact: l10n.buyerUpcycledMarketMockImpact1,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildProductCard(
-                    title: 'Meja Resin Serbuk',
-                    studio: 'Woodie Studio',
+                    title: l10n.buyerUpcycledMarketMockTitle2,
+                    studio: l10n.buyerUpcycledMarketMockStudio2,
                     price: 'Rp 1.250.000',
-                    impact: '🌳 Selamatkan 45kg Kayu',
+                    impact: l10n.buyerUpcycledMarketMockImpact2,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildProductCard(
-                    title: 'Lampu Meja Potongan',
-                    studio: 'Kreasi Lokal',
+                    title: l10n.buyerUpcycledMarketMockTitle3,
+                    studio: l10n.buyerUpcycledMarketMockStudio3,
                     price: 'Rp 185.000',
-                    impact: '🌳 Selamatkan 3kg Kayu',
+                    impact: l10n.buyerUpcycledMarketMockImpact3,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                   _buildProductCard(
-                    title: 'Rak Buku Minimalis',
-                    studio: 'Jepara Eco Art',
+                    title: l10n.buyerUpcycledMarketMockTitle4,
+                    studio: l10n.buyerUpcycledMarketMockStudio4,
                     price: 'Rp 320.000',
-                    impact: '🌳 Selamatkan 8kg Kayu',
+                    impact: l10n.buyerUpcycledMarketMockImpact4,
                     imageUrl: 'assets/images/map_jepara.jpg',
                   ),
                 ],

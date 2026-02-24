@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class DesignClinicInspirationPage extends StatelessWidget {
   const DesignClinicInspirationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -14,9 +16,9 @@ class DesignClinicInspirationPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          'Klinik Desain & Inspirasi',
-          style: TextStyle(
+        title: Text(
+          l10n.converterClinicTitle,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -38,13 +40,13 @@ class DesignClinicInspirationPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Row(
                 children: [
-                  _buildTab('Tren Global', true),
+                  _buildTab(l10n.converterClinicTabGlobal, true),
                   const SizedBox(width: 8),
-                  _buildTab('Ide dari Pallet', false),
+                  _buildTab(l10n.converterClinicTabPallet, false),
                   const SizedBox(width: 8),
-                  _buildTab('Serbuk & Resin', false),
+                  _buildTab(l10n.converterClinicTabResin, false),
                   const SizedBox(width: 8),
-                  _buildTab('Skema Struktur', false),
+                  _buildTab(l10n.converterClinicTabStructure, false),
                 ],
               ),
             ),
@@ -55,22 +57,20 @@ class DesignClinicInspirationPage extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 children: [
                   _buildInspirationCard(
-                    author: 'DesignLab Global',
-                    time: '2 jam yang lalu',
-                    title: 'Modular Pallet Sofa',
-                    description:
-                        'Cara menyusun 4 palet rusak menjadi sofa minimalis yang nyaman. Sangat cocok untuk cafe outdoor.',
+                    author: l10n.converterClinicMockAuthor1,
+                    time: l10n.converterClinicMockTime1,
+                    title: l10n.converterClinicMockTitle1,
+                    description: l10n.converterClinicMockDesc1,
                     likes: '2.4k',
                     comments: '124',
                     imageUrl:
                         'assets/images/map_jepara.jpg', // Placeholder image
                   ),
                   _buildInspirationCard(
-                    author: 'Studio Kayu Lokal',
-                    time: '5 jam yang lalu',
-                    title: 'Metode press serbuk kayu untuk tatakan gelas',
-                    description:
-                        'Menggunakan campuran serbuk kayu sisa penggergajian dengan lem epoxy ramah lingkungan.',
+                    author: l10n.converterClinicMockAuthor2,
+                    time: l10n.converterClinicMockTime2,
+                    title: l10n.converterClinicMockTitle2,
+                    description: l10n.converterClinicMockDesc2,
                     likes: '856',
                     comments: '42',
                     imageUrl:
@@ -88,9 +88,9 @@ class DesignClinicInspirationPage extends StatelessWidget {
         },
         backgroundColor: AppTheme.primaryColor,
         icon: const Icon(Icons.chat_bubble, color: AppTheme.background),
-        label: const Text(
-          'Tanya Ahli',
-          style: TextStyle(
+        label: Text(
+          l10n.converterClinicAskExpertBtn,
+          style: const TextStyle(
             color: AppTheme.background,
             fontWeight: FontWeight.bold,
           ),
