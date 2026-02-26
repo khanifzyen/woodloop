@@ -1,11 +1,14 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
+import '../presentation/scaffold_with_nav_bar.dart';
+
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/role_selection_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
+import '../../features/auth/presentation/pages/unified_registration_page.dart';
 
 import '../../features/supplier/presentation/pages/supplier_registration_page.dart';
 import '../../features/supplier/presentation/pages/supplier_dashboard_page.dart';
@@ -24,10 +27,13 @@ import '../../features/aggregator/presentation/pages/aggregator_dashboard_page.d
 import '../../features/aggregator/presentation/pages/aggregator_treasure_map_page.dart';
 import '../../features/aggregator/presentation/pages/confirm_pickup_collection_page.dart';
 import '../../features/aggregator/presentation/pages/warehouse_inventory_log_page.dart';
+import '../../features/aggregator/presentation/pages/waste_bidding_page.dart';
 
 import '../../features/converter/presentation/pages/converter_registration_page.dart';
 import '../../features/converter/presentation/pages/converter_studio_dashboard_page.dart';
 import '../../features/converter/presentation/pages/waste_materials_marketplace_page.dart';
+import '../../features/converter/presentation/pages/waste_material_detail_page.dart';
+import '../../features/converter/presentation/pages/waste_checkout_page.dart';
 import '../../features/converter/presentation/pages/design_clinic_inspiration_page.dart';
 import '../../features/converter/presentation/pages/my_upcycled_catalog_page.dart';
 import '../../features/converter/presentation/pages/create_upcycled_product_form_page.dart';
@@ -35,6 +41,7 @@ import '../../features/converter/presentation/pages/create_upcycled_product_form
 import '../../features/buyer/presentation/pages/buyer_registration_page.dart';
 import '../../features/buyer/presentation/pages/buyer_profile_impact_dashboard_page.dart';
 import '../../features/buyer/presentation/pages/upcycled_products_marketplace_page.dart';
+import '../../features/buyer/presentation/pages/product_detail_page.dart';
 import '../../features/buyer/presentation/pages/marketplace_category_hub_page.dart';
 import '../../features/buyer/presentation/pages/your_shopping_cart_page.dart';
 import '../../features/buyer/presentation/pages/secure_checkout_payment_page.dart';
@@ -52,11 +59,28 @@ import '../../features/shared/presentation/pages/b2b_profile_page.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
+// Branch navigator keys for StatefulShellRoute
+final _supplierShellKey = GlobalKey<NavigatorState>(
+  debugLabel: 'supplier_shell',
+);
+final _generatorShellKey = GlobalKey<NavigatorState>(
+  debugLabel: 'generator_shell',
+);
+final _aggregatorShellKey = GlobalKey<NavigatorState>(
+  debugLabel: 'aggregator_shell',
+);
+final _converterShellKey = GlobalKey<NavigatorState>(
+  debugLabel: 'converter_shell',
+);
+final _buyerShellKey = GlobalKey<NavigatorState>(debugLabel: 'buyer_shell');
+final _enablerShellKey = GlobalKey<NavigatorState>(debugLabel: 'enabler_shell');
+
 class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: '/',
     routes: [
+      // ── Auth Routes (flat, no bottom nav) ──
       GoRoute(
         path: '/',
         name: 'splash',
@@ -82,30 +106,21 @@ class AppRouter {
         name: 'forgot_password',
         builder: (context, state) => const ForgotPasswordPage(),
       ),
+
+      // ── Unified Registration ──
+      GoRoute(
+        path: '/register/:role',
+        name: 'unified_registration',
+        builder: (context, state) => UnifiedRegistrationPage(
+          role: state.pathParameters['role'] ?? 'buyer',
+        ),
+      ),
+
+      // ── Legacy Registration Routes (kept for backward compat) ──
       GoRoute(
         path: '/supplier-registration',
         name: 'supplier_registration',
         builder: (context, state) => const SupplierRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/supplier-dashboard',
-        name: 'supplier_dashboard',
-        builder: (context, state) => const SupplierDashboardPage(),
-      ),
-      GoRoute(
-        path: '/list-raw-timber',
-        name: 'list_raw_timber',
-        builder: (context, state) => const ListRawTimberFormPage(),
-      ),
-      GoRoute(
-        path: '/supplier-sales-history',
-        name: 'supplier_sales_history',
-        builder: (context, state) => const SupplierSalesHistoryPage(),
-      ),
-      GoRoute(
-        path: '/raw-timber-marketplace',
-        name: 'raw_timber_marketplace',
-        builder: (context, state) => const RawTimberMarketplacePage(),
       ),
       GoRoute(
         path: '/generator-registration',
@@ -113,9 +128,365 @@ class AppRouter {
         builder: (context, state) => const GeneratorRegistrationPage(),
       ),
       GoRoute(
-        path: '/generator-dashboard',
-        name: 'generator_dashboard',
-        builder: (context, state) => const GeneratorDashboardPage(),
+        path: '/aggregator-registration',
+        name: 'aggregator_registration',
+        builder: (context, state) => const AggregatorRegistrationPage(),
+      ),
+      GoRoute(
+        path: '/converter-registration',
+        name: 'converter_registration',
+        builder: (context, state) => const ConverterRegistrationPage(),
+      ),
+      GoRoute(
+        path: '/buyer-registration',
+        name: 'buyer_registration',
+        builder: (context, state) => const BuyerRegistrationPage(),
+      ),
+
+      // ══════════════════════════════════════
+      // ── SUPPLIER Shell (Bottom Nav) ──
+      // ══════════════════════════════════════
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => ScaffoldWithNavBar(
+          navigationShell: navigationShell,
+          destinations: const [
+            NavDestination(icon: Icons.dashboard_outlined, label: 'Home'),
+            NavDestination(icon: Icons.add_box_outlined, label: 'Input'),
+            NavDestination(icon: Icons.storefront_outlined, label: 'Market'),
+            NavDestination(icon: Icons.person_outline, label: 'Profile'),
+          ],
+        ),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _supplierShellKey,
+            routes: [
+              GoRoute(
+                path: '/supplier-dashboard',
+                name: 'supplier_dashboard',
+                builder: (context, state) => const SupplierDashboardPage(),
+                routes: [
+                  GoRoute(
+                    path: 'sales-history',
+                    name: 'supplier_sales_history',
+                    builder: (context, state) =>
+                        const SupplierSalesHistoryPage(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/supplier-input',
+                name: 'supplier_input',
+                builder: (context, state) => const ListRawTimberFormPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/supplier-market',
+                name: 'supplier_market',
+                builder: (context, state) => const RawTimberMarketplacePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/supplier-profile',
+                name: 'supplier_profile',
+                builder: (context, state) => const B2BProfilePage(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // ══════════════════════════════════════
+      // ── GENERATOR Shell (Bottom Nav) ──
+      // ══════════════════════════════════════
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => ScaffoldWithNavBar(
+          navigationShell: navigationShell,
+          destinations: const [
+            NavDestination(icon: Icons.dashboard_outlined, label: 'Home'),
+            NavDestination(icon: Icons.recycling_outlined, label: 'Setor'),
+            NavDestination(icon: Icons.inventory_2_outlined, label: 'Produk'),
+            NavDestination(icon: Icons.person_outline, label: 'Profil'),
+          ],
+        ),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _generatorShellKey,
+            routes: [
+              GoRoute(
+                path: '/generator-dashboard',
+                name: 'generator_dashboard',
+                builder: (context, state) => const GeneratorDashboardPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/generator-waste',
+                name: 'generator_waste',
+                builder: (context, state) => const ReportWoodWasteFormPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/generator-products',
+                name: 'generator_products',
+                builder: (context, state) =>
+                    const GeneratorOrderManagementPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/generator-profile',
+                name: 'generator_profile',
+                builder: (context, state) => const B2BProfilePage(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // ══════════════════════════════════════
+      // ── AGGREGATOR Shell (Bottom Nav) ──
+      // ══════════════════════════════════════
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => ScaffoldWithNavBar(
+          navigationShell: navigationShell,
+          destinations: const [
+            NavDestination(icon: Icons.dashboard_outlined, label: 'Home'),
+            NavDestination(icon: Icons.map_outlined, label: 'Peta'),
+            NavDestination(icon: Icons.warehouse_outlined, label: 'Gudang'),
+            NavDestination(icon: Icons.person_outline, label: 'Profil'),
+          ],
+        ),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _aggregatorShellKey,
+            routes: [
+              GoRoute(
+                path: '/aggregator-dashboard',
+                name: 'aggregator_dashboard',
+                builder: (context, state) => const AggregatorDashboardPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/aggregator-map',
+                name: 'aggregator_map',
+                builder: (context, state) => const AggregatorTreasureMapPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/aggregator-warehouse',
+                name: 'aggregator_warehouse',
+                builder: (context, state) => const WarehouseInventoryLogPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/aggregator-profile',
+                name: 'aggregator_profile',
+                builder: (context, state) => const B2BProfilePage(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // ══════════════════════════════════════
+      // ── CONVERTER Shell (Bottom Nav) ──
+      // ══════════════════════════════════════
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => ScaffoldWithNavBar(
+          navigationShell: navigationShell,
+          destinations: const [
+            NavDestination(icon: Icons.dashboard_outlined, label: 'Studio'),
+            NavDestination(icon: Icons.shopping_bag_outlined, label: 'Market'),
+            NavDestination(icon: Icons.inventory_outlined, label: 'Produk'),
+            NavDestination(icon: Icons.person_outline, label: 'Profil'),
+          ],
+        ),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _converterShellKey,
+            routes: [
+              GoRoute(
+                path: '/converter-dashboard',
+                name: 'converter_dashboard',
+                builder: (context, state) =>
+                    const ConverterStudioDashboardPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/converter-marketplace',
+                name: 'converter_marketplace',
+                builder: (context, state) =>
+                    const WasteMaterialsMarketplacePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/converter-catalog',
+                name: 'converter_catalog',
+                builder: (context, state) => const MyUpcycledCatalogPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/converter-profile',
+                name: 'converter_profile',
+                builder: (context, state) => const B2BProfilePage(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // ══════════════════════════════════════
+      // ── BUYER Shell (Bottom Nav) ──
+      // ══════════════════════════════════════
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => ScaffoldWithNavBar(
+          navigationShell: navigationShell,
+          destinations: const [
+            NavDestination(icon: Icons.home_outlined, label: 'Home'),
+            NavDestination(icon: Icons.storefront_outlined, label: 'Belanja'),
+            NavDestination(
+              icon: Icons.shopping_cart_outlined,
+              label: 'Keranjang',
+            ),
+            NavDestination(icon: Icons.person_outline, label: 'Profil'),
+          ],
+        ),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _buyerShellKey,
+            routes: [
+              GoRoute(
+                path: '/buyer-dashboard',
+                name: 'buyer_dashboard',
+                builder: (context, state) =>
+                    const BuyerProfileImpactDashboardPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/buyer-shop',
+                name: 'buyer_shop',
+                builder: (context, state) =>
+                    const UpcycledProductsMarketplacePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/buyer-cart',
+                name: 'buyer_cart',
+                builder: (context, state) => const YourShoppingCartPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/buyer-profile',
+                name: 'buyer_profile',
+                builder: (context, state) => const B2BProfilePage(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // ══════════════════════════════════════
+      // ── ENABLER Shell (Bottom Nav) ──
+      // ══════════════════════════════════════
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => ScaffoldWithNavBar(
+          navigationShell: navigationShell,
+          destinations: const [
+            NavDestination(icon: Icons.dashboard_outlined, label: 'Home'),
+            NavDestination(icon: Icons.analytics_outlined, label: 'Laporan'),
+            NavDestination(icon: Icons.person_outline, label: 'Profil'),
+          ],
+        ),
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _enablerShellKey,
+            routes: [
+              GoRoute(
+                path: '/enabler-dashboard',
+                name: 'enabler_dashboard',
+                builder: (context, state) =>
+                    const ImpactAnalyticsDashboardPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/enabler-reports',
+                name: 'enabler_reports',
+                builder: (context, state) =>
+                    const ImpactAnalyticsDashboardPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/enabler-profile',
+                name: 'enabler_profile',
+                builder: (context, state) => const B2BProfilePage(),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // ══════════════════════════════════════
+      // ── Shared Feature Routes (no bottom nav, pushed on top) ──
+      // ══════════════════════════════════════
+      GoRoute(
+        path: '/list-raw-timber',
+        name: 'list_raw_timber',
+        builder: (context, state) => const ListRawTimberFormPage(),
+      ),
+      GoRoute(
+        path: '/raw-timber-marketplace',
+        name: 'raw_timber_marketplace',
+        builder: (context, state) => const RawTimberMarketplacePage(),
       ),
       GoRoute(
         path: '/report-wood-waste',
@@ -133,16 +504,6 @@ class AppRouter {
         builder: (context, state) => const AddGeneratorProductPage(),
       ),
       GoRoute(
-        path: '/aggregator-registration',
-        name: 'aggregator_registration',
-        builder: (context, state) => const AggregatorRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/aggregator-dashboard',
-        name: 'aggregator_dashboard',
-        builder: (context, state) => const AggregatorDashboardPage(),
-      ),
-      GoRoute(
         path: '/aggregator-treasure-map',
         name: 'aggregator_treasure_map',
         builder: (context, state) => const AggregatorTreasureMapPage(),
@@ -158,19 +519,24 @@ class AppRouter {
         builder: (context, state) => const WarehouseInventoryLogPage(),
       ),
       GoRoute(
-        path: '/converter-registration',
-        name: 'converter_registration',
-        builder: (context, state) => const ConverterRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/converter-dashboard',
-        name: 'converter_dashboard',
-        builder: (context, state) => const ConverterStudioDashboardPage(),
+        path: '/waste-bidding',
+        name: 'waste_bidding',
+        builder: (context, state) => const WasteBiddingPage(),
       ),
       GoRoute(
         path: '/waste-materials-marketplace',
         name: 'waste_materials_marketplace',
         builder: (context, state) => const WasteMaterialsMarketplacePage(),
+      ),
+      GoRoute(
+        path: '/waste-material-detail',
+        name: 'waste_material_detail',
+        builder: (context, state) => const WasteMaterialDetailPage(),
+      ),
+      GoRoute(
+        path: '/waste-checkout',
+        name: 'waste_checkout',
+        builder: (context, state) => const WasteCheckoutPage(),
       ),
       GoRoute(
         path: '/design-clinic-inspiration',
@@ -188,19 +554,14 @@ class AppRouter {
         builder: (context, state) => const CreateUpcycledProductFormPage(),
       ),
       GoRoute(
-        path: '/buyer-registration',
-        name: 'buyer_registration',
-        builder: (context, state) => const BuyerRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/buyer-dashboard',
-        name: 'buyer_dashboard',
-        builder: (context, state) => const BuyerProfileImpactDashboardPage(),
-      ),
-      GoRoute(
         path: '/upcycled-products-marketplace',
         name: 'upcycled_products_marketplace',
         builder: (context, state) => const UpcycledProductsMarketplacePage(),
+      ),
+      GoRoute(
+        path: '/product-detail',
+        name: 'product_detail',
+        builder: (context, state) => const ProductDetailPage(),
       ),
       GoRoute(
         path: '/marketplace-category-hub',

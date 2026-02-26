@@ -315,55 +315,6 @@ class ConverterStudioDashboardPage extends StatelessWidget {
         backgroundColor: AppTheme.primaryColor,
         child: const Icon(Icons.add, color: AppTheme.background),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppTheme.surfaceColor,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: Colors.white54,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-        ),
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              // Studio Dashboard
-              break;
-            case 1:
-              context.pushNamed('waste_materials_marketplace');
-              break;
-            case 2:
-              // Pesanan - not specifically defined yet
-              break;
-            case 3:
-              context.pushNamed('b2b_profile');
-              break;
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: l10n.converterDashNavStudio,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.store),
-            label: l10n.converterDashNavMarketplace,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.receipt_long),
-            label: l10n.converterDashNavOrders,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_outline),
-            label: l10n.converterDashNavProfile,
-          ),
-        ],
-      ),
     );
   }
 

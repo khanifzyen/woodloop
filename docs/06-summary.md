@@ -101,6 +101,28 @@ Kami telah menyelesaikan implementasi dukungan multi-bahasa (Inggris dan Indones
     *   Menjalankan `flutter gen-l10n` secara berkala untuk menerapkan *arb files* ke *Dart code*.
     *   Memperbaiki seluruh linting error yang timbul akibat transisi teks konstan (seperti menghapus `const` pada widget `Text`, `Row`, `Column`, `Padding`, dsb. yang kini memuat teks dinamis). 0 errors pada `flutter analyze`.
 
+## 8. Implementasi Halaman UI Baru & Refactor Navigasi (26 Februari 2026)
+Kami telah menyelesaikan pembuatan 5 halaman UI baru, refaktor navigasi menggunakan `StatefulShellRoute`, dan modifikasi halaman yang sudah ada.
+
+*   **Halaman Baru:**
+    *   `unified_registration_page.dart`: Halaman registrasi dinamis yang menggabungkan 5 form registrasi role menjadi 1 halaman dengan field khusus per role (Supplier: upload sertifikat, Generator: jenis limbah, Aggregator: kapasitas gudang, Converter: spesialisasi, Buyer: alamat pengiriman).
+    *   `product_detail_page.dart` (Buyer): Detail produk dengan galeri gambar hero, badge dampak lingkungan, harga diskon, informasi material, dan CTA traceability.
+    *   `waste_material_detail_page.dart` (Converter): Detail bahan limbah dengan info penjual terverifikasi, tile informasi kayu, dan tombol Beli/Tawar.
+    *   `waste_checkout_page.dart` (Converter): Alur checkout limbah dengan slider kuantitas, metode pengiriman, metode pembayaran, dan rincian harga.
+    *   `waste_bidding_page.dart` (Aggregator): Halaman penawaran limbah dengan input harga, catatan opsional, dan daftar penawaran aktif.
+*   **Refaktor Navigasi (`StatefulShellRoute`):**
+    *   Membuat `scaffold_with_nav_bar.dart` sebagai wrapper bottom navigation yang digunakan bersama oleh semua role.
+    *   Menulis ulang `app_router.dart` dengan 6 konfigurasi `StatefulShellRoute` (Supplier, Generator, Aggregator, Converter, Buyer, Enabler), masing-masing dengan `StatefulShellBranch` dan `navigatorKey` sendiri.
+    *   Menghapus `bottomNavigationBar` lama dari 5 halaman dashboard (supplier, generator, aggregator, converter, buyer) untuk menghindari duplikasi navigasi.
+*   **Modifikasi Halaman Existing:**
+    *   `generator_order_management_page.dart`: Menambahkan tab ke-3 "Riwayat Setor" dengan kartu riwayat limbah (status: Tersedia → Ditawar → Diambil → Terjual).
+    *   `generator_dashboard_page.dart`: Menambahkan tombol CTA "Beli Bahan Baku" untuk akses ke Raw Timber Marketplace, dan mengkonversi dari `StatefulWidget` ke `StatelessWidget`.
+*   **Dokumen Pendukung:**
+    *   `docs/11-klarifikasi.md`: Jawaban klarifikasi pengguna terhadap item yang perlu perhatian.
+    *   `docs/12-implementation-plan.md`: Rencana implementasi mingguan per fase.
+*   **Kualitas Kode:**
+    *   Memperbaiki semua *lint errors* (import path, unused variables). 0 errors pada `dart analyze`.
+
 ---
 
 **Langkah Selanjutnya (Next Steps):**

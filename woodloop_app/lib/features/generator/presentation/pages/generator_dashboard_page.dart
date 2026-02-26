@@ -3,15 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 
-class GeneratorDashboardPage extends StatefulWidget {
+class GeneratorDashboardPage extends StatelessWidget {
   const GeneratorDashboardPage({super.key});
-
-  @override
-  State<GeneratorDashboardPage> createState() => _GeneratorDashboardPageState();
-}
-
-class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
-  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -420,6 +413,34 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () =>
+                                  context.pushNamed('raw_timber_marketplace'),
+                              icon: const Icon(Icons.forest, size: 20),
+                              label: const Text(
+                                'Beli Bahan Baku',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppTheme.primaryColor,
+                                side: const BorderSide(
+                                  color: AppTheme.primaryColor,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -536,61 +557,6 @@ class _GeneratorDashboardPageState extends State<GeneratorDashboardPage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppTheme.surfaceColor,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: Colors.white54,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        currentIndex: _currentIndex,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-        ),
-        onTap: (index) {
-          setState(() => _currentIndex = index);
-          switch (index) {
-            case 0:
-              // Home
-              break;
-            case 1:
-              context.pushNamed('waste_materials_marketplace');
-              break;
-            case 2:
-              context.pushNamed('impact_analytics_dashboard');
-              break;
-            case 3:
-              context.pushNamed('b2b_profile');
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.storefront_outlined),
-            activeIcon: Icon(Icons.storefront),
-            label: 'Market',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            activeIcon: Icon(Icons.bar_chart),
-            label: 'Analytics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
       ),
     );
   }

@@ -280,62 +280,6 @@ class SupplierDashboardPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppTheme.surfaceColor,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: Colors.white54,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-        ),
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              // Dashboard
-              break;
-            case 1:
-              context.pushNamed('raw_timber_marketplace');
-              break;
-            case 2:
-              context.pushNamed('supplier_sales_history');
-              break;
-            case 3:
-              context.pushNamed('messages_list');
-              break;
-            case 4:
-              context.pushNamed('b2b_profile');
-              break;
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.dashboard),
-            label: l10n.navDashboard,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.storefront),
-            label: l10n.navMarket,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.inventory_2_outlined),
-            label: l10n.navInventory,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.chat_bubble_outline),
-            label: l10n.navMessages,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_outline),
-            label: l10n.navProfile,
-          ),
-        ],
-      ),
     );
   }
 

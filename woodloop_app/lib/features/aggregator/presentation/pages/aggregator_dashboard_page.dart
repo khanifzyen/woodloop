@@ -361,48 +361,6 @@ class AggregatorDashboardPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppTheme.surfaceColor,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: Colors.white54,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-        ),
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              // Dashboard
-              break;
-            case 1:
-              // Transaksi / Riwayat - Route not fully defined yet, can be empty or redirect
-              break;
-            case 2:
-              context.pushNamed('b2b_profile');
-              break;
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: l10n.aggregatorDashNavHome,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.receipt_long),
-            label: l10n.aggregatorDashNavTransaction,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_outline),
-            label: l10n.aggregatorDashNavProfile,
-          ),
-        ],
-      ),
     );
   }
 
