@@ -139,9 +139,36 @@ Kami telah menulis ulang seluruh sistem migrasi database untuk memastikan skema 
 *   **Dokumentasi:**
     *   Memperbarui `docs/migration_style.md` untuk mencerminkan standar penulisan migrasi terbaru yang digunakan dalam proyek ini.
 
+## 10. Konfigurasi Backend PocketBase & Implementasi Hooks (26 Februari 2026)
+Kami telah menyiapkan ekosistem backend untuk proses otomasi dan integritas data aplikasi.
+
+*   **Database Seeding (`migration/seeder.js`):**
+    *   Membuat *seeder script* Node.js untuk mengisi data master `wood_types`.
+    *   Mendaftarkan akun demo (`supplier`, `generator`, `aggregator`, `converter`, `enabler`, `buyer`) lengkap dengan kata sandi bawaan.
+    *   Menambahkan list data *dummy* untuk `waste_listings` (limbah kayu).
+*   **PocketBase Server Hooks (`pb_hooks/main.pb.js`):**
+    *   Mengimplementasikan logika *backend* kustom berbasis JavaScript untuk *cross-collection automations*:
+        *   **`pickups`:** Memperbarui status *waste_listing*, membuat *warehouse_inventory*, menghitung metrik dampak (CO2), dan memberi notifikasi ke Generator setelah pengambilan limbah selesai.
+        *   **`marketplace_transactions`:** Mengubah status `warehouse_inventory` menjadi *sold*, mencatat transaksi dan mengupdate saldo dompet penjual/pembeli.
+        *   **`orders`:** Mengurangi stok `product` saat pesanan terbayar dan otomatis memberi notifikasi kepada Converter.
+        *   **`bids`:** Otomatis membuat jadwal *pickups*, mengubah status *waste_listing*, menolak *bids* lain yang tertunda, dan memberi notifikasi ke Aggregator.
+
+## 11. Implementasi State Management & Integrasi API PocketBase (Fase 3 - Minggu 4)
+Kami telah merampungkan lapisan dasar untuk Otentikasi dan Profil Pengguna (Core BLoCs) serta mendaftarkan dependensinya.
+
+*   **Setup Dependency Injection (`get_it` & `injectable`):**
+    *   Menambahkan `pocketbase` package dan mendaftarkan instance `PocketBase` global yang tersambung ke `pb-woodloop.pasarjepara.com`.
+    *   Mengonfigurasi `AsyncAuthStore` dengan `SharedPreferences` sehingga sesi *login* pengguna bisa menetap (persistent) di penyimpanan lokal.
+    *   Menyelesaikan masalah duplikasi pendaftaran dependensi *SharedPreferences*.
+*   **Implementasi Core BLoCs & Data Layer (Clean Architecture):**
+    *   **AuthBloc:** Membuat entitas `User`, `UserModel`, `AuthRemoteDataSource`, dan `AuthRepository` untuk menangani panggilan API `authWithPassword()`, Registrasi, dan Logout. Membuat `AuthBloc` untuk memonitor `authStateChanges` dari PocketBase secara pasif.
+    *   **UserProfileBloc:** Mengimplementasikan *remote data source* untuk operasi GET/UPDATE pada profil pengguna agar pengguna bisa merubah detail mereka setelah mendaftar.
+*   **Penyatuan State Otentikasi ke Navigasi (`GoRouter`):**
+    *   Mengintegrasikan *Stream* dari `AuthBloc` (dibungkus dalam `GoRouterRefreshStream`) ke dalam properti `refreshListenable` milik `GoRouter`.
+    *   Membuat sistem *Auto-Redirect* global: Mengarahkan paksa pengguna tak terdaftar ke `/role-selection` atau`/login`, dan meneruskan pengguna yang berhasil login (Authenticated) langsung ke dashboard sesuai **Role** akun mereka (Supplier, Generator, dll).
+
 ---
 
 **Langkah Selanjutnya (Next Steps):**
-*   Mengembangkan logika status aplikasi (State Management) menggunakan BLoC.
-*   Menghubungkan aplikasi Flutter dengan Backend PocketBase menggunakan data asli dari migrasi ini.
-*   Mengimplementasikan fungsionalitas fungsional (seperti mengunggah file gambar asli, pemindaian QR code, atau peta dinamis).
+*   Mengimplementasikan BLoCs tingkat fitur (*Feature BLoCs*) seperti `WasteListingBloc`, `PickupBloc`, dan `WarehouseBloc`.
+*   Menyambungkan UI Marketplace dengan data produk dari server PocketBase.

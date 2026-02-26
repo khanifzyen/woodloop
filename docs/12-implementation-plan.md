@@ -12,15 +12,9 @@
 
 | # | Task | Detail |
 | :--- | :--- | :--- |
-| 1 | **Unified Registration Page** | Gabungkan 5 halaman registrasi (`supplier`, `generator`, `aggregator`, `converter`, `buyer`) menjadi 1 halaman dinamis. Field muncul berdasarkan `role` dari `RoleSelectionPage`. |
-| 2 | **Bottom Navigation Bar** per Role | Implementasi `StatefulShellRoute` di `go_router` untuk setiap role dashboard: |
-| | - Generator | Home \| Setor Limbah \| Produk \| Profil |
-| | - Supplier | Home \| Input Kayu \| Marketplace \| Profil |
-| | - Aggregator | Home \| Peta \| Gudang \| Profil |
-| | - Converter | Home \| Marketplace \| Produk Saya \| Profil |
-| | - Buyer | Home \| Belanja \| Keranjang \| Profil |
-| | - Enabler | Home \| Laporan \| Profil |
-| 3 | **Cleanup** | Hapus 5 file registrasi lama, perbarui routing di `app_router.dart` |
+| 1 | **[x] Unified Registration Page** | Gabungkan 5 halaman registrasi (`supplier`, `generator`, `aggregator`, `converter`, `buyer`) menjadi 1 halaman dinamis. Field muncul berdasarkan `role` dari `RoleSelectionPage`. |
+| 2 | **[x] Bottom Navigation Bar** per Role | Implementasi `StatefulShellRoute` di `go_router` untuk setiap role dashboard |
+| 3 | **[x] Cleanup** | Hapus 5 file registrasi lama, perbarui routing di `app_router.dart` |
 
 **Deliverable:** Navigasi lancar antar tab, registrasi 1 halaman, 0 linting errors.
 
@@ -33,11 +27,11 @@
 
 | # | Task | Detail |
 | :--- | :--- | :--- |
-| 1 | **A1: Raw Timber Marketplace di Generator** | Tambahkan akses ke halaman Raw Timber Marketplace dari Generator Dashboard agar Generator bisa membeli bahan baku dari Supplier. |
-| 2 | **A2: Waste Material Detail + Checkout (Converter)** | Buat `waste_material_detail_page.dart` dan `waste_checkout_page.dart`. Flow: Marketplace → Detail (foto, jenis, stok, harga, penjual) → Checkout (kuantitas, total, bayar). |
-| 3 | **A4: Waste History (Generator)** | Tambahkan tab "Riwayat Setor" di `generator_order_management_page.dart` yang menampilkan status setiap limbah yang disetor (Available → Booked → Collected → Sold). |
-| 4 | **A5: Product Detail (Buyer)** | Buat `product_detail_page.dart`: galeri foto, deskripsi, harga, tombol "Tambah ke Keranjang", tombol "Lihat Perjalanan Kayu 🌱" (link ke traceability). |
-| 5 | **B2: Bidding Page** | Buat `waste_bidding_page.dart` di fitur Aggregator. Menampilkan listing limbah yang bisa ditawar, form input harga bid, status bid (menunggu, diterima, ditolak). |
+| 1 | **[x] A1: Raw Timber Marketplace di Generator** | Tambahkan akses ke halaman Raw Timber Marketplace dari Generator Dashboard agar Generator bisa membeli bahan baku dari Supplier. |
+| 2 | **[x] A2: Waste Material Detail + Checkout (Converter)** | Buat `waste_material_detail_page.dart` and `waste_checkout_page.dart`. Flow: Marketplace → Detail (foto, jenis, stok, harga, penjual) → Checkout (kuantitas, total, bayar). |
+| 3 | **[x] A4: Waste History (Generator)** | Tambahkan tab "Riwayat Setor" di `generator_order_management_page.dart` yang menampilkan status setiap limbah yang disetor (Available → Booked → Collected → Sold). |
+| 4 | **[x] A5: Product Detail (Buyer)** | Buat `product_detail_page.dart`: galeri foto, deskripsi, harga, tombol "Tambah ke Keranjang", tombol "Lihat Perjalanan Kayu 🌱" (link ke traceability). |
+| 5 | **[x] B2: Bidding Page** | Buat `waste_bidding_page.dart` di fitur Aggregator. Menampilkan listing limbah yang bisa ditawar, form input harga bid, status bid (menunggu, diterima, ditolak). |
 
 **Deliverable:** 4 halaman baru + 1 modifikasi, semua navigable, mock data, 0 linting errors.
 
@@ -50,11 +44,11 @@
 
 | # | Task | Detail |
 | :--- | :--- | :--- |
-| 1 | **Setup PocketBase** | Instalasi, konfigurasi, deploy lokal/VPS |
-| 2 | **Buat Collections** | Implementasi 15+ koleksi sesuai `07-skema.md` (users, wood_types, waste_listings, pickups, warehouse_inventory, marketplace_transactions, products, orders, cart_items, wallet_transactions, impact_metrics, chats, notifications, design_recipes, bids, generator_products, raw_timber_listings) |
-| 3 | **API Rules** | Setup RBAC per koleksi sesuai `07-skema.md` |
-| 4 | **Seed Data** | Data awal: wood_types (Jati, Mahoni, dll), demo users per role, sample waste_listings |
-| 5 | **PocketBase Hooks** | Hook untuk: auto-create warehouse_inventory saat pickup completed, auto-calculate impact_metrics, auto-create notification |
+| 1 | **[x] Setup PocketBase** | Instalasi, konfigurasi, deploy lokal/VPS |
+| 2 | **[x] Buat Collections** | Implementasi 15+ koleksi sesuai `07-skema.md` (users, wood_types, waste_listings, pickups, warehouse_inventory, marketplace_transactions, products, orders, cart_items, wallet_transactions, impact_metrics, chats, notifications, design_recipes, bids, generator_products, raw_timber_listings) |
+| 3 | **[x] API Rules** | Setup RBAC per koleksi sesuai `07-skema.md` |
+| 4 | **[x] Seed Data** | Data awal: wood_types (Jati, Mahoni, dll), demo users per role, sample waste_listings |
+| 5 | **[x] PocketBase Hooks** | Hook di `pb_hooks/main.pb.js` untuk: auto-create warehouse_inventory saat pickup completed, auto-calculate impact_metrics, auto-create notification |
 
 **Deliverable:** PocketBase berjalan dengan data seed, API rules, hooks aktif.
 
@@ -67,10 +61,10 @@
 
 | # | Task | Detail |
 | :--- | :--- | :--- |
-| 1 | **PocketBase SDK Integration** | Tambahkan `pocketbase_dart` package, setup connection, auth service |
-| 2 | **AuthBloc** | Login, register, session management, auto-redirect per role |
-| 3 | **UserProfileBloc** | CRUD profil pengguna |
-| 4 | **Repository Pattern** | Implementasi data layer (datasource → repository → usecase) per fitur |
+| 1 | **[x] PocketBase SDK Integration** | Tambahkan `pocketbase_dart` package, setup connection, auth service |
+| 2 | **[x] AuthBloc** | Login, register, session management, auto-redirect per role |
+| 3 | **[x] UserProfileBloc** | CRUD profil pengguna |
+| 4 | **[x] Repository Pattern** | Implementasi data layer (datasource → repository → usecase) per fitur |
 
 ### 🔗 Minggu 5 — Feature BLoCs
 

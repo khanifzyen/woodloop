@@ -57,6 +57,10 @@ import '../../features/shared/presentation/pages/notification_center_page.dart';
 import '../../features/shared/presentation/pages/woodloop_digital_wallet_page.dart';
 import '../../features/shared/presentation/pages/b2b_profile_page.dart';
 
+import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../injection_container.dart';
+import 'go_router_refresh_stream.dart';
+
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 // Branch navigator keys for StatefulShellRoute
@@ -79,6 +83,47 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: '/',
+    refreshListenable: GoRouterRefreshStream(getIt<AuthBloc>().stream),
+    redirect: (context, state) {
+      final authState = getIt<AuthBloc>().state;
+
+      final isLoggingIn =
+          state.matchedLocation == '/login' ||
+          state.matchedLocation == '/role-selection' ||
+          state.matchedLocation.startsWith('/register') ||
+          state.matchedLocation == '/forgot-password';
+
+      final isOnboarding =
+          state.matchedLocation == '/onboarding' ||
+          state.matchedLocation == '/';
+
+      if (authState is Unauthenticated ||
+          authState is AuthInitial ||
+          authState is AuthError) {
+        if (!isLoggingIn && !isOnboarding) return '/role-selection';
+      } else if (authState is Authenticated) {
+        if (isLoggingIn || isOnboarding) {
+          final role = authState.user.role;
+          switch (role) {
+            case 'supplier':
+              return '/supplier-dashboard';
+            case 'generator':
+              return '/generator-dashboard';
+            case 'aggregator':
+              return '/aggregator-dashboard';
+            case 'converter':
+              return '/converter-dashboard';
+            case 'buyer':
+              return '/buyer-dashboard';
+            case 'enabler':
+              return '/enabler-dashboard';
+            default:
+              return '/role-selection';
+          }
+        }
+      }
+      return null;
+    },
     routes: [
       // ── Auth Routes (flat, no bottom nav) ──
       GoRoute(
