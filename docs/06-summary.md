@@ -123,9 +123,25 @@ Kami telah menyelesaikan pembuatan 5 halaman UI baru, refaktor navigasi mengguna
 *   **Kualitas Kode:**
     *   Memperbaiki semua *lint errors* (import path, unused variables). 0 errors pada `dart analyze`.
 
+## 9. Perbaikan Migrasi PocketBase & Sinkronisasi Skema (26 Februari 2026)
+Kami telah menulis ulang seluruh sistem migrasi database untuk memastikan skema di PocketBase sinkron dengan dokumentasi `docs/07-skema.md`.
+
+*   **Pembaruan Infrastruktur Migrasi:**
+    *   Menulis ulang `pb-client.js` menggunakan pola singleton PocketBase instance, mematikan `autoCancellation`, dan menambahkan fungsi `verifyFields` untuk validasi pasca-migrasi.
+    *   Menerapkan penamaan environment variables standar: `POCKETBASE_URL`, `POCKETBASE_ADMIN_EMAIL`, dan `POCKETBASE_ADMIN_PASSWORD`.
+*   **Implementasi Migrasi Idempotent (17 Koleksi):**
+    *   Membuat ulang 17 file migrasi koleksi (01-17) dengan logika `upsertCollection` yang lebih kuat, menghindari duplikasi field, dan menangani relasi antar-tabel secara dinamis menggunakan `getCollectionId`.
+    *   Khusus untuk koleksi `users` (Auth), dilakukan pembaruan manual untuk menambahkan 22 custom fields sesuai spesifikasi.
+*   **Verifikasi & Pembersihan:**
+    *   Melakukan verifikasi langsung ke database remote (`pb-woodloop.pasarjepara.com`) dan mengonfirmasi bahwa seluruh skema telah ter-update dengan benar 100%.
+    *   Memperbaiki bug logging pada script migrasi yang memberikan informasi "false positive" terkait perubahan field.
+    *   Menghapus folder `migration-contoh/` setelah digunakan sebagai referensi pola migrasi yang berhasil.
+*   **Dokumentasi:**
+    *   Memperbarui `docs/migration_style.md` untuk mencerminkan standar penulisan migrasi terbaru yang digunakan dalam proyek ini.
+
 ---
 
 **Langkah Selanjutnya (Next Steps):**
 *   Mengembangkan logika status aplikasi (State Management) menggunakan BLoC.
-*   Melakukan integrasi dengan API Backend/PocketBase sungguhan.
+*   Menghubungkan aplikasi Flutter dengan Backend PocketBase menggunakan data asli dari migrasi ini.
 *   Mengimplementasikan fungsionalitas fungsional (seperti mengunggah file gambar asli, pemindaian QR code, atau peta dinamis).

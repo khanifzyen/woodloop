@@ -1,0 +1,30 @@
+{
+    "name": "woodloop-migration",
+    "version": "1.0.0",
+    "description": "PocketBase migration scripts for WoodLoop",
+    "type": "module",
+    "scripts": {
+        "migrate": "node index.js",
+        "migrate:users": "node collections/01_users.js",
+        "migrate:wood-types": "node collections/02_wood_types.js",
+        "migrate:raw-timber": "node collections/03_raw_timber_listings.js",
+        "migrate:waste": "node collections/04_waste_listings.js",
+        "migrate:pickups": "node collections/05_pickups.js",
+        "migrate:warehouse": "node collections/06_warehouse_inventory.js",
+        "migrate:marketplace": "node collections/07_marketplace_transactions.js",
+        "migrate:products": "node collections/08_products.js",
+        "migrate:orders": "node collections/09_orders.js",
+        "migrate:cart": "node collections/10_cart_items.js",
+        "migrate:wallet": "node collections/11_wallet_transactions.js",
+        "migrate:impact": "node collections/12_impact_metrics.js",
+        "migrate:chats": "node collections/13_chats.js",
+        "migrate:notifications": "node collections/14_notifications.js",
+        "migrate:recipes": "node collections/15_design_recipes.js",
+        "migrate:bids": "node collections/16_bids.js",
+        "migrate:gen-products": "node collections/17_generator_products.js"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "pocketbase": "^0.25.2"
+    }
+}

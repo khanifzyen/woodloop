@@ -1,0 +1,72 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch.json and tasks.json which are often
+# shared together with other users of the project. If for your project it
+# contains personal settings, uncomment the next line to ignore it.
+# .vscode/
+
+# Flutter/Dart related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Ephemeral/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/Flutter.podspec
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.h
+**/ios/Runner/GeneratedPluginRegistrant.m
+**/android/local.properties
+**/android/key.properties
+**/android/app/src/main/res/values/google-services.xml
+**/android/app/google-services.json
+**/android/Runner/GeneratedPluginRegistrant.java
+**/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+**/.dart_tool/
+**/build/
+**/package-lock.json
+**/node_modules/
+**/.env
+**/.env.local
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/pubspec-freezed.g.dart
+
+# Symbolication related
+**/*.js.map
+**/*.js.deps
+**/*.wasm.map
+
+# Web related
+**/web/index.html.gz
+**/web/main.dart.js.gz
+**/web/main.dart.js.map.gz
+**/web/main.dart.js.tar.gz
+
+# Node.js related (for migration folder)
+migration/node_modules/
+migration/.env
+migration/npm-debug.log*
+migration/yarn-debug.log*
+migration/yarn-error.log*
+migration/.pnpm-debug.log*
+
+# OS related
+**/Thumbs.db
+**/.DS_Store
