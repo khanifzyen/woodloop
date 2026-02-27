@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
-import '../../presentation/bloc/waste_listing_bloc.dart';
+import '../bloc/waste_listing_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../../injection_container.dart';
+import '../../../shared/presentation/widgets/loading_widget.dart';
+import '../../../shared/presentation/widgets/empty_state_widget.dart';
 
 class GeneratorDashboardPage extends StatelessWidget {
   const GeneratorDashboardPage({super.key});
@@ -548,27 +550,18 @@ class _GeneratorDashboardView extends StatelessWidget {
                     BlocBuilder<WasteListingBloc, WasteListingState>(
                       builder: (context, state) {
                         if (state is WasteListingLoading) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: CircularProgressIndicator(
-                                color: AppTheme.primaryColor,
-                              ),
-                            ),
+                          return const Padding(
+                            padding: EdgeInsets.all(20),
+                            child: LoadingWidget(),
                           );
                         }
                         if (state is WasteListingsLoaded) {
                           if (state.listings.isEmpty) {
-                            return Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Center(
-                                child: Text(
-                                  'Belum ada limbah dilaporkan',
-                                  style: TextStyle(
-                                    color: Colors.white54,
-                                    fontSize: 13,
-                                  ),
-                                ),
+                            return const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: EmptyStateWidget(
+                                message: 'Belum ada limbah dilaporkan',
+                                icon: Icons.recycling,
                               ),
                             );
                           }

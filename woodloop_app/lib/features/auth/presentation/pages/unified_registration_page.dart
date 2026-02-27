@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../bloc/auth_bloc.dart';
 
 /// Unified registration page that shows role-specific fields
 /// based on the selected role from RoleSelectionPage.
@@ -21,23 +23,20 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
   String _selectedVehicle = '';
   final Set<String> _selectedSpecialties = {};
 
-  String get _dashboardRoute {
-    switch (widget.role) {
-      case 'supplier':
-        return '/supplier-dashboard';
-      case 'generator':
-        return '/generator-dashboard';
-      case 'aggregator':
-        return '/aggregator-dashboard';
-      case 'converter':
-        return '/converter-dashboard';
-      case 'buyer':
-        return '/buyer-dashboard';
-      case 'enabler':
-        return '/enabler-dashboard';
-      default:
-        return '/buyer-dashboard';
-    }
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _companyController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _companyController.dispose();
+    super.dispose();
   }
 
   String _getRoleDisplayName(AppLocalizations l10n) {
@@ -99,362 +98,430 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Role Badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppTheme.primaryColor.withValues(alpha: 0.2),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.redAccent,
+              ),
+            );
+          }
+        },
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Role Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              _roleIcon,
-                              color: AppTheme.primaryColor,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              _getRoleDisplayName(l10n),
-                              style: const TextStyle(
-                                color: AppTheme.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: AppTheme.primaryColor.withValues(
+                                alpha: 0.2,
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Title
-                      const Text(
-                        'Buat Akun Baru',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Bergabung dengan jaringan ekonomi sirkular kayu Jepara.',
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
-                      ),
-                      const SizedBox(height: 32),
-
-                      // ── Common Fields (All Roles) ──
-                      _buildLabel('NAMA LENGKAP'),
-                      _buildTextField(
-                        hintText: 'John Doe',
-                        icon: Icons.person_outline,
-                      ),
-                      const SizedBox(height: 20),
-
-                      _buildLabel('EMAIL'),
-                      _buildTextField(
-                        hintText: 'email@domain.com',
-                        icon: Icons.email_outlined,
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                      const SizedBox(height: 20),
-
-                      _buildLabel('NOMOR TELEPON'),
-                      _buildTextField(
-                        hintText: '812 3456 7890',
-                        iconWidget: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                '+62',
-                                style: TextStyle(
-                                  color: Colors.white54,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
                               Icon(
-                                Icons.expand_more,
-                                color: Colors.white54,
-                                size: 20,
+                                _roleIcon,
+                                color: AppTheme.primaryColor,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                _getRoleDisplayName(l10n),
+                                style: const TextStyle(
+                                  color: AppTheme.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        keyboardType: TextInputType.phone,
-                      ),
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                      _buildLabel('PASSWORD'),
-                      _buildTextField(
-                        hintText: 'Minimal 8 karakter',
-                        icon: Icons.lock_outline,
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 24),
-
-                      // ── Supplier-Specific Fields ──
-                      if (widget.role == 'supplier') ...[
-                        _buildLabel('NAMA PERUSAHAAN'),
-                        _buildTextField(
-                          hintText: 'Jepara Teak Mill',
-                          icon: Icons.factory_outlined,
+                        // Title
+                        const Text(
+                          'Buat Akun Baru',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        const SizedBox(height: 20),
-                        _buildAddressMap(),
-                        const SizedBox(height: 20),
-                        _buildCertUpload(),
-                        const SizedBox(height: 24),
-                      ],
-
-                      // ── Generator-Specific Fields ──
-                      if (widget.role == 'generator') ...[
-                        _buildLabel('NAMA WORKSHOP'),
-                        _buildTextField(
-                          hintText: 'Jepara Artisans',
-                          icon: Icons.home_work_outlined,
-                        ),
-                        const SizedBox(height: 20),
-                        _buildAddressMap(),
-                        const SizedBox(height: 20),
-                        _buildLabel('JENIS LIMBAH YANG DIHASILKAN'),
                         const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            _buildSelectableChip('Serbuk Kayu', 'sawdust'),
-                            _buildSelectableChip('Potongan', 'offcuts'),
-                            _buildSelectableChip('Wood Chips', 'chips'),
-                            _buildSelectableChip('Pallet', 'pallets'),
-                            _buildSelectableChip('Kulit Kayu', 'bark'),
-                          ],
+                        const Text(
+                          'Bergabung dengan jaringan ekonomi sirkular kayu Jepara.',
+                          style: TextStyle(color: Colors.white54, fontSize: 14),
+                        ),
+                        const SizedBox(height: 32),
+
+                        // ── Common Fields (All Roles) ──
+                        _buildLabel('NAMA LENGKAP'),
+                        _buildTextField(
+                          hintText: 'John Doe',
+                          icon: Icons.person_outline,
+                          controller: _nameController,
+                          validator: (v) => v == null || v.isEmpty
+                              ? 'Nama wajib diisi'
+                              : null,
                         ),
                         const SizedBox(height: 20),
-                        _buildLabel('EST. VOLUME BULANAN (KG)'),
+
+                        _buildLabel('EMAIL'),
                         _buildTextField(
-                          hintText: 'contoh: 500',
-                          icon: Icons.scale_outlined,
-                          keyboardType: TextInputType.number,
+                          hintText: 'email@domain.com',
+                          icon: Icons.email_outlined,
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _emailController,
+                          validator: (v) {
+                            if (v == null || v.isEmpty)
+                              return 'Email wajib diisi';
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v))
+                              return 'Format email tidak valid';
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        _buildLabel('NOMOR TELEPON'),
+                        _buildTextField(
+                          hintText: '812 3456 7890',
+                          iconWidget: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '+62',
+                                  style: TextStyle(
+                                    color: Colors.white54,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.expand_more,
+                                  color: Colors.white54,
+                                  size: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                          keyboardType: TextInputType.phone,
+                          controller: _phoneController,
+                        ),
+                        const SizedBox(height: 20),
+
+                        _buildLabel('PASSWORD'),
+                        _buildTextField(
+                          hintText: 'Minimal 8 karakter',
+                          icon: Icons.lock_outline,
+                          obscureText: true,
+                          controller: _passwordController,
+                          validator: (v) {
+                            if (v == null || v.isEmpty)
+                              return 'Password wajib diisi';
+                            if (v.length < 8)
+                              return 'Password minimal 8 karakter';
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 24),
-                      ],
 
-                      // ── Aggregator-Specific Fields ──
-                      if (widget.role == 'aggregator') ...[
-                        _buildLabel('NO. KTP (NIK)'),
-                        _buildTextField(
-                          hintText: '3320...',
-                          icon: Icons.badge_outlined,
-                          keyboardType: TextInputType.number,
-                        ),
-                        const SizedBox(height: 20),
-                        _buildLabel('JENIS KENDARAAN'),
-                        const SizedBox(height: 8),
-                        _buildVehicleSelector(),
-                        const SizedBox(height: 20),
-                        _buildLabel('PLAT NOMOR KENDARAAN'),
-                        _buildTextField(
-                          hintText: 'K 1234 XY',
-                          icon: Icons.directions_car_outlined,
-                        ),
-                        const SizedBox(height: 20),
-                        _buildLabel('KAPASITAS GUDANG (KG)'),
-                        _buildTextField(
-                          hintText: 'contoh: 2000',
-                          icon: Icons.warehouse_outlined,
-                          keyboardType: TextInputType.number,
-                        ),
-                        const SizedBox(height: 24),
-                      ],
+                        // ── Supplier-Specific Fields ──
+                        if (widget.role == 'supplier') ...[
+                          _buildLabel('NAMA PERUSAHAAN'),
+                          _buildTextField(
+                            hintText: 'Jepara Teak Mill',
+                            icon: Icons.factory_outlined,
+                          ),
+                          const SizedBox(height: 20),
+                          _buildAddressMap(),
+                          const SizedBox(height: 20),
+                          _buildCertUpload(),
+                          const SizedBox(height: 24),
+                        ],
 
-                      // ── Converter-Specific Fields ──
-                      if (widget.role == 'converter') ...[
-                        _buildLabel('NAMA STUDIO / BISNIS'),
-                        _buildTextField(
-                          hintText: 'Jepara Eco Art',
-                          icon: Icons.store_outlined,
-                        ),
-                        const SizedBox(height: 20),
-                        _buildLabel('SPESIALISASI'),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            _buildSpecialtyChip(
-                              'Eco-Furniture',
-                              Icons.chair_outlined,
-                            ),
-                            _buildSpecialtyChip(
-                              'Handicraft',
-                              Icons.handyman_outlined,
-                            ),
-                            _buildSpecialtyChip(
-                              'Briket Kayu',
-                              Icons.local_fire_department,
-                            ),
-                            _buildSpecialtyChip(
-                              'Kompos',
-                              Icons.compost_outlined,
-                            ),
-                            _buildSpecialtyChip('Lainnya', Icons.more_horiz),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        _buildAddressMap(),
-                        const SizedBox(height: 20),
-                        _buildLabel('KEBUTUHAN BAHAN BAKU (KG/BULAN)'),
-                        _buildTextField(
-                          hintText: 'contoh: 1000',
-                          icon: Icons.scale_outlined,
-                          keyboardType: TextInputType.number,
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-
-                      // ── Buyer-Specific Fields ──
-                      if (widget.role == 'buyer') ...[
-                        _buildLabel('ALAMAT PENGIRIMAN'),
-                        _buildTextField(
-                          hintText: 'Alamat rumah atau kantor',
-                          icon: Icons.home_outlined,
-                          maxLines: 3,
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-
-                      // Terms
-                      Center(
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style: const TextStyle(
-                              color: Colors.white38,
-                              fontSize: 12,
-                            ),
+                        // ── Generator-Specific Fields ──
+                        if (widget.role == 'generator') ...[
+                          _buildLabel('NAMA WORKSHOP'),
+                          _buildTextField(
+                            hintText: 'Jepara Artisans',
+                            icon: Icons.home_work_outlined,
+                          ),
+                          const SizedBox(height: 20),
+                          _buildAddressMap(),
+                          const SizedBox(height: 20),
+                          _buildLabel('JENIS LIMBAH YANG DIHASILKAN'),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
                             children: [
-                              const TextSpan(
-                                text: 'Dengan mendaftar, Anda menyetujui ',
-                              ),
-                              TextSpan(
-                                text: 'Syarat & Ketentuan',
-                                style: const TextStyle(
-                                  color: AppTheme.primaryColor,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                              const TextSpan(text: '\ndan '),
-                              TextSpan(
-                                text: 'Kebijakan Privasi',
-                                style: const TextStyle(
-                                  color: AppTheme.primaryColor,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                              const TextSpan(text: '.'),
+                              _buildSelectableChip('Serbuk Kayu', 'sawdust'),
+                              _buildSelectableChip('Potongan', 'offcuts'),
+                              _buildSelectableChip('Wood Chips', 'chips'),
+                              _buildSelectableChip('Pallet', 'pallets'),
+                              _buildSelectableChip('Kulit Kayu', 'bark'),
                             ],
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+                          const SizedBox(height: 20),
+                          _buildLabel('EST. VOLUME BULANAN (KG)'),
+                          _buildTextField(
+                            hintText: 'contoh: 500',
+                            icon: Icons.scale_outlined,
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 24),
+                        ],
 
-            // Bottom Button
-            Container(
-              padding: const EdgeInsets.all(24.0),
-              decoration: BoxDecoration(
-                color: AppTheme.background,
-                border: Border(
-                  top: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+                        // ── Aggregator-Specific Fields ──
+                        if (widget.role == 'aggregator') ...[
+                          _buildLabel('NO. KTP (NIK)'),
+                          _buildTextField(
+                            hintText: '3320...',
+                            icon: Icons.badge_outlined,
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 20),
+                          _buildLabel('JENIS KENDARAAN'),
+                          const SizedBox(height: 8),
+                          _buildVehicleSelector(),
+                          const SizedBox(height: 20),
+                          _buildLabel('PLAT NOMOR KENDARAAN'),
+                          _buildTextField(
+                            hintText: 'K 1234 XY',
+                            icon: Icons.directions_car_outlined,
+                          ),
+                          const SizedBox(height: 20),
+                          _buildLabel('KAPASITAS GUDANG (KG)'),
+                          _buildTextField(
+                            hintText: 'contoh: 2000',
+                            icon: Icons.warehouse_outlined,
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+
+                        // ── Converter-Specific Fields ──
+                        if (widget.role == 'converter') ...[
+                          _buildLabel('NAMA STUDIO / BISNIS'),
+                          _buildTextField(
+                            hintText: 'Jepara Eco Art',
+                            icon: Icons.store_outlined,
+                          ),
+                          const SizedBox(height: 20),
+                          _buildLabel('SPESIALISASI'),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              _buildSpecialtyChip(
+                                'Eco-Furniture',
+                                Icons.chair_outlined,
+                              ),
+                              _buildSpecialtyChip(
+                                'Handicraft',
+                                Icons.handyman_outlined,
+                              ),
+                              _buildSpecialtyChip(
+                                'Briket Kayu',
+                                Icons.local_fire_department,
+                              ),
+                              _buildSpecialtyChip(
+                                'Kompos',
+                                Icons.compost_outlined,
+                              ),
+                              _buildSpecialtyChip('Lainnya', Icons.more_horiz),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          _buildAddressMap(),
+                          const SizedBox(height: 20),
+                          _buildLabel('KEBUTUHAN BAHAN BAKU (KG/BULAN)'),
+                          _buildTextField(
+                            hintText: 'contoh: 1000',
+                            icon: Icons.scale_outlined,
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+
+                        // ── Buyer-Specific Fields ──
+                        if (widget.role == 'buyer') ...[
+                          _buildLabel('ALAMAT PENGIRIMAN'),
+                          _buildTextField(
+                            hintText: 'Alamat rumah atau kantor',
+                            icon: Icons.home_outlined,
+                            maxLines: 3,
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+
+                        // Terms
+                        Center(
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              style: const TextStyle(
+                                color: Colors.white38,
+                                fontSize: 12,
+                              ),
+                              children: [
+                                const TextSpan(
+                                  text: 'Dengan mendaftar, Anda menyetujui ',
+                                ),
+                                TextSpan(
+                                  text: 'Syarat & Ketentuan',
+                                  style: const TextStyle(
+                                    color: AppTheme.primaryColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                const TextSpan(text: '\ndan '),
+                                TextSpan(
+                                  text: 'Kebijakan Privasi',
+                                  style: const TextStyle(
+                                    color: AppTheme.primaryColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                const TextSpan(text: '.'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.go(_dashboardRoute);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 4,
-                        shadowColor: AppTheme.primaryColor.withValues(
-                          alpha: 0.3,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Daftar Sekarang',
-                            style: TextStyle(
-                              color: AppTheme.background,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          const Icon(
-                            Icons.arrow_forward,
-                            color: AppTheme.background,
-                            size: 20,
-                          ),
-                        ],
-                      ),
+
+              // Bottom Button
+              Container(
+                padding: const EdgeInsets.all(24.0),
+                decoration: BoxDecoration(
+                  color: AppTheme.background,
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.white.withValues(alpha: 0.05),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  GestureDetector(
-                    onTap: () => context.go('/login'),
-                    child: RichText(
-                      text: const TextSpan(
-                        style: TextStyle(color: Colors.white54, fontSize: 14),
-                        children: [
-                          TextSpan(text: 'Sudah punya akun? '),
-                          TextSpan(
-                            text: 'Login',
-                            style: TextStyle(
-                              color: AppTheme.primaryColor,
-                              fontWeight: FontWeight.bold,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          final isLoading = state is AuthLoading;
+                          return ElevatedButton(
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    if (_formKey.currentState!.validate()) {
+                                      context.read<AuthBloc>().add(
+                                        AuthRegisterRequested({
+                                          'name': _nameController.text.trim(),
+                                          'email': _emailController.text.trim(),
+                                          'phone': _phoneController.text.trim(),
+                                          'password': _passwordController.text,
+                                          'passwordConfirm':
+                                              _passwordController.text,
+                                          'role': widget.role,
+                                          'company_name': _companyController
+                                              .text
+                                              .trim(),
+                                        }),
+                                      );
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              elevation: 4,
+                              shadowColor: AppTheme.primaryColor.withValues(
+                                alpha: 0.3,
+                              ),
                             ),
-                          ),
-                        ],
+                            child: isLoading
+                                ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: AppTheme.background,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'Daftar Sekarang',
+                                        style: TextStyle(
+                                          color: AppTheme.background,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Icon(
+                                        Icons.arrow_forward,
+                                        color: AppTheme.background,
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
+                          );
+                        },
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () => context.go('/login'),
+                      child: RichText(
+                        text: const TextSpan(
+                          style: TextStyle(color: Colors.white54, fontSize: 14),
+                          children: [
+                            TextSpan(text: 'Sudah punya akun? '),
+                            TextSpan(
+                              text: 'Login',
+                              style: TextStyle(
+                                color: AppTheme.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -484,12 +551,16 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
     TextInputType? keyboardType,
     bool obscureText = false,
     int maxLines = 1,
+    TextEditingController? controller,
+    String? Function(String?)? validator,
   }) {
     return TextFormField(
+      controller: controller,
       style: const TextStyle(color: Colors.white),
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLines: maxLines,
+      validator: validator,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.white38),
