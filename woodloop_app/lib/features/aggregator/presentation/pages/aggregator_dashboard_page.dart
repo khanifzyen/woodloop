@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/pickup_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
 
 class AggregatorDashboardPage extends StatelessWidget {
   const AggregatorDashboardPage({super.key});
@@ -9,6 +13,28 @@ class AggregatorDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<PickupBloc>();
+        final authState = context.read<AuthBloc>().state;
+        String? aggregatorId;
+        if (authState is Authenticated) {
+          aggregatorId = authState.user.id;
+        }
+        bloc.add(LoadPickups(aggregatorId: aggregatorId));
+        return bloc;
+      },
+      child: _AggregatorDashboardView(l10n: l10n),
+    );
+  }
+}
+
+class _AggregatorDashboardView extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _AggregatorDashboardView({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -326,36 +352,63 @@ class AggregatorDashboardPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  _buildRouteItem(
-                    time: '09:00',
-                    title: l10n.aggregatorDashMockRouteDesc1Title,
-                    subtitle: l10n.aggregatorDashMockRouteDesc1Sub,
-                    distance: '2.5 km',
-                    isFirst: true,
-                    isLast: false,
-                    isCompleted: true,
-                  ),
-                  _buildRouteItem(
-                    time: '10:30',
-                    title: l10n.aggregatorDashMockRouteDesc2Title,
-                    subtitle: l10n.aggregatorDashMockRouteDesc2Sub,
-                    distance: '4.2 km',
-                    isFirst: false,
-                    isLast: false,
-                    isActive: true,
-                  ),
-                  _buildRouteItem(
-                    time: '13:00',
-                    title: l10n.aggregatorDashMockRouteDesc3Title,
-                    subtitle: l10n.aggregatorDashMockRouteDesc3Sub,
-                    distance: '7.8 km',
-                    isFirst: false,
-                    isLast: true,
-                  ),
-                ],
+              child: BlocBuilder<PickupBloc, PickupState>(
+                builder: (context, state) {
+                  if (state is PickupLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppTheme.primaryColor,
+                      ),
+                    );
+                  }
+                  if (state is PickupsLoaded) {
+                    if (state.pickups.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Belum ada jadwal pickup',
+                          style: TextStyle(color: Colors.white54, fontSize: 13),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: state.pickups.length,
+                      itemBuilder: (context, index) {
+                        final pickup = state.pickups[index];
+                        final isCompleted = pickup.status == 'completed';
+                        final isActive = pickup.status == 'in_progress';
+                        final timeStr = pickup.scheduledDate != null
+                            ? '${pickup.scheduledDate!.hour.toString().padLeft(2, '0')}:${pickup.scheduledDate!.minute.toString().padLeft(2, '0')}'
+                            : '--:--';
+                        return _buildRouteItem(
+                          time: timeStr,
+                          title: 'Pickup #${pickup.id.substring(0, 6)}',
+                          subtitle:
+                              pickup.notes ??
+                              'Waste listing: ${pickup.wasteListingId.substring(0, 8)}',
+                          distance:
+                              '${pickup.weightVerified?.toStringAsFixed(0) ?? "-"} kg',
+                          isFirst: index == 0,
+                          isLast: index == state.pickups.length - 1,
+                          isCompleted: isCompleted,
+                          isActive: isActive,
+                        );
+                      },
+                    );
+                  }
+                  if (state is PickupError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],

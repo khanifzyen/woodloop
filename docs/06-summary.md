@@ -167,8 +167,54 @@ Kami telah merampungkan lapisan dasar untuk Otentikasi dan Profil Pengguna (Core
     *   Mengintegrasikan *Stream* dari `AuthBloc` (dibungkus dalam `GoRouterRefreshStream`) ke dalam properti `refreshListenable` milik `GoRouter`.
     *   Membuat sistem *Auto-Redirect* global: Mengarahkan paksa pengguna tak terdaftar ke `/role-selection` atau`/login`, dan meneruskan pengguna yang berhasil login (Authenticated) langsung ke dashboard sesuai **Role** akun mereka (Supplier, Generator, dll).
 
+## 12. Implementasi Feature BLoCs — Integrasi API per Fitur (Fase 3 - Minggu 5) (27 Februari 2026)
+Kami telah menyelesaikan seluruh *Feature BLoCs* untuk menghubungkan setiap halaman fitur dengan backend PocketBase, mengikuti pola Clean Architecture yang sama dengan Core BLoCs.
+
+*   **Generator — `WasteListingBloc`:**
+    *   Membuat entitas, model, datasource, dan repository untuk koleksi `waste_listings`.
+    *   BLoC mendukung operasi CRUD penuh (Load, Create, Update, Delete) dengan filter berdasarkan `generatorId` dan `status`.
+*   **Aggregator — `PickupBloc` & `WarehouseBloc`:**
+    *   `PickupBloc` menangani manajemen penjemputan limbah (buat jadwal, update status ke `completed`).
+    *   `WarehouseBloc` menampilkan stok gudang dari koleksi `warehouse_inventory` dengan expand relasi `wood_type`.
+*   **Converter — `MarketplaceBloc` & `ProductBloc`:**
+    *   `MarketplaceBloc` mengelola transaksi pembelian bahan limbah dari Aggregator (`marketplace_transactions`).
+    *   `ProductBloc` mendukung CRUD produk *upcycle* pada koleksi `products` dengan filter kategori.
+*   **Buyer — `CartBloc` & `OrderBloc`:**
+    *   `CartBloc` mengelola keranjang belanja (tambah, ubah kuantitas, hapus, kosongkan) dengan expand data produk.
+    *   `OrderBloc` menangani pembuatan pesanan dan pembaruan status pesanan.
+*   **Shared — `WalletBloc`:**
+    *   Menampilkan saldo terkini (diambil dari `balance_after` transaksi terakhir) dan riwayat transaksi dompet digital.
+*   **Kualitas Kode:**
+    *   `dart run build_runner build -d` berhasil menghasilkan 34 output (injectable DI).
+    *   `dart analyze`: **0 errors**, hanya 4 info-level style hints.
+    *   Menyelesaikan konflik penamaan `Order` (bentrokan antara `injectable` dan entitas aplikasi) dengan `hide Order`.
+
+## 13. Fitur Spesifik: QR Code, Peta Interaktif & Realtime (Fase 4 - Minggu 6-7) (27 Februari 2026)
+Kami telah mengimplementasikan fitur-fitur spesifik WoodLoop yang menghubungkan UI ke data layer baru.
+
+*   **QR Code Traceability (Minggu 6):**
+    *   Install package `qr_flutter` untuk generate QR code.
+    *   Membuat `QrCodeDialog` widget untuk menampilkan QR traceability per produk.
+    *   Menambahkan tombol QR di setiap product item di `converter_studio_dashboard_page`.
+    *   Membuat data layer traceability lengkap (entity, datasource, repository, BLoC) yang merekonstruksi supply chain dari PocketBase.
+    *   Wire `TraceabilityBloc` ke `product_story_traceability_page` dengan parameter `productId`.
+*   **Peta Interaktif (Minggu 7):**
+    *   Install package `flutter_map` dan `latlong2` untuk peta interaktif.
+    *   Migrasi `aggregator_treasure_map_page` dari gambar statis ke `FlutterMap` + OpenStreetMap tiles dengan `Marker`-based pins di koordinat Jepara.
+*   **Chat Realtime (Minggu 7):**
+    *   Membuat data layer chat lengkap (entity, model, datasource dengan PocketBase realtime subscribe, repository, BLoC).
+    *   `ChatBloc` mendukung: `LoadMessages`, `SendMessage`, dan `NewMessageReceived` (via realtime).
+    *   Wire ke `direct_message_conversation_page` (StatefulWidget dengan TextEditingController + send logic).
+*   **Notifikasi Realtime (Minggu 7):**
+    *   Membuat data layer notifikasi (entity, model, datasource dengan realtime subscribe, BLoC).
+    *   `NotificationBloc` mendukung: `LoadNotifications`, `MarkAsRead`, dan `NewNotificationReceived`.
+    *   Wire ke `notification_center_page` dengan grouping unread/read dan helper methods.
+*   **Kualitas Kode:**
+    *   `dart run build_runner build -d` → 42 output (injectable DI).
+    *   `dart analyze`: **0 errors**, hanya 4 info-level style hints pre-existing.
+
 ---
 
 **Langkah Selanjutnya (Next Steps):**
-*   Mengimplementasikan BLoCs tingkat fitur (*Feature BLoCs*) seperti `WasteListingBloc`, `PickupBloc`, dan `WarehouseBloc`.
-*   Menyambungkan UI Marketplace dengan data produk dari server PocketBase.
+*   Melanjutkan ke **Fase 5** (Minggu 8): Polish, Testing & Deployment.
+

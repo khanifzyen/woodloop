@@ -47,6 +47,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   pocketbase: ^0.23.2
+  qr_flutter: ^4.1.0
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

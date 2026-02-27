@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/traceability_bloc.dart';
+import '../../../../injection_container.dart';
 
 class ProductStoryTraceabilityPage extends StatelessWidget {
-  const ProductStoryTraceabilityPage({super.key});
+  final String? productId;
+  const ProductStoryTraceabilityPage({super.key, this.productId});
 
   @override
   Widget build(BuildContext context) {
+    if (productId != null && productId!.isNotEmpty) {
+      return BlocProvider(
+        create: (context) {
+          final bloc = getIt<TraceabilityBloc>();
+          bloc.add(LoadTraceability(productId!));
+          return bloc;
+        },
+        child: _buildScaffold(context),
+      );
+    }
+    return _buildScaffold(context);
+  }
+
+  Widget _buildScaffold(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,

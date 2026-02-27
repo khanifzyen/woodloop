@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class AggregatorTreasureMapPage extends StatelessWidget {
   const AggregatorTreasureMapPage({super.key});
@@ -9,48 +11,42 @@ class AggregatorTreasureMapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    // Jepara, Central Java coordinates
+    const jeparaCenter = LatLng(-6.5912, 110.6745);
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: Stack(
         children: [
-          // Expanded Map Background (Simulated)
+          // FlutterMap with OpenStreetMap tiles
           Positioned.fill(
-            child: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/map_jepara.jpg'),
-                  fit: BoxFit.cover,
-                  opacity: 0.8,
+            child: FlutterMap(
+              options: const MapOptions(
+                initialCenter: jeparaCenter,
+                initialZoom: 13.0,
+                minZoom: 10.0,
+                maxZoom: 18.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.woodloop.app',
                 ),
-              ),
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          AppTheme.background,
-                          AppTheme.background.withValues(alpha: 0.8),
-                          Colors.transparent,
-                        ],
-                        stops: const [0.0, 0.3, 1.0],
-                      ),
+                // Mock waste listing markers
+                MarkerLayer(
+                  markers: [
+                    _buildMapMarker(
+                      const LatLng(-6.5880, 110.6700),
+                      isUrgent: true,
                     ),
-                  ),
-
-                  // Map Pins
-                  _buildMapPin(top: 200, left: 150, isUrgent: true),
-                  _buildMapPin(top: 350, left: 80, isUrgent: false),
-                  _buildMapPin(
-                    top: 280,
-                    left: 250,
-                    isUrgent: false,
-                    isSelected: true,
-                  ),
-                ],
-              ),
+                    _buildMapMarker(const LatLng(-6.5950, 110.6650)),
+                    _buildMapMarker(
+                      const LatLng(-6.5870, 110.6810),
+                      isSelected: true,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
 
@@ -324,40 +320,34 @@ class AggregatorTreasureMapPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMapPin({
-    required double top,
-    required double left,
+  Marker _buildMapMarker(
+    LatLng point, {
     bool isUrgent = false,
     bool isSelected = false,
   }) {
-    return Positioned(
-      top: top,
-      left: left,
-      child: GestureDetector(
-        onTap: () {
-          // Interaction logic
-        },
-        child: Container(
-          width: isSelected ? 48 : 36,
-          height: isSelected ? 48 : 36,
-          decoration: BoxDecoration(
-            color: isUrgent ? Colors.red : AppTheme.primaryColor,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: isSelected ? 3 : 2),
-            boxShadow: [
-              BoxShadow(
-                color: (isUrgent ? Colors.red : AppTheme.primaryColor)
-                    .withValues(alpha: 0.5),
-                blurRadius: isSelected ? 12 : 6,
-                spreadRadius: isSelected ? 4 : 0,
+    return Marker(
+      width: isSelected ? 48 : 36,
+      height: isSelected ? 48 : 36,
+      point: point,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isUrgent ? Colors.red : AppTheme.primaryColor,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: isSelected ? 3 : 2),
+          boxShadow: [
+            BoxShadow(
+              color: (isUrgent ? Colors.red : AppTheme.primaryColor).withValues(
+                alpha: 0.5,
               ),
-            ],
-          ),
-          child: Icon(
-            Icons.recycling,
-            color: isUrgent ? Colors.white : AppTheme.background,
-            size: isSelected ? 24 : 18,
-          ),
+              blurRadius: isSelected ? 12 : 6,
+              spreadRadius: isSelected ? 4 : 0,
+            ),
+          ],
+        ),
+        child: Icon(
+          Icons.recycling,
+          color: isUrgent ? Colors.white : AppTheme.background,
+          size: isSelected ? 24 : 18,
         ),
       ),
     );

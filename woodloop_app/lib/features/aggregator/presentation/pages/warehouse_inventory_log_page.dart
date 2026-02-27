@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/warehouse_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
 
 class WarehouseInventoryLogPage extends StatelessWidget {
   const WarehouseInventoryLogPage({super.key});
@@ -9,6 +13,28 @@ class WarehouseInventoryLogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<WarehouseBloc>();
+        final authState = context.read<AuthBloc>().state;
+        String? aggregatorId;
+        if (authState is Authenticated) {
+          aggregatorId = authState.user.id;
+        }
+        bloc.add(LoadWarehouseItems(aggregatorId: aggregatorId));
+        return bloc;
+      },
+      child: _WarehouseInventoryLogView(l10n: l10n),
+    );
+  }
+}
+
+class _WarehouseInventoryLogView extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _WarehouseInventoryLogView({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -112,31 +138,61 @@ class WarehouseInventoryLogPage extends StatelessWidget {
 
             // Inventory List
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
-                children: [
-                  _buildInventoryItem(
-                    title: l10n.aggregatorWarehouseMockItem1Title,
-                    subtitle: l10n.aggregatorWarehouseMockItem1Sub,
-                    weight: l10n.aggregatorWarehouseMockItem1Weight,
-                    colorId: Colors.orange,
-                  ),
-                  _buildInventoryItem(
-                    title: l10n.aggregatorWarehouseMockItem2Title,
-                    subtitle: l10n.aggregatorWarehouseMockItem2Sub,
-                    weight: l10n.aggregatorWarehouseMockItem2Weight,
-                    colorId: Colors.blue,
-                  ),
-                  _buildInventoryItem(
-                    title: l10n.aggregatorWarehouseMockItem3Title,
-                    subtitle: l10n.aggregatorWarehouseMockItem3Sub,
-                    weight: l10n.aggregatorWarehouseMockItem3Weight,
-                    colorId: Colors.green,
-                  ),
-                ],
+              child: BlocBuilder<WarehouseBloc, WarehouseState>(
+                builder: (context, state) {
+                  if (state is WarehouseLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppTheme.primaryColor,
+                      ),
+                    );
+                  }
+                  if (state is WarehouseItemsLoaded) {
+                    if (state.items.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Gudang kosong',
+                          style: TextStyle(color: Colors.white54, fontSize: 13),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 8,
+                      ),
+                      itemCount: state.items.length,
+                      itemBuilder: (context, index) {
+                        final item = state.items[index];
+                        final colors = [
+                          Colors.orange,
+                          Colors.blue,
+                          Colors.green,
+                          Colors.purple,
+                          Colors.red,
+                        ];
+                        return _buildInventoryItem(
+                          title: item.woodTypeName ?? item.form,
+                          subtitle: 'Status: ${item.status}',
+                          weight: '${item.weight.toStringAsFixed(0)} kg',
+                          colorId: colors[index % colors.length],
+                        );
+                      },
+                    );
+                  }
+                  if (state is WarehouseError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],

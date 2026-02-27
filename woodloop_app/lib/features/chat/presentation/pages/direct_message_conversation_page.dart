@@ -1,10 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/chat_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
 
 class DirectMessageConversationPage extends StatelessWidget {
-  const DirectMessageConversationPage({super.key});
+  final String? conversationId;
+  const DirectMessageConversationPage({super.key, this.conversationId});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<ChatBloc>();
+        if (conversationId != null && conversationId!.isNotEmpty) {
+          bloc.add(LoadMessages(conversationId!));
+        }
+        return bloc;
+      },
+      child: _DirectMessageConversationView(conversationId: conversationId),
+    );
+  }
+}
+
+class _DirectMessageConversationView extends StatefulWidget {
+  final String? conversationId;
+  const _DirectMessageConversationView({this.conversationId});
+
+  @override
+  State<_DirectMessageConversationView> createState() =>
+      _DirectMessageConversationViewState();
+}
+
+class _DirectMessageConversationViewState
+    extends State<_DirectMessageConversationView> {
+  final _messageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +188,24 @@ class DirectMessageConversationPage extends StatelessWidget {
                         color: AppTheme.background,
                         size: 20,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        final text = _messageController.text.trim();
+                        if (text.isEmpty) return;
+                        final authState = context.read<AuthBloc>().state;
+                        String senderId = '';
+                        if (authState is Authenticated) {
+                          senderId = authState.user.id;
+                        }
+                        context.read<ChatBloc>().add(
+                          SendMessage({
+                            'sender_id': senderId,
+                            'receiver_id': '',
+                            'conversation_id': widget.conversationId ?? '',
+                            'body': text,
+                          }),
+                        );
+                        _messageController.clear();
+                      },
                     ),
                   ),
                 ],

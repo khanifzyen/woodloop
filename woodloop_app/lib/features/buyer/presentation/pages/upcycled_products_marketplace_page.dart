@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../../converter/presentation/bloc/product_bloc.dart';
+import '../../../../injection_container.dart';
 
 class UpcycledProductsMarketplacePage extends StatelessWidget {
   const UpcycledProductsMarketplacePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<ProductBloc>();
+        bloc.add(const LoadProducts()); // Load all products
+        return bloc;
+      },
+      child: const _UpcycledProductsMarketplaceView(),
+    );
+  }
+}
+
+class _UpcycledProductsMarketplaceView extends StatelessWidget {
+  const _UpcycledProductsMarketplaceView();
 
   @override
   Widget build(BuildContext context) {
@@ -175,42 +194,59 @@ class UpcycledProductsMarketplacePage extends StatelessWidget {
 
             // Product Grid
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.65, // Taller cards to accommodate text
-                children: [
-                  _buildProductCard(
-                    title: l10n.buyerUpcycledMarketMockTitle1,
-                    studio: l10n.buyerUpcycledMarketMockStudio1,
-                    price: 'Rp 450.000',
-                    impact: l10n.buyerUpcycledMarketMockImpact1,
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                  _buildProductCard(
-                    title: l10n.buyerUpcycledMarketMockTitle2,
-                    studio: l10n.buyerUpcycledMarketMockStudio2,
-                    price: 'Rp 1.250.000',
-                    impact: l10n.buyerUpcycledMarketMockImpact2,
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                  _buildProductCard(
-                    title: l10n.buyerUpcycledMarketMockTitle3,
-                    studio: l10n.buyerUpcycledMarketMockStudio3,
-                    price: 'Rp 185.000',
-                    impact: l10n.buyerUpcycledMarketMockImpact3,
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                  _buildProductCard(
-                    title: l10n.buyerUpcycledMarketMockTitle4,
-                    studio: l10n.buyerUpcycledMarketMockStudio4,
-                    price: 'Rp 320.000',
-                    impact: l10n.buyerUpcycledMarketMockImpact4,
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                ],
+              child: BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppTheme.primaryColor,
+                      ),
+                    );
+                  }
+                  if (state is ProductsLoaded) {
+                    if (state.products.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Belum ada produk',
+                          style: TextStyle(color: Colors.white54, fontSize: 13),
+                        ),
+                      );
+                    }
+                    return GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 0.65,
+                          ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: state.products.length,
+                      itemBuilder: (context, index) {
+                        final product = state.products[index];
+                        return _buildProductCard(
+                          title: product.name,
+                          studio: product.category,
+                          price: 'Rp ${product.price.toStringAsFixed(0)}',
+                          impact: '${product.stock} in stock',
+                          imageUrl: 'assets/images/map_jepara.jpg',
+                        );
+                      },
+                    );
+                  }
+                  if (state is ProductError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],

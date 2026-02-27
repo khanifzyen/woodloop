@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/wallet_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
+import 'package:intl/intl.dart'; // for DateFormat
 
 class WoodLoopDigitalWalletPage extends StatelessWidget {
   const WoodLoopDigitalWalletPage({super.key});
@@ -9,7 +14,26 @@ class WoodLoopDigitalWalletPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<WalletBloc>();
+        final authState = context.read<AuthBloc>().state;
+        if (authState is Authenticated) {
+          bloc.add(LoadWallet(authState.user.id));
+        }
+        return bloc;
+      },
+      child: _WoodLoopDigitalWalletView(l10n: l10n),
+    );
+  }
+}
 
+class _WoodLoopDigitalWalletView extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _WoodLoopDigitalWalletView({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -68,13 +92,22 @@ class WoodLoopDigitalWalletPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Rp 4.250.000',
-                      style: TextStyle(
-                        color: AppTheme.background,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    BlocBuilder<WalletBloc, WalletState>(
+                      builder: (context, state) {
+                        String balanceStr = 'Rp 0';
+                        if (state is WalletLoaded) {
+                          balanceStr =
+                              'Rp ${NumberFormat('#,###', 'id').format(state.balance)}';
+                        }
+                        return Text(
+                          balanceStr,
+                          style: const TextStyle(
+                            color: AppTheme.background,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 24),
                     Row(
@@ -126,35 +159,64 @@ class WoodLoopDigitalWalletPage extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        children: [
-                          _buildTransactionRow(
-                            title: 'Penjualan Serbuk Jati',
-                            date: '10 Nov 2023, 14:30',
-                            amount: '+ Rp 45.000',
-                            isIncome: true,
-                          ),
-                          _buildTransactionRow(
-                            title: 'Penarikan Dana ke BCA',
-                            date: '08 Nov 2023, 09:15',
-                            amount: '- Rp 1.500.000',
-                            isIncome: false,
-                          ),
-                          _buildTransactionRow(
-                            title: 'Penjualan Potongan Kayu',
-                            date: '02 Nov 2023, 11:20',
-                            amount: '+ Rp 120.000',
-                            isIncome: true,
-                          ),
-                          _buildTransactionRow(
-                            title: 'Biaya Layanan Aggregator',
-                            date: '02 Nov 2023, 11:20',
-                            amount: '- Rp 12.000',
-                            isIncome: false,
-                          ),
-                          const SizedBox(height: 32),
-                        ],
+                      child: BlocBuilder<WalletBloc, WalletState>(
+                        builder: (context, state) {
+                          if (state is WalletLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: AppTheme.primaryColor,
+                              ),
+                            );
+                          }
+                          if (state is WalletLoaded) {
+                            if (state.transactions.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  'Belum ada transaksi',
+                                  style: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              );
+                            }
+                            return ListView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              itemCount: state.transactions.length,
+                              itemBuilder: (context, index) {
+                                final tx = state.transactions[index];
+                                final isIncome = tx.type == 'credit';
+                                final sign = isIncome ? '+' : '-';
+                                final dateStr = DateFormat(
+                                  'dd MMM yyyy, HH:mm',
+                                ).format(tx.created);
+                                return _buildTransactionRow(
+                                  title:
+                                      tx.description ??
+                                      (isIncome ? 'Pemasukan' : 'Pengeluaran'),
+                                  date: dateStr,
+                                  amount:
+                                      '$sign Rp ${NumberFormat('#,###', 'id').format(tx.amount)}',
+                                  isIncome: isIncome,
+                                );
+                              },
+                            );
+                          }
+                          if (state is WalletError) {
+                            return Center(
+                              child: Text(
+                                state.message,
+                                style: const TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
                       ),
                     ),
                   ],

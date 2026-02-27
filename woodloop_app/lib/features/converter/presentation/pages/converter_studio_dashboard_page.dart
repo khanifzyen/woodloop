@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/product_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
+import '../../../traceability/presentation/widgets/qr_code_dialog.dart';
 
 class ConverterStudioDashboardPage extends StatelessWidget {
   const ConverterStudioDashboardPage({super.key});
@@ -9,6 +14,28 @@ class ConverterStudioDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<ProductBloc>();
+        final authState = context.read<AuthBloc>().state;
+        String? converterId;
+        if (authState is Authenticated) {
+          converterId = authState.user.id;
+        }
+        bloc.add(LoadProducts(converterId: converterId));
+        return bloc;
+      },
+      child: _ConverterStudioDashboardView(l10n: l10n),
+    );
+  }
+}
+
+class _ConverterStudioDashboardView extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _ConverterStudioDashboardView({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -282,27 +309,55 @@ class ConverterStudioDashboardPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  _buildProductListItem(
-                    title: l10n.converterDashMockProd1Title,
-                    subtitle: l10n.converterDashMockProd1Sub,
-                    price: l10n.converterDashMockProd1Price,
-                    sales: l10n.converterDashMockProd1Sales,
-                    imageUrl:
-                        'assets/images/map_jepara.jpg', // Map Placeholder acting as product image
-                    l10n: l10n,
-                  ),
-                  _buildProductListItem(
-                    title: l10n.converterDashMockProd2Title,
-                    subtitle: l10n.converterDashMockProd2Sub,
-                    price: l10n.converterDashMockProd2Price,
-                    sales: l10n.converterDashMockProd2Sales,
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                    l10n: l10n,
-                  ),
-                ],
+              child: BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppTheme.primaryColor,
+                      ),
+                    );
+                  }
+                  if (state is ProductsLoaded) {
+                    if (state.products.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Belum ada produk',
+                          style: TextStyle(color: Colors.white54, fontSize: 13),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: state.products.length,
+                      itemBuilder: (context, index) {
+                        final product = state.products[index];
+                        return _buildProductListItem(
+                          context: context,
+                          productId: product.id,
+                          title: product.name,
+                          subtitle: product.category,
+                          price: 'Rp ${product.price.toStringAsFixed(0)}',
+                          sales: '${product.stock}',
+                          imageUrl: 'assets/images/map_jepara.jpg',
+                          l10n: l10n,
+                        );
+                      },
+                    );
+                  }
+                  if (state is ProductError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],
@@ -389,6 +444,8 @@ class ConverterStudioDashboardPage extends StatelessWidget {
   }
 
   Widget _buildProductListItem({
+    required BuildContext context,
+    required String productId,
     required String title,
     required String subtitle,
     required String price,
@@ -463,6 +520,22 @@ class ConverterStudioDashboardPage extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          // QR Code Button
+          IconButton(
+            icon: const Icon(
+              Icons.qr_code_2,
+              color: AppTheme.primaryColor,
+              size: 24,
+            ),
+            tooltip: 'Lihat QR',
+            onPressed: () {
+              QrCodeDialog.show(
+                context,
+                productId: productId,
+                productName: title,
+              );
+            },
           ),
         ],
       ),

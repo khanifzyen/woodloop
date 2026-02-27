@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/waste_listing_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
 
 class ReportWoodWasteFormPage extends StatefulWidget {
   const ReportWoodWasteFormPage({super.key});
@@ -15,6 +19,15 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
   String? _selectedForm;
   String? _selectedCondition;
   String _selectedUnit = 'kg';
+  final _quantityController = TextEditingController();
+  final _priceController = TextEditingController();
+
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    _priceController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,559 +35,637 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
     _selectedForm ??= l10n.generatorReportFormOffcut;
     _selectedCondition ??= l10n.generatorReportConditionDry;
 
-    return Scaffold(
-      backgroundColor: AppTheme.background,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => context.pop(),
-        ),
-        title: Text(
-          l10n.generatorReportTitle,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          TextButton(
-            onPressed: () => context.pop(),
-            child: Text(
-              l10n.generatorReportCancel,
+    return BlocProvider(
+      create: (context) => getIt<WasteListingBloc>(),
+      child: BlocListener<WasteListingBloc, WasteListingState>(
+        listener: (context, state) {
+          if (state is WasteListingCreated) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.generatorReportSuccessMsg)),
+            );
+            context.pop();
+          } else if (state is WasteListingError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.redAccent,
+              ),
+            );
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppTheme.background,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => context.pop(),
+            ),
+            title: Text(
+              l10n.generatorReportTitle,
               style: const TextStyle(
-                color: Colors.white54,
+                color: Colors.white,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            centerTitle: true,
+            actions: [
+              TextButton(
+                onPressed: () => context.pop(),
+                child: Text(
+                  l10n.generatorReportCancel,
+                  style: const TextStyle(
+                    color: Colors.white54,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+            backgroundColor: Colors.transparent,
+            elevation: 0,
           ),
-        ],
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ─── Step 1: Capture Waste ────────────────────────────
-                  _buildSectionHeader(
-                    l10n.generatorReportStep1,
-                    l10n.generatorReportStep1Title,
-                  ),
-                  const SizedBox(height: 12),
-                  GestureDetector(
-                    onTap: () {
-                      // Handle photo upload
-                    },
-                    child: Container(
-                      height: 120,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppTheme.surfaceColor,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          style: BorderStyle.solid,
-                        ),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ─── Step 1: Capture Waste ────────────────────────────
+                      _buildSectionHeader(
+                        l10n.generatorReportStep1,
+                        l10n.generatorReportStep1Title,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.add_a_photo,
-                            color: Colors.white54,
-                            size: 32,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            l10n.generatorReportUploadPhoto,
-                            style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                      const SizedBox(height: 12),
+                      GestureDetector(
+                        onTap: () {
+                          // Handle photo upload
+                        },
+                        child: Container(
+                          height: 120,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AppTheme.surfaceColor,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              style: BorderStyle.solid,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-
-                  // ─── Step 2: Waste Information ────────────────────────
-                  _buildSectionHeader(
-                    l10n.generatorReportStep2,
-                    l10n.generatorReportStep2Title,
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceColor,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.08),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.generatorReportWasteForm,
-                          style: const TextStyle(
-                            color: Colors.white54,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        GridView.count(
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 2.5,
-                          children: [
-                            _buildWasteFormOption(
-                              l10n.generatorReportFormOffcut,
-                              Icons.content_cut,
-                            ),
-                            _buildWasteFormOption(
-                              l10n.generatorReportFormSawdust,
-                              Icons.grain,
-                            ),
-                            _buildWasteFormOption(
-                              l10n.generatorReportFormShaving,
-                              Icons.carpenter,
-                            ),
-                            _buildWasteFormOption(
-                              l10n.generatorReportFormLogEnd,
-                              Icons.forest,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceColor,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.08),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.generatorReportWoodCondition,
-                          style: const TextStyle(
-                            color: Colors.white54,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildConditionOption(
-                                l10n.generatorReportConditionDry,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: _buildConditionOption(
-                                l10n.generatorReportConditionWet,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: _buildConditionOption(
-                                l10n.generatorReportConditionMixed,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-
-                  // ─── Step 3: Waste Details ────────────────────────────
-                  _buildSectionHeader(
-                    l10n.generatorReportStep3,
-                    l10n.generatorReportStep3Title,
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceColor,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.08),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.generatorReportQuantity,
-                                    style: const TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    height: 52,
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.background,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.08,
-                                        ),
-                                      ),
-                                    ),
-                                    child: const TextField(
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      decoration: InputDecoration(
-                                        hintText: '0',
-                                        hintStyle: TextStyle(
-                                          color: Colors.white38,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.generatorReportUnit,
-                                    style: const TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    height: 52,
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.background,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.08,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: _buildUnitOption('kg', 'Kg'),
-                                        ),
-                                        Expanded(
-                                          child: _buildUnitOption('m3', 'M³'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.info_outline,
-                              color: Colors.white38,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              l10n.generatorReportDensityHint,
-                              style: const TextStyle(
-                                color: Colors.white38,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-
-                  // ─── Step 4: Pickup Location ──────────────────────────
-                  _buildSectionHeader('4', 'Pickup Location'),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.only(right: 8),
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceColor,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.08),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        const SizedBox(
-                          width: 52,
-                          height: 52,
-                          child: Icon(
-                            Icons.location_on,
-                            color: AppTheme.primaryColor,
-                          ),
-                        ),
-                        Container(
-                          width: 1,
-                          height: 36,
-                          color: Colors.white.withValues(alpha: 0.08),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                l10n.generatorReportCurrentLocation,
-                                style: const TextStyle(
-                                  color: AppTheme.primaryColor,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              const Icon(
+                                Icons.add_a_photo,
+                                color: Colors.white54,
+                                size: 32,
                               ),
-                              const SizedBox(height: 2),
+                              const SizedBox(height: 8),
                               Text(
-                                l10n.generatorReportMockLocation,
+                                l10n.generatorReportUploadPhoto,
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.white54,
                                   fontSize: 13,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.my_location,
-                            color: Colors.white54,
+                      ),
+                      const SizedBox(height: 28),
+
+                      // ─── Step 2: Waste Information ────────────────────────
+                      _buildSectionHeader(
+                        l10n.generatorReportStep2,
+                        l10n.generatorReportStep2Title,
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
                           ),
-                          onPressed: () {},
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.generatorReportWasteForm,
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            GridView.count(
+                              crossAxisCount: 2,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              childAspectRatio: 2.5,
+                              children: [
+                                _buildWasteFormOption(
+                                  l10n.generatorReportFormOffcut,
+                                  Icons.content_cut,
+                                ),
+                                _buildWasteFormOption(
+                                  l10n.generatorReportFormSawdust,
+                                  Icons.grain,
+                                ),
+                                _buildWasteFormOption(
+                                  l10n.generatorReportFormShaving,
+                                  Icons.carpenter,
+                                ),
+                                _buildWasteFormOption(
+                                  l10n.generatorReportFormLogEnd,
+                                  Icons.forest,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.generatorReportWoodCondition,
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildConditionOption(
+                                    l10n.generatorReportConditionDry,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: _buildConditionOption(
+                                    l10n.generatorReportConditionWet,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: _buildConditionOption(
+                                    l10n.generatorReportConditionMixed,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+
+                      // ─── Step 3: Waste Details ────────────────────────────
+                      _buildSectionHeader(
+                        l10n.generatorReportStep3,
+                        l10n.generatorReportStep3Title,
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        l10n.generatorReportQuantity,
+                                        style: const TextStyle(
+                                          color: Colors.white54,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        height: 52,
+                                        decoration: BoxDecoration(
+                                          color: AppTheme.background,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          border: Border.all(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.08,
+                                            ),
+                                          ),
+                                        ),
+                                        child: TextField(
+                                          controller: _quantityController,
+                                          keyboardType: TextInputType.number,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: '0',
+                                            hintStyle: TextStyle(
+                                              color: Colors.white38,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  horizontal: 16,
+                                                  vertical: 14,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        l10n.generatorReportUnit,
+                                        style: const TextStyle(
+                                          color: Colors.white54,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        height: 52,
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: AppTheme.background,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          border: Border.all(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.08,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: _buildUnitOption(
+                                                'kg',
+                                                'Kg',
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: _buildUnitOption(
+                                                'm3',
+                                                'M³',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.info_outline,
+                                  color: Colors.white38,
+                                  size: 14,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  l10n.generatorReportDensityHint,
+                                  style: const TextStyle(
+                                    color: Colors.white38,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+
+                      // ─── Step 4: Pickup Location ──────────────────────────
+                      _buildSectionHeader('4', 'Pickup Location'),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.only(right: 8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 52,
+                              height: 52,
+                              child: Icon(
+                                Icons.location_on,
+                                color: AppTheme.primaryColor,
+                              ),
+                            ),
+                            Container(
+                              width: 1,
+                              height: 36,
+                              color: Colors.white.withValues(alpha: 0.08),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    l10n.generatorReportCurrentLocation,
+                                    style: const TextStyle(
+                                      color: AppTheme.primaryColor,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    l10n.generatorReportMockLocation,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.my_location,
+                                color: Colors.white54,
+                              ),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 48),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ─── Sticky Footer ──────────────────────────────────────────
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                decoration: BoxDecoration(
+                  color: AppTheme.background,
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.white.withValues(alpha: 0.08),
+                    ),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.generatorReportEstValue,
+                                style: const TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Container(
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.surfaceColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.08),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                      ),
+                                      child: Text(
+                                        l10n.generatorReportCurrency,
+                                        style: const TextStyle(
+                                          color: Colors.white54,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _priceController,
+                                        keyboardType: TextInputType.number,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: '0',
+                                          hintStyle: TextStyle(
+                                            color: Colors.white38,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                l10n.generatorReportPoints,
+                                style: const TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Container(
+                                height: 44,
+                                alignment: Alignment.centerRight,
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.loyalty,
+                                      color: AppTheme.primaryColor,
+                                      size: 16,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      '+0',
+                                      style: TextStyle(
+                                        color: AppTheme.primaryColor,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 48),
-                ],
-              ),
-            ),
-          ),
-
-          // ─── Sticky Footer ──────────────────────────────────────────
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-            decoration: BoxDecoration(
-              color: AppTheme.background,
-              border: Border(
-                top: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
-              ),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.generatorReportEstValue,
-                            style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: AppTheme.surfaceColor,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.08),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: BlocBuilder<WasteListingBloc, WasteListingState>(
+                        builder: (context, state) {
+                          final isLoading = state is WasteListingLoading;
+                          return ElevatedButton(
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    final authState = context
+                                        .read<AuthBloc>()
+                                        .state;
+                                    String generatorId = '';
+                                    if (authState is Authenticated) {
+                                      generatorId = authState.user.id;
+                                    }
+                                    final quantity =
+                                        double.tryParse(
+                                          _quantityController.text,
+                                        ) ??
+                                        0;
+                                    final price =
+                                        double.tryParse(
+                                          _priceController.text,
+                                        ) ??
+                                        0;
+                                    context.read<WasteListingBloc>().add(
+                                      CreateWasteListing({
+                                        'generator_id': generatorId,
+                                        'wood_type_id': '',
+                                        'form': _selectedForm ?? '',
+                                        'condition': _selectedCondition ?? '',
+                                        'volume': quantity,
+                                        'unit': _selectedUnit,
+                                        'price_estimate': price,
+                                        'status': 'available',
+                                      }),
+                                    );
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryColor,
+                              foregroundColor: AppTheme.background,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                  ),
-                                  child: Text(
-                                    l10n.generatorReportCurrency,
-                                    style: const TextStyle(
-                                      color: Colors.white54,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
+                            child: isLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: AppTheme.background,
+                                      strokeWidth: 2,
                                     ),
-                                  ),
-                                ),
-                                const Expanded(
-                                  child: TextField(
-                                    keyboardType: TextInputType.number,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    decoration: InputDecoration(
-                                      hintText: '0',
-                                      hintStyle: TextStyle(
-                                        color: Colors.white38,
-                                        fontWeight: FontWeight.normal,
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        l10n.generatorReportSubmitBtn,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      border: InputBorder.none,
-                                    ),
+                                      const SizedBox(width: 8),
+                                      const Icon(Icons.send, size: 20),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            l10n.generatorReportPoints,
-                            style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            height: 44,
-                            alignment: Alignment.centerRight,
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.loyalty,
-                                  color: AppTheme.primaryColor,
-                                  size: 16,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  '+0',
-                                  style: TextStyle(
-                                    color: AppTheme.primaryColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l10n.generatorReportSuccessMsg)),
-                      );
-                      context.pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: AppTheme.background,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          l10n.generatorReportSubmitBtn,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.send, size: 20),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ), // Scaffold
+      ), // BlocListener
+    ); // BlocProvider
   }
 
   Widget _buildSectionHeader(String number, String title) {

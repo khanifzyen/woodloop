@@ -70,13 +70,13 @@
 
 | # | Task | Detail |
 | :--- | :--- | :--- |
-| 1 | **WasteListingBloc** | CRUD waste listings (Generator) |
-| 2 | **PickupBloc** | Buat & kelola penjemputan (Aggregator) |
-| 3 | **WarehouseBloc** | Stok gudang (Aggregator) |
-| 4 | **MarketplaceBloc** | Browse & beli bahan (Converter) |
-| 5 | **ProductBloc** | CRUD produk upcycled (Converter) |
-| 6 | **CartBloc & OrderBloc** | Keranjang & pesanan (Buyer) |
-| 7 | **WalletBloc** | Riwayat transaksi wallet |
+| 1 | **[x] WasteListingBloc** | CRUD waste listings (Generator) |
+| 2 | **[x] PickupBloc** | Buat & kelola penjemputan (Aggregator) |
+| 3 | **[x] WarehouseBloc** | Stok gudang (Aggregator) |
+| 4 | **[x] MarketplaceBloc** | Browse & beli bahan (Converter) |
+| 5 | **[x] ProductBloc** | CRUD produk upcycled (Converter) |
+| 6 | **[x] CartBloc & OrderBloc** | Keranjang & pesanan (Buyer) |
+| 7 | **[x] WalletBloc** | Riwayat transaksi wallet |
 
 **Deliverable:** Semua halaman terhubung ke PocketBase, data real-time.
 

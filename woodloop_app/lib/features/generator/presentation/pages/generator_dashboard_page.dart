@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/waste_listing_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
 
 class GeneratorDashboardPage extends StatelessWidget {
   const GeneratorDashboardPage({super.key});
@@ -9,6 +13,28 @@ class GeneratorDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<WasteListingBloc>();
+        final authState = context.read<AuthBloc>().state;
+        String? generatorId;
+        if (authState is Authenticated) {
+          generatorId = authState.user.id;
+        }
+        bloc.add(LoadWasteListings(generatorId: generatorId));
+        return bloc;
+      },
+      child: _GeneratorDashboardView(l10n: l10n),
+    );
+  }
+}
+
+class _GeneratorDashboardView extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _GeneratorDashboardView({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -519,37 +545,96 @@ class GeneratorDashboardPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    _buildWasteItem(
-                      icon: Icons.hourglass_top,
-                      iconBg: Colors.amber.withValues(alpha: 0.1),
-                      iconColor: Colors.amber,
-                      title: 'Teak Offcuts',
-                      subtitle: 'Hari ini • 50kg • Grade B',
-                      status: l10n.generatorDashStatusPending,
-                      statusColor: Colors.amber,
-                      price: 'Rp 150rb',
-                    ),
-                    const SizedBox(height: 10),
-                    _buildWasteItem(
-                      icon: Icons.local_shipping_outlined,
-                      iconBg: Colors.blue.withValues(alpha: 0.1),
-                      iconColor: Colors.blue,
-                      title: 'Serbuk Mahoni',
-                      subtitle: 'Kemarin • 200kg • Bulk',
-                      status: l10n.generatorDashStatusPickedUp,
-                      statusColor: Colors.blue,
-                      price: 'Rp 400rb',
-                    ),
-                    const SizedBox(height: 10),
-                    _buildWasteItem(
-                      icon: Icons.check_circle_outline,
-                      iconBg: AppTheme.primaryColor.withValues(alpha: 0.1),
-                      iconColor: AppTheme.primaryColor,
-                      title: 'Serutan Campuran',
-                      subtitle: '2 hari lalu • 100kg',
-                      status: l10n.generatorDashStatusSold,
-                      statusColor: AppTheme.primaryColor,
-                      price: 'Rp 250rb',
+                    BlocBuilder<WasteListingBloc, WasteListingState>(
+                      builder: (context, state) {
+                        if (state is WasteListingLoading) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: CircularProgressIndicator(
+                                color: AppTheme.primaryColor,
+                              ),
+                            ),
+                          );
+                        }
+                        if (state is WasteListingsLoaded) {
+                          if (state.listings.isEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Center(
+                                child: Text(
+                                  'Belum ada limbah dilaporkan',
+                                  style: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return Column(
+                            children: state.listings.take(3).map((listing) {
+                              IconData icon;
+                              Color iconBg;
+                              Color iconColor;
+                              String statusLabel;
+                              Color statusColor;
+                              switch (listing.status) {
+                                case 'available':
+                                  icon = Icons.hourglass_top;
+                                  iconBg = Colors.amber.withValues(alpha: 0.1);
+                                  iconColor = Colors.amber;
+                                  statusLabel = l10n.generatorDashStatusPending;
+                                  statusColor = Colors.amber;
+                                  break;
+                                case 'picked_up':
+                                  icon = Icons.local_shipping_outlined;
+                                  iconBg = Colors.blue.withValues(alpha: 0.1);
+                                  iconColor = Colors.blue;
+                                  statusLabel =
+                                      l10n.generatorDashStatusPickedUp;
+                                  statusColor = Colors.blue;
+                                  break;
+                                default:
+                                  icon = Icons.check_circle_outline;
+                                  iconBg = AppTheme.primaryColor.withValues(
+                                    alpha: 0.1,
+                                  );
+                                  iconColor = AppTheme.primaryColor;
+                                  statusLabel = l10n.generatorDashStatusSold;
+                                  statusColor = AppTheme.primaryColor;
+                              }
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: _buildWasteItem(
+                                  icon: icon,
+                                  iconBg: iconBg,
+                                  iconColor: iconColor,
+                                  title: listing.form,
+                                  subtitle: '${listing.volume} ${listing.unit}',
+                                  status: statusLabel,
+                                  statusColor: statusColor,
+                                  price:
+                                      'Rp ${listing.priceEstimate.toStringAsFixed(0)}',
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        }
+                        if (state is WasteListingError) {
+                          return Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text(
+                              state.message,
+                              style: const TextStyle(
+                                color: Colors.redAccent,
+                                fontSize: 12,
+                              ),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
                     ),
                   ],
                 ),

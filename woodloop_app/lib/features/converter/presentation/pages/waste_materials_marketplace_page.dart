@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../../aggregator/presentation/bloc/warehouse_bloc.dart';
+import '../../../../injection_container.dart';
 
 class WasteMaterialsMarketplacePage extends StatelessWidget {
   const WasteMaterialsMarketplacePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<WarehouseBloc>();
+        bloc.add(const LoadWarehouseItems(status: 'available'));
+        return bloc;
+      },
+      child: const _WasteMaterialsMarketplaceView(),
+    );
+  }
+}
+
+class _WasteMaterialsMarketplaceView extends StatelessWidget {
+  const _WasteMaterialsMarketplaceView();
 
   @override
   Widget build(BuildContext context) {
@@ -85,31 +104,53 @@ class WasteMaterialsMarketplacePage extends StatelessWidget {
 
             // Market Listings (Grid or List based on preference, using List for density here)
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  _buildMarketItem(
-                    title: l10n.converterMarketMockTitle1,
-                    seller: l10n.converterMarketMockSeller1,
-                    stock: l10n.converterMarketMockStock1,
-                    price: l10n.converterMarketMockPrice1,
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                  _buildMarketItem(
-                    title: l10n.converterMarketMockTitle2,
-                    seller: l10n.converterMarketMockSeller2,
-                    stock: l10n.converterMarketMockStock2,
-                    price: l10n.converterMarketMockPrice2,
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                  _buildMarketItem(
-                    title: l10n.converterMarketMockTitle3,
-                    seller: l10n.converterMarketMockSeller3,
-                    stock: l10n.converterMarketMockStock3,
-                    price: l10n.converterMarketMockPrice3,
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                ],
+              child: BlocBuilder<WarehouseBloc, WarehouseState>(
+                builder: (context, state) {
+                  if (state is WarehouseLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppTheme.primaryColor,
+                      ),
+                    );
+                  }
+                  if (state is WarehouseItemsLoaded) {
+                    if (state.items.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Belum ada material tersedia',
+                          style: TextStyle(color: Colors.white54, fontSize: 13),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: state.items.length,
+                      itemBuilder: (context, index) {
+                        final item = state.items[index];
+                        return _buildMarketItem(
+                          title: item.woodTypeName ?? item.form,
+                          seller: 'Aggregator',
+                          stock: '${item.weight.toStringAsFixed(0)} kg',
+                          price:
+                              'Rp ${(item.pricePerKg ?? 0).toStringAsFixed(0)}/kg',
+                          imageUrl: 'assets/images/map_jepara.jpg',
+                        );
+                      },
+                    );
+                  }
+                  if (state is WarehouseError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],
