@@ -31,6 +31,14 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       backgroundColor: AppTheme.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => context.pop(),
+        ),
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -54,7 +62,9 @@ class _LoginPageState extends State<LoginPage> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          const SizedBox(height: 48), // Top padding
+                          const SizedBox(
+                            height: 16,
+                          ), // Reduced top padding due to AppBar
                           // Header & Logo Section
                           Container(
                             width: 80,
@@ -304,66 +314,32 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 24),
 
                           // Social Buttons
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.g_mobiledata,
-                                    color: Colors.white,
-                                    size: 28,
-                                  ), // Placeholder for Google
-                                  label: Text(
-                                    l10n.loginGoogle,
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                    ),
-                                    side: BorderSide(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.1,
-                                      ),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    backgroundColor: AppTheme.surfaceColor,
-                                  ),
-                                ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.g_mobiledata,
+                                color: Colors.white,
+                                size: 28,
+                              ), // Placeholder for Google
+                              label: Text(
+                                l10n.loginGoogle,
+                                style: const TextStyle(color: Colors.white),
                               ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.apple,
-                                    color: Colors.white,
-                                    size: 24,
-                                  ),
-                                  label: Text(
-                                    l10n.loginApple,
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                    ),
-                                    side: BorderSide(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.1,
-                                      ),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    backgroundColor: AppTheme.surfaceColor,
-                                  ),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
                                 ),
+                                side: BorderSide(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                backgroundColor: AppTheme.surfaceColor,
                               ),
-                            ],
+                            ),
                           ),
 
                           const Spacer(),

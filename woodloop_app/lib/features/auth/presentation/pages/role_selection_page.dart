@@ -350,29 +350,11 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            switch (_selectedRole) {
-                              case 'supplier':
-                                context.pushNamed('supplier_registration');
-                                break;
-                              case 'generator':
-                                context.pushNamed('generator_registration');
-                                break;
-                              case 'aggregator':
-                                context.pushNamed('aggregator_registration');
-                                break;
-                              case 'converter':
-                                context.pushNamed('converter_registration');
-                                break;
-                              case 'designer':
-                                context.pushNamed(
-                                  'designer_consultant_profile',
-                                );
-                                break;
-                              case 'buyer':
-                                context.pushNamed('buyer_registration');
-                                break;
-                              default:
-                                context.pushNamed('login');
+                            if (_selectedRole != null) {
+                              context.pushNamed(
+                                'unified_registration',
+                                pathParameters: {'role': _selectedRole!},
+                              );
                             }
                           },
                           // Applying styling required by user to global theme:

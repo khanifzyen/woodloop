@@ -56,6 +56,7 @@ import '../../features/profile/presentation/pages/designer_consultant_profile_pa
 import '../../features/shared/presentation/pages/notification_center_page.dart';
 import '../../features/shared/presentation/pages/woodloop_digital_wallet_page.dart';
 import '../../features/shared/presentation/pages/b2b_profile_page.dart';
+import '../../features/shared/presentation/pages/map_picker_page.dart';
 
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../injection_container.dart';
@@ -91,7 +92,8 @@ class AppRouter {
           state.matchedLocation == '/login' ||
           state.matchedLocation == '/role-selection' ||
           state.matchedLocation.startsWith('/register') ||
-          state.matchedLocation == '/forgot-password';
+          state.matchedLocation == '/forgot-password' ||
+          state.matchedLocation == '/map-picker';
 
       final isOnboarding =
           state.matchedLocation == '/onboarding' ||
@@ -159,6 +161,11 @@ class AppRouter {
         builder: (context, state) => UnifiedRegistrationPage(
           role: state.pathParameters['role'] ?? 'buyer',
         ),
+      ),
+      GoRoute(
+        path: '/map-picker',
+        name: 'map_picker',
+        builder: (context, state) => const MapPickerPage(),
       ),
 
       // ── Legacy Registration Routes (kept for backward compat) ──

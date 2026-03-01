@@ -7,6 +7,7 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> register(Map<String, dynamic> body);
   Future<void> logout();
   Future<UserModel?> getCurrentUser();
+  Future<bool> checkUniqueness(String field, String value);
   Stream<AuthStoreEvent> get authStateChanges;
 }
 
@@ -55,6 +56,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return UserModel.fromRecord(pb.authStore.record!);
     }
     return null;
+  }
+
+  @override
+  Future<bool> checkUniqueness(String field, String value) async {
+    try {
+      final result = await pb
+          .collection('users')
+          .getList(page: 1, perPage: 1, filter: '$field = "$value"');
+      return result.items.isEmpty;
+    } catch (e) {
+      // If error, assume it might not be unique or something went wrong
+      return false;
+    }
   }
 
   @override

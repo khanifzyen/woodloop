@@ -32,6 +32,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<bool> checkUniqueness(String field, String value) async {
+    return await remoteDataSource.checkUniqueness(field, value);
+  }
+
+  @override
   Stream<AuthStoreEvent> get authStateChanges =>
       remoteDataSource.authStateChanges;
 }

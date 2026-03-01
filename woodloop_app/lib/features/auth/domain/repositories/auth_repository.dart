@@ -6,5 +6,6 @@ abstract class AuthRepository {
   Future<User> register(Map<String, dynamic> data);
   Future<void> logout();
   Future<User?> getCurrentUser();
+  Future<bool> checkUniqueness(String field, String value);
   Stream<AuthStoreEvent> get authStateChanges;
 }

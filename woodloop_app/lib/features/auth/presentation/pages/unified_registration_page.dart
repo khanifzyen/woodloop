@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:cross_file/cross_file.dart';
 import '../bloc/auth_bloc.dart';
 
 /// Unified registration page that shows role-specific fields
@@ -28,6 +30,12 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _companyController = TextEditingController();
+  final _addressController = TextEditingController();
+  double? _lat;
+  double? _lng;
+  final List<XFile> _certificationFiles = [];
+  bool _obscurePassword = true;
+  bool _isRegistering = false;
 
   @override
   void dispose() {
@@ -36,6 +44,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
     _phoneController.dispose();
     _passwordController.dispose();
     _companyController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -101,12 +110,27 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
+            setState(() => _isRegistering = false);
+            String message = state.message;
+            // Handle PocketBase unique field error specifically
+            if (message.contains('is not unique') ||
+                message.contains('Constraint violation')) {
+              if (message.contains('email')) {
+                message = 'Email sudah digunakan';
+              } else if (message.contains('phone')) {
+                message = 'Nomor telepon sudah digunakan';
+              }
+            }
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(message),
                 backgroundColor: Colors.redAccent,
               ),
             );
+          }
+
+          if (state is Authenticated && _isRegistering) {
+            _showSuccessDialog(context);
           }
         },
         child: SafeArea(
@@ -192,10 +216,12 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                           keyboardType: TextInputType.emailAddress,
                           controller: _emailController,
                           validator: (v) {
-                            if (v == null || v.isEmpty)
+                            if (v == null || v.isEmpty) {
                               return 'Email wajib diisi';
-                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v))
+                            }
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
                               return 'Format email tidak valid';
+                            }
                             return null;
                           },
                         ),
@@ -233,13 +259,29 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                         _buildTextField(
                           hintText: 'Minimal 8 karakter',
                           icon: Icons.lock_outline,
-                          obscureText: true,
+                          obscureText: _obscurePassword,
                           controller: _passwordController,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: Colors.white38,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                           validator: (v) {
-                            if (v == null || v.isEmpty)
+                            if (v == null || v.isEmpty) {
                               return 'Password wajib diisi';
-                            if (v.length < 8)
+                            }
+                            if (v.length < 8) {
                               return 'Password minimal 8 karakter';
+                            }
                             return null;
                           },
                         ),
@@ -440,6 +482,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                                 ? null
                                 : () {
                                     if (_formKey.currentState!.validate()) {
+                                      setState(() => _isRegistering = true);
                                       context.read<AuthBloc>().add(
                                         AuthRegisterRequested({
                                           'name': _nameController.text.trim(),
@@ -452,6 +495,9 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                                           'company_name': _companyController
                                               .text
                                               .trim(),
+                                          'address': _addressController.text,
+                                          'lat': _lat,
+                                          'lng': _lng,
                                         }),
                                       );
                                     }
@@ -527,6 +573,76 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
     );
   }
 
+  void _showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.mark_email_read_outlined,
+                color: Colors.green,
+                size: 48,
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'Pendaftaran Berhasil!',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Silakan cek email Anda untuk aktivasi akun.\n\nMenunggu konfirmasi admin 1x24 jam untuk verifikasi data Anda.',
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  // After success, go to login so they can login after activation/admin approval
+                  context.go('/login');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Text(
+                  'Selesai',
+                  style: TextStyle(
+                    color: AppTheme.background,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ── Shared Widgets ──
 
   Widget _buildLabel(String text) {
@@ -552,6 +668,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
     bool obscureText = false,
     int maxLines = 1,
     TextEditingController? controller,
+    Widget? suffixIcon,
     String? Function(String?)? validator,
   }) {
     return TextFormField(
@@ -567,6 +684,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
         prefixIcon:
             iconWidget ??
             (icon != null ? Icon(icon, color: Colors.white38, size: 20) : null),
+        suffixIcon: suffixIcon,
         filled: true,
         fillColor: AppTheme.surfaceColor,
         border: OutlineInputBorder(
@@ -595,7 +713,16 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
       children: [
         _buildLabel('ALAMAT BISNIS'),
         GestureDetector(
-          onTap: () {},
+          onTap: () async {
+            final result = await context.pushNamed('map_picker');
+            if (result != null && result is Map<String, dynamic>) {
+              setState(() {
+                _lat = result['lat'];
+                _lng = result['lng'];
+                _addressController.text = result['address'];
+              });
+            }
+          },
           child: Container(
             height: 140,
             width: double.infinity,
@@ -631,27 +758,30 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Jl. Raya Jepara-Kudus No. 45',
-                              style: TextStyle(
+                              _addressController.text.isEmpty
+                                  ? 'Pilih lokasi di peta'
+                                  : _addressController.text,
+                              style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w600,
                               ),
-                              maxLines: 1,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text(
-                              'Jepara, Central Java',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 12,
+                            if (_lat != null && _lng != null)
+                              Text(
+                                '${_lat!.toStringAsFixed(4)}, ${_lng!.toStringAsFixed(4)}',
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 11,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -713,11 +843,71 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
           ],
         ),
         const SizedBox(height: 8),
+        if (_certificationFiles.isNotEmpty) ...[
+          ..._certificationFiles.asMap().entries.map((entry) {
+            final index = entry.key;
+            final file = entry.value;
+            return Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppTheme.surfaceColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.description_outlined,
+                    color: AppTheme.primaryColor,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      file.name,
+                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.redAccent,
+                      size: 20,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _certificationFiles.removeAt(index);
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          }),
+          const SizedBox(height: 8),
+        ],
         GestureDetector(
-          onTap: () {},
+          onTap: () async {
+            final result = await FilePicker.platform.pickFiles(
+              allowMultiple: true,
+              type: FileType.custom,
+              allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+            );
+
+            if (result != null) {
+              setState(() {
+                _certificationFiles.addAll(
+                  result.files.map((file) => XFile(file.path!)),
+                );
+              });
+            }
+          },
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 32),
+            padding: const EdgeInsets.symmetric(vertical: 24),
             decoration: BoxDecoration(
               color: AppTheme.surfaceColor.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(16),
@@ -729,30 +919,31 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
             child: Column(
               children: [
                 Container(
-                  height: 48,
-                  width: 48,
+                  height: 40,
+                  width: 40,
                   decoration: BoxDecoration(
                     color: AppTheme.primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.upload_file,
+                    Icons.add_a_photo_outlined,
                     color: AppTheme.primaryColor,
+                    size: 20,
                   ),
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Upload SVLK atau FSC',
+                  'Klik untuk tambah file sertifikasi',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 4),
                 const Text(
-                  'PDF, JPG atau PNG (Max 5MB)',
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  'Upload SVLK atau FSC (PDF, JPG, PNG)',
+                  style: TextStyle(color: Colors.white54, fontSize: 11),
                 ),
               ],
             ),
