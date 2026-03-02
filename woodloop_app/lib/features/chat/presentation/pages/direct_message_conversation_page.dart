@@ -167,6 +167,7 @@ class _DirectMessageConversationViewState
                         ),
                       ),
                       child: TextField(
+                        controller: _messageController,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: l10n.chatDmInputHint,

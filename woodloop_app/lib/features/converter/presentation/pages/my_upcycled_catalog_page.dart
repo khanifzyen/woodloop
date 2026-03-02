@@ -1,10 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 
 class MyUpcycledCatalogPage extends StatelessWidget {
   const MyUpcycledCatalogPage({super.key});
+
+  void _showQrDialog(BuildContext context, String productId, String title) {
+    final traceabilityUrl = 'https://woodloop.app/trace/$productId';
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Column(
+          children: [
+            const Icon(Icons.qr_code_2, color: AppTheme.primaryColor, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: QrImageView(
+                data: traceabilityUrl,
+                version: QrVersions.auto,
+                size: 200,
+                backgroundColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Scan untuk melihat jejak kayu produk ini',
+              style: const TextStyle(color: Colors.white54, fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              traceabilityUrl,
+              style: const TextStyle(
+                color: AppTheme.primaryColor,
+                fontSize: 10,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'Tutup',
+                style: TextStyle(
+                  color: AppTheme.background,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +151,7 @@ class MyUpcycledCatalogPage extends StatelessWidget {
                 children: [
                   _buildCatalogGridItem(
                     context: context,
+                    productId: 'prod_001',
                     title: l10n.converterCatalogMockTitle1,
                     price: 'Rp 450.000',
                     stock: l10n.converterCatalogStock('5'),
@@ -77,6 +159,7 @@ class MyUpcycledCatalogPage extends StatelessWidget {
                   ),
                   _buildCatalogGridItem(
                     context: context,
+                    productId: 'prod_002',
                     title: l10n.converterCatalogMockTitle2,
                     price: 'Rp 1.200.000',
                     stock: l10n.converterCatalogStock('2'),
@@ -84,6 +167,7 @@ class MyUpcycledCatalogPage extends StatelessWidget {
                   ),
                   _buildCatalogGridItem(
                     context: context,
+                    productId: 'prod_003',
                     title: l10n.converterCatalogMockTitle3,
                     price: 'Rp 45.000',
                     stock: l10n.converterCatalogStock('12'),
@@ -91,6 +175,7 @@ class MyUpcycledCatalogPage extends StatelessWidget {
                   ),
                   _buildCatalogGridItem(
                     context: context,
+                    productId: 'prod_004',
                     title: l10n.converterCatalogMockTitle4,
                     price: 'Rp 180.000',
                     stock: l10n.converterCatalogStock('0'),
@@ -164,6 +249,7 @@ class MyUpcycledCatalogPage extends StatelessWidget {
 
   Widget _buildCatalogGridItem({
     required BuildContext context,
+    required String productId,
     required String title,
     required String price,
     required String stock,
@@ -246,10 +332,29 @@ class MyUpcycledCatalogPage extends StatelessWidget {
                         fontSize: 12,
                       ),
                     ),
-                    const Icon(
-                      Icons.edit_outlined,
-                      color: Colors.white54,
-                      size: 16,
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (!isSoldOut) {
+                              _showQrDialog(context, productId, title);
+                            }
+                          },
+                          child: Icon(
+                            Icons.qr_code,
+                            color: isSoldOut
+                                ? Colors.white24
+                                : AppTheme.primaryColor,
+                            size: 16,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.edit_outlined,
+                          color: Colors.white54,
+                          size: 16,
+                        ),
+                      ],
                     ),
                   ],
                 ),

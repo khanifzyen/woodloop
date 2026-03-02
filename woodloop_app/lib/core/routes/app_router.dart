@@ -10,26 +10,22 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/unified_registration_page.dart';
 
-import '../../features/supplier/presentation/pages/supplier_registration_page.dart';
 import '../../features/supplier/presentation/pages/supplier_dashboard_page.dart';
 import '../../features/supplier/presentation/pages/list_raw_timber_form_page.dart';
 import '../../features/supplier/presentation/pages/supplier_sales_history_page.dart';
 import '../../features/supplier/presentation/pages/raw_timber_marketplace_page.dart';
 
-import '../../features/generator/presentation/pages/generator_registration_page.dart';
 import '../../features/generator/presentation/pages/generator_dashboard_page.dart';
 import '../../features/generator/presentation/pages/report_wood_waste_form_page.dart';
 import '../../features/generator/presentation/pages/generator_order_management_page.dart';
 import '../../features/generator/presentation/pages/add_generator_product_page.dart';
 
-import '../../features/aggregator/presentation/pages/aggregator_registration_page.dart';
 import '../../features/aggregator/presentation/pages/aggregator_dashboard_page.dart';
 import '../../features/aggregator/presentation/pages/aggregator_treasure_map_page.dart';
 import '../../features/aggregator/presentation/pages/confirm_pickup_collection_page.dart';
 import '../../features/aggregator/presentation/pages/warehouse_inventory_log_page.dart';
 import '../../features/aggregator/presentation/pages/waste_bidding_page.dart';
 
-import '../../features/converter/presentation/pages/converter_registration_page.dart';
 import '../../features/converter/presentation/pages/converter_studio_dashboard_page.dart';
 import '../../features/converter/presentation/pages/waste_materials_marketplace_page.dart';
 import '../../features/converter/presentation/pages/waste_material_detail_page.dart';
@@ -38,7 +34,6 @@ import '../../features/converter/presentation/pages/design_clinic_inspiration_pa
 import '../../features/converter/presentation/pages/my_upcycled_catalog_page.dart';
 import '../../features/converter/presentation/pages/create_upcycled_product_form_page.dart';
 
-import '../../features/buyer/presentation/pages/buyer_registration_page.dart';
 import '../../features/buyer/presentation/pages/buyer_profile_impact_dashboard_page.dart';
 import '../../features/buyer/presentation/pages/upcycled_products_marketplace_page.dart';
 import '../../features/buyer/presentation/pages/product_detail_page.dart';
@@ -166,33 +161,6 @@ class AppRouter {
         path: '/map-picker',
         name: 'map_picker',
         builder: (context, state) => const MapPickerPage(),
-      ),
-
-      // ── Legacy Registration Routes (kept for backward compat) ──
-      GoRoute(
-        path: '/supplier-registration',
-        name: 'supplier_registration',
-        builder: (context, state) => const SupplierRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/generator-registration',
-        name: 'generator_registration',
-        builder: (context, state) => const GeneratorRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/aggregator-registration',
-        name: 'aggregator_registration',
-        builder: (context, state) => const AggregatorRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/converter-registration',
-        name: 'converter_registration',
-        builder: (context, state) => const ConverterRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/buyer-registration',
-        name: 'buyer_registration',
-        builder: (context, state) => const BuyerRegistrationPage(),
       ),
 
       // ══════════════════════════════════════

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 
@@ -14,6 +15,117 @@ class CreateUpcycledProductFormPage extends StatefulWidget {
 class _CreateUpcycledProductFormPageState
     extends State<CreateUpcycledProductFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _descController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _stockController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descController.dispose();
+    _priceController.dispose();
+    _stockController.dispose();
+    super.dispose();
+  }
+
+  void _onSubmit() {
+    if (!_formKey.currentState!.validate()) return;
+    // In real app, productId comes from PocketBase after creation
+    final productId = 'prod_${DateTime.now().millisecondsSinceEpoch}';
+    final traceabilityUrl = 'https://woodloop.app/trace/$productId';
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Column(
+          children: [
+            Icon(Icons.check_circle, color: Colors.green, size: 40),
+            SizedBox(height: 8),
+            Text(
+              'Produk Berhasil Dibuat!',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'QR Code Traceability untuk produk ini:',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: QrImageView(
+                data: traceabilityUrl,
+                version: QrVersions.auto,
+                size: 180,
+                backgroundColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              traceabilityUrl,
+              style: const TextStyle(
+                color: AppTheme.primaryColor,
+                fontSize: 10,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Sertakan QR ini bersama produk agar pembeli bisa melacak asal kayu.',
+              style: TextStyle(
+                color: Colors.white54,
+                fontSize: 11,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                context.pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'Selesai & Kembali ke Katalog',
+                style: TextStyle(
+                  color: AppTheme.background,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,28 +235,31 @@ class _CreateUpcycledProductFormPageState
                       const SizedBox(height: 32),
 
                       // Input Fields
-                      // Input Fields
                       _buildInputField(
                         label: l10n.converterAddProductName,
                         hint: l10n.converterAddProductNameHint,
+                        controller: _nameController,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
                         label: l10n.converterAddProductDesc,
                         hint: l10n.converterAddProductDescHint,
                         maxLines: 4,
+                        controller: _descController,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
                         label: l10n.converterAddProductPrice,
                         hint: l10n.converterAddProductPriceHint,
                         keyboardType: TextInputType.number,
+                        controller: _priceController,
                       ),
                       const SizedBox(height: 20),
                       _buildInputField(
                         label: l10n.converterAddProductStock,
                         hint: l10n.converterAddProductStockHint,
                         keyboardType: TextInputType.number,
+                        controller: _stockController,
                       ),
                       const SizedBox(height: 32),
 
@@ -221,7 +336,7 @@ class _CreateUpcycledProductFormPageState
                           ],
                         ),
                       ),
-                      const SizedBox(height: 48), // Bottom padding
+                      const SizedBox(height: 48),
                     ],
                   ),
                 ),
@@ -241,12 +356,7 @@ class _CreateUpcycledProductFormPageState
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Navigate back to catalog
-                      context.pop();
-                    }
-                  },
+                  onPressed: _onSubmit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
                     shape: RoundedRectangleBorder(
@@ -276,6 +386,7 @@ class _CreateUpcycledProductFormPageState
     required String hint,
     int maxLines = 1,
     TextInputType keyboardType = TextInputType.text,
+    TextEditingController? controller,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,6 +401,7 @@ class _CreateUpcycledProductFormPageState
         ),
         const SizedBox(height: 8),
         TextFormField(
+          controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLines,
           style: const TextStyle(color: Colors.white),
@@ -319,7 +431,7 @@ class _CreateUpcycledProductFormPageState
             if (value == null || value.isEmpty) {
               return AppLocalizations.of(
                 context,
-              )!.converterRegRequiredValidation; // reusing required validation from previous translation
+              )!.converterRegRequiredValidation;
             }
             return null;
           },
