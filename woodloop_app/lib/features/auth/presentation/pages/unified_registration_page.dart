@@ -65,6 +65,91 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
     }
   }
 
+  String _getRegTitle(AppLocalizations l10n) {
+    switch (widget.role) {
+      case 'supplier':
+        return l10n.supplierRegTitle;
+      case 'generator':
+        return l10n.generatorRegTitle;
+      case 'aggregator':
+        return l10n.aggregatorRegTitle;
+      case 'converter':
+        return l10n.converterRegTitle;
+      case 'buyer':
+        return l10n.buyerRegTitle;
+      default:
+        return 'Register';
+    }
+  }
+
+  String _getRegSubtitle(AppLocalizations l10n) {
+    switch (widget.role) {
+      case 'supplier':
+        return l10n.supplierRegSubtitle;
+      case 'generator':
+        return l10n.generatorRegSubtitle;
+      case 'aggregator':
+        return l10n.aggregatorRegSubtitle;
+      case 'converter':
+        return l10n.converterRegSubHeader;
+      case 'buyer':
+        return l10n.buyerRegSubheader;
+      default:
+        return 'Bergabung dengan aplikasi ini.';
+    }
+  }
+
+  String _getNameLabel(AppLocalizations l10n) {
+    switch (widget.role) {
+      case 'supplier':
+        return l10n.supplierRegFullNameLabel;
+      case 'generator':
+        return l10n.generatorRegOwnerName;
+      case 'aggregator':
+        return l10n.aggregatorRegFullName;
+      case 'converter':
+        return l10n.converterRegOwnerName;
+      case 'buyer':
+        return l10n.buyerRegNameLabel;
+      default:
+        return 'NAMA LENGKAP';
+    }
+  }
+
+  String _getNameHint(AppLocalizations l10n) {
+    switch (widget.role) {
+      case 'supplier':
+        return l10n.supplierRegFullNameHint;
+      case 'generator':
+        return l10n.generatorRegOwnerHint;
+      case 'aggregator':
+        return l10n.aggregatorRegFullNameHint;
+      case 'converter':
+        return l10n.converterRegOwnerNameHint;
+      case 'buyer':
+        return l10n.buyerRegNameHint;
+      default:
+        return 'John Doe';
+    }
+  }
+
+  String _getRegSubmitBtnLabel(AppLocalizations l10n) {
+    switch (widget.role) {
+      case 'supplier':
+        return l10n.supplierRegCompleteBtn;
+      case 'generator':
+        return l10n.generatorRegCompleteBtn;
+      case 'aggregator':
+        return l10n.aggregatorRegSubmitBtn;
+      case 'converter':
+        return l10n.converterRegSubmitBtn;
+      case 'buyer':
+        return l10n.buyerRegBtnSubmit;
+      default:
+        return 'Daftar';
+    }
+  }
+
   IconData get _roleIcon {
     switch (widget.role) {
       case 'supplier':
@@ -96,7 +181,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Daftar sebagai ${_getRoleDisplayName(l10n)}',
+          _getRegTitle(l10n),
           style: const TextStyle(
             color: AppTheme.primaryColor,
             fontSize: 14,
@@ -182,42 +267,45 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                         const SizedBox(height: 20),
 
                         // Title
-                        const Text(
-                          'Buat Akun Baru',
-                          style: TextStyle(
+                        Text(
+                          _getRegTitle(l10n),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Bergabung dengan jaringan ekonomi sirkular kayu Jepara.',
-                          style: TextStyle(color: Colors.white54, fontSize: 14),
+                        Text(
+                          _getRegSubtitle(l10n),
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 14,
+                          ),
                         ),
                         const SizedBox(height: 32),
 
                         // ── Common Fields (All Roles) ──
-                        _buildLabel('NAMA LENGKAP'),
+                        _buildLabel(_getNameLabel(l10n).toUpperCase()),
                         _buildTextField(
-                          hintText: 'John Doe',
+                          hintText: _getNameHint(l10n),
                           icon: Icons.person_outline,
                           controller: _nameController,
                           validator: (v) => v == null || v.isEmpty
-                              ? 'Nama wajib diisi'
+                              ? l10n.buyerRegRequiredValidation
                               : null,
                         ),
                         const SizedBox(height: 20),
 
-                        _buildLabel('EMAIL'),
+                        _buildLabel(l10n.loginEmailLabel.toUpperCase()),
                         _buildTextField(
-                          hintText: 'email@domain.com',
+                          hintText: l10n.buyerRegEmailHint,
                           icon: Icons.email_outlined,
                           keyboardType: TextInputType.emailAddress,
                           controller: _emailController,
                           validator: (v) {
                             if (v == null || v.isEmpty) {
-                              return 'Email wajib diisi';
+                              return l10n.buyerRegRequiredValidation;
                             }
                             if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
                               return 'Format email tidak valid';
@@ -227,9 +315,9 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                         ),
                         const SizedBox(height: 20),
 
-                        _buildLabel('NOMOR TELEPON'),
+                        _buildLabel(l10n.supplierRegPhoneLabel.toUpperCase()),
                         _buildTextField(
-                          hintText: '812 3456 7890',
+                          hintText: l10n.generatorRegPhoneHint,
                           iconWidget: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12.0),
                             child: Row(
@@ -255,9 +343,9 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                         ),
                         const SizedBox(height: 20),
 
-                        _buildLabel('PASSWORD'),
+                        _buildLabel(l10n.loginPasswordLabel.toUpperCase()),
                         _buildTextField(
-                          hintText: 'Minimal 8 karakter',
+                          hintText: l10n.buyerRegPasswordHint,
                           icon: Icons.lock_outline,
                           obscureText: _obscurePassword,
                           controller: _passwordController,
@@ -277,7 +365,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                           ),
                           validator: (v) {
                             if (v == null || v.isEmpty) {
-                              return 'Password wajib diisi';
+                              return l10n.buyerRegRequiredValidation;
                             }
                             if (v.length < 8) {
                               return 'Password minimal 8 karakter';
@@ -289,45 +377,68 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
 
                         // ── Supplier-Specific Fields ──
                         if (widget.role == 'supplier') ...[
-                          _buildLabel('NAMA PERUSAHAAN'),
+                          _buildLabel(
+                            l10n.supplierRegCompanyNameLabel.toUpperCase(),
+                          ),
                           _buildTextField(
-                            hintText: 'Jepara Teak Mill',
+                            hintText: l10n.supplierRegCompanyNameHint,
                             icon: Icons.factory_outlined,
+                            controller: _companyController,
                           ),
                           const SizedBox(height: 20),
-                          _buildAddressMap(),
+                          _buildAddressMap(l10n),
                           const SizedBox(height: 20),
-                          _buildCertUpload(),
+                          _buildCertUpload(l10n),
                           const SizedBox(height: 24),
                         ],
 
                         // ── Generator-Specific Fields ──
                         if (widget.role == 'generator') ...[
-                          _buildLabel('NAMA WORKSHOP'),
+                          _buildLabel(
+                            l10n.generatorRegWorkshopName.toUpperCase(),
+                          ),
                           _buildTextField(
-                            hintText: 'Jepara Artisans',
+                            hintText: l10n.generatorRegWorkshopHint,
                             icon: Icons.home_work_outlined,
+                            controller: _companyController,
                           ),
                           const SizedBox(height: 20),
-                          _buildAddressMap(),
+                          _buildAddressMap(l10n),
                           const SizedBox(height: 20),
-                          _buildLabel('JENIS LIMBAH YANG DIHASILKAN'),
+                          _buildLabel(
+                            l10n.generatorRegWasteFocus.toUpperCase(),
+                          ),
                           const SizedBox(height: 8),
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
                             children: [
-                              _buildSelectableChip('Serbuk Kayu', 'sawdust'),
-                              _buildSelectableChip('Potongan', 'offcuts'),
-                              _buildSelectableChip('Wood Chips', 'chips'),
-                              _buildSelectableChip('Pallet', 'pallets'),
-                              _buildSelectableChip('Kulit Kayu', 'bark'),
+                              _buildSelectableChip(
+                                l10n.generatorRegWasteSawdust,
+                                'sawdust',
+                              ),
+                              _buildSelectableChip(
+                                l10n.generatorRegWasteOffcuts,
+                                'offcuts',
+                              ),
+                              _buildSelectableChip(
+                                l10n.generatorRegWasteChips,
+                                'chips',
+                              ),
+                              _buildSelectableChip(
+                                l10n.generatorRegWastePallets,
+                                'pallets',
+                              ),
+                              _buildSelectableChip(
+                                l10n.generatorRegWasteBark,
+                                'bark',
+                              ),
                             ],
                           ),
                           const SizedBox(height: 20),
-                          _buildLabel('EST. VOLUME BULANAN (KG)'),
+                          _buildLabel(l10n.generatorRegVolLabel.toUpperCase()),
                           _buildTextField(
-                            hintText: 'contoh: 500',
+                            hintText: l10n.generatorRegVolHint,
                             icon: Icons.scale_outlined,
                             keyboardType: TextInputType.number,
                           ),
@@ -336,71 +447,87 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
 
                         // ── Aggregator-Specific Fields ──
                         if (widget.role == 'aggregator') ...[
-                          _buildLabel('NO. KTP (NIK)'),
+                          _buildLabel(l10n.aggregatorRegIdCard.toUpperCase()),
                           _buildTextField(
-                            hintText: '3320...',
+                            hintText: l10n.aggregatorRegIdCardHint,
                             icon: Icons.badge_outlined,
                             keyboardType: TextInputType.number,
                           ),
                           const SizedBox(height: 20),
-                          _buildLabel('JENIS KENDARAAN'),
+                          _buildLabel(
+                            l10n.aggregatorRegVehicleType.toUpperCase(),
+                          ),
                           const SizedBox(height: 8),
-                          _buildVehicleSelector(),
+                          _buildVehicleSelector(l10n),
                           const SizedBox(height: 20),
-                          _buildLabel('PLAT NOMOR KENDARAAN'),
+                          _buildLabel(
+                            l10n.aggregatorRegLicensePlate.toUpperCase(),
+                          ),
                           _buildTextField(
-                            hintText: 'K 1234 XY',
+                            hintText: l10n.aggregatorRegLicensePlateHint,
                             icon: Icons.directions_car_outlined,
                           ),
                           const SizedBox(height: 20),
-                          _buildLabel('KAPASITAS GUDANG (KG)'),
+                          _buildLabel(
+                            l10n.aggregatorWarehouseCapacity.toUpperCase(),
+                          ),
                           _buildTextField(
-                            hintText: 'contoh: 2000',
+                            hintText: '2000',
                             icon: Icons.warehouse_outlined,
                             keyboardType: TextInputType.number,
                           ),
+                          const SizedBox(height: 20),
+                          _buildAddressMap(l10n),
                           const SizedBox(height: 24),
                         ],
 
                         // ── Converter-Specific Fields ──
                         if (widget.role == 'converter') ...[
-                          _buildLabel('NAMA STUDIO / BISNIS'),
+                          _buildLabel(
+                            l10n.converterRegStudioName.toUpperCase(),
+                          ),
                           _buildTextField(
-                            hintText: 'Jepara Eco Art',
+                            hintText: l10n.converterRegStudioNameHint,
                             icon: Icons.store_outlined,
+                            controller: _companyController,
                           ),
                           const SizedBox(height: 20),
-                          _buildLabel('SPESIALISASI'),
+                          _buildLabel(l10n.converterRegSpecialty.toUpperCase()),
                           const SizedBox(height: 8),
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
                             children: [
                               _buildSpecialtyChip(
-                                'Eco-Furniture',
+                                l10n.converterRegSpecEcoFurniture,
                                 Icons.chair_outlined,
                               ),
                               _buildSpecialtyChip(
-                                'Handicraft',
+                                l10n.converterRegSpecHandicraft,
                                 Icons.handyman_outlined,
                               ),
                               _buildSpecialtyChip(
-                                'Briket Kayu',
+                                l10n.converterRegSpecBriquette,
                                 Icons.local_fire_department,
                               ),
                               _buildSpecialtyChip(
-                                'Kompos',
+                                l10n.converterRegSpecCompost,
                                 Icons.compost_outlined,
                               ),
-                              _buildSpecialtyChip('Lainnya', Icons.more_horiz),
+                              _buildSpecialtyChip(
+                                l10n.converterRegSpecOther,
+                                Icons.more_horiz,
+                              ),
                             ],
                           ),
                           const SizedBox(height: 20),
-                          _buildAddressMap(),
+                          _buildAddressMap(l10n),
                           const SizedBox(height: 20),
-                          _buildLabel('KEBUTUHAN BAHAN BAKU (KG/BULAN)'),
+                          _buildLabel(
+                            l10n.converterRegRawMaterialNeed.toUpperCase(),
+                          ),
                           _buildTextField(
-                            hintText: 'contoh: 1000',
+                            hintText: l10n.converterRegRawMaterialHint,
                             icon: Icons.scale_outlined,
                             keyboardType: TextInputType.number,
                           ),
@@ -409,12 +536,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
 
                         // ── Buyer-Specific Fields ──
                         if (widget.role == 'buyer') ...[
-                          _buildLabel('ALAMAT PENGIRIMAN'),
-                          _buildTextField(
-                            hintText: 'Alamat rumah atau kantor',
-                            icon: Icons.home_outlined,
-                            maxLines: 3,
-                          ),
+                          _buildAddressMap(l10n),
                           const SizedBox(height: 24),
                         ],
 
@@ -428,25 +550,23 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                                 fontSize: 12,
                               ),
                               children: [
-                                const TextSpan(
-                                  text: 'Dengan mendaftar, Anda menyetujui ',
-                                ),
+                                TextSpan(text: l10n.supplierRegTermsPrefix),
                                 TextSpan(
-                                  text: 'Syarat & Ketentuan',
+                                  text: l10n.supplierRegTermsLink,
                                   style: const TextStyle(
                                     color: AppTheme.primaryColor,
                                     decoration: TextDecoration.underline,
                                   ),
                                 ),
-                                const TextSpan(text: '\ndan '),
+                                TextSpan(text: l10n.supplierRegTermsAnd),
                                 TextSpan(
-                                  text: 'Kebijakan Privasi',
+                                  text: l10n.supplierRegPrivacyLink,
                                   style: const TextStyle(
                                     color: AppTheme.primaryColor,
                                     decoration: TextDecoration.underline,
                                   ),
                                 ),
-                                const TextSpan(text: '.'),
+                                TextSpan(text: l10n.supplierRegTermsSuffix),
                               ],
                             ),
                           ),
@@ -492,12 +612,12 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                                           'passwordConfirm':
                                               _passwordController.text,
                                           'role': widget.role,
-                                          'company_name': _companyController
+                                          'workshop_name': _companyController
                                               .text
                                               .trim(),
                                           'address': _addressController.text,
-                                          'lat': _lat,
-                                          'lng': _lng,
+                                          'location_lat': _lat,
+                                          'location_lng': _lng,
                                         }),
                                       );
                                     }
@@ -524,9 +644,9 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Text(
-                                        'Daftar Sekarang',
-                                        style: TextStyle(
+                                      Text(
+                                        _getRegSubmitBtnLabel(l10n),
+                                        style: const TextStyle(
                                           color: AppTheme.background,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -548,13 +668,16 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                     GestureDetector(
                       onTap: () => context.go('/login'),
                       child: RichText(
-                        text: const TextSpan(
-                          style: TextStyle(color: Colors.white54, fontSize: 14),
+                        text: TextSpan(
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 14,
+                          ),
                           children: [
-                            TextSpan(text: 'Sudah punya akun? '),
+                            TextSpan(text: l10n.alreadyHaveAccount),
                             TextSpan(
-                              text: 'Login',
-                              style: TextStyle(
+                              text: l10n.logInButton,
+                              style: const TextStyle(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -707,11 +830,31 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
     );
   }
 
-  Widget _buildAddressMap() {
+  Widget _buildAddressMap(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel('ALAMAT BISNIS'),
+        _buildLabel(
+          (widget.role == 'buyer'
+                  ? l10n.buyerRegAddressLabel
+                  : l10n.supplierRegAddressLabel)
+              .toUpperCase(),
+        ),
+        _buildTextField(
+          hintText: l10n.buyerRegAddressHint,
+          icon: Icons.home_outlined,
+          controller: _addressController,
+          maxLines: 2,
+          validator: (v) =>
+              v == null || v.isEmpty ? l10n.buyerRegRequiredValidation : null,
+        ),
+        const SizedBox(height: 12),
+        _buildLabel(
+          (widget.role == 'generator'
+                  ? l10n.generatorRegLocation
+                  : 'TITIK LOKASI DI PETA')
+              .toUpperCase(),
+        ),
         GestureDetector(
           onTap: () async {
             final result = await context.pushNamed('map_picker');
@@ -719,21 +862,29 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
               setState(() {
                 _lat = result['lat'];
                 _lng = result['lng'];
-                _addressController.text = result['address'];
+                // Auto-fill address from map only if field is still empty
+                if (_addressController.text.isEmpty &&
+                    result['address'] != null) {
+                  _addressController.text = result['address'];
+                }
               });
             }
           },
           child: Container(
-            height: 140,
+            height: 120,
             width: double.infinity,
             decoration: BoxDecoration(
               color: AppTheme.surfaceColor,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              border: Border.all(
+                color: _lat != null
+                    ? AppTheme.primaryColor.withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.1),
+              ),
               image: const DecorationImage(
                 image: AssetImage('assets/images/map_jepara.jpg'),
                 fit: BoxFit.cover,
-                opacity: 0.6,
+                opacity: 0.5,
               ),
             ),
             child: Stack(
@@ -745,83 +896,108 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.black.withValues(alpha: 0.8),
-                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.85),
+                        Colors.black.withValues(alpha: 0.2),
                       ],
                     ),
                   ),
                 ),
-                Positioned(
-                  bottom: 12,
-                  left: 16,
-                  right: 16,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _addressController.text.isEmpty
-                                  ? 'Pilih lokasi di peta'
-                                  : _addressController.text,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            if (_lat != null && _lng != null)
-                              Text(
-                                '${_lat!.toStringAsFixed(4)}, ${_lng!.toStringAsFixed(4)}',
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 11,
-                                ),
-                              ),
-                          ],
+                if (_lat == null)
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_location_alt_outlined,
+                          color: AppTheme.primaryColor.withValues(alpha: 0.8),
+                          size: 28,
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor,
-                          borderRadius: BorderRadius.circular(8),
+                        const SizedBox(height: 6),
+                        Text(
+                          l10n.supplierRegMapHint,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        child: const Icon(
-                          Icons.pin_drop,
-                          color: AppTheme.background,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                if (_lat != null && _lng != null)
+                  Positioned(
+                    bottom: 10,
+                    left: 14,
+                    right: 14,
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.check_circle,
+                          color: AppTheme.primaryColor,
+                          size: 14,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            '${_lat!.toStringAsFixed(5)}, ${_lng!.toStringAsFixed(5)}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            final result = await context.pushNamed(
+                              'map_picker',
+                            );
+                            if (result != null &&
+                                result is Map<String, dynamic>) {
+                              setState(() {
+                                _lat = result['lat'];
+                                _lng = result['lng'];
+                              });
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primaryColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              l10n.buyerCheckoutBtnChange,
+                              style: const TextStyle(
+                                color: AppTheme.background,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8, left: 4),
-          child: const Text(
-            'Ketuk peta untuk menandai lokasi Anda.',
-            style: TextStyle(color: Colors.white38, fontSize: 12),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildCertUpload() {
+  Widget _buildCertUpload(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildLabel('SERTIFIKASI LEGAL'),
+            _buildLabel(l10n.supplierRegCertLabel.toUpperCase()),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
@@ -831,9 +1007,9 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                   color: AppTheme.primaryColor.withValues(alpha: 0.2),
                 ),
               ),
-              child: const Text(
-                'Required',
-                style: TextStyle(
+              child: Text(
+                l10n.supplierRegCertRequired,
+                style: const TextStyle(
                   color: AppTheme.primaryColor,
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
@@ -932,18 +1108,18 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Klik untuk tambah file sertifikasi',
-                  style: TextStyle(
+                Text(
+                  l10n.supplierRegUploadTitle,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Upload SVLK atau FSC (PDF, JPG, PNG)',
-                  style: TextStyle(color: Colors.white54, fontSize: 11),
+                Text(
+                  l10n.supplierRegUploadHint,
+                  style: const TextStyle(color: Colors.white54, fontSize: 11),
                 ),
               ],
             ),
@@ -991,27 +1167,27 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
     );
   }
 
-  Widget _buildVehicleSelector() {
+  Widget _buildVehicleSelector(AppLocalizations l10n) {
     return Column(
       children: [
         _buildVehicleOption(
           id: 'motorcart',
-          title: 'Motor Gerobak',
-          subtitle: '< 100 kg',
+          title: l10n.aggregatorRegVehicleMotorcart,
+          subtitle: l10n.aggregatorRegVehicleMotorcartCap,
           icon: Icons.two_wheeler,
         ),
         const SizedBox(height: 8),
         _buildVehicleOption(
           id: 'pickup',
-          title: 'Pick-up Truck',
-          subtitle: '100 - 800 kg',
+          title: l10n.aggregatorRegVehiclePickup,
+          subtitle: l10n.aggregatorRegVehiclePickupCap,
           icon: Icons.local_shipping_outlined,
         ),
         const SizedBox(height: 8),
         _buildVehicleOption(
           id: 'truck',
-          title: 'Light Truck',
-          subtitle: '> 800 kg',
+          title: l10n.aggregatorRegVehicleTruck,
+          subtitle: l10n.aggregatorRegVehicleTruckCap,
           icon: Icons.fire_truck_outlined,
         ),
       ],
