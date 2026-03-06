@@ -10,7 +10,9 @@ class User extends Equatable {
   final double? locationLat;
   final double? locationLng;
   final String? phone;
-  final bool isVerified;
+  final bool isVerified; // email verification (PocketBase built-in `verified`)
+  final bool
+  isAdminVerified; // manual admin approval (`is_verified` custom field)
   final String? bio;
 
   const User({
@@ -24,6 +26,7 @@ class User extends Equatable {
     this.locationLng,
     this.phone,
     this.isVerified = false,
+    this.isAdminVerified = false,
     this.bio,
   });
 
@@ -39,6 +42,7 @@ class User extends Equatable {
     locationLng,
     phone,
     isVerified,
+    isAdminVerified,
     bio,
   ];
 }

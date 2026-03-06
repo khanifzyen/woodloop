@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:cross_file/cross_file.dart';
 import '../bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
+import '../../domain/repositories/auth_repository.dart';
 
 /// Unified registration page that shows role-specific fields
 /// based on the selected role from RoleSelectionPage.
@@ -33,9 +34,38 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
   final _addressController = TextEditingController();
   double? _lat;
   double? _lng;
-  final List<XFile> _certificationFiles = [];
+
+  /// Legality documents with their type: { 'path': '/tmp/...', 'docType': 'NIB' }
+  final List<Map<String, String>> _legalityDocs = [];
   bool _obscurePassword = true;
   bool _isRegistering = false;
+
+  static const List<String> _docTypes = [
+    'NIB',
+    'SVLK',
+    'SK_Pengesahan',
+    'Izin_Usaha',
+    'Sertifikat_Lainnya',
+    'Lainnya',
+  ];
+
+  Future<void> _uploadDocumentsForUser(String userId) async {
+    if (_legalityDocs.isEmpty) return;
+    final repo = getIt<AuthRepository>();
+    // Group by docType for efficient batch upload
+    final grouped = <String, List<String>>{};
+    for (final doc in _legalityDocs) {
+      final type = doc['docType'] ?? 'Lainnya';
+      grouped.putIfAbsent(type, () => []).add(doc['path']!);
+    }
+    for (final entry in grouped.entries) {
+      await repo.uploadUserDocuments(
+        userId: userId,
+        filePaths: entry.value,
+        docType: entry.key,
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -215,7 +245,32 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
           }
 
           if (state is Authenticated && _isRegistering) {
-            _showSuccessDialog(context);
+            setState(() => _isRegistering = false);
+            if (_legalityDocs.isNotEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Mengunggah dokumen legalitas...'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              _uploadDocumentsForUser(state.user.id)
+                  .then((_) {
+                    if (mounted) _showSuccessDialog(context);
+                  })
+                  .catchError((e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Gagal mengunggah beberapa dokumen.'),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      );
+                      _showSuccessDialog(context);
+                    }
+                  });
+            } else {
+              _showSuccessDialog(context);
+            }
           }
         },
         child: SafeArea(
@@ -1019,13 +1074,14 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
           ],
         ),
         const SizedBox(height: 8),
-        if (_certificationFiles.isNotEmpty) ...[
-          ..._certificationFiles.asMap().entries.map((entry) {
+        if (_legalityDocs.isNotEmpty) ...[
+          ..._legalityDocs.asMap().entries.map((entry) {
             final index = entry.key;
-            final file = entry.value;
+            final doc = entry.value;
+            final fileName = doc['path']!.split('/').last;
             return Container(
               margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: AppTheme.surfaceColor,
                 borderRadius: BorderRadius.circular(12),
@@ -1038,13 +1094,48 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                     color: AppTheme.primaryColor,
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      file.name,
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          fileName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        // Doc type dropdown
+                        DropdownButton<String>(
+                          value: doc['docType'],
+                          isDense: true,
+                          dropdownColor: AppTheme.background,
+                          style: const TextStyle(
+                            color: AppTheme.primaryColor,
+                            fontSize: 12,
+                          ),
+                          underline: const SizedBox(),
+                          items: _docTypes
+                              .map(
+                                (t) => DropdownMenuItem(
+                                  value: t,
+                                  child: Text(t.replaceAll('_', ' ')),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (val) {
+                            if (val != null) {
+                              setState(
+                                () => _legalityDocs[index]['docType'] = val,
+                              );
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ),
                   IconButton(
@@ -1054,9 +1145,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
                       size: 20,
                     ),
                     onPressed: () {
-                      setState(() {
-                        _certificationFiles.removeAt(index);
-                      });
+                      setState(() => _legalityDocs.removeAt(index));
                     },
                   ),
                 ],
@@ -1075,8 +1164,10 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
 
             if (result != null) {
               setState(() {
-                _certificationFiles.addAll(
-                  result.files.map((file) => XFile(file.path!)),
+                _legalityDocs.addAll(
+                  result.files
+                      .where((f) => f.path != null)
+                      .map((f) => {'path': f.path!, 'docType': 'NIB'}),
                 );
               });
             }

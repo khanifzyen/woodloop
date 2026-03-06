@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 
@@ -38,6 +39,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
     ];
   }
 
+  Future<void> _markSeenAndNavigate() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_seen', true);
+    if (mounted) context.goNamed('role_selection');
+  }
+
   void _nextPage(int totalLength) {
     if (_currentPageIndex < totalLength - 1) {
       _pageController.nextPage(
@@ -45,7 +52,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         curve: Curves.easeInOut,
       );
     } else {
-      context.goNamed('role_selection');
+      _markSeenAndNavigate();
     }
   }
 
@@ -89,7 +96,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     ],
                   ),
                   TextButton(
-                    onPressed: () => context.goNamed('role_selection'),
+                    onPressed: _markSeenAndNavigate,
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white54,
                     ),

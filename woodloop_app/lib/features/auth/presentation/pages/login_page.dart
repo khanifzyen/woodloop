@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../../../../injection_container.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,6 +25,117 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  String _friendlyErrorMessage(String raw) {
+    final lower = raw.toLowerCase();
+    if (lower.contains('invalid credentials') ||
+        lower.contains('failed to authenticate')) {
+      return 'Email atau password salah. Silakan coba lagi.';
+    }
+    if (lower.contains('not found')) {
+      return 'Akun tidak ditemukan. Pastikan email Anda benar.';
+    }
+    return 'Login gagal. Silakan coba lagi.';
+  }
+
+  void _showUnverifiedDialog(BuildContext context, String email) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppTheme.surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        icon: const Icon(
+          Icons.mark_email_unread_outlined,
+          color: AppTheme.primaryColor,
+          size: 40,
+        ),
+        title: const Text(
+          'Akun Belum Aktif',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
+          'Email Anda ($email) belum diverifikasi.\n\nCek kotak masuk email Anda dan klik tautan verifikasi untuk mengaktifkan akun.',
+          style: const TextStyle(color: Colors.white70, height: 1.5),
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              try {
+                await getIt<AuthRepository>().requestPasswordReset(email);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Email verifikasi sudah dikirim ulang.'),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              } catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Gagal mengirim ulang. Coba lagi.'),
+                      backgroundColor: Colors.redAccent,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text(
+              'Kirim Ulang Email',
+              style: TextStyle(color: Colors.white54),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Mengerti'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAdminUnverifiedDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppTheme.surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        icon: const Icon(
+          Icons.pending_actions_outlined,
+          color: Colors.orange,
+          size: 40,
+        ),
+        title: const Text(
+          'Akun Dalam Proses Verifikasi',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+        content: const Text(
+          'Email Anda sudah terverifikasi, namun akun Anda masih menunggu persetujuan admin.\n\nProses verifikasi membutuhkan waktu hingga 1×24 jam. Harap bersabar dan coba login kembali setelah menerima notifikasi persetujuan.',
+          style: TextStyle(color: Colors.white70, height: 1.5),
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Baik, Mengerti'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -49,11 +162,16 @@ class _LoginPageState extends State<LoginPage> {
                 child: IntrinsicHeight(
                   child: BlocListener<AuthBloc, AuthState>(
                     listener: (context, state) {
-                      if (state is AuthError) {
+                      if (state is AuthUnverifiedEmail) {
+                        _showUnverifiedDialog(context, state.email);
+                      } else if (state is AuthAdminUnverified) {
+                        _showAdminUnverifiedDialog(context);
+                      } else if (state is AuthError) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(state.message),
+                            content: Text(_friendlyErrorMessage(state.message)),
                             backgroundColor: Colors.redAccent,
+                            behavior: SnackBarBehavior.floating,
                           ),
                         );
                       }
@@ -359,7 +477,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    // Navigate to sign up
+                                    context.pushNamed('role_selection');
                                   },
                                   child: Text(
                                     l10n.loginSignUp,

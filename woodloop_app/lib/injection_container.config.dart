@@ -83,6 +83,14 @@ import 'features/shared/data/repositories/wallet_repository_impl.dart' as _i427;
 import 'features/shared/domain/repositories/wallet_repository.dart' as _i525;
 import 'features/shared/presentation/bloc/notification_bloc.dart' as _i1036;
 import 'features/shared/presentation/bloc/wallet_bloc.dart' as _i678;
+import 'features/supplier/data/datasources/supplier_remote_data_source.dart'
+    as _i548;
+import 'features/supplier/data/repositories/supplier_repository_impl.dart'
+    as _i740;
+import 'features/supplier/domain/repositories/supplier_repository.dart'
+    as _i563;
+import 'features/supplier/presentation/bloc/supplier_dashboard_cubit.dart'
+    as _i874;
 import 'features/traceability/data/datasources/traceability_remote_datasource.dart'
     as _i541;
 import 'features/traceability/data/repositories/traceability_repository_impl.dart'
@@ -149,6 +157,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i127.WasteListingRemoteDataSource>(
       () => _i127.WasteListingRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
+    gh.lazySingleton<_i548.SupplierRemoteDataSource>(
+      () => _i548.SupplierRemoteDataSourceImpl(gh<_i169.PocketBase>()),
+    );
     gh.lazySingleton<_i28.WarehouseRepository>(
       () =>
           _i994.WarehouseRepositoryImpl(gh<_i549.WarehouseRemoteDataSource>()),
@@ -193,10 +204,16 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i172.UserProfileRemoteDataSource>(),
       ),
     );
+    gh.lazySingleton<_i563.SupplierRepository>(
+      () => _i740.SupplierRepositoryImpl(gh<_i548.SupplierRemoteDataSource>()),
+    );
     gh.lazySingleton<_i114.MarketplaceRepository>(
       () => _i505.MarketplaceRepositoryImpl(
         gh<_i11.MarketplaceRemoteDataSource>(),
       ),
+    );
+    gh.factory<_i874.SupplierDashboardCubit>(
+      () => _i874.SupplierDashboardCubit(gh<_i563.SupplierRepository>()),
     );
     gh.factory<_i1026.ChatBloc>(
       () => _i1026.ChatBloc(gh<_i453.ChatRepository>()),
@@ -222,7 +239,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i532.UserProfileBloc>(
       () => _i532.UserProfileBloc(gh<_i142.UserProfileRepository>()),
     );
-    gh.factory<_i363.AuthBloc>(
+    gh.lazySingleton<_i363.AuthBloc>(
       () => _i363.AuthBloc(gh<_i1015.AuthRepository>()),
     );
     gh.factory<_i561.ProductBloc>(

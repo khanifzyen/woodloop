@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 
@@ -15,12 +16,20 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    // Simulate loading and redirect
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        context.goNamed('onboarding');
-      }
-    });
+    _navigateAfterSplash();
+  }
+
+  Future<void> _navigateAfterSplash() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+    final prefs = await SharedPreferences.getInstance();
+    final seen = prefs.getBool('onboarding_seen') ?? false;
+    if (!mounted) return;
+    if (seen) {
+      context.goNamed('role_selection');
+    } else {
+      context.goNamed('onboarding');
+    }
   }
 
   @override

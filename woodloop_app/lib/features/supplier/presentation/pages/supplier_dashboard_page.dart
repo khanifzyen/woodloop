@@ -1,101 +1,141 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
+import '../bloc/supplier_dashboard_cubit.dart';
+import '../../domain/entities/raw_timber_listing.dart';
 
 class SupplierDashboardPage extends StatelessWidget {
   const SupplierDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (_) {
+        final cubit = getIt<SupplierDashboardCubit>();
+        // Get user from AuthBloc
+        final authState = context.read<AuthBloc>().state;
+        if (authState is Authenticated) {
+          final user = authState.user;
+          cubit.load(user.id, user.name, user.workshopName ?? '');
+        }
+        return cubit;
+      },
+      child: const _SupplierDashboardView(),
+    );
+  }
+}
 
-    return Scaffold(
-      backgroundColor: AppTheme.background,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.1),
-                          ),
-                          image: const DecorationImage(
-                            image: AssetImage(
-                              'assets/images/supplier_profile.jpg',
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+class _SupplierDashboardView extends StatelessWidget {
+  const _SupplierDashboardView();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final currencyFmt = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+
+    return BlocBuilder<SupplierDashboardCubit, SupplierDashboardState>(
+      builder: (context, state) {
+        String displayName = 'WoodLoop Supply';
+        if (state is SupplierDashboardLoaded) {
+          displayName = state.data.workshopName.isNotEmpty
+              ? state.data.workshopName
+              : state.data.supplierName;
+        }
+
+        return Scaffold(
+          backgroundColor: AppTheme.background,
+          body: RefreshIndicator(
+            color: AppTheme.primaryColor,
+            backgroundColor: AppTheme.surfaceColor,
+            onRefresh: () async {
+              final authState = context.read<AuthBloc>().state;
+              if (authState is Authenticated) {
+                final user = authState.user;
+                await context.read<SupplierDashboardCubit>().load(
+                  user.id,
+                  user.name,
+                  user.workshopName ?? '',
+                );
+              }
+            },
+            child: SafeArea(
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  // ── Header ──
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            l10n.supplierDashWelcome,
-                            style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.1),
+                                  ),
+                                  image: const DecorationImage(
+                                    image: AssetImage(
+                                      'assets/images/supplier_profile.jpg',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    l10n.supplierDashWelcome,
+                                    style: const TextStyle(
+                                      color: Colors.white54,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    displayName,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                          const Text(
-                            'WoodLoop Supply',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () => context.pushNamed('notification_center'),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppTheme.surfaceColor,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.1),
-                        ),
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          const Icon(
-                            Icons.notifications_none,
-                            color: Colors.white54,
-                          ),
-                          Positioned(
-                            top: 10,
-                            right: 12,
+                          GestureDetector(
+                            onTap: () =>
+                                context.pushNamed('notification_center'),
                             child: Container(
-                              width: 8,
-                              height: 8,
+                              width: 40,
+                              height: 40,
                               decoration: BoxDecoration(
-                                color: AppTheme.primaryColor,
+                                color: AppTheme.surfaceColor,
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: AppTheme.surfaceColor,
-                                  width: 2,
+                                  color: Colors.white.withValues(alpha: 0.1),
                                 ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none,
+                                color: Colors.white54,
                               ),
                             ),
                           ),
@@ -103,183 +143,236 @@ class SupplierDashboardPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                l10n.supplierDashOverviewTitle,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Horizontal Metrics
-            SizedBox(
-              height: 144,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  _buildMetricCard(
-                    icon: Icons.attach_money,
-                    iconBgColor: Colors.green.withValues(alpha: 0.2),
-                    iconColor: AppTheme.primaryColor,
-                    badgeText: '12%',
-                    badgeIcon: Icons.trending_up,
-                    title: l10n.supplierDashMonthlyRevenue,
-                    value: '\$34,200',
-                    bgIcon: Icons.payments_outlined,
-                  ),
-                  const SizedBox(width: 16),
-                  _buildMetricCard(
-                    icon: Icons.inventory_2,
-                    iconBgColor: Colors.blue.withValues(alpha: 0.2),
-                    iconColor: Colors.blue[400]!,
-                    badgeText: '5%',
-                    badgeIcon: Icons.trending_up,
-                    title: l10n.supplierDashTotalStock,
-                    value: '4,520 m³',
-                    bgIcon: Icons.forest_outlined,
-                  ),
-                  const SizedBox(width: 16),
-                  _buildMetricCard(
-                    icon: Icons.view_list,
-                    iconBgColor: Colors.orange.withValues(alpha: 0.2),
-                    iconColor: Colors.orange[400]!,
-                    badgeText: null,
-                    badgeIcon: null,
-                    title: l10n.supplierDashActiveListings,
-                    value: '12',
-                    bgIcon: Icons.list_alt,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Primary Action
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.pushNamed('list_raw_timber');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 8,
-                    shadowColor: AppTheme.primaryColor.withValues(alpha: 0.3),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.add,
-                        color: AppTheme.background,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        l10n.supplierDashListNewTimber,
+                  // ── Title ──
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                        l10n.supplierDashOverviewTitle,
                         style: const TextStyle(
-                          color: AppTheme.background,
-                          fontSize: 18,
+                          color: Colors.white,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Recent Sales Header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    l10n.supplierDashRecentSales,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      context.pushNamed('supplier_sales_history');
-                    },
-                    child: Text(
-                      l10n.supplierDashViewAll,
-                      style: const TextStyle(
-                        color: AppTheme.primaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
+
+                  // ── Metric Cards ──
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 144,
+                      child: _buildMetricRow(context, state, currencyFmt, l10n),
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+                  // ── Primary Action ──
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: () => context.pushNamed('list_raw_timber'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            elevation: 8,
+                            shadowColor: AppTheme.primaryColor.withValues(
+                              alpha: 0.3,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.add,
+                                color: AppTheme.background,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.supplierDashListNewTimber,
+                                style: const TextStyle(
+                                  color: AppTheme.background,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
-            // Recent Sales List
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  _buildSaleItem(
-                    title: 'Raw Oak Logs',
-                    price: '\$1,200',
-                    subtitle: '500m³ • Buyer: Nordic Furniture',
-                    status: 'Processing',
-                    statusColor: Colors.yellow,
-                    icon: Icons.forest,
+                  // ── Recent Sales Header ──
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10n.supplierDashRecentSales,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () =>
+                                context.pushNamed('supplier_sales_history'),
+                            child: Text(
+                              l10n.supplierDashViewAll,
+                              style: const TextStyle(
+                                color: AppTheme.primaryColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  _buildSaleItem(
-                    title: 'Pine Lumber Grade A',
-                    price: '\$4,550',
-                    subtitle: '1200m³ • Buyer: BuildCorp',
-                    status: 'Shipped',
-                    statusColor: AppTheme.primaryColor,
-                    icon: Icons.straighten,
-                  ),
-                  _buildSaleItem(
-                    title: 'Birch Plywood',
-                    price: '\$890',
-                    subtitle: '200m³ • Buyer: Local Carpentry',
-                    status: 'Delivered',
-                    statusColor: AppTheme.primaryColor,
-                    icon: Icons.forest,
-                  ),
-                  _buildSaleItem(
-                    title: 'Mahogany Planks',
-                    price: '\$12,100',
-                    subtitle: '50m³ • Buyer: Luxury Yachts Inc.',
-                    status: 'Cancelled',
-                    statusColor: Colors.red,
-                    icon: Icons.category,
-                  ),
+
+                  // ── Recent Sales List ──
+                  if (state is SupplierDashboardLoading)
+                    const SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(40),
+                          child: CircularProgressIndicator(
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      ),
+                    )
+                  else if (state is SupplierDashboardError)
+                    SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: Column(
+                            children: [
+                              const Icon(
+                                Icons.wifi_off,
+                                color: Colors.white38,
+                                size: 48,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Gagal memuat data',
+                                style: const TextStyle(color: Colors.white54),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  else if (state is SupplierDashboardLoaded &&
+                      state.data.recentSales.isEmpty)
+                    const SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(32),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.sell_outlined,
+                                color: Colors.white24,
+                                size: 48,
+                              ),
+                              SizedBox(height: 12),
+                              Text(
+                                'Belum ada penjualan',
+                                style: TextStyle(color: Colors.white38),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  else if (state is SupplierDashboardLoaded)
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final sale = state.data.recentSales[index];
+                          return _buildSaleItem(sale, currencyFmt);
+                        }, childCount: state.data.recentSales.length),
+                      ),
+                    )
+                  else
+                    const SliverToBoxAdapter(child: SizedBox(height: 40)),
                 ],
               ),
             ),
-          ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMetricRow(
+    BuildContext context,
+    SupplierDashboardState state,
+    NumberFormat currencyFmt,
+    AppLocalizations l10n,
+  ) {
+    final revenue = state is SupplierDashboardLoaded
+        ? currencyFmt.format(state.data.monthlyRevenue)
+        : '—';
+    final stock = state is SupplierDashboardLoaded
+        ? '${state.data.totalStock.toStringAsFixed(1)} m³'
+        : '—';
+    final listings = state is SupplierDashboardLoaded
+        ? '${state.data.activeListings}'
+        : '—';
+
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      children: [
+        _buildMetricCard(
+          icon: Icons.attach_money,
+          iconBgColor: Colors.green.withValues(alpha: 0.2),
+          iconColor: AppTheme.primaryColor,
+          title: l10n.supplierDashMonthlyRevenue,
+          value: revenue,
+          bgIcon: Icons.payments_outlined,
+          isLoading: state is SupplierDashboardLoading,
         ),
-      ),
+        const SizedBox(width: 16),
+        _buildMetricCard(
+          icon: Icons.inventory_2,
+          iconBgColor: Colors.blue.withValues(alpha: 0.2),
+          iconColor: Colors.blue[400]!,
+          title: l10n.supplierDashTotalStock,
+          value: stock,
+          bgIcon: Icons.forest_outlined,
+          isLoading: state is SupplierDashboardLoading,
+        ),
+        const SizedBox(width: 16),
+        _buildMetricCard(
+          icon: Icons.view_list,
+          iconBgColor: Colors.orange.withValues(alpha: 0.2),
+          iconColor: Colors.orange[400]!,
+          title: l10n.supplierDashActiveListings,
+          value: listings,
+          bgIcon: Icons.list_alt,
+          isLoading: state is SupplierDashboardLoading,
+        ),
+      ],
     );
   }
 
@@ -287,11 +380,10 @@ class SupplierDashboardPage extends StatelessWidget {
     required IconData icon,
     required Color iconBgColor,
     required Color iconColor,
-    required String? badgeText,
-    required IconData? badgeIcon,
     required String title,
     required String value,
     required IconData bgIcon,
+    required bool isLoading,
   }) {
     return Container(
       width: 160,
@@ -316,48 +408,13 @@ class SupplierDashboardPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: iconBgColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(icon, color: iconColor, size: 20),
-                  ),
-                  if (badgeText != null)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            badgeIcon,
-                            color: AppTheme.primaryColor,
-                            size: 12,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            badgeText,
-                            style: const TextStyle(
-                              color: AppTheme.primaryColor,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: iconBgColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: iconColor, size: 20),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -367,15 +424,26 @@ class SupplierDashboardPage extends StatelessWidget {
                     style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    value,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
+                  isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppTheme.primaryColor,
+                          ),
+                        )
+                      : Text(
+                          value,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -0.5,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                 ],
               ),
             ],
@@ -385,14 +453,7 @@ class SupplierDashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSaleItem({
-    required String title,
-    required String price,
-    required String subtitle,
-    required String status,
-    required Color statusColor,
-    required IconData icon,
-  }) {
+  Widget _buildSaleItem(RawTimberListing sale, NumberFormat currencyFmt) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -410,7 +471,7 @@ class SupplierDashboardPage extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: Colors.white54),
+            child: const Icon(Icons.forest, color: Colors.white54),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -422,7 +483,7 @@ class SupplierDashboardPage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        title,
+                        sale.woodTypeName,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -433,10 +494,10 @@ class SupplierDashboardPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      price,
+                      currencyFmt.format(sale.price),
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -446,15 +507,11 @@ class SupplierDashboardPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Text(
-                        subtitle,
-                        style: const TextStyle(
-                          color: Colors.white54,
-                          fontSize: 12,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      '${sale.volume} ${sale.unit}',
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 12,
                       ),
                     ),
                     Container(
@@ -463,16 +520,16 @@ class SupplierDashboardPage extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: statusColor.withValues(alpha: 0.1),
+                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: statusColor.withValues(alpha: 0.2),
+                          color: AppTheme.primaryColor.withValues(alpha: 0.2),
                         ),
                       ),
-                      child: Text(
-                        status.toUpperCase(),
+                      child: const Text(
+                        'SOLD',
                         style: TextStyle(
-                          color: statusColor,
+                          color: AppTheme.primaryColor,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5,

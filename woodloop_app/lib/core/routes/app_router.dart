@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../presentation/scaffold_with_nav_bar.dart';
 
@@ -82,6 +83,9 @@ class AppRouter {
     refreshListenable: GoRouterRefreshStream(getIt<AuthBloc>().stream),
     redirect: (context, state) {
       final authState = getIt<AuthBloc>().state;
+      debugPrint(
+        '[Router] redirect called — location: ${state.matchedLocation}, authState: ${authState.runtimeType}',
+      );
 
       final isLoggingIn =
           state.matchedLocation == '/login' ||
@@ -101,6 +105,9 @@ class AppRouter {
       } else if (authState is Authenticated) {
         if (isLoggingIn || isOnboarding) {
           final role = authState.user.role;
+          debugPrint(
+            '[Router] Authenticated — role: "$role", isLoggingIn: $isLoggingIn',
+          );
           switch (role) {
             case 'supplier':
               return '/supplier-dashboard';
@@ -115,6 +122,9 @@ class AppRouter {
             case 'enabler':
               return '/enabler-dashboard';
             default:
+              debugPrint(
+                '[Router] Unknown role: "$role" — going to role-selection',
+              );
               return '/role-selection';
           }
         }

@@ -22,6 +22,19 @@ class Authenticated extends AuthState {
 
 class Unauthenticated extends AuthState {}
 
+class AuthUnverifiedEmail extends AuthState {
+  final String email;
+
+  const AuthUnverifiedEmail(this.email);
+
+  @override
+  List<Object?> get props => [email];
+}
+
+class AuthAdminUnverified extends AuthState {
+  const AuthAdminUnverified();
+}
+
 class AuthError extends AuthState {
   final String message;
 

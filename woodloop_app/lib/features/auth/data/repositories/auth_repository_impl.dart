@@ -37,6 +37,24 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> requestPasswordReset(String email) async {
+    await remoteDataSource.requestPasswordReset(email);
+  }
+
+  @override
   Stream<AuthStoreEvent> get authStateChanges =>
       remoteDataSource.authStateChanges;
+
+  @override
+  Future<void> uploadUserDocuments({
+    required String userId,
+    required List<String> filePaths,
+    String docType = 'Lainnya',
+  }) async {
+    await remoteDataSource.uploadUserDocuments(
+      userId: userId,
+      filePaths: filePaths,
+      docType: docType,
+    );
+  }
 }

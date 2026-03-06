@@ -13,10 +13,20 @@ class UserModel extends User {
     super.locationLng,
     super.phone,
     super.isVerified,
+    super.isAdminVerified,
     super.bio,
   });
 
   factory UserModel.fromRecord(RecordModel record) {
+    // `is_verified` = custom admin approval field.
+    // getBoolValue() returns false for BOTH null and false — we can't distinguish.
+    // Use raw data: null means admin hasn't decided yet → allow login (true).
+    // Only block if admin explicitly set it to false.
+    final rawAdminVerified = record.data['is_verified'];
+    final isAdminVerified = rawAdminVerified == null
+        ? true
+        : (rawAdminVerified as bool? ?? true);
+
     return UserModel(
       id: record.id,
       email: record.getStringValue('email'),
@@ -27,7 +37,8 @@ class UserModel extends User {
       locationLat: record.getDoubleValue('location_lat'),
       locationLng: record.getDoubleValue('location_lng'),
       phone: record.getStringValue('phone'),
-      isVerified: record.getBoolValue('is_verified'),
+      isVerified: record.getBoolValue('verified'),
+      isAdminVerified: isAdminVerified,
       bio: record.getStringValue('bio'),
     );
   }

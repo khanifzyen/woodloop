@@ -7,5 +7,11 @@ abstract class AuthRepository {
   Future<void> logout();
   Future<User?> getCurrentUser();
   Future<bool> checkUniqueness(String field, String value);
+  Future<void> requestPasswordReset(String email);
   Stream<AuthStoreEvent> get authStateChanges;
+  Future<void> uploadUserDocuments({
+    required String userId,
+    required List<String> filePaths,
+    String docType = 'Lainnya',
+  });
 }

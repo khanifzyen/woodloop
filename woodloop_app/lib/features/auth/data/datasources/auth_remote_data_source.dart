@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:injectable/injectable.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:http/http.dart' as http;
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
@@ -8,7 +10,18 @@ abstract class AuthRemoteDataSource {
   Future<void> logout();
   Future<UserModel?> getCurrentUser();
   Future<bool> checkUniqueness(String field, String value);
+  Future<void> requestPasswordReset(String email);
   Stream<AuthStoreEvent> get authStateChanges;
+
+  /// Upload multiple legality documents to user_documents collection.
+  /// [userId] — the user's record ID after registration.
+  /// [filePaths] — list of local file paths to upload.
+  /// [docType] — document type key (e.g. 'NIB', 'SVLK', 'Lainnya').
+  Future<void> uploadUserDocuments({
+    required String userId,
+    required List<String> filePaths,
+    String docType = 'Lainnya',
+  });
 }
 
 @LazySingleton(as: AuthRemoteDataSource)
@@ -25,12 +38,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final authData = await pb
         .collection('users')
         .authWithPassword(email, password);
-    return UserModel.fromRecord(authData.record);
+    // authWithPassword returns a cached record from the JWT token.
+    // Fetch the full record to ensure ALL custom fields (verified, is_verified, role, etc.) are present.
+    final fullRecord = await pb.collection('users').getOne(authData.record.id);
+    return UserModel.fromRecord(fullRecord);
   }
 
   @override
   Future<UserModel> register(Map<String, dynamic> body) async {
     final record = await pb.collection('users').create(body: body);
+
+    // Request verification email explicitly, just in case "Send on register" is off in PB settings
+    try {
+      if (body.containsKey('email') && body['email'].toString().isNotEmpty) {
+        await pb.collection('users').requestVerification(body['email']);
+      }
+    } catch (_) {
+      // Ignore if it fails (e.g. already verified or email invalid)
+    }
 
     // Attempt auto-login after register
     try {
@@ -51,11 +76,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel?> getCurrentUser() async {
-    if (pb.authStore.isValid && pb.authStore.record != null) {
-      // Technically we should refresh to get latest, but for speed we use cached model unless requested
-      return UserModel.fromRecord(pb.authStore.record!);
+    if (!pb.authStore.isValid || pb.authStore.record == null) return null;
+    try {
+      // Fetch fresh record from API to get all custom fields (not just cached JWT data)
+      final fullRecord = await pb
+          .collection('users')
+          .getOne(pb.authStore.record!.id);
+      return UserModel.fromRecord(fullRecord);
+    } catch (_) {
+      return null;
     }
-    return null;
   }
 
   @override
@@ -68,6 +98,36 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e) {
       // If error, assume it might not be unique or something went wrong
       return false;
+    }
+  }
+
+  @override
+  Future<void> requestPasswordReset(String email) async {
+    await pb.collection('users').requestPasswordReset(email);
+  }
+
+  @override
+  Future<void> uploadUserDocuments({
+    required String userId,
+    required List<String> filePaths,
+    String docType = 'Lainnya',
+  }) async {
+    for (final path in filePaths) {
+      final file = File(path);
+      if (!file.existsSync()) continue;
+      final fileName = file.path.split('/').last;
+      await pb
+          .collection('user_documents')
+          .create(
+            body: {'user': userId, 'doc_type': docType, 'doc_name': fileName},
+            files: [
+              http.MultipartFile.fromBytes(
+                'file',
+                file.readAsBytesSync(),
+                filename: fileName,
+              ),
+            ],
+          );
     }
   }
 

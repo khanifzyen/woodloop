@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
@@ -10,7 +11,7 @@ import '../../domain/repositories/auth_repository.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
-@injectable
+@lazySingleton
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
   StreamSubscription<AuthStoreEvent>? _authStoreSubscription;
@@ -53,10 +54,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
+      debugPrint('[AuthBloc] Attempting login for ${event.email}...');
       final user = await _authRepository.login(event.email, event.password);
-      emit(Authenticated(user));
+      debugPrint(
+        '[AuthBloc] Login success — role: ${user.role}, isVerified: ${user.isVerified}, isAdminVerified: ${user.isAdminVerified}',
+      );
+      if (!user.isVerified) {
+        debugPrint('[AuthBloc] Blocking: email not verified');
+        await _authRepository.logout();
+        emit(AuthUnverifiedEmail(event.email));
+        emit(Unauthenticated());
+      } else if (!user.isAdminVerified) {
+        debugPrint('[AuthBloc] Blocking: admin not verified');
+        await _authRepository.logout();
+        emit(const AuthAdminUnverified());
+        emit(Unauthenticated());
+      } else {
+        debugPrint('[AuthBloc] Emitting Authenticated');
+        emit(Authenticated(user));
+      }
     } catch (e) {
-      // In a real app we'd parse ClientException from PocketBase
+      debugPrint('[AuthBloc] Login error: $e');
       emit(AuthError(e.toString()));
       emit(Unauthenticated());
     }
@@ -92,17 +110,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(Unauthenticated());
   }
 
-  void _onAuthStoreChanged(_AuthStoreChanged event, Emitter<AuthState> emit) {
+  Future<void> _onAuthStoreChanged(
+    _AuthStoreChanged event,
+    Emitter<AuthState> emit,
+  ) async {
+    debugPrint(
+      '[AuthBloc] AuthStoreChanged — token empty: ${event.event.token.isEmpty}',
+    );
     if (event.event.token.isEmpty || event.event.record == null) {
       emit(Unauthenticated());
     } else {
-      // Typically, auth model updates wouldn't directly re-emit unless user entity updates.
-      // In this app, we're relying on the pb instance to give us current user.
-      _authRepository.getCurrentUser().then((user) {
-        if (user != null && !isClosed) {
-          add(AuthCheckRequested()); // Lazy loop to reuse existing check
-        }
-      });
+      // Don't re-fetch here to avoid overriding an in-progress login state.
+      // AuthCheckRequested will be dispatched from the initial check.
     }
   }
 
