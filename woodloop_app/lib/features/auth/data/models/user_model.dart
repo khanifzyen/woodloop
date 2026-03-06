@@ -15,6 +15,7 @@ class UserModel extends User {
     super.isVerified,
     super.isAdminVerified,
     super.bio,
+    super.avatar,
   });
 
   factory UserModel.fromRecord(RecordModel record) {
@@ -40,6 +41,7 @@ class UserModel extends User {
       isVerified: record.getBoolValue('verified'),
       isAdminVerified: isAdminVerified,
       bio: record.getStringValue('bio'),
+      avatar: record.getStringValue('avatar'),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 import '../../domain/entities/user.dart';
+import '../../domain/entities/user_document.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
 
@@ -49,12 +50,22 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> uploadUserDocuments({
     required String userId,
     required List<String> filePaths,
-    String docType = 'Lainnya',
+    required String docType,
   }) async {
     await remoteDataSource.uploadUserDocuments(
       userId: userId,
       filePaths: filePaths,
       docType: docType,
     );
+  }
+
+  @override
+  Future<List<UserDocument>> fetchUserDocuments(String userId) async {
+    return await remoteDataSource.fetchUserDocuments(userId);
+  }
+
+  @override
+  Future<User> updateProfileAvatar(String userId, String filePath) async {
+    return await remoteDataSource.updateProfileAvatar(userId, filePath);
   }
 }

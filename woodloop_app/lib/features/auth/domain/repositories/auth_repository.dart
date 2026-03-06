@@ -1,4 +1,5 @@
 import '../entities/user.dart';
+import '../entities/user_document.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 abstract class AuthRepository {
@@ -12,6 +13,8 @@ abstract class AuthRepository {
   Future<void> uploadUserDocuments({
     required String userId,
     required List<String> filePaths,
-    String docType = 'Lainnya',
+    required String docType,
   });
+  Future<List<UserDocument>> fetchUserDocuments(String userId);
+  Future<User> updateProfileAvatar(String userId, String filePath);
 }

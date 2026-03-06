@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:http/http.dart' as http;
 import '../models/user_model.dart';
+import '../models/user_document_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserModel> loginWithEmailAndPassword(String email, String password);
@@ -12,16 +13,13 @@ abstract class AuthRemoteDataSource {
   Future<bool> checkUniqueness(String field, String value);
   Future<void> requestPasswordReset(String email);
   Stream<AuthStoreEvent> get authStateChanges;
-
-  /// Upload multiple legality documents to user_documents collection.
-  /// [userId] — the user's record ID after registration.
-  /// [filePaths] — list of local file paths to upload.
-  /// [docType] — document type key (e.g. 'NIB', 'SVLK', 'Lainnya').
   Future<void> uploadUserDocuments({
     required String userId,
     required List<String> filePaths,
-    String docType = 'Lainnya',
+    required String docType,
   });
+  Future<List<UserDocumentModel>> fetchUserDocuments(String userId);
+  Future<UserModel> updateProfileAvatar(String userId, String filePath);
 }
 
 @LazySingleton(as: AuthRemoteDataSource)
@@ -110,7 +108,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> uploadUserDocuments({
     required String userId,
     required List<String> filePaths,
-    String docType = 'Lainnya',
+    required String docType,
   }) async {
     for (final path in filePaths) {
       final file = File(path);
@@ -120,15 +118,28 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .collection('user_documents')
           .create(
             body: {'user': userId, 'doc_type': docType, 'doc_name': fileName},
-            files: [
-              http.MultipartFile.fromBytes(
-                'file',
-                file.readAsBytesSync(),
-                filename: fileName,
-              ),
-            ],
+            files: [await http.MultipartFile.fromPath('file', path)],
           );
     }
+  }
+
+  @override
+  Future<List<UserDocumentModel>> fetchUserDocuments(String userId) async {
+    final records = await pb
+        .collection('user_documents')
+        .getFullList(filter: 'user = "$userId"', sort: '-created');
+    return records.map((r) => UserDocumentModel.fromRecord(r)).toList();
+  }
+
+  @override
+  Future<UserModel> updateProfileAvatar(String userId, String filePath) async {
+    final record = await pb
+        .collection('users')
+        .update(
+          userId,
+          files: [await http.MultipartFile.fromPath('avatar', filePath)],
+        );
+    return UserModel.fromRecord(record);
   }
 
   @override

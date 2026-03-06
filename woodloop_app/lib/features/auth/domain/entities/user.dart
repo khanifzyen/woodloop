@@ -14,6 +14,7 @@ class User extends Equatable {
   final bool
   isAdminVerified; // manual admin approval (`is_verified` custom field)
   final String? bio;
+  final String? avatar;
 
   const User({
     required this.id,
@@ -28,6 +29,7 @@ class User extends Equatable {
     this.isVerified = false,
     this.isAdminVerified = false,
     this.bio,
+    this.avatar,
   });
 
   @override
@@ -44,5 +46,6 @@ class User extends Equatable {
     isVerified,
     isAdminVerified,
     bio,
+    avatar,
   ];
 }

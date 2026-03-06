@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 import '../../domain/entities/user.dart';
+import '../../domain/entities/user_document.dart';
 import '../../domain/repositories/auth_repository.dart';
 
 part 'auth_event.dart';
@@ -21,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onAuthLoginRequested);
     on<AuthRegisterRequested>(_onAuthRegisterRequested);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
+    on<AuthUserRefreshRequested>(_onAuthUserRefreshRequested);
     on<_AuthStoreChanged>(_onAuthStoreChanged);
 
     // Initial session check
@@ -39,7 +41,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await _authRepository.getCurrentUser();
       if (user != null) {
-        emit(Authenticated(user));
+        if (!user.isVerified) {
+          await _authRepository.logout();
+          emit(AuthUnverifiedEmail(user.email));
+          emit(Unauthenticated());
+        } else if (!user.isAdminVerified) {
+          await _authRepository.logout();
+          emit(const AuthAdminUnverified());
+          emit(Unauthenticated());
+        } else {
+          emit(Authenticated(user));
+        }
       } else {
         emit(Unauthenticated());
       }
@@ -70,6 +82,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const AuthAdminUnverified());
         emit(Unauthenticated());
       } else {
+        // Document Verification Check
+        final rolesRequiringDocs = [
+          'supplier',
+          'generator',
+          'aggregator',
+          'converter',
+        ];
+        if (rolesRequiringDocs.contains(user.role)) {
+          final docs = await _authRepository.fetchUserDocuments(user.id);
+          final hasUnverifiedDocs = docs.any((doc) => !doc.verified);
+
+          if (hasUnverifiedDocs || docs.isEmpty) {
+            debugPrint('[AuthBloc] Blocking: documents unverified or empty');
+            await _authRepository.logout();
+            emit(AuthDocumentsUnverified(docs));
+            emit(Unauthenticated());
+            return;
+          }
+        }
+
         debugPrint('[AuthBloc] Emitting Authenticated');
         emit(Authenticated(user));
       }
@@ -92,7 +124,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // Safe fallback check:
       final currentUser = await _authRepository.getCurrentUser();
       if (currentUser != null) {
-        emit(Authenticated(currentUser));
+        emit(AuthRegisterSuccess(currentUser));
       } else {
         emit(Unauthenticated());
       }
@@ -108,6 +140,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     await _authRepository.logout();
     emit(Unauthenticated());
+  }
+
+  Future<void> _onAuthUserRefreshRequested(
+    AuthUserRefreshRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    final user = await _authRepository.getCurrentUser();
+    if (user != null) {
+      emit(Authenticated(user));
+    }
   }
 
   Future<void> _onAuthStoreChanged(

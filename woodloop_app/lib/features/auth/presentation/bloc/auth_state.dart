@@ -43,3 +43,21 @@ class AuthError extends AuthState {
   @override
   List<Object?> get props => [message];
 }
+
+class AuthRegisterSuccess extends AuthState {
+  final User user;
+
+  const AuthRegisterSuccess(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}
+
+class AuthDocumentsUnverified extends AuthState {
+  final List<UserDocument> documents;
+
+  const AuthDocumentsUnverified(this.documents);
+
+  @override
+  List<Object?> get props => [documents];
+}

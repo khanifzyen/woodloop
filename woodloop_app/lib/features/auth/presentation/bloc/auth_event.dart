@@ -30,6 +30,8 @@ class AuthRegisterRequested extends AuthEvent {
 
 class AuthLogoutRequested extends AuthEvent {}
 
+class AuthUserRefreshRequested extends AuthEvent {}
+
 class _AuthStoreChanged extends AuthEvent {
   final AuthStoreEvent event;
 

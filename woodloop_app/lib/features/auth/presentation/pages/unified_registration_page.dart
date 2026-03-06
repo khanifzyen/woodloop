@@ -244,7 +244,7 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
             );
           }
 
-          if (state is Authenticated && _isRegistering) {
+          if (state is AuthRegisterSuccess && _isRegistering) {
             setState(() => _isRegistering = false);
             if (_legalityDocs.isNotEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -796,6 +796,8 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
+                  // Logout to clear the session so they must wait for activation
+                  context.read<AuthBloc>().add(AuthLogoutRequested());
                   // After success, go to login so they can login after activation/admin approval
                   context.go('/login');
                 },

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
+import '../../domain/entities/user_document.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../../../injection_container.dart';
 
@@ -138,6 +139,113 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _showDocumentsUnverifiedDialog(
+    BuildContext context,
+    List<UserDocument> documents,
+  ) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppTheme.surfaceColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text(
+          'Status Verifikasi Dokumen',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Dokumen legalitas Anda belum lengkap atau masih menunggu verifikasi admin.',
+                style: TextStyle(color: Colors.white70, height: 1.5),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              if (documents.isEmpty)
+                const Text(
+                  'Belum ada dokumen yang diunggah. Hubungi admin.',
+                  style: TextStyle(color: Colors.redAccent),
+                  textAlign: TextAlign.center,
+                )
+              else
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: documents.length,
+                    itemBuilder: (context, index) {
+                      final doc = documents[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppTheme.background,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: doc.verified
+                                ? Colors.green.withValues(alpha: 0.3)
+                                : Colors.orange.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    doc.docType.replaceAll('_', ' '),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Icon(
+                                  doc.verified
+                                      ? Icons.check_circle
+                                      : Icons.pending,
+                                  color: doc.verified
+                                      ? Colors.green
+                                      : Colors.orange,
+                                  size: 16,
+                                ),
+                              ],
+                            ),
+                            if (doc.notes != null && doc.notes!.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Text(
+                                  'Catatan: ${doc.notes}',
+                                  style: const TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Mengerti'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -166,6 +274,11 @@ class _LoginPageState extends State<LoginPage> {
                         _showUnverifiedDialog(context, state.email);
                       } else if (state is AuthAdminUnverified) {
                         _showAdminUnverifiedDialog(context);
+                      } else if (state is AuthDocumentsUnverified) {
+                        _showDocumentsUnverifiedDialog(
+                          context,
+                          state.documents,
+                        );
                       } else if (state is AuthError) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
