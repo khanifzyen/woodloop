@@ -19,6 +19,10 @@ abstract class AuthRemoteDataSource {
     required String docType,
   });
   Future<List<UserDocumentModel>> fetchUserDocuments(String userId);
+  Future<void> updateUserDocumentFile({
+    required String docId,
+    required String filePath,
+  });
   Future<UserModel> updateProfileAvatar(String userId, String filePath);
 }
 
@@ -129,6 +133,28 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         .collection('user_documents')
         .getFullList(filter: 'user = "$userId"', sort: '-created');
     return records.map((r) => UserDocumentModel.fromRecord(r)).toList();
+  }
+
+  @override
+  Future<void> updateUserDocumentFile({
+    required String docId,
+    required String filePath,
+  }) async {
+    final file = File(filePath);
+    if (!file.existsSync()) return;
+
+    final fileName = file.path.split('/').last;
+
+    await pb
+        .collection('user_documents')
+        .update(
+          docId,
+          body: {
+            'doc_name': fileName,
+            'notes': '', // Clear notes on update
+          },
+          files: [await http.MultipartFile.fromPath('file', filePath)],
+        );
   }
 
   @override

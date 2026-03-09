@@ -10,6 +10,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 import 'core/presentation/bloc/language/language_cubit.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/shared/presentation/cubit/user_documents_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,7 @@ class WoodLoopApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<LanguageCubit>()),
         BlocProvider(create: (context) => getIt<AuthBloc>()),
+        BlocProvider(create: (context) => getIt<UserDocumentsCubit>()),
       ],
       child: BlocBuilder<LanguageCubit, LanguageState>(
         builder: (context, state) {

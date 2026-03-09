@@ -60,6 +60,17 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> updateUserDocumentFile({
+    required String docId,
+    required String filePath,
+  }) async {
+    await remoteDataSource.updateUserDocumentFile(
+      docId: docId,
+      filePath: filePath,
+    );
+  }
+
+  @override
   Future<List<UserDocument>> fetchUserDocuments(String userId) async {
     return await remoteDataSource.fetchUserDocuments(userId);
   }

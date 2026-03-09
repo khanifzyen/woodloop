@@ -84,6 +84,7 @@ import 'features/shared/domain/repositories/wallet_repository.dart' as _i525;
 import 'features/shared/presentation/bloc/notification_bloc.dart' as _i1036;
 import 'features/shared/presentation/bloc/profile_cubit.dart' as _i99;
 import 'features/shared/presentation/bloc/wallet_bloc.dart' as _i678;
+import 'features/shared/presentation/cubit/user_documents_cubit.dart' as _i1025;
 import 'features/supplier/data/datasources/supplier_remote_data_source.dart'
     as _i548;
 import 'features/supplier/data/repositories/supplier_repository_impl.dart'
@@ -202,6 +203,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i99.ProfileCubit>(
       () => _i99.ProfileCubit(gh<_i1015.AuthRepository>()),
+    );
+    gh.factory<_i1025.UserDocumentsCubit>(
+      () => _i1025.UserDocumentsCubit(gh<_i1015.AuthRepository>()),
     );
     gh.lazySingleton<_i142.UserProfileRepository>(
       () => _i671.UserProfileRepositoryImpl(

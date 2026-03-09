@@ -10,6 +10,9 @@ import '../../features/auth/presentation/pages/role_selection_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/unified_registration_page.dart';
+import '../../features/auth/presentation/pages/registration_status_page.dart';
+
+import '../../features/shared/presentation/pages/manage_legality_documents_page.dart';
 
 import '../../features/supplier/presentation/pages/supplier_dashboard_page.dart';
 import '../../features/supplier/presentation/pages/list_raw_timber_form_page.dart';
@@ -87,7 +90,7 @@ class AppRouter {
         '[Router] redirect called — location: ${state.matchedLocation}, authState: ${authState.runtimeType}',
       );
 
-      final isLoggingIn =
+      var isLoggingIn =
           state.matchedLocation == '/login' ||
           state.matchedLocation == '/role-selection' ||
           state.matchedLocation.startsWith('/register') ||
@@ -103,6 +106,22 @@ class AppRouter {
           authState is AuthError) {
         if (!isLoggingIn && !isOnboarding) return '/role-selection';
       } else if (authState is Authenticated) {
+        // If the user's email is verified but admin hasn't approved them yet
+        if (!authState.user.isAdminVerified) {
+          if (state.matchedLocation != '/registration-status') {
+            debugPrint(
+              '[Router] User not admin verified, redirecting to /registration-status',
+            );
+            return '/registration-status';
+          }
+          return null;
+        }
+
+        // If the admin is verified, prevent them from accessing the registration status page
+        if (state.matchedLocation == '/registration-status') {
+          isLoggingIn = true; // force redirect to dashboard
+        }
+
         if (isLoggingIn || isOnboarding) {
           final role = authState.user.role;
           debugPrint(
@@ -171,6 +190,16 @@ class AppRouter {
         path: '/map-picker',
         name: 'map_picker',
         builder: (context, state) => const MapPickerPage(),
+      ),
+      GoRoute(
+        path: '/registration-status',
+        name: 'registration_status',
+        builder: (context, state) => const RegistrationStatusPage(),
+      ),
+      GoRoute(
+        path: '/manage-legality-documents',
+        name: 'manage_legality_documents',
+        builder: (context, state) => const ManageLegalityDocumentsPage(),
       ),
 
       // ══════════════════════════════════════

@@ -286,7 +286,9 @@ class _B2BProfilePageState extends State<B2BProfilePage> {
                           _buildMenuItem(
                             icon: Icons.document_scanner_outlined,
                             title: l10n.b2bProfileLegalDocs,
-                            onTap: () => _showDocumentsSheet(context),
+                            onTap: () {
+                              context.pushNamed('manage_legality_documents');
+                            },
                           ),
                           _buildDivider(),
                           _buildMenuItem(
@@ -346,151 +348,6 @@ class _B2BProfilePageState extends State<B2BProfilePage> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  void _showDocumentsSheet(BuildContext context) {
-    final profileCubit = context.read<ProfileCubit>();
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppTheme.background,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (sheetContext) => BlocProvider.value(
-        value: profileCubit,
-        child: DraggableScrollableSheet(
-          initialChildSize: 0.7,
-          maxChildSize: 0.9,
-          minChildSize: 0.5,
-          expand: false,
-          builder: (context, scrollController) => Column(
-            children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Dokumen Legalitas',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: BlocBuilder<ProfileCubit, ProfileState>(
-                  builder: (context, state) {
-                    if (state is ProfileLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (state is ProfileLoaded) {
-                      if (state.documents.isEmpty) {
-                        return const Center(
-                          child: Text(
-                            'Belum ada dokumen terunggah',
-                            style: TextStyle(color: Colors.white54),
-                          ),
-                        );
-                      }
-                      return ListView.builder(
-                        controller: scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        itemCount: state.documents.length,
-                        itemBuilder: (context, index) {
-                          final doc = state.documents[index];
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: AppTheme.surfaceColor,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.05),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.primaryColor.withValues(
-                                      alpha: 0.1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.description,
-                                    color: AppTheme.primaryColor,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        doc.docName,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        doc.docType.replaceAll('_', ' '),
-                                        style: const TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: doc.verified
-                                        ? Colors.green.withValues(alpha: 0.1)
-                                        : Colors.orange.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    doc.verified ? 'Verified' : 'Pending',
-                                    style: TextStyle(
-                                      color: doc.verified
-                                          ? Colors.green
-                                          : Colors.orange,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

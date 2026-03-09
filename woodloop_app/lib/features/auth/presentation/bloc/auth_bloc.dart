@@ -45,11 +45,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await _authRepository.logout();
           emit(AuthUnverifiedEmail(user.email));
           emit(Unauthenticated());
-        } else if (!user.isAdminVerified) {
-          await _authRepository.logout();
-          emit(const AuthAdminUnverified());
-          emit(Unauthenticated());
         } else {
+          // Both verified and unverified admin users are allowed to "authenticate".
+          // The router will intercept those without isAdminVerified.
           emit(Authenticated(user));
         }
       } else {
@@ -76,31 +74,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await _authRepository.logout();
         emit(AuthUnverifiedEmail(event.email));
         emit(Unauthenticated());
-      } else if (!user.isAdminVerified) {
-        debugPrint('[AuthBloc] Blocking: admin not verified');
-        await _authRepository.logout();
-        emit(const AuthAdminUnverified());
-        emit(Unauthenticated());
       } else {
-        // Document Verification Check
-        final rolesRequiringDocs = [
-          'supplier',
-          'generator',
-          'aggregator',
-          'converter',
-        ];
-        if (rolesRequiringDocs.contains(user.role)) {
-          final docs = await _authRepository.fetchUserDocuments(user.id);
-          final hasUnverifiedDocs = docs.any((doc) => !doc.verified);
-
-          if (hasUnverifiedDocs || docs.isEmpty) {
-            debugPrint('[AuthBloc] Blocking: documents unverified or empty');
-            await _authRepository.logout();
-            emit(AuthDocumentsUnverified(docs));
-            emit(Unauthenticated());
-            return;
-          }
-        }
+        // Document Verification Check - only for roles that need them
+        // NOTE: We no longer block login for missing/unverified documents here.
+        // GoRouter will redirect users with !user.isAdminVerified to the RegistrationStatusPage,
+        // where they can upload/fix their documents.
+        // The check below is kept only if you explicitly want to emit `AuthDocumentsUnverified`
+        // before they get to the RegistrationStatusPage, but since we want them to use the app's
+        // document manager, we should just let them authenticate.
 
         debugPrint('[AuthBloc] Emitting Authenticated');
         emit(Authenticated(user));

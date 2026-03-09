@@ -16,5 +16,9 @@ abstract class AuthRepository {
     required String docType,
   });
   Future<List<UserDocument>> fetchUserDocuments(String userId);
+  Future<void> updateUserDocumentFile({
+    required String docId,
+    required String filePath,
+  });
   Future<User> updateProfileAvatar(String userId, String filePath);
 }
