@@ -269,8 +269,8 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                               badge1Text: 'SVLK',
                               badge1Icon: Icons.verified,
                               badge2Text: 'Grade A',
-                              thickness: '40',
-                              width: '40',
+                              shape: 'log',
+                              diameter: '40',
                               process: 'Raw',
                               volumeLeft: '45 m³ Left',
                               volumePercent: 0.75,
@@ -288,6 +288,7 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                               badge1Text: 'FSC 100%',
                               badge1Icon: Icons.eco,
                               badge2Text: 'Kiln Dried',
+                              shape: 'sawn',
                               thickness: '5',
                               width: '20',
                               process: 'KD',
@@ -469,8 +470,10 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
     required String badge1Text,
     required IconData badge1Icon,
     required String badge2Text,
-    required String thickness,
-    required String width,
+    required String shape,
+    String? diameter,
+    String? thickness,
+    String? width,
     required String process,
     required String volumeLeft,
     required double volumePercent,
@@ -674,7 +677,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.supplierMarketSpecThick,
+                              shape == 'log'
+                                  ? l10n.supplierListTimberDimDiameter
+                                  : l10n.supplierMarketSpecThick,
                               style: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 10,
@@ -688,7 +693,9 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                               textBaseline: TextBaseline.alphabetic,
                               children: [
                                 Text(
-                                  thickness,
+                                  shape == 'log'
+                                      ? (diameter ?? '-')
+                                      : (thickness ?? '-'),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
@@ -712,52 +719,55 @@ class _RawTimberMarketplacePageState extends State<RawTimberMarketplacePage> {
                         height: 24,
                         color: Colors.white.withValues(alpha: 0.1),
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                l10n.supplierMarketSpecWidth,
-                                style: const TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5,
+                      if (shape == 'sawn') ...[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.supplierMarketSpecWidth,
+                                  style: const TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 2),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  Text(
-                                    width,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
+                                const SizedBox(height: 2),
+                                Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Text(
+                                      width ?? '-',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  ),
-                                  const Text(
-                                    ' cm',
-                                    style: TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 10,
+                                    const Text(
+                                      ' cm',
+                                      style: TextStyle(
+                                        color: Colors.white54,
+                                        fontSize: 10,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        width: 1,
-                        height: 24,
-                        color: Colors.white.withValues(alpha: 0.1),
-                      ),
+                        Container(
+                          width: 1,
+                          height: 24,
+                          color: Colors.white.withValues(alpha: 0.1),
+                        ),
+                      ],
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 12.0),

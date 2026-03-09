@@ -47,7 +47,15 @@ async function migrateRawTimberListings() {
 
     // Add remaining fields after relations
     fields.push(
+        {
+            name: 'shape',
+            type: 'select',
+            required: true,
+            values: ['log', 'sawn']
+        },
         { name: 'diameter', type: 'number', required: false },
+        { name: 'width', type: 'number', required: false },
+        { name: 'height', type: 'number', required: false },
         { name: 'length', type: 'number', required: false },
         { name: 'volume', type: 'number', required: true },
         { name: 'price', type: 'number', required: true },
@@ -63,7 +71,7 @@ async function migrateRawTimberListings() {
             name: 'status',
             type: 'select',
             required: false,
-            values: ['available', 'sold']
+            values: ['draft', 'published', 'available', 'sold']
         },
     );
 

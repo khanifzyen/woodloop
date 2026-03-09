@@ -4,6 +4,11 @@ class RawTimberListing extends Equatable {
   final String id;
   final String supplierId;
   final String woodTypeName;
+  final String shape; // log, sawn
+  final double? diameter;
+  final double? width;
+  final double? height;
+  final double? length;
   final double volume;
   final double price;
   final String unit; // m3, batang, ton
@@ -14,6 +19,11 @@ class RawTimberListing extends Equatable {
     required this.id,
     required this.supplierId,
     required this.woodTypeName,
+    required this.shape,
+    this.diameter,
+    this.width,
+    this.height,
+    this.length,
     required this.volume,
     required this.price,
     required this.unit,
@@ -29,6 +39,11 @@ class RawTimberListing extends Equatable {
     id,
     supplierId,
     woodTypeName,
+    shape,
+    diameter,
+    width,
+    height,
+    length,
     volume,
     price,
     unit,

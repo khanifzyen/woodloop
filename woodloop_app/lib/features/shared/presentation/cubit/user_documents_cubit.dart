@@ -37,4 +37,24 @@ class UserDocumentsCubit extends Cubit<UserDocumentsState> {
       emit(UserDocumentsError(e.toString()));
     }
   }
+
+  Future<void> addDocument({
+    required String filePath,
+    required String docType,
+    required String userId,
+  }) async {
+    emit(UserDocumentsUploading());
+    try {
+      await _repository.uploadUserDocuments(
+        userId: userId,
+        filePaths: [filePath],
+        docType: docType,
+      );
+      emit(UserDocumentsUploadSuccess());
+      // Re-fetch documents to update UI
+      await fetchDocuments(userId);
+    } catch (e) {
+      emit(UserDocumentsError(e.toString()));
+    }
+  }
 }

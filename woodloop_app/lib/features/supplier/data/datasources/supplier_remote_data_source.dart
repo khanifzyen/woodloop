@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:pocketbase/pocketbase.dart';
 import '../../domain/entities/raw_timber_listing.dart';
@@ -10,6 +12,21 @@ abstract class SupplierRemoteDataSource {
     String supplierName,
     String workshopName,
   );
+
+  Future<RawTimberListing> createListing({
+    required String supplierId,
+    required String shape,
+    double? diameter,
+    double? thickness,
+    double? width,
+    double? length,
+    required double volume,
+    required double price,
+    required String unit,
+    required String status, // 'draft' or 'published'
+    required List<File> photos,
+    File? legalityDoc,
+  });
 }
 
 @LazySingleton(as: SupplierRemoteDataSource)
@@ -72,5 +89,47 @@ class SupplierRemoteDataSourceImpl implements SupplierRemoteDataSource {
       activeListings: activeListings,
       recentSales: recentSales,
     );
+  }
+
+  @override
+  Future<RawTimberListing> createListing({
+    required String supplierId,
+    required String shape,
+    double? diameter,
+    double? thickness,
+    double? width,
+    double? length,
+    required double volume,
+    required double price,
+    required String unit,
+    required String status,
+    required List<File> photos,
+    File? legalityDoc,
+  }) async {
+    final body = <String, dynamic>{
+      'supplier': supplierId,
+      'shape': shape,
+      'diameter': diameter,
+      'height': thickness, // maps to `height` in DB
+      'width': width,
+      'length': length,
+      'volume': volume,
+      'price': price,
+      'unit': unit,
+      'status': status,
+    };
+
+    final files = <http.MultipartFile>[
+      for (final f in photos)
+        await http.MultipartFile.fromPath('photos', f.path),
+      if (legalityDoc != null)
+        await http.MultipartFile.fromPath('legality_doc', legalityDoc.path),
+    ];
+
+    final record = await pb
+        .collection('raw_timber_listings')
+        .create(body: body, files: files);
+
+    return RawTimberListingModel.fromRecord(record);
   }
 }

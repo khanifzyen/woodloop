@@ -908,6 +908,30 @@ abstract class AppLocalizations {
   /// **'Tap to add photos of log ends and bark texture'**
   String get supplierListTimberCaptureSubtitle;
 
+  /// No description provided for @supplierListTimberPhotoCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get supplierListTimberPhotoCamera;
+
+  /// No description provided for @supplierListTimberPhotoGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get supplierListTimberPhotoGallery;
+
+  /// No description provided for @supplierListTimberPhotoReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get supplierListTimberPhotoReplace;
+
+  /// No description provided for @supplierListTimberPhotoDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get supplierListTimberPhotoDelete;
+
   /// No description provided for @supplierListTimberSpecsTitle.
   ///
   /// In en, this message translates to:
@@ -962,6 +986,24 @@ abstract class AppLocalizations {
   /// **'Quality Grade'**
   String get supplierListTimberSpecsGrade;
 
+  /// No description provided for @supplierListTimberShape.
+  ///
+  /// In en, this message translates to:
+  /// **'Timber Shape'**
+  String get supplierListTimberShape;
+
+  /// No description provided for @supplierListTimberShapeLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Log (Round)'**
+  String get supplierListTimberShapeLog;
+
+  /// No description provided for @supplierListTimberShapeSawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sawn (Square)'**
+  String get supplierListTimberShapeSawn;
+
   /// No description provided for @supplierListTimberDimTitle.
   ///
   /// In en, this message translates to:
@@ -973,6 +1015,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Diameter (cm)'**
   String get supplierListTimberDimDiameter;
+
+  /// No description provided for @supplierListTimberDimThickness.
+  ///
+  /// In en, this message translates to:
+  /// **'Thickness (cm)'**
+  String get supplierListTimberDimThickness;
+
+  /// No description provided for @supplierListTimberDimWidth.
+  ///
+  /// In en, this message translates to:
+  /// **'Width (cm)'**
+  String get supplierListTimberDimWidth;
 
   /// No description provided for @supplierListTimberDimLength.
   ///
@@ -1027,6 +1081,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Upload PDF / Image'**
   String get supplierListTimberCompUpload;
+
+  /// No description provided for @supplierListTimberCompChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Document'**
+  String get supplierListTimberCompChange;
+
+  /// No description provided for @supplierListTimberSaveDraftBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Draft'**
+  String get supplierListTimberSaveDraftBtn;
 
   /// No description provided for @supplierListTimberPublishBtn.
   ///

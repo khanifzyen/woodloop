@@ -6,6 +6,11 @@ class RawTimberListingModel extends RawTimberListing {
     required super.id,
     required super.supplierId,
     required super.woodTypeName,
+    required super.shape,
+    super.diameter,
+    super.width,
+    super.height,
+    super.length,
     required super.volume,
     required super.price,
     required super.unit,
@@ -24,6 +29,21 @@ class RawTimberListingModel extends RawTimberListing {
       id: record.id,
       supplierId: record.getStringValue('supplier'),
       woodTypeName: woodTypeName,
+      shape: record.getStringValue('shape').isNotEmpty
+          ? record.getStringValue('shape')
+          : 'log',
+      diameter: record.getDoubleValue('diameter') == 0
+          ? null
+          : record.getDoubleValue('diameter'),
+      width: record.getDoubleValue('width') == 0
+          ? null
+          : record.getDoubleValue('width'),
+      height: record.getDoubleValue('height') == 0
+          ? null
+          : record.getDoubleValue('height'),
+      length: record.getDoubleValue('length') == 0
+          ? null
+          : record.getDoubleValue('length'),
       volume: record.getDoubleValue('volume'),
       price: record.getDoubleValue('price'),
       unit: record.getStringValue('unit').isEmpty

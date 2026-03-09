@@ -424,6 +424,18 @@ class AppLocalizationsId extends AppLocalizations {
       'Ketuk untuk menambahkan foto ujung kayu dan tekstur kulit kayu';
 
   @override
+  String get supplierListTimberPhotoCamera => 'Ambil Foto';
+
+  @override
+  String get supplierListTimberPhotoGallery => 'Pilih dari Galeri';
+
+  @override
+  String get supplierListTimberPhotoReplace => 'Ganti';
+
+  @override
+  String get supplierListTimberPhotoDelete => 'Hapus';
+
+  @override
   String get supplierListTimberSpecsTitle => 'Spesifikasi';
 
   @override
@@ -452,10 +464,25 @@ class AppLocalizationsId extends AppLocalizations {
   String get supplierListTimberSpecsGrade => 'Kelas Kualitas';
 
   @override
+  String get supplierListTimberShape => 'Bentuk Kayu';
+
+  @override
+  String get supplierListTimberShapeLog => 'Log (Gelondongan)';
+
+  @override
+  String get supplierListTimberShapeSawn => 'Sawn (Gergajian/Potongan)';
+
+  @override
   String get supplierListTimberDimTitle => 'Dimensi';
 
   @override
   String get supplierListTimberDimDiameter => 'Diameter (cm)';
+
+  @override
+  String get supplierListTimberDimThickness => 'Tebal (cm)';
+
+  @override
+  String get supplierListTimberDimWidth => 'Lebar (cm)';
 
   @override
   String get supplierListTimberDimLength => 'Panjang (m)';
@@ -484,6 +511,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get supplierListTimberCompUpload => 'Unggah PDF / Gambar';
+
+  @override
+  String get supplierListTimberCompChange => 'Ganti Dokumen';
+
+  @override
+  String get supplierListTimberSaveDraftBtn => 'Simpan Draft';
 
   @override
   String get supplierListTimberPublishBtn => 'Terbitkan ke Pasar';

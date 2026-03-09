@@ -424,6 +424,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap to add photos of log ends and bark texture';
 
   @override
+  String get supplierListTimberPhotoCamera => 'Take Photo';
+
+  @override
+  String get supplierListTimberPhotoGallery => 'Choose from Gallery';
+
+  @override
+  String get supplierListTimberPhotoReplace => 'Replace';
+
+  @override
+  String get supplierListTimberPhotoDelete => 'Delete';
+
+  @override
   String get supplierListTimberSpecsTitle => 'Specifications';
 
   @override
@@ -451,10 +463,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supplierListTimberSpecsGrade => 'Quality Grade';
 
   @override
+  String get supplierListTimberShape => 'Timber Shape';
+
+  @override
+  String get supplierListTimberShapeLog => 'Log (Round)';
+
+  @override
+  String get supplierListTimberShapeSawn => 'Sawn (Square)';
+
+  @override
   String get supplierListTimberDimTitle => 'Dimensions';
 
   @override
   String get supplierListTimberDimDiameter => 'Diameter (cm)';
+
+  @override
+  String get supplierListTimberDimThickness => 'Thickness (cm)';
+
+  @override
+  String get supplierListTimberDimWidth => 'Width (cm)';
 
   @override
   String get supplierListTimberDimLength => 'Length (m)';
@@ -483,6 +510,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supplierListTimberCompUpload => 'Upload PDF / Image';
+
+  @override
+  String get supplierListTimberCompChange => 'Change Document';
+
+  @override
+  String get supplierListTimberSaveDraftBtn => 'Save Draft';
 
   @override
   String get supplierListTimberPublishBtn => 'Publish to Marketplace';
