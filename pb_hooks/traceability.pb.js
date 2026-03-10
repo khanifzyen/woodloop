@@ -7,21 +7,22 @@
  * This file contains business logic for automated operations related to Traceability and Tracking IDs.
  */
 
-// Helper to generate random alphanumeric string (A-Z, 2-9) avoiding 0, O, 1, I
-function generateRandomString(length) {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-}
 
 // ==========================================
 // 1. USERS HOOKS
 // ==========================================
 
-onRecordBeforeCreateRequest((e) => {
+onRecordCreateRequest((e) => {
+    // Helper to generate random alphanumeric string
+    var generateRandomString = function (length) {
+        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        var result = '';
+        for (var i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    };
+
     // Hook: Generate user_code for new users if not provided
     let userCode = e.record.get("user_code");
 
@@ -41,6 +42,8 @@ onRecordBeforeCreateRequest((e) => {
         userCode = `${prefix}${generateRandomString(3)}`;
         e.record.set("user_code", userCode);
     }
+
+    return e.next();
 }, "users");
 
 
@@ -48,7 +51,17 @@ onRecordBeforeCreateRequest((e) => {
 // 2. RAW TIMBER LISTINGS HOOKS
 // ==========================================
 
-onRecordBeforeCreateRequest((e) => {
+onRecordCreateRequest((e) => {
+    // Helper to generate random alphanumeric string
+    var generateRandomString = function (length) {
+        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        var result = '';
+        for (var i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    };
+
     // Hook: Auto-generate tracking_id for raw timber
     try {
         let trackingId = e.record.get("tracking_id");
@@ -94,4 +107,6 @@ onRecordBeforeCreateRequest((e) => {
     } catch (err) {
         console.error("Error generating tracking_id for raw timber:", err);
     }
+
+    return e.next();
 }, "raw_timber_listings");

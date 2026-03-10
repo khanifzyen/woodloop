@@ -11,7 +11,10 @@
 // 1. PICKUPS HOOKS
 // ==========================================
 
-onRecordAfterCreateRequest((e) => {
+onRecordCreateRequest((e) => {
+    let err = e.next();
+    if (err) return err;
+
     // Hook: When a pickup is created, set the waste_listing status to 'booked'
     const wasteListingId = e.record.get("waste_listing");
     if (wasteListingId) {
@@ -23,10 +26,14 @@ onRecordAfterCreateRequest((e) => {
             console.error("Error updating waste_listing status to booked:", err);
         }
     }
+    return null;
 }, "pickups");
 
 
-onRecordAfterUpdateRequest((e) => {
+onRecordUpdateRequest((e) => {
+    let err = e.next();
+    if (err) return err;
+
     // Hook: When a pickup is updated to 'completed'
     const status = e.record.get("status");
     // Check if status changed to 'completed' vs just an unrelated update
@@ -99,6 +106,7 @@ onRecordAfterUpdateRequest((e) => {
             }
         }
     }
+    return null;
 }, "pickups");
 
 
@@ -106,7 +114,10 @@ onRecordAfterUpdateRequest((e) => {
 // 2. MARKETPLACE TRANSACTIONS HOOKS
 // ==========================================
 
-onRecordAfterUpdateRequest((e) => {
+onRecordUpdateRequest((e) => {
+    let err = e.next();
+    if (err) return err;
+
     // Hook: When a marketplace transaction is paid -> update inventory & wallets
     const status = e.record.get("status");
 
@@ -152,6 +163,7 @@ onRecordAfterUpdateRequest((e) => {
             console.error("Error processing paid marketplace transaction:", err);
         }
     }
+    return null;
 }, "marketplace_transactions");
 
 
@@ -159,7 +171,10 @@ onRecordAfterUpdateRequest((e) => {
 // 3. ORDERS HOOKS
 // ==========================================
 
-onRecordAfterUpdateRequest((e) => {
+onRecordUpdateRequest((e) => {
+    let err = e.next();
+    if (err) return err;
+
     // Hook: When an order is paid -> update product stock & notify converter
     const status = e.record.get("status");
 
@@ -196,6 +211,7 @@ onRecordAfterUpdateRequest((e) => {
             console.error("Error processing paid order:", err);
         }
     }
+    return null;
 }, "orders");
 
 
@@ -203,7 +219,10 @@ onRecordAfterUpdateRequest((e) => {
 // 4. BIDS HOOKS
 // ==========================================
 
-onRecordAfterUpdateRequest((e) => {
+onRecordUpdateRequest((e) => {
+    let err = e.next();
+    if (err) return err;
+
     // Hook: When a bid is accepted -> auto-create pickup, set waste booked, reject other bids
     const status = e.record.get("status");
 
@@ -263,4 +282,5 @@ onRecordAfterUpdateRequest((e) => {
             console.error("Error processing accepted bid:", err);
         }
     }
+    return null;
 }, "bids");
