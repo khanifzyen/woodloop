@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import '../presentation/scaffold_with_nav_bar.dart';
+import '../theme/app_theme.dart';
 
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
@@ -16,8 +17,10 @@ import '../../features/shared/presentation/pages/manage_legality_documents_page.
 
 import '../../features/supplier/presentation/pages/supplier_dashboard_page.dart';
 import '../../features/supplier/presentation/pages/list_raw_timber_form_page.dart';
+import '../../features/supplier/presentation/pages/my_timber_inventory_page.dart';
 import '../../features/supplier/presentation/pages/supplier_sales_history_page.dart';
 import '../../features/supplier/presentation/pages/raw_timber_marketplace_page.dart';
+import '../../features/supplier/domain/entities/raw_timber_listing.dart';
 
 import '../../features/generator/presentation/pages/generator_dashboard_page.dart';
 import '../../features/generator/presentation/pages/report_wood_waste_form_page.dart';
@@ -201,6 +204,14 @@ class AppRouter {
         name: 'manage_legality_documents',
         builder: (context, state) => const ManageLegalityDocumentsPage(),
       ),
+      GoRoute(
+        path: '/supplier-input',
+        name: 'supplier_input',
+        builder: (context, state) {
+          final listing = state.extra as RawTimberListing?;
+          return ListRawTimberFormPage(initialListing: listing);
+        },
+      ),
 
       // ══════════════════════════════════════
       // ── SUPPLIER Shell (Bottom Nav) ──
@@ -208,11 +219,24 @@ class AppRouter {
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => ScaffoldWithNavBar(
           navigationShell: navigationShell,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => context.pushNamed('supplier_input'),
+            backgroundColor: AppTheme.primaryColor,
+            foregroundColor: Colors.white,
+            elevation: 2,
+            shape: const CircleBorder(),
+            child: const Icon(Icons.add_rounded, size: 32),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           destinations: const [
             NavDestination(icon: Icons.dashboard_outlined, label: 'Home'),
-            NavDestination(icon: Icons.add_box_outlined, label: 'Input'),
-            NavDestination(icon: Icons.storefront_outlined, label: 'Market'),
-            NavDestination(icon: Icons.person_outline, label: 'Profile'),
+            NavDestination(icon: Icons.storefront_outlined, label: 'Katalog'),
+            NavDestination(
+              icon: Icons.inventory_2_outlined,
+              label: 'Inventaris',
+            ),
+            NavDestination(icon: Icons.person_outline, label: 'Profil'),
           ],
         ),
         branches: [
@@ -237,18 +261,19 @@ class AppRouter {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/supplier-input',
-                name: 'supplier_input',
-                builder: (context, state) => const ListRawTimberFormPage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
                 path: '/supplier-market',
                 name: 'supplier_market',
                 builder: (context, state) => const RawTimberMarketplacePage(),
+              ),
+            ],
+          ),
+
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/supplier-inventory',
+                name: 'supplier_inventory',
+                builder: (context, state) => const MyTimberInventoryPage(),
               ),
             ],
           ),

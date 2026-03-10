@@ -73,6 +73,7 @@ async function migrateRawTimberListings() {
             required: false,
             values: ['draft', 'published', 'available', 'sold']
         },
+        { name: 'tracking_id', type: 'text', required: false },
     );
 
     await upsertCollection(pb, {
@@ -87,6 +88,7 @@ async function migrateRawTimberListings() {
         indexes: [
             'CREATE INDEX idx_raw_timber_supplier ON raw_timber_listings (supplier)',
             'CREATE INDEX idx_raw_timber_status ON raw_timber_listings (status)',
+            'CREATE UNIQUE INDEX idx_raw_timber_tracking_id ON raw_timber_listings (tracking_id)',
         ],
     });
 

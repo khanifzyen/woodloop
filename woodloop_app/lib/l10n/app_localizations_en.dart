@@ -493,7 +493,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supplierListTimberFinTitle => 'Financials';
 
   @override
-  String get supplierListTimberFinPrice => 'Price per m³';
+  String get supplierListTimberFinPrice => 'Price';
 
   @override
   String get supplierListTimberFinTotalApprox =>
@@ -573,6 +573,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supplierMarketNavProfile => 'Profile';
+
+  @override
+  String get supplierInvTitle => 'Timber Inventory';
+
+  @override
+  String get supplierInvFilterAll => 'All';
+
+  @override
+  String get supplierInvFilterAvailable => 'Available';
+
+  @override
+  String get supplierInvFilterDraft => 'Draft';
+
+  @override
+  String get supplierInvFilterSold => 'Sold';
+
+  @override
+  String get supplierInvEmptyState => 'No timber data yet.';
+
+  @override
+  String get supplierInvActionEdit => 'Edit';
+
+  @override
+  String get supplierInvActionDelete => 'Delete';
+
+  @override
+  String get supplierInvDeleteDialogTitle => 'Delete Timber?';
+
+  @override
+  String get supplierInvDeleteDialogContent =>
+      'Are you sure you want to delete this timber data? This action cannot be undone.';
+
+  @override
+  String get supplierInvDeleteDialogCancel => 'Cancel';
+
+  @override
+  String get supplierInvDeleteDialogConfirm => 'Delete';
 
   @override
   String supplierMarketSupplierPrefix(String supplier) {

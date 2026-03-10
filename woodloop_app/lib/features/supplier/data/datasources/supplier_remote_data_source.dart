@@ -15,6 +15,7 @@ abstract class SupplierRemoteDataSource {
 
   Future<RawTimberListing> createListing({
     required String supplierId,
+    required String woodTypeId,
     required String shape,
     double? diameter,
     double? thickness,
@@ -27,6 +28,19 @@ abstract class SupplierRemoteDataSource {
     required List<File> photos,
     File? legalityDoc,
   });
+
+  Future<List<RawTimberListing>> getListingsBySupplier(String supplierId);
+
+  Future<void> updateListing(
+    String id,
+    Map<String, dynamic> body, {
+    List<File>? newPhotos,
+    File? newLegalityDoc,
+  });
+
+  Future<void> deleteListing(String listingId);
+
+  Future<List<Map<String, dynamic>>> getWoodTypes();
 }
 
 @LazySingleton(as: SupplierRemoteDataSource)
@@ -94,6 +108,7 @@ class SupplierRemoteDataSourceImpl implements SupplierRemoteDataSource {
   @override
   Future<RawTimberListing> createListing({
     required String supplierId,
+    required String woodTypeId,
     required String shape,
     double? diameter,
     double? thickness,
@@ -108,6 +123,7 @@ class SupplierRemoteDataSourceImpl implements SupplierRemoteDataSource {
   }) async {
     final body = <String, dynamic>{
       'supplier': supplierId,
+      'wood_type': woodTypeId,
       'shape': shape,
       'diameter': diameter,
       'height': thickness, // maps to `height` in DB
@@ -131,5 +147,64 @@ class SupplierRemoteDataSourceImpl implements SupplierRemoteDataSource {
         .create(body: body, files: files);
 
     return RawTimberListingModel.fromRecord(record);
+  }
+
+  @override
+  Future<List<RawTimberListing>> getListingsBySupplier(
+    String supplierId,
+  ) async {
+    final result = await pb
+        .collection('raw_timber_listings')
+        .getList(
+          page: 1,
+          perPage: 500,
+          filter: 'supplier = "$supplierId"',
+          expand: 'wood_type',
+          sort: '-updated',
+        );
+
+    return result.items
+        .map((r) => RawTimberListingModel.fromRecord(r))
+        .toList();
+  }
+
+  @override
+  Future<void> deleteListing(String listingId) async {
+    await pb.collection('raw_timber_listings').delete(listingId);
+  }
+
+  @override
+  Future<void> updateListing(
+    String id,
+    Map<String, dynamic> body, {
+    List<File>? newPhotos,
+    File? newLegalityDoc,
+  }) async {
+    final authRecord = pb.authStore.record;
+    if (authRecord == null) {
+      throw Exception('User is not authenticated');
+    }
+
+    final files = <http.MultipartFile>[];
+    if (newPhotos != null) {
+      for (final f in newPhotos) {
+        files.add(await http.MultipartFile.fromPath('photos', f.path));
+      }
+    }
+    if (newLegalityDoc != null) {
+      files.add(
+        await http.MultipartFile.fromPath('legality_doc', newLegalityDoc.path),
+      );
+    }
+
+    await pb
+        .collection('raw_timber_listings')
+        .update(id, body: body, files: files);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getWoodTypes() async {
+    final result = await pb.collection('wood_types').getFullList(sort: 'name');
+    return result.map((r) => r.toJson()).toList();
   }
 }

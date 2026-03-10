@@ -169,50 +169,6 @@ class _SupplierDashboardView extends StatelessWidget {
                   ),
                   const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
-                  // ── Primary Action ──
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: () => context.pushNamed('list_raw_timber'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            elevation: 8,
-                            shadowColor: AppTheme.primaryColor.withValues(
-                              alpha: 0.3,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.add,
-                                color: AppTheme.background,
-                                size: 24,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                l10n.supplierDashListNewTimber,
-                                style: const TextStyle(
-                                  color: AppTheme.background,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
-
                   // ── Recent Sales Header ──
                   SliverToBoxAdapter(
                     child: Padding(

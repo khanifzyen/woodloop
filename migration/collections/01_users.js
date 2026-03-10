@@ -41,6 +41,7 @@ async function migrateUsers() {
         { name: 'location_lat', type: 'number', required: false, min: -90, max: 90 },
         { name: 'location_lng', type: 'number', required: false, min: -180, max: 180 },
         { name: 'phone', type: 'text', required: false },
+        { name: 'user_code', type: 'text', required: false },
         { name: 'is_verified', type: 'bool', required: false },
         { name: 'bio', type: 'text', required: false },
         { name: 'production_capacity', type: 'text', required: false },

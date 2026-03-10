@@ -5,6 +5,7 @@ class RawTimberListingModel extends RawTimberListing {
   const RawTimberListingModel({
     required super.id,
     required super.supplierId,
+    required super.woodTypeId,
     required super.woodTypeName,
     required super.shape,
     super.diameter,
@@ -15,19 +16,37 @@ class RawTimberListingModel extends RawTimberListing {
     required super.price,
     required super.unit,
     required super.status,
+    super.photos,
+    super.legalityDoc,
+    super.trackingId,
     required super.updatedAt,
   });
 
   factory RawTimberListingModel.fromRecord(RecordModel record) {
-    // wood_type is expanded — use new get<T> API
-    final woodTypeList = record.get<List<RecordModel>>('expand.wood_type');
-    final woodTypeName = woodTypeList.isNotEmpty
-        ? woodTypeList.first.get<String>('name')
-        : record.getStringValue('wood_type'); // fallback to raw id
+    // Safely extract wood_type name using modern PocketBase get<T>
+    String woodTypeName = record.getStringValue(
+      'wood_type',
+    ); // fallback to raw id
+
+    try {
+      final woodTypeRecord = record.get<RecordModel?>('expand.wood_type');
+      if (woodTypeRecord != null) {
+        woodTypeName = woodTypeRecord.getStringValue('name');
+      }
+    } catch (_) {
+      // In case it's somehow returned as a List despite maxSelect: 1
+      try {
+        final woodTypeList = record.get<List<RecordModel>>('expand.wood_type');
+        if (woodTypeList.isNotEmpty) {
+          woodTypeName = woodTypeList.first.getStringValue('name');
+        }
+      } catch (_) {}
+    }
 
     return RawTimberListingModel(
       id: record.id,
       supplierId: record.getStringValue('supplier'),
+      woodTypeId: record.getStringValue('wood_type'),
       woodTypeName: woodTypeName,
       shape: record.getStringValue('shape').isNotEmpty
           ? record.getStringValue('shape')
@@ -46,14 +65,21 @@ class RawTimberListingModel extends RawTimberListing {
           : record.getDoubleValue('length'),
       volume: record.getDoubleValue('volume'),
       price: record.getDoubleValue('price'),
-      unit: record.getStringValue('unit').isEmpty
-          ? 'm3'
-          : record.getStringValue('unit'),
-      status: record.getStringValue('status').isEmpty
-          ? 'available'
-          : record.getStringValue('status'),
+      unit: record.getStringValue('unit').isNotEmpty
+          ? record.getStringValue('unit')
+          : 'm3',
+      status: record.getStringValue('status').isNotEmpty
+          ? record.getStringValue('status')
+          : 'draft',
+      photos: record.getListValue<String>('photos'),
+      legalityDoc: record.getStringValue('legality_doc').isNotEmpty
+          ? record.getStringValue('legality_doc')
+          : null,
+      trackingId: record.getStringValue('tracking_id').isNotEmpty
+          ? record.getStringValue('tracking_id')
+          : null,
       updatedAt:
-          DateTime.tryParse(record.get<String>('updated')) ?? DateTime.now(),
+          DateTime.tryParse(record.getStringValue('updated')) ?? DateTime.now(),
     );
   }
 }

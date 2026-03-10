@@ -494,7 +494,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get supplierListTimberFinTitle => 'Keuangan';
 
   @override
-  String get supplierListTimberFinPrice => 'Harga per m³';
+  String get supplierListTimberFinPrice => 'Harga';
 
   @override
   String get supplierListTimberFinTotalApprox =>
@@ -574,6 +574,43 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get supplierMarketNavProfile => 'Profil';
+
+  @override
+  String get supplierInvTitle => 'Inventaris Kayu';
+
+  @override
+  String get supplierInvFilterAll => 'Semua';
+
+  @override
+  String get supplierInvFilterAvailable => 'Tersedia';
+
+  @override
+  String get supplierInvFilterDraft => 'Draft';
+
+  @override
+  String get supplierInvFilterSold => 'Terjual';
+
+  @override
+  String get supplierInvEmptyState => 'Belum ada data kayu.';
+
+  @override
+  String get supplierInvActionEdit => 'Edit';
+
+  @override
+  String get supplierInvActionDelete => 'Hapus';
+
+  @override
+  String get supplierInvDeleteDialogTitle => 'Hapus Kayu?';
+
+  @override
+  String get supplierInvDeleteDialogContent =>
+      'Apakah Anda yakin ingin menghapus data kayu ini? Tindakan ini tidak dapat dibatalkan.';
+
+  @override
+  String get supplierInvDeleteDialogCancel => 'Batal';
+
+  @override
+  String get supplierInvDeleteDialogConfirm => 'Hapus';
 
   @override
   String supplierMarketSupplierPrefix(String supplier) {

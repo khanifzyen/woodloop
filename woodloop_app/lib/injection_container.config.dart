@@ -93,6 +93,9 @@ import 'features/supplier/domain/repositories/supplier_repository.dart'
     as _i563;
 import 'features/supplier/presentation/bloc/supplier_dashboard_cubit.dart'
     as _i874;
+import 'features/supplier/presentation/bloc/supplier_inventory_cubit.dart'
+    as _i429;
+import 'features/supplier/presentation/bloc/wood_types_cubit.dart' as _i958;
 import 'features/traceability/data/datasources/traceability_remote_datasource.dart'
     as _i541;
 import 'features/traceability/data/repositories/traceability_repository_impl.dart'
@@ -231,6 +234,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i525.WalletRepository>(
       () => _i427.WalletRepositoryImpl(gh<_i231.WalletRemoteDataSource>()),
+    );
+    gh.factory<_i429.SupplierInventoryCubit>(
+      () => _i429.SupplierInventoryCubit(gh<_i563.SupplierRepository>()),
+    );
+    gh.factory<_i958.WoodTypesCubit>(
+      () => _i958.WoodTypesCubit(gh<_i563.SupplierRepository>()),
     );
     gh.factory<_i251.MarketplaceBloc>(
       () => _i251.MarketplaceBloc(gh<_i114.MarketplaceRepository>()),

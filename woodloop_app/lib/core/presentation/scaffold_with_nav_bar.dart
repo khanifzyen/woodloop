@@ -9,16 +9,22 @@ class ScaffoldWithNavBar extends StatelessWidget {
     super.key,
     required this.navigationShell,
     required this.destinations,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
   });
 
   final StatefulNavigationShell navigationShell;
   final List<NavDestination> destinations;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: navigationShell,
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppTheme.surfaceColor,

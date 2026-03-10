@@ -1049,7 +1049,7 @@ abstract class AppLocalizations {
   /// No description provided for @supplierListTimberFinPrice.
   ///
   /// In en, this message translates to:
-  /// **'Price per m³'**
+  /// **'Price'**
   String get supplierListTimberFinPrice;
 
   /// No description provided for @supplierListTimberFinTotalApprox.
@@ -1201,6 +1201,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profile'**
   String get supplierMarketNavProfile;
+
+  /// No description provided for @supplierInvTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Timber Inventory'**
+  String get supplierInvTitle;
+
+  /// No description provided for @supplierInvFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get supplierInvFilterAll;
+
+  /// No description provided for @supplierInvFilterAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get supplierInvFilterAvailable;
+
+  /// No description provided for @supplierInvFilterDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get supplierInvFilterDraft;
+
+  /// No description provided for @supplierInvFilterSold.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get supplierInvFilterSold;
+
+  /// No description provided for @supplierInvEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'No timber data yet.'**
+  String get supplierInvEmptyState;
+
+  /// No description provided for @supplierInvActionEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get supplierInvActionEdit;
+
+  /// No description provided for @supplierInvActionDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get supplierInvActionDelete;
+
+  /// No description provided for @supplierInvDeleteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Timber?'**
+  String get supplierInvDeleteDialogTitle;
+
+  /// No description provided for @supplierInvDeleteDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this timber data? This action cannot be undone.'**
+  String get supplierInvDeleteDialogContent;
+
+  /// No description provided for @supplierInvDeleteDialogCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get supplierInvDeleteDialogCancel;
+
+  /// No description provided for @supplierInvDeleteDialogConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get supplierInvDeleteDialogConfirm;
 
   /// No description provided for @supplierMarketSupplierPrefix.
   ///
