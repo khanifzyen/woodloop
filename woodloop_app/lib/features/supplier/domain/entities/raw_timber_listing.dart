@@ -17,6 +17,7 @@ class RawTimberListing extends Equatable {
   final List<String> photos;
   final String? legalityDoc;
   final String? trackingId; // LOG-JEP01-260310-A7X
+  final String? description;
   final DateTime updatedAt;
 
   const RawTimberListing({
@@ -36,6 +37,7 @@ class RawTimberListing extends Equatable {
     this.photos = const [],
     this.legalityDoc,
     this.trackingId,
+    this.description,
     required this.updatedAt,
   });
 
@@ -60,6 +62,7 @@ class RawTimberListing extends Equatable {
     photos,
     legalityDoc,
     trackingId,
+    description,
     updatedAt,
   ];
 }

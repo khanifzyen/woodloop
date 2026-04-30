@@ -19,6 +19,7 @@ class RawTimberListingModel extends RawTimberListing {
     super.photos,
     super.legalityDoc,
     super.trackingId,
+    super.description,
     required super.updatedAt,
   });
 
@@ -77,6 +78,9 @@ class RawTimberListingModel extends RawTimberListing {
           : null,
       trackingId: record.getStringValue('tracking_id').isNotEmpty
           ? record.getStringValue('tracking_id')
+          : null,
+      description: record.getStringValue('description').isNotEmpty
+          ? record.getStringValue('description')
           : null,
       updatedAt:
           DateTime.tryParse(record.getStringValue('updated')) ?? DateTime.now(),

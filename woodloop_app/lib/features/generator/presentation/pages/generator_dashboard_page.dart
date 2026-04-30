@@ -161,156 +161,175 @@ class _GeneratorDashboardView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ─── Main Stats Card ────────────────────────────────
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppTheme.surfaceColor,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.08),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                    BlocBuilder<WasteListingBloc, WasteListingState>(
+                      builder: (context, state) {
+                        double totalWeight = 0;
+                        int listingCount = 0;
+                        int activeCount = 0;
+                        double totalRevenue = 0;
+                        if (state is WasteListingsLoaded) {
+                          listingCount = state.listings.length;
+                          for (final l in state.listings) {
+                            if (l.unit == 'kg') {
+                              totalWeight += l.volume;
+                            }
+                            if (l.status == 'available') {
+                              activeCount++;
+                            }
+                            totalRevenue += l.priceEstimate;
+                          }
+                        }
+                        final weightStr = totalWeight >= 1000
+                            ? '${(totalWeight / 1000).toStringAsFixed(1)}'
+                            : totalWeight.toStringAsFixed(0);
+                        final weightUnit = totalWeight >= 1000 ? 'ton' : 'kg';
+                        final conversionRate = listingCount > 0
+                            ? '${((listingCount - activeCount) / listingCount * 100).toStringAsFixed(0)}%'
+                            : '0%';
+                        final revenueStr = totalRevenue >= 1000000
+                            ? 'Rp ${(totalRevenue / 1000000).toStringAsFixed(1)}jt'
+                            : 'Rp ${totalRevenue.toStringAsFixed(0)}';
+                        final activePickupStr = '$activeCount Aktif';
+
+                        return Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppTheme.surfaceColor,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.08),
+                            ),
+                          ),
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      l10n.generatorDashTotalWaste,
-                                      style: const TextStyle(
-                                        color: Colors.white54,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.baseline,
-                                      textBaseline: TextBaseline.alphabetic,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          '1.250',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 36,
-                                            fontWeight: FontWeight.bold,
+                                        Text(
+                                          l10n.generatorDashTotalWaste,
+                                          style: const TextStyle(
+                                            color: Colors.white54,
+                                            fontSize: 13,
                                           ),
                                         ),
-                                        const SizedBox(width: 6),
-                                        const Text(
-                                          'kg',
-                                          style: TextStyle(
-                                            color: Colors.white54,
-                                            fontSize: 14,
-                                          ),
+                                        const SizedBox(height: 4),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.baseline,
+                                          textBaseline: TextBaseline.alphabetic,
+                                          children: [
+                                            Text(
+                                              weightStr,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 36,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 6),
+                                            Text(
+                                              weightUnit,
+                                              style: const TextStyle(
+                                                color: Colors.white54,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.primaryColor.withValues(
-                                    alpha: 0.1,
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: LinearProgressIndicator(
+                                  value: listingCount > 0
+                                      ? (listingCount - activeCount) / listingCount
+                                      : 0,
+                                  minHeight: 6,
+                                  backgroundColor: Colors.white.withValues(alpha: 0.08),
+                                  valueColor: const AlwaysStoppedAnimation<Color>(
+                                    AppTheme.primaryColor,
+                                  ),
                                 ),
-                                child: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.trending_up,
-                                      color: AppTheme.primaryColor,
-                                      size: 14,
+                              ),
+                              const SizedBox(height: 16),
+                              const Divider(color: Colors.white10, height: 1),
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildStatItem(
+                                      label: l10n.generatorDashProductsSold,
+                                      value: '$listingCount',
+                                      valueColor: Colors.white,
                                     ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '12%',
-                                      style: TextStyle(
-                                        color: AppTheme.primaryColor,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  ),
+                                  Expanded(
+                                    child: _buildStatItem(
+                                      label: l10n.generatorDashConversion,
+                                      value: conversionRate,
+                                      valueColor: AppTheme.primaryColor,
+                                      align: CrossAxisAlignment.end,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          const SizedBox(height: 12),
-                          // Progress bar
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: LinearProgressIndicator(
-                              value: 0.75,
-                              minHeight: 6,
-                              backgroundColor: Colors.white.withValues(
-                                alpha: 0.08,
-                              ),
-                              valueColor: const AlwaysStoppedAnimation<Color>(
-                                AppTheme.primaryColor,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          const Divider(color: Colors.white10, height: 1),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _buildStatItem(
-                                  label: l10n.generatorDashProductsSold,
-                                  value: '24',
-                                  valueColor: Colors.white,
-                                ),
-                              ),
-                              Expanded(
-                                child: _buildStatItem(
-                                  label: l10n.generatorDashConversion,
-                                  value: '85%',
-                                  valueColor: AppTheme.primaryColor,
-                                  align: CrossAxisAlignment.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
 
                     // ─── 2 Small Stat Cards ─────────────────────────────
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildSmallStatCard(
-                            icon: Icons.payments_outlined,
-                            iconBg: Colors.green.withValues(alpha: 0.12),
-                            iconColor: Colors.green,
-                            label: l10n.generatorDashRevenue,
-                            value: 'Rp 4,5jt',
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _buildSmallStatCard(
-                            icon: Icons.local_shipping_outlined,
-                            iconBg: Colors.blue.withValues(alpha: 0.12),
-                            iconColor: Colors.blue,
-                            label: l10n.generatorDashPickup,
-                            value: '3 Aktif',
-                          ),
-                        ),
-                      ],
+                    BlocBuilder<WasteListingBloc, WasteListingState>(
+                      builder: (context, state) {
+                        double totalRevenue = 0;
+                        int activeCount = 0;
+                        if (state is WasteListingsLoaded) {
+                          for (final l in state.listings) {
+                            totalRevenue += l.priceEstimate;
+                            if (l.status == 'available') {
+                              activeCount++;
+                            }
+                          }
+                        }
+                        final revenueStr = totalRevenue >= 1000000
+                            ? 'Rp ${(totalRevenue / 1000000).toStringAsFixed(1)}jt'
+                            : 'Rp ${totalRevenue.toStringAsFixed(0)}';
+                        final activePickupStr = '$activeCount Aktif';
+                        return Row(
+                          children: [
+                            Expanded(
+                              child: _buildSmallStatCard(
+                                icon: Icons.payments_outlined,
+                                iconBg: Colors.green.withValues(alpha: 0.12),
+                                iconColor: Colors.green,
+                                label: l10n.generatorDashRevenue,
+                                value: revenueStr,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _buildSmallStatCard(
+                                icon: Icons.local_shipping_outlined,
+                                iconBg: Colors.blue.withValues(alpha: 0.12),
+                                iconColor: Colors.blue,
+                                label: l10n.generatorDashPickup,
+                                value: activePickupStr,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
 

@@ -1,11 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../converter/presentation/bloc/product_bloc.dart';
+import '../../../converter/domain/entities/product.dart';
+import '../../../../injection_container.dart';
 
-/// Buyer product detail page — shows full product info,
-/// gallery, impact badge, add-to-cart, and traceability link.
+/// Buyer product detail page -- shows full product info,
+/// gallery, add-to-cart, and traceability link.
+/// Loads real product data via ProductBloc.
 class ProductDetailPage extends StatelessWidget {
-  const ProductDetailPage({super.key});
+  final String? productId;
+
+  const ProductDetailPage({super.key, this.productId});
+
+  @override
+  Widget build(BuildContext context) {
+    final id =
+        productId ?? (GoRouterState.of(context).extra as String?);
+
+    if (id == null || id.isEmpty) {
+      return Scaffold(
+        backgroundColor: AppTheme.background,
+        body: Center(
+          child: Text(
+            'Product ID tidak tersedia',
+            style: const TextStyle(color: Colors.white54, fontSize: 14),
+          ),
+        ),
+      );
+    }
+
+    return BlocProvider(
+      create: (_) => getIt<ProductBloc>()..add(LoadProductDetail(id)),
+      child: const _ProductDetailBody(),
+    );
+  }
+}
+
+class _ProductDetailBody extends StatelessWidget {
+  const _ProductDetailBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        if (state is ProductLoading || state is ProductInitial) {
+          return const Scaffold(
+            backgroundColor: AppTheme.background,
+            body: Center(
+              child:
+                  CircularProgressIndicator(color: AppTheme.primaryColor),
+            ),
+          );
+        }
+        if (state is ProductDetailLoaded) {
+          return _ProductDetailView(product: state.product);
+        }
+        if (state is ProductError) {
+          return Scaffold(
+            backgroundColor: AppTheme.background,
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  state.message,
+                  style: const TextStyle(color: Colors.redAccent, fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+}
+
+class _ProductDetailView extends StatelessWidget {
+  final Product product;
+
+  const _ProductDetailView({required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +97,8 @@ class ProductDetailPage extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
-                backgroundColor: AppTheme.background.withValues(alpha: 0.7),
+                backgroundColor:
+                    AppTheme.background.withValues(alpha: 0.7),
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () => context.pop(),
@@ -32,7 +109,8 @@ class ProductDetailPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(
-                  backgroundColor: AppTheme.background.withValues(alpha: 0.7),
+                  backgroundColor:
+                      AppTheme.background.withValues(alpha: 0.7),
                   child: IconButton(
                     icon: const Icon(
                       Icons.favorite_border,
@@ -45,7 +123,8 @@ class ProductDetailPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: CircleAvatar(
-                  backgroundColor: AppTheme.background.withValues(alpha: 0.7),
+                  backgroundColor:
+                      AppTheme.background.withValues(alpha: 0.7),
                   child: IconButton(
                     icon: const Icon(Icons.share_outlined, color: Colors.white),
                     onPressed: () {},
@@ -57,10 +136,22 @@ class ProductDetailPage extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.asset(
-                    'assets/images/map_jepara.jpg',
-                    fit: BoxFit.cover,
-                  ),
+                  // Product image
+                  if (product.photos.isNotEmpty)
+                    Image.network(
+                      product.photos.first,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Image.asset(
+                        'assets/images/map_jepara.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  else
+                    Image.asset(
+                      'assets/images/map_jepara.jpg',
+                      fit: BoxFit.cover,
+                    ),
                   // Photo indicator dots
                   Positioned(
                     bottom: 16,
@@ -69,11 +160,14 @@ class ProductDetailPage extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
-                        4,
+                        product.photos.isEmpty
+                            ? 1
+                            : product.photos.length,
                         (i) => Container(
                           width: i == 0 ? 24 : 8,
                           height: 8,
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          margin:
+                              const EdgeInsets.symmetric(horizontal: 3),
                           decoration: BoxDecoration(
                             color: i == 0
                                 ? AppTheme.primaryColor
@@ -96,38 +190,10 @@ class ProductDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Impact badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.eco, color: AppTheme.primaryColor, size: 14),
-                        SizedBox(width: 4),
-                        Text(
-                          '🌳 Selamatkan 12kg Kayu',
-                          style: TextStyle(
-                            color: AppTheme.primaryColor,
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
                   // Product name
-                  const Text(
-                    'Aesthetic Pallet Chair',
-                    style: TextStyle(
+                  Text(
+                    product.name,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -135,77 +201,40 @@ class ProductDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // Studio & rating
+                  // Category
                   Row(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                          color:
+                              AppTheme.primaryColor.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Icons.storefront,
+                          Icons.category,
                           color: AppTheme.primaryColor,
                           size: 14,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        'Jepara Eco Art',
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
-                      ),
-                      const Spacer(),
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
-                      const SizedBox(width: 4),
-                      const Text(
-                        '4.8 (24 reviews)',
-                        style: TextStyle(color: Colors.white54, fontSize: 12),
+                      Text(
+                        product.category,
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 14),
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
 
                   // Price
-                  Row(
-                    children: [
-                      const Text(
-                        'Rp 450.000',
-                        style: TextStyle(
-                          color: AppTheme.primaryColor,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Text(
-                          '-15%',
-                          style: TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Rp 530.000',
-                        style: TextStyle(
-                          color: Colors.white38,
-                          fontSize: 14,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Rp ${product.price.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      color: AppTheme.primaryColor,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 24),
 
@@ -223,15 +252,12 @@ class ProductDetailPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    'Kursi estetik yang dibuat 100% dari pallet kayu bekas. '
-                    'Didesain ulang dengan sentuhan minimalis modern, cocok untuk '
-                    'teras rumah, kafe, atau ruang tamu. Finishing natural '
-                    'oil yang aman dan tahan lama.\n\n'
-                    'Dimensi: 60cm x 55cm x 80cm (P x L x T)\n'
-                    'Berat: ~8 kg\n'
-                    'Material: 100% Reclaimed Pine Pallet',
-                    style: TextStyle(
+                  Text(
+                    (product.description != null &&
+                            product.description!.isNotEmpty)
+                        ? product.description!
+                        : 'Tidak ada deskripsi',
+                    style: const TextStyle(
                       color: Colors.white60,
                       fontSize: 14,
                       height: 1.6,
@@ -239,42 +265,14 @@ class ProductDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
 
-                  // Material info cards
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildInfoCard(
-                          icon: Icons.forest,
-                          label: 'Jenis Kayu',
-                          value: 'Pine (Pinus)',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildInfoCard(
-                          icon: Icons.recycling,
-                          label: 'Sumber',
-                          value: '100% Upcycled',
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+                  // Stock card
                   Row(
                     children: [
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.inventory_2_outlined,
                           label: 'Stok',
-                          value: '5 tersisa',
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildInfoCard(
-                          icon: Icons.local_shipping_outlined,
-                          label: 'Pengiriman',
-                          value: '3-5 hari kerja',
+                          value: '${product.stock} tersisa',
                         ),
                       ),
                     ],
@@ -296,7 +294,8 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                          color:
+                              AppTheme.primaryColor.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
@@ -320,7 +319,7 @@ class ProductDetailPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Lihat Perjalanan Kayu 🌱',
+                                  'Lihat Perjalanan Kayu \u{1F331}',
                                   style: TextStyle(
                                     color: AppTheme.primaryColor,
                                     fontWeight: FontWeight.bold,
@@ -412,7 +411,8 @@ class ProductDetailPage extends StatelessWidget {
                 child: SizedBox(
                   height: 52,
                   child: ElevatedButton.icon(
-                    onPressed: () => context.pushNamed('your_shopping_cart'),
+                    onPressed: () =>
+                        context.pushNamed('your_shopping_cart'),
                     icon: const Icon(
                       Icons.shopping_cart_outlined,
                       color: AppTheme.background,

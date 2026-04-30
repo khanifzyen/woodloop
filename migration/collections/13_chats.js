@@ -41,6 +41,7 @@ async function migrateChats() {
 
     fields.push(
         { name: 'message', type: 'text', required: true },
+        { name: 'conversation_id', type: 'text', required: false },
         { name: 'is_read', type: 'bool', required: false },
         { name: 'attachment', type: 'file', maxSelect: 1, maxSize: 10485760 },
     );
@@ -57,6 +58,7 @@ async function migrateChats() {
         indexes: [
             'CREATE INDEX idx_chats_sender ON chats (sender)',
             'CREATE INDEX idx_chats_receiver ON chats (receiver)',
+            'CREATE INDEX idx_chats_conversation ON chats (conversation_id)',
         ],
     });
 

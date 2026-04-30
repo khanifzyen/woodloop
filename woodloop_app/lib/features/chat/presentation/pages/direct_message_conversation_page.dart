@@ -9,7 +9,14 @@ import '../../../../injection_container.dart';
 
 class DirectMessageConversationPage extends StatelessWidget {
   final String? conversationId;
-  const DirectMessageConversationPage({super.key, this.conversationId});
+  final String receiverId;
+  final String receiverName;
+  const DirectMessageConversationPage({
+    super.key,
+    this.conversationId,
+    required this.receiverId,
+    required this.receiverName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +28,24 @@ class DirectMessageConversationPage extends StatelessWidget {
         }
         return bloc;
       },
-      child: _DirectMessageConversationView(conversationId: conversationId),
+      child: _DirectMessageConversationView(
+        conversationId: conversationId,
+        receiverId: receiverId,
+        receiverName: receiverName,
+      ),
     );
   }
 }
 
 class _DirectMessageConversationView extends StatefulWidget {
   final String? conversationId;
-  const _DirectMessageConversationView({this.conversationId});
+  final String receiverId;
+  final String receiverName;
+  const _DirectMessageConversationView({
+    this.conversationId,
+    required this.receiverId,
+    required this.receiverName,
+  });
 
   @override
   State<_DirectMessageConversationView> createState() =>
@@ -70,25 +87,13 @@ class _DirectMessageConversationViewState
               ),
             ),
             const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.chatDmSenderName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  l10n.chatDmStatusOnline,
-                  style: const TextStyle(
-                    color: AppTheme.primaryColor,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
+            Text(
+              widget.receiverName,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -102,42 +107,64 @@ class _DirectMessageConversationViewState
       body: SafeArea(
         child: Column(
           children: [
-            // Chat Area
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                reverse: true, // Start from bottom
-                children: [
-                  _buildChatBubble(
-                    message: l10n.chatDmMessage1,
-                    time: l10n.chatDmTime1,
-                    isMe: false,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildChatBubble(
-                    message: l10n.chatDmMessage2,
-                    time: l10n.chatDmTime2,
-                    isMe: true,
-                    isRead: true,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildChatBubble(
-                    message: l10n.chatDmMessage3,
-                    time: l10n.chatDmTime3,
-                    isMe: true,
-                    isRead: true,
-                  ),
-                  const SizedBox(height: 32),
-                  Center(
-                    child: Text(
-                      l10n.chatDmToday,
-                      style: const TextStyle(
-                        color: Colors.white24,
-                        fontSize: 12,
+              child: BlocBuilder<ChatBloc, ChatState>(
+                builder: (context, state) {
+                  if (state is ChatLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (state is MessagesLoaded) {
+                    if (state.messages.isEmpty) {
+                      return Center(
+                        child: Text(
+                          l10n.chatDmMessage1, // reuse: "Belum ada pesan"
+                          style: const TextStyle(color: Colors.white54),
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(20),
+                      reverse: true,
+                      itemCount: state.messages.length,
+                      itemBuilder: (context, index) {
+                        final msg = state.messages[index];
+                        final authState = context.read<AuthBloc>().state;
+                        final myId =
+                            authState is Authenticated ? authState.user.id : '';
+                        final isMe = msg.senderId == myId;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildChatBubble(
+                            message: msg.message,
+                            time: _formatTime(msg.created, l10n),
+                            isMe: isMe,
+                            isRead: msg.isRead,
+                          ),
+                        );
+                      },
+                    );
+                  }
+
+                  if (state is ChatError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(color: Colors.redAccent),
                       ),
+                    );
+                  }
+
+                  return Center(
+                    child: Text(
+                      l10n.chatDmMessage1,
+                      style: const TextStyle(color: Colors.white54),
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
 
@@ -199,10 +226,10 @@ class _DirectMessageConversationViewState
                         }
                         context.read<ChatBloc>().add(
                           SendMessage({
-                            'sender_id': senderId,
-                            'receiver_id': '',
+                            'sender': senderId,
+                            'receiver': widget.receiverId,
                             'conversation_id': widget.conversationId ?? '',
-                            'body': text,
+                            'message': text,
                           }),
                         );
                         _messageController.clear();
@@ -218,6 +245,12 @@ class _DirectMessageConversationViewState
     );
   }
 
+  String _formatTime(DateTime dt, AppLocalizations l10n) {
+    final hour = dt.hour.toString().padLeft(2, '0');
+    final minute = dt.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
   Widget _buildChatBubble({
     required String message,
     required String time,
@@ -227,13 +260,10 @@ class _DirectMessageConversationViewState
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 280, // Max width for chat bubbles
-        ),
+        constraints: const BoxConstraints(maxWidth: 280),
         child: Column(
-          crossAxisAlignment: isMe
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.all(16),

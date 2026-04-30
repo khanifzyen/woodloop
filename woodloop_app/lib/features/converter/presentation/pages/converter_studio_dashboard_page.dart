@@ -78,13 +78,22 @@ class _ConverterStudioDashboardView extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Text(
-                            l10n.converterDashMockStudioName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, authState) {
+                              String displayName = 'WoodLoop Studio';
+                              if (authState is Authenticated) {
+                                displayName = authState.user.workshopName ??
+                                    authState.user.name;
+                              }
+                              return Text(
+                                displayName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -170,74 +179,96 @@ class _ConverterStudioDashboardView extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: BlocBuilder<ProductBloc, ProductState>(
+                  builder: (context, state) {
+                    int productCount = 0;
+                    int totalStock = 0;
+                    double totalRevenue = 0;
+                    if (state is ProductsLoaded) {
+                      productCount = state.products.length;
+                      for (final p in state.products) {
+                        totalStock += p.stock;
+                        totalRevenue += p.price * p.stock;
+                      }
+                    }
+                    final revenueStr = totalRevenue >= 1000000
+                        ? 'Rp ${(totalRevenue / 1000000).toStringAsFixed(1)}jt'
+                        : 'Rp ${totalRevenue.toStringAsFixed(0)}';
+                    final months = [
+                      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+                    ];
+                    final monthLabel = months[DateTime.now().month];
+                    return Column(
                       children: [
-                        Text(
-                          l10n.converterDashRevenueThisMonth,
-                          style: const TextStyle(
-                            color: Colors.black54,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            l10n.converterDashMockMonth,
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              l10n.converterDashRevenueThisMonth,
+                              style: const TextStyle(
+                                color: Colors.black54,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                monthLabel,
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text(
+                              revenueStr,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            _buildStatItem(
+                              '$productCount',
+                              l10n.converterDashSoldLabel,
+                              Icons.shopping_bag_outlined,
+                            ),
+                            Container(
+                              width: 1,
+                              height: 24,
+                              color: Colors.black12,
+                              margin: const EdgeInsets.symmetric(horizontal: 16),
+                            ),
+                            _buildStatItem(
+                              '$totalStock',
+                              l10n.converterDashProcessedLabel,
+                              Icons.recycling,
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Text(
-                          l10n.converterDashMockRevenue,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        _buildStatItem(
-                          l10n.converterDashMockSold,
-                          l10n.converterDashSoldLabel,
-                          Icons.shopping_bag_outlined,
-                        ),
-                        Container(
-                          width: 1,
-                          height: 24,
-                          color: Colors.black12,
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
-                        ),
-                        _buildStatItem(
-                          l10n.converterDashMockProcessed,
-                          l10n.converterDashProcessedLabel,
-                          Icons.recycling,
-                        ),
-                      ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),

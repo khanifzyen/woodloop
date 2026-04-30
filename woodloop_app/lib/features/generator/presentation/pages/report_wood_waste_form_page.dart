@@ -5,6 +5,7 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 import '../../presentation/bloc/waste_listing_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../supplier/presentation/bloc/wood_types_cubit.dart';
 import '../../../../injection_container.dart';
 
 class ReportWoodWasteFormPage extends StatefulWidget {
@@ -19,6 +20,8 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
   String? _selectedForm;
   String? _selectedCondition;
   String _selectedUnit = 'kg';
+  String? _selectedWoodTypeId;
+  String? _selectedWoodTypeName;
   final _quantityController = TextEditingController();
   final _priceController = TextEditingController();
 
@@ -36,8 +39,10 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
     _selectedCondition ??= l10n.generatorReportConditionDry;
 
     return BlocProvider(
-      create: (context) => getIt<WasteListingBloc>(),
-      child: BlocListener<WasteListingBloc, WasteListingState>(
+      create: (context) => getIt<WoodTypesCubit>()..loadWoodTypes(),
+      child: BlocProvider(
+        create: (context) => getIt<WasteListingBloc>(),
+        child: BlocListener<WasteListingBloc, WasteListingState>(
         listener: (context, state) {
           if (state is WasteListingCreated) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -188,6 +193,105 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                                   Icons.forest,
                                 ),
                               ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Wood Type Dropdown
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Jenis Kayu',
+                              style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            BlocBuilder<WoodTypesCubit, WoodTypesState>(
+                              builder: (context, state) {
+                                if (state is WoodTypesLoaded) {
+                                  return DropdownButtonFormField<String>(
+                                    value: _selectedWoodTypeId,
+                                    dropdownColor: AppTheme.surfaceColor,
+                                    style: const TextStyle(color: Colors.white),
+                                    decoration: InputDecoration(
+                                      hintText: 'Pilih jenis kayu',
+                                      hintStyle: const TextStyle(
+                                        color: Colors.white38,
+                                      ),
+                                      filled: true,
+                                      fillColor: AppTheme.background,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.08,
+                                          ),
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.08,
+                                          ),
+                                        ),
+                                      ),
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 14,
+                                      ),
+                                    ),
+                                    items: state.woodTypes.map((wt) {
+                                      return DropdownMenuItem<String>(
+                                        value: wt['id'] as String?,
+                                        child: Text(
+                                          wt['name'] as String? ?? '',
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedWoodTypeId = value;
+                                        _selectedWoodTypeName = state
+                                            .woodTypes
+                                            .firstWhere(
+                                              (wt) => wt['id'] == value,
+                                            )['name'] as String?;
+                                      });
+                                    },
+                                  );
+                                }
+                                if (state is WoodTypesLoading) {
+                                  return const SizedBox(
+                                    height: 52,
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
                             ),
                           ],
                         ),
@@ -613,8 +717,8 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                                         0;
                                     context.read<WasteListingBloc>().add(
                                       CreateWasteListing({
-                                        'generator_id': generatorId,
-                                        'wood_type_id': '',
+                                        'generator': generatorId,
+                                        'wood_type': _selectedWoodTypeId ?? '',
                                         'form': _selectedForm ?? '',
                                         'condition': _selectedCondition ?? '',
                                         'volume': quantity,
@@ -665,7 +769,8 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
           ),
         ), // Scaffold
       ), // BlocListener
-    ); // BlocProvider
+      ), // BlocProvider (WasteListingBloc)
+    ); // BlocProvider (WoodTypesCubit)
   }
 
   Widget _buildSectionHeader(String number, String title) {

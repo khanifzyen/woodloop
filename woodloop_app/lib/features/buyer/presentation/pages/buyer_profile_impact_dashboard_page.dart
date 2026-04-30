@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/order_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
 
 class BuyerProfileImpactDashboardPage extends StatelessWidget {
   const BuyerProfileImpactDashboardPage({super.key});
@@ -9,6 +13,28 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<OrderBloc>();
+        final authState = context.read<AuthBloc>().state;
+        String? buyerId;
+        if (authState is Authenticated) {
+          buyerId = authState.user.id;
+        }
+        bloc.add(LoadOrders(buyerId: buyerId));
+        return bloc;
+      },
+      child: _BuyerProfileImpactDashboardView(l10n: l10n),
+    );
+  }
+}
+
+class _BuyerProfileImpactDashboardView extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _BuyerProfileImpactDashboardView({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
@@ -38,32 +64,40 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                             image: const DecorationImage(
                               image: AssetImage(
                                 'assets/images/user1.jpg',
-                              ), // Placeholder
+                              ),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
                         const SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.buyerProfileWelcome,
-                              style: const TextStyle(
-                                color: Colors.white54,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              l10n.buyerProfileMockName,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, authState) {
+                            String displayName = 'Buyer';
+                            if (authState is Authenticated) {
+                              displayName = authState.user.name;
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.buyerProfileWelcome,
+                                  style: const TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  displayName,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -98,55 +132,76 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                  child: BlocBuilder<OrderBloc, OrderState>(
+                    builder: (context, state) {
+                      int orderCount = 0;
+                      int totalQuantity = 0;
+                      double totalSpent = 0;
+                      if (state is OrdersLoaded) {
+                        orderCount = state.orders.length;
+                        for (final o in state.orders) {
+                          totalQuantity += o.quantity;
+                          totalSpent += o.totalPrice;
+                        }
+                      }
+                      // Estimate: each product unit diverts ~1 kg wood waste,
+                      // saves ~2 kg CO2
+                      final estimatedWoodKg =
+                          (totalQuantity * 2.5).toStringAsFixed(1);
+                      final estimatedCo2Kg =
+                          (totalQuantity * 5.0).toStringAsFixed(0);
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.eco, color: Colors.black87),
-                          const SizedBox(width: 8),
-                          Text(
-                            l10n.buyerProfileImpactTitle,
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row(
+                            children: [
+                              const Icon(Icons.eco, color: Colors.black87),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.buyerProfileImpactTitle,
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _buildImpactStat(
+                                '$orderCount',
+                                l10n.buyerProfileImpactProducts,
+                                Icons.shopping_bag_outlined,
+                              ),
+                              Container(
+                                width: 1,
+                                height: 40,
+                                color: Colors.black12,
+                              ),
+                              _buildImpactStat(
+                                estimatedWoodKg,
+                                l10n.buyerProfileImpactWood,
+                                Icons.nature_people_outlined,
+                              ),
+                              Container(
+                                width: 1,
+                                height: 40,
+                                color: Colors.black12,
+                              ),
+                              _buildImpactStat(
+                                estimatedCo2Kg,
+                                l10n.buyerProfileImpactCO2,
+                                Icons.cloud_done_outlined,
+                              ),
+                            ],
                           ),
                         ],
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildImpactStat(
-                            '4',
-                            l10n.buyerProfileImpactProducts,
-                            Icons.shopping_bag_outlined,
-                          ),
-                          Container(
-                            width: 1,
-                            height: 40,
-                            color: Colors.black12,
-                          ),
-                          _buildImpactStat(
-                            '12.5',
-                            l10n.buyerProfileImpactWood,
-                            Icons.nature_people_outlined,
-                          ),
-                          Container(
-                            width: 1,
-                            height: 40,
-                            color: Colors.black12,
-                          ),
-                          _buildImpactStat(
-                            '25',
-                            l10n.buyerProfileImpactCO2,
-                            Icons.cloud_done_outlined,
-                          ),
-                        ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -183,7 +238,7 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
                         title: l10n.buyerProfileMenuFavorites,
                         icon: Icons.favorite_border,
                         color: Colors.pink,
-                        route: '', // Placeholder
+                        route: '',
                       ),
                     ),
                   ],
@@ -205,32 +260,80 @@ class BuyerProfileImpactDashboardPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              ListView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  _buildOrderCard(
-                    l10n: l10n,
-                    status: l10n.buyerProfileStatusShipping,
-                    statusColor: Colors.orange,
-                    date: '12 Nov 2023',
-                    title: l10n.buyerProfileMockOrderTitle1,
-                    subtitle: l10n.buyerProfileMockOrderStore1,
-                    price: 'Rp 1.200.000',
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                  _buildOrderCard(
-                    l10n: l10n,
-                    status: l10n.buyerProfileStatusDone,
-                    statusColor: AppTheme.primaryColor,
-                    date: '05 Okt 2023',
-                    title: l10n.buyerProfileMockOrderTitle2,
-                    subtitle: l10n.buyerProfileMockOrderStore2,
-                    price: 'Rp 85.000',
-                    imageUrl: 'assets/images/map_jepara.jpg',
-                  ),
-                ],
+              BlocBuilder<OrderBloc, OrderState>(
+                builder: (context, state) {
+                  if (state is OrderLoading) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: CircularProgressIndicator(
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+                    );
+                  }
+                  if (state is OrdersLoaded) {
+                    if (state.orders.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          'Belum ada pesanan',
+                          style: TextStyle(color: Colors.white54, fontSize: 13),
+                        ),
+                      );
+                    }
+                    return ListView(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      children: state.orders.take(5).map((order) {
+                        final statusLabels = {
+                          'pending': 'Pending',
+                          'confirmed': 'Confirmed',
+                          'shipped': l10n.buyerProfileStatusShipping,
+                          'delivered': l10n.buyerProfileStatusDone,
+                          'cancelled': 'Cancelled',
+                        };
+                        final statusColors = {
+                          'pending': Colors.orange,
+                          'confirmed': Colors.blue,
+                          'shipped': Colors.orange,
+                          'delivered': AppTheme.primaryColor,
+                          'cancelled': Colors.red,
+                        };
+                        final statusLabel =
+                            statusLabels[order.status] ?? order.status;
+                        final statusColor =
+                            statusColors[order.status] ?? Colors.grey;
+                        final dateStr =
+                            '${order.created.day} ${['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][order.created.month]} ${order.created.year}';
+                        return _buildOrderCard(
+                          l10n: l10n,
+                          status: statusLabel,
+                          statusColor: statusColor,
+                          date: dateStr,
+                          title: order.productName ?? 'Product #${order.productId.substring(0, 6)}',
+                          subtitle: '${order.quantity} item(s)',
+                          price: 'Rp ${order.totalPrice.toStringAsFixed(0)}',
+                          imageUrl: 'assets/images/map_jepara.jpg',
+                        );
+                      }).toList(),
+                    );
+                  }
+                  if (state is OrderError) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ],
           ),

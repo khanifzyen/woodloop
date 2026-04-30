@@ -7,6 +7,8 @@ class NotificationItem extends Equatable {
   final String message;
   final String type; // order, payment, pickup, bid, system
   final bool isRead;
+  final String? referenceType;
+  final String? referenceId;
   final DateTime created;
 
   const NotificationItem({
@@ -16,6 +18,8 @@ class NotificationItem extends Equatable {
     required this.message,
     required this.type,
     this.isRead = false,
+    this.referenceType,
+    this.referenceId,
     required this.created,
   });
 
@@ -27,6 +31,8 @@ class NotificationItem extends Equatable {
     message,
     type,
     isRead,
+    referenceType,
+    referenceId,
     created,
   ];
 }

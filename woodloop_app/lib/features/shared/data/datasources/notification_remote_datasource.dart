@@ -19,7 +19,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   Future<List<NotificationModel>> getNotifications(String userId) async {
     final records = await _pb
         .collection('notifications')
-        .getList(filter: 'user_id = "$userId"', sort: '-created', perPage: 50);
+        .getList(filter: 'user = "$userId"', sort: '-created', perPage: 50);
     return records.items.map((r) => NotificationModel.fromRecord(r)).toList();
   }
 

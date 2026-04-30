@@ -77,13 +77,22 @@ class _AggregatorDashboardView extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Text(
-                            l10n.aggregatorDashMockName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, authState) {
+                              String displayName = 'Aggregator';
+                              if (authState is Authenticated) {
+                                displayName = authState.user.workshopName ??
+                                    authState.user.name;
+                              }
+                              return Text(
+                                displayName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -151,98 +160,127 @@ class _AggregatorDashboardView extends StatelessWidget {
             ),
 
             // Today's Stats Card
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF13EC5B), Color(0xFF0A6E29)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.primaryColor.withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+            BlocBuilder<PickupBloc, PickupState>(
+              builder: (context, state) {
+                int pickupCount = 0;
+                int completedCount = 0;
+                double totalWeight = 0;
+                if (state is PickupsLoaded) {
+                  pickupCount = state.pickups.length;
+                  for (final p in state.pickups) {
+                    if (p.status == 'completed') {
+                      completedCount++;
+                    }
+                    totalWeight += (p.weightVerified ?? 0);
+                  }
+                }
+                final today = DateTime.now();
+                final dateStr =
+                    '${today.day} ${['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][today.month]} ${today.year}';
+                final weightStr = totalWeight >= 1000
+                    ? '${(totalWeight / 1000).toStringAsFixed(1)}'
+                    : totalWeight.toStringAsFixed(0);
+                final weightUnit = totalWeight >= 1000 ? 'ton' : 'kg';
+
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF13EC5B), Color(0xFF0A6E29)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          l10n.aggregatorDashEstIncome,
-                          style: const TextStyle(
-                            color: Colors.black54,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            l10n.aggregatorDashMockDate,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10n.aggregatorDashEstIncome,
                             style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 10,
+                              color: Colors.black54,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Text(
-                          l10n.aggregatorDashMockIncome,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              dateStr,
+                              style: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        _buildStatItem(
-                          '3',
-                          l10n.aggregatorDashTaskCount,
-                          Icons.task_alt,
-                        ),
-                        Container(
-                          width: 1,
-                          height: 24,
-                          color: Colors.black12,
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
-                        ),
-                        _buildStatItem('45', 'km', Icons.route_outlined),
-                        Container(
-                          width: 1,
-                          height: 24,
-                          color: Colors.black12,
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
-                        ),
-                        _buildStatItem('850', 'kg', Icons.scale_outlined),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Text(
+                            '$pickupCount pickup',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          _buildStatItem(
+                            '$completedCount',
+                            l10n.aggregatorDashTaskCount,
+                            Icons.task_alt,
+                          ),
+                          Container(
+                            width: 1,
+                            height: 24,
+                            color: Colors.black12,
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                          _buildStatItem(
+                            '$pickupCount',
+                            'total',
+                            Icons.route_outlined,
+                          ),
+                          Container(
+                            width: 1,
+                            height: 24,
+                            color: Colors.black12,
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                          _buildStatItem(
+                            weightStr,
+                            weightUnit,
+                            Icons.scale_outlined,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 24),
 

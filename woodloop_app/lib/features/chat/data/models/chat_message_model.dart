@@ -7,19 +7,21 @@ class ChatMessageModel extends ChatMessage {
     required super.senderId,
     required super.receiverId,
     super.conversationId,
-    required super.body,
-    super.senderName,
+    required super.message,
+    super.isRead,
+    super.attachment,
     required super.created,
   });
 
   factory ChatMessageModel.fromRecord(RecordModel record) {
     return ChatMessageModel(
       id: record.id,
-      senderId: record.getStringValue('sender_id'),
-      receiverId: record.getStringValue('receiver_id'),
+      senderId: record.getStringValue('sender'),
+      receiverId: record.getStringValue('receiver'),
       conversationId: record.getStringValue('conversation_id'),
-      body: record.getStringValue('body'),
-      senderName: record.getStringValue('sender_name'),
+      message: record.getStringValue('message'),
+      isRead: record.getBoolValue('is_read'),
+      attachment: record.getStringValue('attachment'),
       created:
           DateTime.tryParse(record.getStringValue('created')) ?? DateTime.now(),
     );

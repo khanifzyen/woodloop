@@ -645,7 +645,9 @@ class AppRouter {
       GoRoute(
         path: '/product-detail',
         name: 'product_detail',
-        builder: (context, state) => const ProductDetailPage(),
+        builder: (context, state) => ProductDetailPage(
+          productId: state.extra as String?,
+        ),
       ),
       GoRoute(
         path: '/marketplace-category-hub',
@@ -665,7 +667,9 @@ class AppRouter {
       GoRoute(
         path: '/order-tracking-journey',
         name: 'order_tracking_journey',
-        builder: (context, state) => const OrderTrackingJourneyPage(),
+        builder: (context, state) => OrderTrackingJourneyPage(
+          orderId: state.extra as String?,
+        ),
       ),
       GoRoute(
         path: '/impact-analytics-dashboard',
@@ -680,7 +684,20 @@ class AppRouter {
       GoRoute(
         path: '/direct-message-conversation',
         name: 'direct_message_conversation',
-        builder: (context, state) => const DirectMessageConversationPage(),
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is Map<String, dynamic>) {
+            return DirectMessageConversationPage(
+              conversationId: extra['conversation_id'] as String?,
+              receiverId: extra['receiver_id'] as String? ?? '',
+              receiverName: extra['receiver_name'] as String? ?? 'User',
+            );
+          }
+          return const DirectMessageConversationPage(
+            receiverId: '',
+            receiverName: 'User',
+          );
+        },
       ),
       GoRoute(
         path: '/select-wood-source-history',

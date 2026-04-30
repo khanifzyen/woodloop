@@ -17,18 +17,25 @@ import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'core/di/app_module.dart' as _i808;
 import 'core/di/shared_preferences_module.dart' as _i497;
 import 'core/presentation/bloc/language/language_cubit.dart' as _i262;
+import 'features/aggregator/data/datasources/bid_remote_data_source.dart'
+    as _i884;
 import 'features/aggregator/data/datasources/pickup_remote_data_source.dart'
     as _i883;
 import 'features/aggregator/data/datasources/warehouse_remote_data_source.dart'
     as _i549;
+import 'features/aggregator/data/repositories/bid_repository_impl.dart'
+    as _i278;
 import 'features/aggregator/data/repositories/pickup_repository_impl.dart'
     as _i277;
 import 'features/aggregator/data/repositories/warehouse_repository_impl.dart'
     as _i994;
+import 'features/aggregator/domain/repositories/bid_repository.dart'
+    as _i253;
 import 'features/aggregator/domain/repositories/pickup_repository.dart'
     as _i252;
 import 'features/aggregator/domain/repositories/warehouse_repository.dart'
     as _i28;
+import 'features/aggregator/presentation/bloc/bid_bloc.dart' as _i101;
 import 'features/aggregator/presentation/bloc/pickup_bloc.dart' as _i100;
 import 'features/aggregator/presentation/bloc/warehouse_bloc.dart' as _i193;
 import 'features/auth/data/datasources/auth_remote_data_source.dart' as _i767;
@@ -43,6 +50,14 @@ import 'features/buyer/domain/repositories/cart_repository.dart' as _i723;
 import 'features/buyer/domain/repositories/order_repository.dart' as _i99;
 import 'features/buyer/presentation/bloc/cart_bloc.dart' as _i953;
 import 'features/buyer/presentation/bloc/order_bloc.dart' as _i39;
+import 'features/enabler/data/datasources/impact_metric_remote_data_source.dart'
+    as _i550;
+import 'features/enabler/data/repositories/impact_metric_repository_impl.dart'
+    as _i995;
+import 'features/enabler/domain/repositories/impact_metric_repository.dart'
+    as _i29;
+import 'features/enabler/presentation/cubit/enabler_dashboard_cubit.dart'
+    as _i102;
 import 'features/chat/data/datasources/chat_remote_datasource.dart' as _i343;
 import 'features/chat/data/repositories/chat_repository_impl.dart' as _i382;
 import 'features/chat/domain/repositories/chat_repository.dart' as _i453;
@@ -61,6 +76,14 @@ import 'features/converter/domain/repositories/product_repository.dart'
     as _i412;
 import 'features/converter/presentation/bloc/marketplace_bloc.dart' as _i251;
 import 'features/converter/presentation/bloc/product_bloc.dart' as _i561;
+import 'features/design_recipe/data/datasources/design_recipe_remote_data_source.dart'
+    as _i1050;
+import 'features/design_recipe/data/repositories/design_recipe_repository_impl.dart'
+    as _i1051;
+import 'features/design_recipe/domain/repositories/design_recipe_repository.dart'
+    as _i1052;
+import 'features/design_recipe/presentation/bloc/design_recipe_bloc.dart'
+    as _i1053;
 import 'features/generator/data/datasources/waste_listing_remote_data_source.dart'
     as _i127;
 import 'features/generator/data/repositories/waste_listing_repository_impl.dart'
@@ -68,6 +91,13 @@ import 'features/generator/data/repositories/waste_listing_repository_impl.dart'
 import 'features/generator/domain/repositories/waste_listing_repository.dart'
     as _i657;
 import 'features/generator/presentation/bloc/waste_listing_bloc.dart' as _i981;
+import 'features/generator/data/datasources/generator_product_remote_data_source.dart'
+    as _i1040;
+import 'features/generator/data/repositories/generator_product_repository_impl.dart'
+    as _i1041;
+import 'features/generator/domain/repositories/generator_product_repository.dart'
+    as _i1042;
+import 'features/generator/presentation/bloc/generator_product_bloc.dart' as _i1043;
 import 'features/profile/data/datasources/user_profile_remote_data_source.dart'
     as _i172;
 import 'features/profile/data/repositories/user_profile_repository_impl.dart'
@@ -127,6 +157,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i883.PickupRemoteDataSource>(
       () => _i883.PickupRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
+    gh.lazySingleton<_i884.BidRemoteDataSource>(
+      () => _i884.BidRemoteDataSourceImpl(gh<_i169.PocketBase>()),
+    );
     gh.lazySingleton<_i88.NotificationRemoteDataSource>(
       () => _i88.NotificationRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
@@ -147,11 +180,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i252.PickupRepository>(
       () => _i277.PickupRepositoryImpl(gh<_i883.PickupRemoteDataSource>()),
     );
+    gh.lazySingleton<_i253.BidRepository>(
+      () => _i278.BidRepositoryImpl(gh<_i884.BidRemoteDataSource>()),
+    );
     gh.factory<_i322.TraceabilityBloc>(
       () => _i322.TraceabilityBloc(gh<_i71.TraceabilityRepository>()),
     );
     gh.factory<_i100.PickupBloc>(
       () => _i100.PickupBloc(gh<_i252.PickupRepository>()),
+    );
+    gh.factory<_i101.BidBloc>(
+      () => _i101.BidBloc(gh<_i253.BidRepository>()),
     );
     gh.lazySingleton<_i453.ChatRepository>(
       () => _i382.ChatRepositoryImpl(gh<_i343.ChatRemoteDataSource>()),
@@ -159,8 +198,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i549.WarehouseRemoteDataSource>(
       () => _i549.WarehouseRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
+    gh.lazySingleton<_i550.ImpactMetricRemoteDataSource>(
+      () => _i550.ImpactMetricRemoteDataSourceImpl(gh<_i169.PocketBase>()),
+    );
     gh.lazySingleton<_i127.WasteListingRemoteDataSource>(
       () => _i127.WasteListingRemoteDataSourceImpl(gh<_i169.PocketBase>()),
+    );
+    gh.lazySingleton<_i1040.GeneratorProductRemoteDataSource>(
+      () => _i1040.GeneratorProductRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
     gh.lazySingleton<_i548.SupplierRemoteDataSource>(
       () => _i548.SupplierRemoteDataSourceImpl(gh<_i169.PocketBase>()),
@@ -168,6 +213,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i28.WarehouseRepository>(
       () =>
           _i994.WarehouseRepositoryImpl(gh<_i549.WarehouseRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i29.ImpactMetricRepository>(
+      () => _i995.ImpactMetricRepositoryImpl(
+        gh<_i550.ImpactMetricRemoteDataSource>(),
+      ),
     );
     gh.lazySingleton<_i694.ProductRemoteDataSource>(
       () => _i694.ProductRemoteDataSourceImpl(gh<_i169.PocketBase>()),
@@ -189,6 +239,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i127.WasteListingRemoteDataSource>(),
       ),
     );
+    gh.lazySingleton<_i1042.GeneratorProductRepository>(
+      () => _i1041.GeneratorProductRepositoryImpl(
+        gh<_i1040.GeneratorProductRemoteDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i172.UserProfileRemoteDataSource>(
       () => _i172.UserProfileRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
@@ -200,6 +255,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i981.WasteListingBloc>(
       () => _i981.WasteListingBloc(gh<_i657.WasteListingRepository>()),
+    );
+    gh.factory<_i1043.GeneratorProductBloc>(
+      () => _i1043.GeneratorProductBloc(
+        gh<_i1042.GeneratorProductRepository>(),
+      ),
     );
     gh.lazySingleton<_i1015.AuthRepository>(
       () => _i111.AuthRepositoryImpl(gh<_i767.AuthRemoteDataSource>()),
@@ -258,6 +318,23 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i363.AuthBloc>(
       () => _i363.AuthBloc(gh<_i1015.AuthRepository>()),
+    );
+    gh.factory<_i102.EnablerDashboardCubit>(
+      () => _i102.EnablerDashboardCubit(
+        gh<_i29.ImpactMetricRepository>(),
+        gh<_i169.PocketBase>(),
+      ),
+    );
+    gh.lazySingleton<_i1050.DesignRecipeRemoteDataSource>(
+      () => _i1050.DesignRecipeRemoteDataSourceImpl(gh<_i169.PocketBase>()),
+    );
+    gh.lazySingleton<_i1052.DesignRecipeRepository>(
+      () => _i1051.DesignRecipeRepositoryImpl(
+        gh<_i1050.DesignRecipeRemoteDataSource>(),
+      ),
+    );
+    gh.factory<_i1053.DesignRecipeBloc>(
+      () => _i1053.DesignRecipeBloc(gh<_i1052.DesignRecipeRepository>()),
     );
     gh.factory<_i561.ProductBloc>(
       () => _i561.ProductBloc(gh<_i412.ProductRepository>()),

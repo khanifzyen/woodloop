@@ -5,8 +5,10 @@ class ChatMessage extends Equatable {
   final String senderId;
   final String receiverId;
   final String? conversationId;
-  final String body;
+  final String message;
   final String? senderName;
+  final bool isRead;
+  final String? attachment;
   final DateTime created;
 
   const ChatMessage({
@@ -14,8 +16,10 @@ class ChatMessage extends Equatable {
     required this.senderId,
     required this.receiverId,
     this.conversationId,
-    required this.body,
+    required this.message,
     this.senderName,
+    this.isRead = false,
+    this.attachment,
     required this.created,
   });
 
@@ -25,8 +29,10 @@ class ChatMessage extends Equatable {
     senderId,
     receiverId,
     conversationId,
-    body,
+    message,
     senderName,
+    isRead,
+    attachment,
     created,
   ];
 }
