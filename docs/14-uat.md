@@ -533,6 +533,54 @@ Test dilakukan di app Flutter yang terhubung ke PocketBase production/staging.
 
 ---
 
+---
+
+## UAT-12: Polish & Quality (FASE 8)
+
+### UAT-12.1: Loading States
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Buka halaman dengan data dari API | Spinner/CircularProgressIndicator muncul | |
+| 2 | Wallet page loading | Spinner di balance card + history | |
+| 3 | Marketplace loading | Spinner sebelum list muncul | |
+| 4 | User management loading | Spinner sebelum user list | |
+| 5 | Notification center loading | Spinner saat fetch | |
+
+### UAT-12.2: Error States
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Matikan internet → buka halaman | Error message + retry/refresh option | |
+| 2 | Wallet error | "Coba Lagi" button | |
+| 3 | Marketplace error | Pesan error jelas | |
+| 4 | Traceability error | "Product not found" / error state | |
+| 5 | Kembali online → refresh | Data muncul normal | |
+
+### UAT-12.3: Empty States
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | User baru tanpa transaksi → wallet | "Belum ada transaksi" + icon | |
+| 2 | Converter tanpa transaksi → source | "Belum ada transaksi pembelian" | |
+| 3 | Notification kosong | "Belum ada notifikasi" | |
+| 4 | Order kosong | "Belum ada pesanan" | |
+| 5 | Chat kosong | Empty conversation list | |
+
+### UAT-12.4: Responsiveness
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Rotate device (portrait ↔ landscape) | Layout menyesuaikan | |
+| 2 | Small screen (360px width) | Tidak overflow | |
+| 3 | Large screen (tablet) | Tidak stretch berlebihan | |
+| 4 | Scroll long list | Smooth, tidak janky | |
+| 5 | Bottom sheet (transaction detail) | Swipe to close | |
+
+### UAT-12.5: Test Coverage
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Run `flutter test` | >350 tests, <3 failures | |
+| 2 | Semua BLoC/Cubit ter-cover | Setiap fitur punya *bloc_test.dart | |
+| 3 | Semua entity ter-cover | Setiap entity punya *entity_test.dart | |
+| 4 | Tidak ada skipped test | Semua test aktif | |
+
 ## UAT-11: End-to-End Full Flow (Skenario Lengkap)
 
 Lakukan skenario ini dari awal sampai akhir **tanpa reset data**:
@@ -594,8 +642,9 @@ Lakukan skenario ini dari awal sampai akhir **tanpa reset data**:
 | UAT-07: Wallet | ___ | ___ | ___ | |
 | UAT-08: Supplier | ___ | ___ | ___ | |
 | UAT-09: Enabler | ___ | ___ | ___ | |
-| UAT-10: Chat & Notifikasi | ___ | ___ | ___ | |
+| UAT-10: Chat & Notifikasi (FASE 6) | ___ | ___ | ___ | |
 | UAT-11: End-to-End | ___ | ___ | ___ | |
+| UAT-12: Polish & Quality (FASE 8) | ___ | ___ | ___ | |
 | **TOTAL** | ___ | ___ | ___ | |
 
 ### Catatan / Bug Ditemukan
