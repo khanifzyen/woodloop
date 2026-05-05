@@ -6,6 +6,7 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/product_bloc.dart';
+import '../bloc/marketplace_bloc.dart';
 import '../../../../injection_container.dart';
 
 class CreateUpcycledProductFormPage extends StatefulWidget {
@@ -24,6 +25,7 @@ class _CreateUpcycledProductFormPageState
   final _priceController = TextEditingController();
   final _stockController = TextEditingController();
   String _selectedCategory = 'furniture';
+  final List<String> _selectedTransactionIds = [];
 
   // Category options matching PocketBase products schema
   final List<_CategoryOption> _categories = [
@@ -66,6 +68,7 @@ class _CreateUpcycledProductFormPageState
       'category': _selectedCategory,
       'price': double.tryParse(_priceController.text.trim()) ?? 0,
       'stock': int.tryParse(_stockController.text.trim()) ?? 0,
+      'source_transactions': _selectedTransactionIds,
     };
 
     context.read<ProductBloc>().add(CreateProduct(body));
@@ -389,15 +392,14 @@ class _CreateUpcycledProductFormPageState
                             ),
                             const SizedBox(height: 32),
 
-                            // Material Source Tracking
+                            // Material Source Tracking — Load marketplace transactions
                             Container(
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
                                 color: AppTheme.surfaceColor,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color:
-                                      Colors.white.withValues(alpha: 0.1),
+                                  color: Colors.white.withValues(alpha: 0.1),
                                 ),
                               ),
                               child: Column(
@@ -405,62 +407,53 @@ class _CreateUpcycledProductFormPageState
                                 children: [
                                   Row(
                                     children: [
-                                      const Icon(
-                                        Icons.receipt_long,
-                                        color: AppTheme.primaryColor,
-                                        size: 20,
-                                      ),
+                                      const Icon(Icons.receipt_long, color: AppTheme.primaryColor, size: 20),
                                       const SizedBox(width: 8),
-                                      Text(
-                                        l10n.converterAddProductTraceability,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                                      Text(l10n.converterAddProductTraceability, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                                     ],
                                   ),
                                   const SizedBox(height: 16),
-                                  Text(
-                                    l10n.converterAddProductTraceabilityDesc,
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                      height: 1.5,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 12,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Colors.white.withValues(alpha: 0.05),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: Colors.white
-                                            .withValues(alpha: 0.1),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          l10n
-                                              .converterAddProductSelectTransaction,
-                                          style: const TextStyle(
-                                            color: Colors.white54,
-                                          ),
-                                        ),
-                                        const Icon(
-                                          Icons.arrow_drop_down,
-                                          color: Colors.white54,
-                                        ),
-                                      ],
+                                  Text(l10n.converterAddProductTraceabilityDesc, style: const TextStyle(color: Colors.white70, fontSize: 12, height: 1.5)),
+                                  const SizedBox(height: 12),
+                                  BlocProvider(
+                                    create: (_) => getIt<MarketplaceBloc>()..add(LoadMarketplaceTransactions(buyerId: converterId, status: 'paid')),
+                                    child: BlocBuilder<MarketplaceBloc, MarketplaceState>(
+                                      builder: (ctx, mktState) {
+                                        if (mktState is MarketplaceLoading) {
+                                          return const SizedBox(height: 40, child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
+                                        }
+                                        if (mktState is MarketplaceError) {
+                                          return Text('Gagal memuat transaksi: ${mktState.message}', style: const TextStyle(color: Colors.redAccent, fontSize: 12));
+                                        }
+                                        if (mktState is MarketplaceTransactionsLoaded) {
+                                          final transactions = mktState.transactions;
+                                          if (transactions.isEmpty) {
+                                            return const Text('Belum ada transaksi pembelian bahan.', style: TextStyle(color: Colors.white54, fontSize: 12));
+                                          }
+                                          return Wrap(
+                                            spacing: 8,
+                                            runSpacing: 8,
+                                            children: transactions.map((tx) {
+                                              final isSelected = _selectedTransactionIds.contains(tx.id);
+                                              return FilterChip(
+                                                selected: isSelected,
+                                                label: Text('${tx.id.substring(0, 8)}... (${tx.quantity}kg)', style: TextStyle(fontSize: 11, color: isSelected ? AppTheme.background : Colors.white70)),
+                                                selectedColor: AppTheme.primaryColor,
+                                                backgroundColor: AppTheme.background,
+                                                checkmarkColor: AppTheme.background,
+                                                side: BorderSide(color: isSelected ? AppTheme.primaryColor : Colors.white24),
+                                                onSelected: (sel) {
+                                                  setState(() {
+                                                    if (sel) { _selectedTransactionIds.add(tx.id); }
+                                                    else { _selectedTransactionIds.remove(tx.id); }
+                                                  });
+                                                },
+                                              );
+                                            }).toList(),
+                                          );
+                                        }
+                                        return const SizedBox.shrink();
+                                      },
                                     ),
                                   ),
                                 ],

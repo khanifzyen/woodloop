@@ -62,7 +62,11 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
   @override
   Future<ProductModel> createProduct(Map<String, dynamic> body) async {
-    final record = await pb.collection('products').create(body: body);
+    // Auto-generate a unique QR code ID for traceability
+    final qrCodeId = 'QR-${DateTime.now().millisecondsSinceEpoch.toRadixString(36).toUpperCase()}';
+    final bodyWithQr = Map<String, dynamic>.from(body)
+      ..['qr_code_id'] = qrCodeId;
+    final record = await pb.collection('products').create(body: bodyWithQr);
     return ProductModel.fromRecord(record);
   }
 

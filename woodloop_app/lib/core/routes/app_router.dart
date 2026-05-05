@@ -100,7 +100,8 @@ class AppRouter {
           state.matchedLocation == '/role-selection' ||
           state.matchedLocation.startsWith('/register') ||
           state.matchedLocation == '/forgot-password' ||
-          state.matchedLocation == '/map-picker';
+          state.matchedLocation == '/map-picker' ||
+          state.matchedLocation.startsWith('/trace/');
 
       final isOnboarding =
           state.matchedLocation == '/onboarding' ||
@@ -723,6 +724,14 @@ class AppRouter {
         path: '/product-story-traceability',
         name: 'product_story_traceability',
         builder: (context, state) => const ProductStoryTraceabilityPage(),
+      ),
+      // Public traceability route (no auth required)
+      GoRoute(
+        path: '/trace/:productId',
+        name: 'public_traceability',
+        builder: (context, state) => ProductStoryTraceabilityPage(
+          productId: state.pathParameters['productId'],
+        ),
       ),
       GoRoute(
         path: '/designer-consultant-profile',
