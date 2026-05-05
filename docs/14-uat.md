@@ -227,23 +227,79 @@ Test dilakukan di app Flutter yang terhubung ke PocketBase production/staging.
 
 ---
 
-## UAT-06: Traceability (QR Code)
+## UAT-06: Traceability & QR Code (FASE 3)
 
-> **Tanpa login** (halaman publik)
+> **Sebagian tanpa login** (halaman publik untuk scan QR)  
+> **Login sebagai Converter** untuk generate QR
 
-### UAT-06.1: Scan QR Code
+### UAT-06.1: Product Creation dengan Source Transactions
 | Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
 |---------|------|----------------------|------|
-| 1 | Scan QR code dari produk Converter | Redirect ke halaman traceability | |
-| 2 | Timeline perjalanan kayu muncul | 3-4 step: Generator → Aggregator → Converter | |
-| 3 | Statistik dampak muncul | CO2 saved, waste diverted | |
-| 4 | Nama entitas di setiap step | Nama Generator, Aggregator, Converter | |
+| 1 | Login sebagai Converter | Dashboard studio muncul | |
+| 2 | Buat produk baru (tab Produk → Tambah) | Form create product terbuka | |
+| 3 | Scroll ke "Material Source Tracking" | Section menampilkan list marketplace tx milik converter | |
+| 4 | Loading state muncul | Circular progress indicator | |
+| 5 | List transaksi "paid" muncul sebagai chip | Setiap chip: ID transaksi + quantity | |
+| 6 | Tap 1-2 chip untuk select | Chip ter-highlight (primary color) | |
+| 7 | Tap lagi untuk deselect | Chip kembali normal | |
+| 8 | Isi form lengkap + submit | Product terbuat + success dialog muncul | |
 
-### UAT-06.2: Akses via Link
+### UAT-06.2: QR Code Auto-Generate
 | Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
 |---------|------|----------------------|------|
-| 1 | Buka link traceability di browser | Halaman publik terbuka (tanpa login) | |
-| 2 | Semua data traceability muncul | Sama seperti scan QR | |
+| 1 | Setelah product created | Dialog sukses muncul dengan QR Code | |
+| 2 | QR code tertampil dengan benar | QR image visible, resolusi jelas | |
+| 3 | URL di bawah QR: `https://woodloop.app/trace/{qr_code_id}` | Format QR-XXXXXX | |
+| 4 | Verifikasi di PB Admin (`products`) | Field `qr_code_id` terisi otomatis | |
+| 5 | Klik "Selesai & Kembali ke Katalog" | Redirect ke My Upcycled Catalog | |
+| 6 | Buka lagi QR dari catalog (opsional) | QR Code dialog muncul via tombol | |
+
+### UAT-06.3: Halaman Traceability (dengan Data Real)
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Buka `/product-story-traceability?productId=xxx` | Halaman traceability terbuka | |
+| 2 | Nama produk muncul di hero section | Sesuai nama produk yang dibuat | |
+| 3 | Kategori produk muncul | Category badge di hero | |
+| 4 | Impact metrics muncul | Dua card: CO2 saved (kg) + Waste Diverted (kg) | |
+| 5 | Timeline muncul dengan 3-4 steps | Generator → Aggregator → Converter | |
+| 6 | Setiap step: role icon, title, entity name, date | Icon sesuai role (carpenter, shipping, handyman) | |
+| 7 | Step terakhir highlight (active) | Node berwarna primary, teks bold | |
+| 8 | Step terverifikasi tampil badge hijau | "Terverifikasi" + check icon | |
+| 9 | Foto background map_jepara.jpg | Gambar peta Jepara di hero | |
+| 10 | Bottom bar "Tambah ke Keranjang" (jika diakses dari app) | Tombol CTA aktif | |
+
+### UAT-06.4: Public Traceability (Tanpa Login)
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Logout dari app | Kembali ke splash/login | |
+| 2 | Scan QR code produk (dari UAT-06.2) | Redirect ke `/trace/{qr_code_id}` | |
+| 3 | Halaman traceability terbuka **tanpa login** | Tidak di-redirect ke login | |
+| 4 | Timeline perjalanan kayu muncul | 3-4 step lengkap | |
+| 5 | Statistik CO2 & waste diverted muncul | Data real dari impact_metrics | |
+| 6 | Nama entitas di setiap step tampil | Nama Generator, Aggregator, Converter | |
+| 7 | Halaman tidak ada tombol "Tambah ke Keranjang" | Hanya read-only | |
+| 8 | Test buka di browser eksternal (HP teman) | Halaman publik bisa diakses siapa pun | |
+
+### UAT-06.5: Traceability Chain Verification (PB Admin)
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Buka PB Admin → `products` | Cari produk yang dibuat | |
+| 2 | Cek field `source_transactions` | Berisi ID marketplace transaction yang dipilih | |
+| 3 | Buka `marketplace_transactions` → cari ID tsb | Ada field `inventory_item` | |
+| 4 | Buka `warehouse_inventory` → cari ID inventory | Ada field `pickup` | |
+| 5 | Buka `pickups` → cari ID pickup | Ada field `waste_listing` | |
+| 6 | Buka `waste_listings` → cari ID waste | Ada field `generator` | |
+| 7 | Buka `impact_metrics` → filter by pickup | CO2 saved & waste diverted terhitung | |
+| 8 | **Verifikasi chain tidak putus** | 5 koleksi terhubung: product → marketplace → warehouse → pickup → waste ✅ | |
+
+### UAT-06.6: Edge Cases
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Converter tanpa transaksi → buka form | "Belum ada transaksi pembelian bahan" | |
+| 2 | Traceability untuk produk tanpa source tx | "Belum ada data jejak" / empty state | |
+| 3 | Traceability dengan productId invalid | Error message / "Product not found" | |
+| 4 | Buka `/trace/` tanpa productId | Halaman kosong / default state | |
+| 5 | Loading state saat fetch data | CircularProgressIndicator muncul | |
 
 ---
 
@@ -364,7 +420,11 @@ Lakukan skenario ini dari awal sampai akhir **tanpa reset data**:
 | 10 | wallet_transactions Converter: -Rp 300.000 (debit) + nanti credit dari Buyer | |
 | 11 | wallet_transactions Buyer: -Rp 250.000 (debit) | |
 | 12 | Traceability page: 3 steps (Generator → Aggregator → Converter) | |
-| 13 | Enabler dashboard: total limbah + CO2 ter-update | |
+| 13 | Traceability chain unbroken: product → marketplace_tx → warehouse → pickup → waste | |
+| 14 | Public traceability page accessible without login | |
+| 15 | QR Code auto-generated dengan format QR-XXXXXX | |
+| 16 | Product.source_transactions berisi marketplace tx IDs | |
+| 17 | Enabler dashboard: total limbah + CO2 ter-update | |
 
 ---
 
@@ -377,7 +437,7 @@ Lakukan skenario ini dari awal sampai akhir **tanpa reset data**:
 | UAT-03: Aggregator | ___ | ___ | ___ | |
 | UAT-04: Converter | ___ | ___ | ___ | |
 | UAT-05: Buyer | ___ | ___ | ___ | |
-| UAT-06: Traceability | ___ | ___ | ___ | |
+| UAT-06: Traceability & QR (FASE 3) | ___ | ___ | ___ | |
 | UAT-07: Wallet | ___ | ___ | ___ | |
 | UAT-08: Supplier | ___ | ___ | ___ | |
 | UAT-09: Enabler | ___ | ___ | ___ | |
