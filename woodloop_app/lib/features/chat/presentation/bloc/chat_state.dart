@@ -20,6 +20,15 @@ class MessagesLoaded extends ChatState {
   List<Object?> get props => [messages];
 }
 
+class ConversationsLoaded extends ChatState {
+  final List<ConversationPreview> conversations;
+
+  const ConversationsLoaded(this.conversations);
+
+  @override
+  List<Object?> get props => [conversations];
+}
+
 class ChatError extends ChatState {
   final String message;
 

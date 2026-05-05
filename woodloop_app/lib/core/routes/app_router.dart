@@ -52,6 +52,8 @@ import '../../features/buyer/presentation/pages/order_tracking_journey_page.dart
 import '../../features/enabler/presentation/pages/impact_analytics_dashboard_page.dart';
 import '../../features/chat/presentation/pages/messages_list_page.dart';
 import '../../features/chat/presentation/pages/direct_message_conversation_page.dart';
+import '../../features/design_recipe/presentation/pages/design_recipes_list_page.dart';
+import '../../features/design_recipe/presentation/pages/design_recipe_detail_page.dart';
 import '../../features/traceability/presentation/pages/select_wood_source_history_page.dart';
 import '../../features/traceability/presentation/pages/product_story_traceability_page.dart';
 import '../../features/profile/presentation/pages/designer_consultant_profile_page.dart';
@@ -694,13 +696,26 @@ class AppRouter {
             );
           }
           return const DirectMessageConversationPage(
-            receiverId: '',
-            receiverName: 'User',
-          );
-        },
-      ),
-      GoRoute(
-        path: '/select-wood-source-history',
+        receiverId: '',
+        receiverName: 'User',
+      );
+    },
+  ),
+  GoRoute(
+    path: '/design-recipes',
+    name: 'design_recipes',
+    builder: (context, state) => const DesignRecipesListPage(),
+  ),
+  GoRoute(
+    path: '/design-recipe-detail',
+    name: 'design_recipe_detail',
+    builder: (context, state) {
+      final recipeId = state.extra as String? ?? '';
+      return DesignRecipeDetailPage(recipeId: recipeId);
+    },
+  ),
+  GoRoute(
+    path: '/select-wood-source-history',
         name: 'select_wood_source_history',
         builder: (context, state) => const SelectWoodSourceHistoryPage(),
       ),

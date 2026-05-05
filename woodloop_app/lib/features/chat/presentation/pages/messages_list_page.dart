@@ -1,10 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
+import '../../presentation/bloc/chat_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../../injection_container.dart';
 
 class MessagesListPage extends StatelessWidget {
   const MessagesListPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final bloc = getIt<ChatBloc>();
+        final authState = context.read<AuthBloc>().state;
+        if (authState is Authenticated) {
+          bloc.add(LoadConversations(authState.user.id));
+        }
+        return bloc;
+      },
+      child: const _MessagesListView(),
+    );
+  }
+}
+
+class _MessagesListView extends StatelessWidget {
+  const _MessagesListView();
 
   @override
   Widget build(BuildContext context) {
@@ -30,225 +53,213 @@ class MessagesListPage extends StatelessWidget {
         actions: [IconButton(icon: const Icon(Icons.search), onPressed: () {})],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Tabs Menu
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 8.0,
-              ),
-              child: Row(
-                children: [
-                  _buildTabItem(l10n.chatMessagesTabAll, true),
-                  const SizedBox(width: 8),
-                  _buildTabItem(l10n.chatMessagesTabUnread, false),
-                  const SizedBox(width: 8),
-                  _buildTabItem(l10n.chatMessagesTabSystem, false),
-                ],
-              ),
-            ),
+        child: BlocBuilder<ChatBloc, ChatState>(
+          builder: (context, state) {
+            if (state is ChatLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-            // Messages List
-            Expanded(
-              child: ListView(
+            if (state is ConversationsLoaded) {
+              if (state.conversations.isEmpty) {
+                return Center(
+                  child: Text(
+                    l10n.chatDmMessage1,
+                    style: const TextStyle(color: Colors.white54),
+                  ),
+                );
+              }
+
+              return ListView.builder(
                 padding: const EdgeInsets.only(top: 16),
-                children: [
-                  _buildMessageItem(
+                itemCount: state.conversations.length,
+                itemBuilder: (context, index) {
+                  final conv = state.conversations[index];
+                  return _buildConversationItem(
                     context: context,
-                    name: l10n.chatMockSender1,
-                    message: l10n.chatMockMessage1,
-                    time: l10n.chatMockTime1,
-                    unreadCount: 2,
-                    isOnline: true,
-                  ),
-                  const Divider(color: Colors.white10, height: 1),
-                  _buildMessageItem(
-                    context: context,
-                    name: l10n.chatMockSender2,
-                    message: l10n.chatMockMessage2,
-                    time: l10n.chatMockTime2,
-                    unreadCount: 0,
-                    isOnline: false,
-                  ),
-                  const Divider(color: Colors.white10, height: 1),
-                  _buildMessageItem(
-                    context: context,
-                    name: l10n.chatMockSender3,
-                    message: l10n.chatMockMessage3,
-                    time: l10n.chatMockTime3,
-                    unreadCount: 0,
-                    isOnline: true,
-                  ),
-                ],
-              ),
-            ),
-          ],
+                    conversationId: conv.conversationId,
+                    receiverId: conv.otherUserId,
+                    receiverName: conv.otherUserName,
+                    message: conv.lastMessage,
+                    time: _formatTime(conv.lastMessageTime),
+                    unreadCount: conv.unreadCount,
+                  );
+                },
+              );
+            }
+
+            if (state is ChatError) {
+              return Center(
+                child: Text(
+                  state.message,
+                  style: const TextStyle(color: Colors.redAccent),
+                ),
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
   }
 
-  Widget _buildTabItem(String label, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected
-            ? AppTheme.primaryColor.withValues(alpha: 0.1)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isSelected
-              ? AppTheme.primaryColor
-              : Colors.white.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? AppTheme.primaryColor : Colors.white70,
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          fontSize: 12,
-        ),
-      ),
-    );
+  String _formatTime(DateTime dt) {
+    final hour = dt.hour.toString().padLeft(2, '0');
+    final minute = dt.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 
-  Widget _buildMessageItem({
+  Widget _buildConversationItem({
     required BuildContext context,
-    required String name,
+    required String conversationId,
+    required String receiverId,
+    required String receiverName,
     required String message,
     required String time,
     required int unreadCount,
-    required bool isOnline,
   }) {
     return InkWell(
       onTap: () {
-        context.pushNamed('direct_message_conversation');
+        context.pushNamed('direct_message_conversation', extra: {
+          'conversation_id': conversationId,
+          'receiver_id': receiverId,
+          'receiver_name': receiverName,
+        });
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-        child: Row(
-          children: [
-            // Avatar
-            Stack(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: Row(
               children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceColor,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.1),
-                    ),
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.person, color: Colors.white54),
-                  ),
-                ),
-                if (isOnline)
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      width: 14,
-                      height: 14,
+                Stack(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
                       decoration: BoxDecoration(
-                        color: AppTheme.primaryColor,
+                        color: AppTheme.surfaceColor,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppTheme.background,
-                          width: 2,
+                          color: Colors.white.withValues(alpha: 0.1),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          receiverName.isNotEmpty
+                              ? receiverName[0].toUpperCase()
+                              : '?',
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-            const SizedBox(width: 16),
-
-            // Text Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: unreadCount > 0
-                                ? FontWeight.bold
-                                : FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Text(
-                        time,
-                        style: TextStyle(
-                          color: unreadCount > 0
-                              ? AppTheme.primaryColor
-                              : Colors.white38,
-                          fontSize: 12,
-                          fontWeight: unreadCount > 0
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          message,
-                          style: TextStyle(
-                            color: unreadCount > 0
-                                ? Colors.white
-                                : Colors.white54,
-                            fontWeight: unreadCount > 0
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            fontSize: 14,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      if (unreadCount > 0) ...[
-                        const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: const BoxDecoration(
+                    if (unreadCount == 0)
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          width: 14,
+                          height: 14,
+                          decoration: BoxDecoration(
                             color: AppTheme.primaryColor,
                             shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            unreadCount.toString(),
-                            style: const TextStyle(
+                            border: Border.all(
                               color: AppTheme.background,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                              width: 2,
                             ),
                           ),
                         ),
-                      ],
+                      ),
+                  ],
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              receiverName,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: unreadCount > 0
+                                    ? FontWeight.bold
+                                    : FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            time,
+                            style: TextStyle(
+                              color: unreadCount > 0
+                                  ? AppTheme.primaryColor
+                                  : Colors.white38,
+                              fontSize: 12,
+                              fontWeight: unreadCount > 0
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              message,
+                              style: TextStyle(
+                                color: unreadCount > 0
+                                    ? Colors.white
+                                    : Colors.white54,
+                                fontWeight: unreadCount > 0
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                fontSize: 14,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (unreadCount > 0) ...[
+                            const SizedBox(width: 12),
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(
+                                color: AppTheme.primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                unreadCount.toString(),
+                                style: const TextStyle(
+                                  color: AppTheme.background,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          const Divider(color: Colors.white10, height: 1),
+        ],
       ),
     );
   }

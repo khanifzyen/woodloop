@@ -33,3 +33,12 @@ class NewMessageReceived extends ChatEvent {
   @override
   List<Object?> get props => [message];
 }
+
+class LoadConversations extends ChatEvent {
+  final String userId;
+
+  const LoadConversations(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}

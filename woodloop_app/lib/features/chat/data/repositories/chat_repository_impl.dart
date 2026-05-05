@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import '../../domain/entities/chat_message.dart';
+import '../../domain/entities/conversation_preview.dart';
 import '../../domain/repositories/chat_repository.dart';
 import '../datasources/chat_remote_datasource.dart';
 
@@ -12,6 +13,11 @@ class ChatRepositoryImpl implements ChatRepository {
   @override
   Future<List<ChatMessage>> getMessages(String conversationId) {
     return _remoteDataSource.getMessages(conversationId);
+  }
+
+  @override
+  Future<List<ConversationPreview>> getConversations(String userId) {
+    return _remoteDataSource.getConversations(userId);
   }
 
   @override

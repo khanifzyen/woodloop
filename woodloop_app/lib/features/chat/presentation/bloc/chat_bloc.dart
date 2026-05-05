@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/entities/chat_message.dart';
+import '../../domain/entities/conversation_preview.dart';
 import '../../domain/repositories/chat_repository.dart';
 
 part 'chat_event.dart';
@@ -15,6 +16,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc(this._repository) : super(ChatInitial()) {
     on<LoadMessages>(_onLoadMessages);
     on<SendMessage>(_onSendMessage);
+    on<LoadConversations>(_onLoadConversations);
     on<NewMessageReceived>(_onNewMessageReceived);
   }
 
@@ -41,6 +43,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     try {
       await _repository.sendMessage(event.data);
+    } catch (e) {
+      emit(ChatError(e.toString()));
+    }
+  }
+
+  Future<void> _onLoadConversations(
+    LoadConversations event,
+    Emitter<ChatState> emit,
+  ) async {
+    emit(ChatLoading());
+    try {
+      final conversations = await _repository.getConversations(event.userId);
+      emit(ConversationsLoaded(conversations));
     } catch (e) {
       emit(ChatError(e.toString()));
     }

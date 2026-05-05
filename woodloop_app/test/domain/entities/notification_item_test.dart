@@ -38,7 +38,7 @@ void main() {
         id: 'n4', userId: 'u4', title: 'T', message: 'M',
         type: 'system', created: now,
       );
-      expect(notif.props.length, 7);
+      expect(notif.props.length, 9);
     });
 
     test('equality', () {
