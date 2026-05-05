@@ -407,17 +407,51 @@ Test dilakukan di app Flutter yang terhubung ke PocketBase production/staging.
 
 ---
 
-## UAT-09: Enabler Dashboard
+## UAT-09: Enabler Dashboard & User Management (FASE 5)
 
 > **Login sebagai:** `demo.enabler@woodloop.id`
 
-### UAT-09.1: Impact Analytics
+### UAT-09.1: Impact Analytics Dashboard
 | Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
 |---------|------|----------------------|------|
 | 1 | Dashboard Enabler muncul | Statistik aggregate | |
 | 2 | Total limbah terselamatkan (kg) | Akumulasi dari impact_metrics | |
 | 3 | Total CO2 dicegah (kg) | Akumulasi co2_saved | |
-| 4 | Grafik tren bulanan | Chart.js / grafik Flutter | |
+| 4 | Total nilai ekonomi (Rp) | Akumulasi economic_value | |
+| 5 | Jumlah user per role | Generator, Aggregator, Converter, Buyer count | |
+| 6 | Total transaksi | Pickups + Orders | |
+| 7 | Loading state | Spinner saat fetch data | |
+| 8 | Error state (jika PB offline) | Pesan error + retry | |
+
+### UAT-09.2: User Management Page
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Dari dashboard Enabler → buka User Management | Halaman dengan 3 stat card: Total, Verified, Pending | |
+| 2 | List user muncul | Avatar inisial, nama, email, role badge, switch | |
+| 3 | Role badge berwarna per role | Supplier=coklat, Generator=toska, Aggregator=biru, dll | |
+| 4 | Filter by role: tap "Generator" | Hanya user dengan role Generator tampil | |
+| 5 | Tap "Semua" | Semua user tampil kembali | |
+| 6 | Switch toggle verifikasi ON | Status "Pending" → "Verified", teks hijau | |
+| 7 | Verifikasi di PB Admin | Field `is_verified` user berubah jadi true | |
+| 8 | Switch toggle OFF | Status kembali ke "Pending" | |
+| 9 | Optimistic update | UI langsung berubah tanpa loading | |
+| 10 | Jika gagal (simulasi matikan PB) | UI revert ke state sebelumnya |
+
+### UAT-09.3: User Card Detail
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Avatar circle dengan inisial huruf pertama | Background warna sesuai role | |
+| 2 | Nama user + email terlihat | Font putih, jelas terbaca | |
+| 3 | Workshop name muncul jika ada | Teks abu-abu kecil | |
+| 4 | Role badge di kanan atas | Label + warna | |
+| 5 | Switch toggle di kanan | Mudah dijangkau jempol | |
+
+### UAT-09.4: Stats Bar
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Total users = verified + pending | Angka konsisten | |
+| 2 | Tap filter role → stats tetap akurat | Total sesuai filter | |
+| 3 | Toggle verification → angka verified/pending update | Real-time update | |
 
 ---
 

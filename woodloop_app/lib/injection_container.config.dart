@@ -58,6 +58,8 @@ import 'features/enabler/domain/repositories/impact_metric_repository.dart'
     as _i29;
 import 'features/enabler/presentation/cubit/enabler_dashboard_cubit.dart'
     as _i102;
+import 'features/enabler/presentation/cubit/user_management_cubit.dart'
+    as _i1054;
 import 'features/chat/data/datasources/chat_remote_datasource.dart' as _i343;
 import 'features/chat/data/repositories/chat_repository_impl.dart' as _i382;
 import 'features/chat/domain/repositories/chat_repository.dart' as _i453;
@@ -324,6 +326,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i29.ImpactMetricRepository>(),
         gh<_i169.PocketBase>(),
       ),
+    );
+    gh.factory<_i1054.UserManagementCubit>(
+      () => _i1054.UserManagementCubit(gh<_i169.PocketBase>()),
     );
     gh.lazySingleton<_i1050.DesignRecipeRemoteDataSource>(
       () => _i1050.DesignRecipeRemoteDataSourceImpl(gh<_i169.PocketBase>()),

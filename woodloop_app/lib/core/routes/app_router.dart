@@ -50,6 +50,7 @@ import '../../features/buyer/presentation/pages/secure_checkout_payment_page.dar
 import '../../features/buyer/presentation/pages/order_tracking_journey_page.dart';
 
 import '../../features/enabler/presentation/pages/impact_analytics_dashboard_page.dart';
+import '../../features/enabler/presentation/pages/user_management_page.dart';
 import '../../features/chat/presentation/pages/messages_list_page.dart';
 import '../../features/chat/presentation/pages/direct_message_conversation_page.dart';
 import '../../features/design_recipe/presentation/pages/design_recipes_list_page.dart';
@@ -542,12 +543,17 @@ class AppRouter {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(
-                path: '/enabler-reports',
-                name: 'enabler_reports',
-                builder: (context, state) =>
-                    const ImpactAnalyticsDashboardPage(),
-              ),
+      GoRoute(
+        path: '/enabler-reports',
+        name: 'enabler_reports',
+        builder: (context, state) =>
+            const ImpactAnalyticsDashboardPage(),
+      ),
+      GoRoute(
+        path: '/user-management',
+        name: 'user_management',
+        builder: (context, state) => const UserManagementPage(),
+      ),
             ],
           ),
           StatefulShellBranch(
