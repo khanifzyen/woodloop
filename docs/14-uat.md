@@ -303,24 +303,84 @@ Test dilakukan di app Flutter yang terhubung ke PocketBase production/staging.
 
 ---
 
-## UAT-07: Wallet & Transaksi
+## UAT-07: Wallet & Transaksi (FASE 4)
 
-### UAT-07.1: Cek Saldo
+> **Semua role** — setiap user punya dompet digital
+
+### UAT-07.1: Buka Halaman Wallet
 | Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
 |---------|------|----------------------|------|
-| 1 | Login sebagai Generator | Dashboard dengan saldo | |
-| 2 | Saldo bertambah setelah pickup completed | Balance sesuai credit dari Aggregator | |
-| 3 | Login sebagai Aggregator | Saldo bertambah setelah marketplace sale | |
-| 4 | Login sebagai Converter | Saldo berkurang setelah marketplace purchase | |
-| 5 | Login sebagai Buyer | Saldo berkurang setelah order paid | |
+| 1 | Login sebagai Generator | Dashboard muncul | |
+| 2 | Buka Digital Wallet (dari profil / menu) | Halaman wallet terbuka | |
+| 3 | Balance card muncul (hijau gradient) | Saldo saat ini terlihat | |
+| 4 | 4 action icon: Top Up, Transfer, Tarik, History | Icon + label muncul | |
+| 5 | Pull-to-refresh berfungsi | Swipe down → refresh balance & history | |
+| 6 | Tombol refresh di header history | Tap icon → data reload | |
 
-### UAT-07.2: Riwayat Transaksi
+### UAT-07.2: Cek Saldo Per Role
 | Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
 |---------|------|----------------------|------|
-| 1 | Buka Digital Wallet | List transaksi (credit/debit) | |
-| 2 | Verifikasi tipe transaksi sesuai | credit/debit sesuai flow | |
-| 3 | Verifikasi reference_type | pickup / marketplace_transaction / order | |
-| 4 | Verifikasi balance_after konsisten | Saldo akhir = saldo awal ± amount | |
+| 1 | Generator: saldo setelah pickup completed | Balance = credit amount dari Aggregator | |
+| 2 | Aggregator: saldo setelah marketplace sale | Balance bertambah dari penjualan | |
+| 3 | Converter: saldo setelah marketplace purchase | Balance berkurang dari pembelian | |
+| 4 | Buyer: saldo setelah order paid | Balance berkurang dari pembelian produk | |
+| 5 | Supplier: saldo awal | Balance = 0 (atau sesuai top-up) | |
+| 6 | Enabler: cek saldo | Balance = 0 (Enabler tidak bertransaksi) | |
+
+### UAT-07.3: Riwayat Transaksi
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | List transaksi muncul | Diurutkan terbaru dulu | |
+| 2 | Credit: panah hijau bawah + jumlah hijau | Ikon south_west, warna primary | |
+| 3 | Debit: panah merah atas + jumlah putih | Ikon north_east, warna merah | |
+| 4 | Reference badge muncul | Label: Pickup / Market / Order / Top Up / Tarik | |
+| 5 | Deskripsi transaksi muncul | Sesuai sumber transaksi | |
+| 6 | Format tanggal: "dd MMM yyyy, HH:mm" | "05 Mei 2026, 14:30" | |
+| 7 | Format jumlah: "Rp 500.000" (dengan titik) | NumberFormat Indonesia | |
+
+### UAT-07.4: Transaction Detail (Bottom Sheet)
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Tap salah satu transaksi | Bottom sheet muncul | |
+| 2 | Judul: deskripsi transaksi | Sesuai item yang di-tap | |
+| 3 | Tipe: "Kredit (Masuk)" / "Debit (Keluar)" | Warna sesuai tipe | |
+| 4 | Jumlah: format Rupiah | Rp xxx.xxx | |
+| 5 | Saldo Setelah: balance_after | Sesuai data PB | |
+| 6 | Referensi: "Penjemputan (pick1)" | Label + ID reference | |
+| 7 | Tanggal lengkap: "05 Mei 2026, 14:30" | Format long date | |
+| 8 | Swipe down untuk close | Bottom sheet tertutup | |
+
+### UAT-07.5: Empty State
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | User baru (belum ada transaksi) → buka wallet | Saldo Rp 0 | |
+| 2 | History section | Ikon receipt + "Belum ada transaksi" | |
+| 3 | Subtitle: "Transaksi akan muncul setelah ada aktivitas" | Teks abu-abu | |
+
+### UAT-07.6: Error State
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Matikan koneksi internet → buka wallet | Error message muncul | |
+| 2 | Icon error + pesan | "Coba Lagi" button | |
+| 3 | Tap "Coba Lagi" | Retry fetch data | |
+| 4 | Pull-to-refresh saat error | Retry fetch | |
+
+### UAT-07.7: WalletBalanceCard Widget (Dashboard)
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Widget reusable tersedia | `WalletBalanceCard(userId: ...)` | |
+| 2 | Embed di Generator Dashboard | Saldo tampil di dashboard | |
+| 3 | Tap card → navigasi ke wallet page | `onTap` callback berfungsi | |
+| 4 | Loading spinner saat fetch | CircularProgressIndicator kecil | |
+
+### UAT-07.8: Verifikasi Backend (PB Admin)
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Buka `wallet_transactions` di PB Admin | Ada record dari hook | |
+| 2 | Cek balance_after konsisten | Saldo akhir = saldo awal ± amount | |
+| 3 | Cek create/update/delete rule | Semua null (immutable, hanya via hook) | |
+| 4 | Cek reference_type + reference_id terisi | Sesuai trigger (pickup/marketplace/order) | |
+| 5 | Cek user ID sesuai | Transaksi milik user yang tepat | |
 
 ---
 
