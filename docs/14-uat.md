@@ -405,6 +405,28 @@ Test dilakukan di app Flutter yang terhubung ke PocketBase production/staging.
 | 3 | Buka "Inventaris" | Filter by status (available/sold) | |
 | 4 | Buka "Riwayat Penjualan" | List item yang sudah terjual | |
 
+### UAT-08.3: Pesanan Masuk (Supplier) — FASE 7
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Supplier → buka "Pesanan Masuk" | List pesanan dari Generator | |
+| 2 | Status "Menunggu" muncul | Badge oranye | |
+| 3 | Detail: quantity, total price, catatan | Sesuai order | |
+| 4 | Tap "Terima" | Status → "Diterima" (hijau) | |
+| 5 | Tap "Tolak" | Status → "Ditolak" (merah) | |
+| 6 | Order yang sudah di-accept/reject tidak muncul tombol | Hanya status badge | |
+| 7 | Verifikasi di PB (`raw_timber_orders`) | Status ter-update | |
+
+### UAT-08.4: Beli Bahan (Generator) — FASE 7
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Generator → buka "Beli Bahan Baku" | List kayu dari Supplier (available) | |
+| 2 | Setiap card: jenis kayu, volume, harga | Data dari PB | |
+| 3 | Tap "Pesan" | Snackbar "Pesanan dikirim!" | |
+| 4 | Order terbuat di `raw_timber_orders` | Status "pending" | |
+| 5 | Generator → buka "Pesanan Bahan" | List pesanan sendiri | |
+| 6 | Status badge sesuai | Menunggu / Diterima / Ditolak / Selesai | |
+| 7 | Login sebagai Supplier → lihat pesanan masuk | Pesanan dari Generator muncul | |
+
 ---
 
 ## UAT-09: Enabler Dashboard & User Management (FASE 5)

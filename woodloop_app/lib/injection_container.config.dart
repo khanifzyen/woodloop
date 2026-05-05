@@ -95,11 +95,18 @@ import 'features/generator/domain/repositories/waste_listing_repository.dart'
 import 'features/generator/presentation/bloc/waste_listing_bloc.dart' as _i981;
 import 'features/generator/data/datasources/generator_product_remote_data_source.dart'
     as _i1040;
+import 'features/generator/data/datasources/raw_timber_order_remote_data_source.dart'
+    as _i1055;
 import 'features/generator/data/repositories/generator_product_repository_impl.dart'
     as _i1041;
+import 'features/generator/data/repositories/raw_timber_order_repository_impl.dart'
+    as _i1056;
 import 'features/generator/domain/repositories/generator_product_repository.dart'
     as _i1042;
+import 'features/generator/domain/repositories/raw_timber_order_repository.dart'
+    as _i1057;
 import 'features/generator/presentation/bloc/generator_product_bloc.dart' as _i1043;
+import 'features/generator/presentation/bloc/raw_timber_order_bloc.dart' as _i1058;
 import 'features/profile/data/datasources/user_profile_remote_data_source.dart'
     as _i172;
 import 'features/profile/data/repositories/user_profile_repository_impl.dart'
@@ -209,6 +216,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1040.GeneratorProductRemoteDataSource>(
       () => _i1040.GeneratorProductRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
+    gh.lazySingleton<_i1055.RawTimberOrderRemoteDataSource>(
+      () => _i1055.RawTimberOrderRemoteDataSourceImpl(gh<_i169.PocketBase>()),
+    );
     gh.lazySingleton<_i548.SupplierRemoteDataSource>(
       () => _i548.SupplierRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
@@ -246,6 +256,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1040.GeneratorProductRemoteDataSource>(),
       ),
     );
+    gh.lazySingleton<_i1057.RawTimberOrderRepository>(
+      () => _i1056.RawTimberOrderRepositoryImpl(
+        gh<_i1055.RawTimberOrderRemoteDataSource>(),
+      ),
+    );
     gh.lazySingleton<_i172.UserProfileRemoteDataSource>(
       () => _i172.UserProfileRemoteDataSourceImpl(gh<_i169.PocketBase>()),
     );
@@ -262,6 +277,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i1043.GeneratorProductBloc(
         gh<_i1042.GeneratorProductRepository>(),
       ),
+    );
+    gh.factory<_i1058.RawTimberOrderBloc>(
+      () => _i1058.RawTimberOrderBloc(gh<_i1057.RawTimberOrderRepository>()),
     );
     gh.lazySingleton<_i1015.AuthRepository>(
       () => _i111.AuthRepositoryImpl(gh<_i767.AuthRemoteDataSource>()),

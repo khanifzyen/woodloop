@@ -51,6 +51,9 @@ import '../../features/buyer/presentation/pages/order_tracking_journey_page.dart
 
 import '../../features/enabler/presentation/pages/impact_analytics_dashboard_page.dart';
 import '../../features/enabler/presentation/pages/user_management_page.dart';
+import '../../features/generator/presentation/pages/generator_buy_timber_page.dart';
+import '../../features/generator/presentation/pages/generator_timber_orders_page.dart';
+import '../../features/supplier/presentation/pages/supplier_incoming_orders_page.dart';
 import '../../features/chat/presentation/pages/messages_list_page.dart';
 import '../../features/chat/presentation/pages/direct_message_conversation_page.dart';
 import '../../features/design_recipe/presentation/pages/design_recipes_list_page.dart';
@@ -553,6 +556,21 @@ class AppRouter {
         path: '/user-management',
         name: 'user_management',
         builder: (context, state) => const UserManagementPage(),
+      ),
+      GoRoute(
+        path: '/generator-buy-timber',
+        name: 'generator_buy_timber',
+        builder: (context, state) => const GeneratorBuyTimberPage(),
+      ),
+      GoRoute(
+        path: '/generator-timber-orders',
+        name: 'generator_timber_orders',
+        builder: (context, state) => const GeneratorTimberOrdersPage(),
+      ),
+      GoRoute(
+        path: '/supplier-incoming-orders',
+        name: 'supplier_incoming_orders',
+        builder: (context, state) => const SupplierIncomingOrdersPage(),
       ),
             ],
           ),
