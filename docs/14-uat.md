@@ -455,22 +455,59 @@ Test dilakukan di app Flutter yang terhubung ke PocketBase production/staging.
 
 ---
 
-## UAT-10: Chat & Notifikasi
+## UAT-10: Chat & Notifikasi (FASE 6)
 
-### UAT-10.1: Chat
+### UAT-10.1: Chat — Conversation List
 | Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
 |---------|------|----------------------|------|
-| 1 | Generator → Chat ke Aggregator | Pesan terkirim | |
-| 2 | Aggregator terima notifikasi chat | Muncul di conversation list | |
-| 3 | Balas pesan | Percakapan dua arah | |
-| 4 | Cek unread count | Counter muncul | |
+| 1 | Generator → buka Messages | List percakapan muncul | |
+| 2 | Unread count badge di item | "1" atau jumlah pesan belum dibaca | |
+| 3 | Nama lawan bicara muncul | otherUserName dari PB | |
+| 4 | Last message preview | Pesan terakhir terpotong | |
+| 5 | Waktu last message | Format relatif (5m yang lalu) | |
+| 6 | Tap conversation | Masuk ke DM page | |
 
-### UAT-10.2: Notifikasi
+### UAT-10.2: Chat — Direct Message
 | Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
 |---------|------|----------------------|------|
-| 1 | Buka Notification Center | List notifikasi | |
-| 2 | Notifikasi muncul saat status berubah | "Pickup completed", "Order paid" | |
-| 3 | Tap notifikasi → mark as read | Status berubah, counter berkurang | |
+| 1 | Ketik pesan di text field | Input berfungsi | |
+| 2 | Tap send | Pesan terkirim, muncul di chat | |
+| 3 | Balasan dari lawan bicara | Muncul realtime (PB subscription) | |
+| 4 | Pesan terbaru di bawah | Urutan kronologis | |
+| 5 | Sender vs receiver style berbeda | Bubble warna beda | |
+| 6 | Back → conversation list | List ter-update dengan last message baru | |
+
+### UAT-10.3: Notifikasi — Notification Center
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Buka Notification Center | List notifikasi (unread & read) | |
+| 2 | Section "Baru" untuk unread | Dipisah dari "Sebelumnya" | |
+| 3 | Ikon sesuai tipe: pickup, payment, order, system | Icon + warna berbeda | |
+| 4 | Waktu relatif: "5m yang lalu", "2j yang lalu" | Format Indonesia | |
+| 5 | Tap notifikasi → mark as read | Warna berubah, counter berkurang | |
+| 6 | Tap notifikasi → navigasi (jika ada ref) | Ke halaman terkait | |
+| 7 | Tap "Mark All Read" di appbar | Semua unread jadi read | |
+| 8 | Empty state jika tidak ada notifikasi | "Belum ada notifikasi" | |
+| 9 | Loading state | Spinner | |
+| 10 | Error state | Pesan error | |
+
+### UAT-10.4: NotificationBadge Widget
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Widget reusable tersedia | `NotificationBadge(onTap: ...)` | |
+| 2 | Embed di AppBar dashboard | Ikon lonceng + badge merah | |
+| 3 | Badge count sesuai unread | "3" jika 3 belum dibaca | |
+| 4 | "99+" jika >99 notifikasi | Teks "99+" | |
+| 5 | 0 unread → badge hilang | Hanya ikon lonceng | |
+| 6 | Tap badge → navigasi ke Notification Center | `onTap` callback | |
+
+### UAT-10.5: Realtime Subscription
+| Langkah | Aksi | Hasil yang Diharapkan | ✅/❌ |
+|---------|------|----------------------|------|
+| 1 | Dua device login sebagai user berbeda | Keduanya masuk chat | |
+| 2 | Device A kirim pesan ke Device B | Device B terima realtime (tanpa refresh) | |
+| 3 | Admin PB create notifikasi untuk user | User terima realtime di app | |
+| 4 | Close chat page → unsubscribe | Subscription bersih (tidak leak) | |
 
 ---
 

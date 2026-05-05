@@ -4,11 +4,57 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:woodloop_app/l10n/app_localizations.dart';
 import '../../presentation/bloc/notification_bloc.dart';
+import '../../domain/entities/notification_item.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../../injection_container.dart';
 
-class NotificationCenterPage extends StatelessWidget {
+class NotificationCenterPage extends StatefulWidget {
   const NotificationCenterPage({super.key});
+
+  @override
+  State<NotificationCenterPage> createState() => _NotificationCenterPageState();
+}
+
+class _NotificationCenterPageState extends State<NotificationCenterPage> {
+  String? _userId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final authState = context.read<AuthBloc>().state;
+    if (authState is Authenticated) {
+      _userId = authState.user.id;
+    }
+  }
+
+  void _markAllRead() {
+    final bloc = context.read<NotificationBloc>();
+    final state = bloc.state;
+    if (state is NotificationsLoaded) {
+      for (final n in state.items.where((n) => !n.isRead)) {
+        bloc.add(MarkNotificationAsRead(n.id));
+      }
+    }
+  }
+
+  void _onNotificationTap(NotificationItem item) {
+    // Mark as read
+    if (!item.isRead) {
+      context.read<NotificationBloc>().add(MarkNotificationAsRead(item.id));
+    }
+
+    // Navigate based on reference
+    final refType = item.referenceType;
+    final refId = item.referenceId;
+
+    if (refType == 'pickup' && refId != null) {
+      context.pushNamed('product_story_traceability');
+    } else if (refType == 'order' && refId != null) {
+      // Navigate to order tracking
+    } else if (refType == 'marketplace_transaction') {
+      // Navigate to marketplace detail
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +98,10 @@ class _NotificationCenterView extends StatelessWidget {
         elevation: 0,
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: _markAllRead,
             child: Text(
               l10n.notificationMarkRead,
-              style: const TextStyle(color: AppTheme.primaryColor),
+              style: const TextStyle(color: AppTheme.primaryColor, fontSize: 13),
             ),
           ),
         ],
@@ -97,7 +143,9 @@ class _NotificationCenterView extends StatelessWidget {
                       ),
                     ),
                     ...unread.map(
-                      (n) => _buildNotificationItem(
+                      (n) => GestureDetector(
+                        onTap: () => _onNotificationTap(n),
+                        child: _buildNotificationItem(
                         title: n.title,
                         message: n.message,
                         time: _formatTime(n.created),
@@ -105,6 +153,7 @@ class _NotificationCenterView extends StatelessWidget {
                         color: _colorForType(n.type),
                         isUnread: true,
                       ),
+                    ),
                     ),
                   ],
                   if (read.isNotEmpty) ...[
