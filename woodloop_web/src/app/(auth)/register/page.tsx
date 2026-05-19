@@ -234,9 +234,15 @@ export default function RegisterPage() {
           </form>
         </Form>
 
-        <div className="mt-6 text-center text-sm">
-          <span className="text-muted-foreground">Salah pilih peran? </span>
-          <Link href="/role-selection" className="text-primary hover:underline font-medium">Pilih ulang</Link>
+        <div className="mt-6 text-center text-sm space-y-2">
+          <div>
+            <span className="text-muted-foreground">Salah pilih peran? </span>
+            <Link href="/role-selection" className="text-primary hover:underline font-medium">Pilih ulang</Link>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Sudah punya akun? </span>
+            <Link href="/login" className="text-primary hover:underline font-medium">Masuk</Link>
+          </div>
         </div>
       </CardContent>
     </Card>
