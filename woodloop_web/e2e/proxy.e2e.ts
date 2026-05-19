@@ -28,7 +28,11 @@ test.describe("TC-07: Proxy/Middleware Route Protection", () => {
     expect(page.url()).toContain("/login");
   });
 
-  test("should redirect homepage / to /login", async ({ page }) => {
+  test("should redirect homepage / to /login after onboarding", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      localStorage.setItem("woodloop_onboarding_done", "true");
+    });
     await page.goto("/");
     await page.waitForURL("/login");
     expect(page.url()).toContain("/login");

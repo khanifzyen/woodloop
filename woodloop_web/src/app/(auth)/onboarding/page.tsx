@@ -40,16 +40,21 @@ export default function OnboardingPage() {
 
   const slide = SLIDES[currentSlide];
 
+  function completeOnboarding() {
+    localStorage.setItem("woodloop_onboarding_done", "true");
+    router.push("/role-selection");
+  }
+
   function next() {
     if (currentSlide < SLIDES.length - 1) {
       setCurrentSlide((s) => s + 1);
     } else {
-      router.push("/role-selection");
+      completeOnboarding();
     }
   }
 
   function skip() {
-    router.push("/role-selection");
+    completeOnboarding();
   }
 
   function prev() {

@@ -4,11 +4,32 @@ import { test, expect } from "@playwright/test";
  * UAT Fase 1: Foundation — Halaman Auth
  */
 
-test.describe("TC-01: Homepage Redirect", () => {
-  test("should redirect / to /login", async ({ page }) => {
+test.describe("TC-01: Homepage Redirect (Onboarding Flow)", () => {
+  test("should redirect / to /onboarding when first visit (no flag)", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForURL("/onboarding");
+    expect(page.url()).toContain("/onboarding");
+  });
+
+  test("should redirect / to /login after onboarding completed", async ({ page }) => {
+    // Set localStorage flag seolah onboarding sudah selesai
+    await page.goto("/");
+    await page.evaluate(() => {
+      localStorage.setItem("woodloop_onboarding_done", "true");
+    });
     await page.goto("/");
     await page.waitForURL("/login");
     expect(page.url()).toContain("/login");
+  });
+
+  test("should allow re-watching onboarding from login page", async ({ page }) => {
+    await page.goto("/login");
+    await page.evaluate(() => {
+      localStorage.setItem("woodloop_onboarding_done", "true");
+    });
+    await page.goto("/login");
+    await page.getByText("Lihat onboarding lagi").click();
+    await expect(page).toHaveURL(/onboarding/);
   });
 });
 

@@ -129,8 +129,9 @@ export default function LoginPage() {
           <Link
             href="/onboarding"
             className="text-xs text-muted-foreground hover:underline"
+            onClick={() => localStorage.removeItem("woodloop_onboarding_done")}
           >
-            Pelajari WoodLoop
+            🎬 Lihat onboarding lagi
           </Link>
         </div>
       </CardContent>
