@@ -6,10 +6,10 @@ import { getPB } from "@/lib/pocketbase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import type { LoginFormData, RegisterFormData } from "@/lib/validations/auth";
+import { setAuthCookie } from "./use-auth-cookie";
 
 /**
  * Hook: Login
- * Menerima email + password, autentikasi ke PocketBase
  */
 export function useLogin() {
   const { setAuth } = useAuthStore();
@@ -27,6 +27,7 @@ export function useLogin() {
     },
     onSuccess: ({ user, token }) => {
       setAuth(user, token);
+      setAuthCookie(token); // ⬅️ Set cookie untuk proxy middleware
       toast.success(`Selamat datang, ${user.name}!`);
       router.push(`/${user.role}/dashboard`);
     },
@@ -38,7 +39,6 @@ export function useLogin() {
 
 /**
  * Hook: Register
- * Menerima data registrasi + role, create user di PocketBase
  */
 export function useRegister() {
   const { setAuth } = useAuthStore();
@@ -57,7 +57,6 @@ export function useRegister() {
         workshop_name: data.workshop_name || "",
         is_verified: false,
       });
-      // Auto login setelah register
       const authData = await pb
         .collection("users")
         .authWithPassword(data.email, data.password);
@@ -67,6 +66,7 @@ export function useRegister() {
     },
     onSuccess: ({ user, token }) => {
       setAuth(user, token);
+      setAuthCookie(token); // ⬅️ Set cookie untuk proxy middleware
       toast.success("Akun berhasil dibuat!");
       router.push(`/${user.role}/dashboard`);
     },
@@ -78,7 +78,6 @@ export function useRegister() {
 
 /**
  * Hook: Forgot Password
- * Kirim email reset password via PocketBase
  */
 export function useForgotPassword() {
   return useMutation({
@@ -94,3 +93,4 @@ export function useForgotPassword() {
     },
   });
 }
+
