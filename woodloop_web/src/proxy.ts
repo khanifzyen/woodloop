@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import PocketBase from "pocketbase";
 
 const PB_URL = process.env.NEXT_PUBLIC_PB_URL || "http://127.0.0.1:8090";
 
@@ -24,6 +23,19 @@ const publicRoutes = [
   "/p/", // Traceability pages
 ];
 
+function decodeJWTPayload(token: string): Record<string, unknown> | null {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    // Base64 decode payload (bagian tengah JWT) — manual tanpa atob
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const jsonStr = Buffer.from(base64, "base64").toString("utf-8");
+    return JSON.parse(jsonStr);
+  } catch {
+    return null;
+  }
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -41,19 +53,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check auth dari cookie PocketBase
+  // Cek auth dari cookie — decode JWT langsung
   const authCookie = request.cookies.get("pb_auth");
   let userRole: string | null = null;
 
   if (authCookie?.value) {
-    try {
-      const pb = new PocketBase(PB_URL);
-      pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-      if (pb.authStore.isValid && pb.authStore.model) {
-        userRole = (pb.authStore.model as Record<string, unknown>).role as string;
-      }
-    } catch {
-      // Invalid token
+    const payload = decodeJWTPayload(authCookie.value);
+    if (payload) {
+      userRole = (payload.role as string) || null;
     }
   }
 
