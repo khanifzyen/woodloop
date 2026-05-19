@@ -13,6 +13,14 @@
 # testing
 /coverage
 
+# e2e test artifacts
+/test-results/
+/e2e-report/data/
+/playwright-report/
+
+# debug screenshots
+*.png
+
 # next.js
 /.next/
 /out/

@@ -1,4 +1,22 @@
 import "@testing-library/jest-dom/vitest";
+import { vi } from "vitest";
+
+// Mock Capacitor modules untuk test environment
+vi.mock("@capacitor/core", () => ({
+  Capacitor: {
+    isPluginAvailable: () => false,
+    getPlatform: () => "web",
+    isNativePlatform: () => false,
+  },
+}));
+
+vi.mock("@capacitor/camera", () => ({
+  Camera: {
+    getPhoto: vi.fn(),
+  },
+  CameraResultType: { DataUrl: "dataurl" },
+  CameraSource: { Camera: "camera" },
+}));
 
 // Mock localStorage untuk Zustand persist middleware
 const localStorageMock = (() => {
