@@ -70,7 +70,7 @@ class _TraceabilityContent extends StatelessWidget {
                 children: [
                   const Icon(Icons.error_outline, color: Colors.redAccent, size: 48),
                   const SizedBox(height: 16),
-                  Text(errorMsg!, style: const TextStyle(color: Colors.white70)),
+                  Text(errorMsg, style: const TextStyle(color: Colors.white70)),
                 ],
               ),
             )

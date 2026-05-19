@@ -135,9 +135,10 @@ class _DocumentManagerViewState extends State<DocumentManagerView> {
                           );
                           if (result != null &&
                               result.files.single.path != null) {
-                            if (!this.context.mounted) return;
+                            if (!sheetContext.mounted) return;
                             Navigator.pop(sheetContext);
-                            this.context.read<UserDocumentsCubit>().addDocument(
+                            if (!context.mounted) return;
+                            context.read<UserDocumentsCubit>().addDocument(
                               filePath: result.files.single.path!,
                               docType: selectedType,
                               userId: widget.userId,

@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:woodloop_app/features/shared/data/datasources/notification_remote_datasource.dart';
 import 'package:woodloop_app/features/shared/data/models/notification_model.dart';
-import 'package:woodloop_app/features/shared/domain/entities/notification_item.dart';
 import 'package:woodloop_app/features/shared/presentation/bloc/notification_bloc.dart';
 
 class MockNotificationRemoteDataSource extends Mock

@@ -166,7 +166,6 @@ class _GeneratorDashboardView extends StatelessWidget {
                         double totalWeight = 0;
                         int listingCount = 0;
                         int activeCount = 0;
-                        double totalRevenue = 0;
                         if (state is WasteListingsLoaded) {
                           listingCount = state.listings.length;
                           for (final l in state.listings) {
@@ -176,20 +175,15 @@ class _GeneratorDashboardView extends StatelessWidget {
                             if (l.status == 'available') {
                               activeCount++;
                             }
-                            totalRevenue += l.priceEstimate;
                           }
                         }
                         final weightStr = totalWeight >= 1000
-                            ? '${(totalWeight / 1000).toStringAsFixed(1)}'
+                            ? (totalWeight / 1000).toStringAsFixed(1)
                             : totalWeight.toStringAsFixed(0);
                         final weightUnit = totalWeight >= 1000 ? 'ton' : 'kg';
                         final conversionRate = listingCount > 0
                             ? '${((listingCount - activeCount) / listingCount * 100).toStringAsFixed(0)}%'
                             : '0%';
-                        final revenueStr = totalRevenue >= 1000000
-                            ? 'Rp ${(totalRevenue / 1000000).toStringAsFixed(1)}jt'
-                            : 'Rp ${totalRevenue.toStringAsFixed(0)}';
-                        final activePickupStr = '$activeCount Aktif';
 
                         return Container(
                           padding: const EdgeInsets.all(20),

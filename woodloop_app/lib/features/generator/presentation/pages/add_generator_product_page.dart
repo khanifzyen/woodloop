@@ -66,7 +66,6 @@ class _AddGeneratorProductPageState extends State<AddGeneratorProductPage> {
       return;
     }
 
-    final l10n = AppLocalizations.of(context)!;
     final body = {
       'generator': generatorId,
       'name': _nameController.text.trim(),

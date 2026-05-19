@@ -255,18 +255,18 @@ class _UnifiedRegistrationPageState extends State<UnifiedRegistrationPage> {
               );
               _uploadDocumentsForUser(state.user.id)
                   .then((_) {
-                    if (mounted) _showSuccessDialog(context);
+                    if (!context.mounted) return;
+                    _showSuccessDialog(context);
                   })
                   .catchError((e) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Gagal mengunggah beberapa dokumen.'),
-                          backgroundColor: Colors.redAccent,
-                        ),
-                      );
-                      _showSuccessDialog(context);
-                    }
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Gagal mengunggah beberapa dokumen.'),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
+                    _showSuccessDialog(context);
                   });
             } else {
               _showSuccessDialog(context);

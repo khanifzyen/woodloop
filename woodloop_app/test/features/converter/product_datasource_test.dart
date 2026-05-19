@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 
-import 'package:woodloop_app/features/converter/data/datasources/product_remote_data_source.dart';
 import 'package:woodloop_app/features/converter/domain/entities/product.dart';
 
 /// Test for Product datasource logic (unit test without PocketBase connection)

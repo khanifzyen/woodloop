@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pocketbase/pocketbase.dart';
 import 'package:woodloop_app/features/auth/domain/entities/user.dart';
 import 'package:woodloop_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:woodloop_app/features/auth/presentation/bloc/auth_bloc.dart';

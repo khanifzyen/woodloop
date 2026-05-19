@@ -235,7 +235,7 @@ class _DesignRecipeDetailView extends StatelessWidget {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: recipe.photos.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        separatorBuilder: (context, index) => const SizedBox(width: 12),
                         itemBuilder: (context, index) {
                           return Container(
                             width: 120,

@@ -158,7 +158,7 @@ class SupplierRemoteDataSourceImpl implements SupplierRemoteDataSource {
         .getList(
           page: 1,
           perPage: 500,
-          filter: 'supplier = "$supplierId"',
+          filter: supplierId.isNotEmpty ? 'supplier = "$supplierId"' : '',
           expand: 'wood_type',
           sort: '-updated',
         );

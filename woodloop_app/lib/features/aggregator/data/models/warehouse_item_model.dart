@@ -53,10 +53,10 @@ class WarehouseItemModel extends WarehouseItem {
     return {
       'aggregator': aggregatorId,
       'pickup': pickupId,
-      if (woodTypeId != null) 'wood_type': woodTypeId,
+      'wood_type': ?woodTypeId,
       'form': form,
       'weight': weight,
-      if (pricePerKg != null) 'price_per_kg': pricePerKg,
+      'price_per_kg': ?pricePerKg,
       'status': 'in_stock',
     };
   }

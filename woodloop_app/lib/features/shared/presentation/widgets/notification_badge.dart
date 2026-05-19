@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/notification_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../../injection_container.dart';
-import '../../../core/theme/app_theme.dart';
 
 /// Reusable notification badge widget.
 /// Shows unread notification count. Can be embedded in AppBar or dashboard.

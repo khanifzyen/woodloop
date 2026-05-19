@@ -13,7 +13,6 @@ void main() {
   late MockAuthRepository repository;
 
   const userId = 'user1';
-  final now = DateTime(2026, 4, 28);
 
   final sampleDocuments = [
     const UserDocument(

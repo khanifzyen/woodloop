@@ -54,7 +54,7 @@ class GeneratorProductModel extends GeneratorProduct {
       'category': category,
       'price': price,
       'stock': stock,
-      if (woodTypeId != null) 'wood_type': woodTypeId,
+      'wood_type': ?woodTypeId,
       'status': status,
     };
   }

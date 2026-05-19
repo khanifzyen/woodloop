@@ -16,15 +16,9 @@ class NotificationCenterPage extends StatefulWidget {
 }
 
 class _NotificationCenterPageState extends State<NotificationCenterPage> {
-  String? _userId;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final authState = context.read<AuthBloc>().state;
-    if (authState is Authenticated) {
-      _userId = authState.user.id;
-    }
   }
 
   void _markAllRead() {
@@ -67,13 +61,22 @@ class _NotificationCenterPageState extends State<NotificationCenterPage> {
         }
         return bloc;
       },
-      child: const _NotificationCenterView(),
+      child: _NotificationCenterView(
+        onMarkAllRead: _markAllRead,
+        onNotificationTap: _onNotificationTap,
+      ),
     );
   }
 }
 
 class _NotificationCenterView extends StatelessWidget {
-  const _NotificationCenterView();
+  final VoidCallback onMarkAllRead;
+  final Function(NotificationItem) onNotificationTap;
+
+  const _NotificationCenterView({
+    required this.onMarkAllRead,
+    required this.onNotificationTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +101,7 @@ class _NotificationCenterView extends StatelessWidget {
         elevation: 0,
         actions: [
           TextButton(
-            onPressed: _markAllRead,
+            onPressed: onMarkAllRead,
             child: Text(
               l10n.notificationMarkRead,
               style: const TextStyle(color: AppTheme.primaryColor, fontSize: 13),
@@ -144,7 +147,7 @@ class _NotificationCenterView extends StatelessWidget {
                     ),
                     ...unread.map(
                       (n) => GestureDetector(
-                        onTap: () => _onNotificationTap(n),
+                        onTap: () => onNotificationTap(n),
                         child: _buildNotificationItem(
                         title: n.title,
                         message: n.message,

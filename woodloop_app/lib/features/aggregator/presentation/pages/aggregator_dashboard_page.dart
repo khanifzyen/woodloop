@@ -178,7 +178,7 @@ class _AggregatorDashboardView extends StatelessWidget {
                 final dateStr =
                     '${today.day} ${['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][today.month]} ${today.year}';
                 final weightStr = totalWeight >= 1000
-                    ? '${(totalWeight / 1000).toStringAsFixed(1)}'
+                    ? (totalWeight / 1000).toStringAsFixed(1)
                     : totalWeight.toStringAsFixed(0);
                 final weightUnit = totalWeight >= 1000 ? 'ton' : 'kg';
 

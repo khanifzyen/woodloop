@@ -360,22 +360,16 @@ class _WalletView extends StatelessWidget {
   }
 }
 
-void _detailRow(String label, String value, {Color? valueColor}) {
-  // This is a top-level function used inside showModalBottomSheet builder
-}
-
-extension _DetailRow on _WalletView {
-  Widget _detailRow(String label, String value, {Color? valueColor}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(color: Colors.white54, fontSize: 13)),
-          Text(value, style: TextStyle(color: valueColor ?? Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-        ],
-      ),
-    );
-  }
+Widget _detailRow(String label, String value, {Color? valueColor}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+        Text(value, style: TextStyle(color: valueColor ?? Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+      ],
+    ),
+  );
 }
 

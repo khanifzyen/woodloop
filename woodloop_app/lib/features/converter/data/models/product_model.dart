@@ -52,8 +52,7 @@ class ProductModel extends Product {
       'category': category,
       'price': price,
       'stock': stock,
-      if (sourceTransactionIds != null)
-        'source_transactions': sourceTransactionIds,
+      'source_transactions': ?sourceTransactionIds,
     };
   }
 }

@@ -21,7 +21,6 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
   String? _selectedCondition;
   String _selectedUnit = 'kg';
   String? _selectedWoodTypeId;
-  String? _selectedWoodTypeName;
   final _quantityController = TextEditingController();
   final _priceController = TextEditingController();
 
@@ -225,7 +224,7 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                               builder: (context, state) {
                                 if (state is WoodTypesLoaded) {
                                   return DropdownButtonFormField<String>(
-                                    value: _selectedWoodTypeId,
+                                    initialValue: _selectedWoodTypeId,
                                     dropdownColor: AppTheme.surfaceColor,
                                     style: const TextStyle(color: Colors.white),
                                     decoration: InputDecoration(
@@ -267,11 +266,6 @@ class _ReportWoodWasteFormPageState extends State<ReportWoodWasteFormPage> {
                                     onChanged: (value) {
                                       setState(() {
                                         _selectedWoodTypeId = value;
-                                        _selectedWoodTypeName = state
-                                            .woodTypes
-                                            .firstWhere(
-                                              (wt) => wt['id'] == value,
-                                            )['name'] as String?;
                                       });
                                     },
                                   );

@@ -5,7 +5,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:woodloop_app/features/traceability/domain/entities/traceability_step.dart';
 import 'package:woodloop_app/features/traceability/domain/repositories/traceability_repository.dart';
 import 'package:woodloop_app/features/traceability/presentation/bloc/traceability_bloc.dart';
-import 'package:woodloop_app/features/traceability/data/datasources/traceability_remote_datasource.dart';
 
 class MockTraceabilityRepository extends Mock
     implements TraceabilityRepository {}
@@ -173,7 +172,7 @@ void main() {
           steps[i].date.isAfter(steps[i - 1].date) ||
               steps[i].date.isAtSameMomentAs(steps[i - 1].date),
           isTrue,
-          reason: 'Step ${i} date (${steps[i].date}) should be >= step ${i - 1} date (${steps[i - 1].date})',
+          reason: 'Step $i date (${steps[i].date}) should be >= step ${i - 1} date (${steps[i - 1].date})',
         );
       }
     });
@@ -212,7 +211,6 @@ void main() {
 
     test('QR code ID format is valid', () {
       // QR code format: QR-{timestamp_base36}
-      final now = DateTime.now();
       final qrCodeId = 'QR-${now.millisecondsSinceEpoch.toRadixString(36).toUpperCase()}';
       expect(qrCodeId, startsWith('QR-'));
       expect(qrCodeId.length, greaterThan(5));

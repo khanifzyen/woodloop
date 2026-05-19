@@ -136,12 +136,10 @@ class _BuyerProfileImpactDashboardView extends StatelessWidget {
                     builder: (context, state) {
                       int orderCount = 0;
                       int totalQuantity = 0;
-                      double totalSpent = 0;
                       if (state is OrdersLoaded) {
                         orderCount = state.orders.length;
                         for (final o in state.orders) {
                           totalQuantity += o.quantity;
-                          totalSpent += o.totalPrice;
                         }
                       }
                       // Estimate: each product unit diverts ~1 kg wood waste,

@@ -172,6 +172,12 @@ class _CreateUpcycledProductFormPageState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final authState = context.read<AuthBloc>().state;
+    String converterId = '';
+    if (authState is Authenticated) {
+      converterId = authState.user.id;
+    }
+
     return BlocProvider(
       create: (context) => getIt<ProductBloc>(),
       child: BlocConsumer<ProductBloc, ProductState>(

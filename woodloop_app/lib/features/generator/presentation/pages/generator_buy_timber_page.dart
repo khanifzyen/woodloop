@@ -23,14 +23,14 @@ class GeneratorBuyTimberPage extends StatelessWidget {
         centerTitle: true, backgroundColor: Colors.transparent, elevation: 0,
       ),
       body: BlocProvider(
-        create: (_) => getIt<SupplierInventoryCubit>()..loadListings(),
+        create: (_) => getIt<SupplierInventoryCubit>()..loadInventory(''),
         child: BlocBuilder<SupplierInventoryCubit, SupplierInventoryState>(
           builder: (context, state) {
             if (state is SupplierInventoryLoading) {
               return const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor));
             }
             if (state is SupplierInventoryLoaded) {
-              final available = state.listings.where((l) => l.isAvailable).toList();
+              final available = state.allListings.where((l) => l.isAvailable).toList();
               if (available.isEmpty) {
                 return const Center(child: Text('Belum ada kayu tersedia', style: TextStyle(color: Colors.white54)));
               }

@@ -54,10 +54,9 @@ class DesignRecipeModel extends DesignRecipe {
     return {
       'title': title,
       'description': description ?? '',
-      if (suitableWoodTypeIds != null)
-        'suitable_wood_types': suitableWoodTypeIds,
-      if (suitableForms != null) 'suitable_forms': suitableForms,
-      if (authorId != null) 'author': authorId,
+      'suitable_wood_types': ?suitableWoodTypeIds,
+      'suitable_forms': ?suitableForms,
+      'author': ?authorId,
       'difficulty': difficulty,
     };
   }

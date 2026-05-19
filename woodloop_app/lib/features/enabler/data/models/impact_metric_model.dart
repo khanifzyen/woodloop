@@ -33,12 +33,12 @@ class ImpactMetricModel extends ImpactMetric {
     String? period,
   }) {
     return {
-      if (wasteListingId != null) 'waste_listing': wasteListingId,
-      if (pickupId != null) 'pickup': pickupId,
-      if (co2Saved != null) 'co2_saved': co2Saved,
-      if (wasteDiverted != null) 'waste_diverted': wasteDiverted,
-      if (economicValue != null) 'economic_value': economicValue,
-      if (period != null) 'period': period,
+      'waste_listing': ?wasteListingId,
+      'pickup': ?pickupId,
+      'co2_saved': ?co2Saved,
+      'waste_diverted': ?wasteDiverted,
+      'economic_value': ?economicValue,
+      'period': ?period,
     };
   }
 }

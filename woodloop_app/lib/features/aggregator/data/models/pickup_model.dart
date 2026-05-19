@@ -38,15 +38,16 @@ class PickupModel extends Pickup {
     required String aggregatorId,
     required String wasteListingId,
     DateTime? scheduledDate,
+    DateTime? actualDate,
     String? notes,
   }) {
     return {
       'aggregator': aggregatorId,
       'waste_listing': wasteListingId,
       'status': 'pending',
-      if (scheduledDate != null)
-        'scheduled_date': scheduledDate.toIso8601String(),
-      if (notes != null) 'notes': notes,
+      'scheduled_date': scheduledDate?.toIso8601String(),
+      'actual_date': actualDate?.toIso8601String(),
+      'notes': notes,
     };
   }
 }

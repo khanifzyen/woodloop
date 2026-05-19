@@ -39,8 +39,8 @@ class BidModel extends Bid {
       'bidder': bidderId,
       'waste_listing': wasteListingId,
       'bid_amount': bidAmount,
-      if (message != null) 'message': message,
-      if (status != null) 'status': status,
+      'message': ?message,
+      'status': ?status,
     };
   }
 }
