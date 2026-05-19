@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PB_URL = process.env.NEXT_PUBLIC_PB_URL || "http://127.0.0.1:8090";
-
 // Route paths → role yang diizinkan
 const protectedRoutes: Record<string, string[]> = {
   "/supplier": ["supplier"],
@@ -27,9 +25,11 @@ function decodeJWTPayload(token: string): Record<string, unknown> | null {
   try {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
-    // Base64 decode payload (bagian tengah JWT) — manual tanpa atob
+    // Base64url → base64, then decode (atob tersedia di Edge Runtime)
     const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const jsonStr = Buffer.from(base64, "base64").toString("utf-8");
+    // Tambah padding jika perlu
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+    const jsonStr = atob(padded);
     return JSON.parse(jsonStr);
   } catch {
     return null;
