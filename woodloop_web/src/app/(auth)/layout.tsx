@@ -10,10 +10,11 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isAuthenticated, role } = useAuthStore();
+  const { isAuthenticated, role, _hydrated } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
+    if (!_hydrated) return;
     if (isAuthenticated && role) {
       router.push(`/${role}/dashboard`);
     }

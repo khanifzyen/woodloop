@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 // Types minimal — akan diperluas di types.ts nanti
 export interface AuthUser {
@@ -19,10 +19,12 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   role: AuthUser["role"] | null;
+  _hydrated: boolean; // ⬅️ flag untuk memastikan store sudah restore dari localStorage
 
   setAuth: (user: AuthUser, token: string) => void;
   setUser: (user: AuthUser) => void;
   logout: () => void;
+  _setHydrated: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -32,6 +34,7 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isAuthenticated: false,
       role: null,
+      _hydrated: false,
 
       setAuth: (user, token) =>
         set({
@@ -54,15 +57,23 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           role: null,
         }),
+
+      _setHydrated: () => set({ _hydrated: true }),
     }),
     {
       name: "woodloop-auth",
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         token: state.token,
         user: state.user,
         isAuthenticated: state.isAuthenticated,
         role: state.role,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state._setHydrated();
+        }
+      },
     }
   )
 );
