@@ -93,7 +93,7 @@ Fase terakhir! Fokus pada **native testing** (Capacitor di device sungguhan), **
 
 ### Day 38: PWA Setup
 
-- [ ] **P7-T10** Setup PWA manifest:
+- [x] **P7-T10** Setup PWA manifest:
   - `src/app/manifest.ts` atau `public/manifest.json`
   - Name: WoodLoop
   - Short name: WoodLoop
@@ -130,14 +130,14 @@ Fase terakhir! Fokus pada **native testing** (Capacitor di device sungguhan), **
 
 ### Day 39: SEO Optimization
 
-- [ ] **P7-T15** Setup `src/app/sitemap.ts`:
+- [x] **P7-T15** Setup `src/app/sitemap.ts`:
   - URLs: semua halaman publik
     - `/p/[id]` — semua produk (dynamic)
     - `/buyer/marketplace` + kategori
     - `/buyer/product/[id]`
   - Prioritas: produk = 1.0, kategori = 0.8, lainnya = 0.5
   - Change frequency: produk = daily, lainnya = weekly
-- [ ] **P7-T16** Setup `src/app/robots.ts`:
+- [x] **P7-T16** Setup `src/app/robots.ts`:
   - Allow: semua path publik
   - Disallow: semua path yang butuh auth (`/(supplier)/`, `/(generator)/`, dll)
   - Sitemap: https://woodloop.app/sitemap.xml
@@ -190,37 +190,37 @@ Fase terakhir! Fokus pada **native testing** (Capacitor di device sungguhan), **
 
 ### Day 41: Bug Fixing & Final Testing
 
-- [ ] **P7-T26** Regression test semua flow (ceklist lengkap):
-  - [ ] Auth flow: register → login → logout
-  - [ ] Supplier: CRUD kayu → order masuk
-  - [ ] Generator: setor limbah → beli kayu → produk
-  - [ ] Aggregator: treasure map → pickup → warehouse → bid
-  - [ ] Converter: beli bahan → buat produk → QR
-  - [ ] Buyer: marketplace → cart → checkout → payment → tracking
-  - [ ] Enabler: dashboard → user management
-  - [ ] Shared: wallet, chat, notifikasi, profil
-- [ ] **P7-T27** Test di berbagai browser:
+- [x] **P7-T26** Regression test semua flow (ceklist lengkap):
+  - [x] Auth flow: register → login → logout
+  - [x] Supplier: CRUD kayu → order masuk
+  - [x] Generator: setor limbah → beli kayu → produk
+  - [x] Aggregator: treasure map → pickup → warehouse → bid
+  - [x] Converter: beli bahan → buat produk → QR
+  - [x] Buyer: marketplace → cart → checkout → payment → tracking
+  - [x] Enabler: dashboard → user management
+  - [x] Shared: wallet, chat, notifikasi, profil
+- [x] **P7-T27** Test di berbagai browser:
   - Chrome (desktop + mobile)
   - Firefox (desktop)
   - Safari (iOS)
   - Samsung Internet (Android)
-- [ ] **P7-T28** Test di berbagai ukuran layar:
+- [x] **P7-T28** Test di berbagai ukuran layar:
   - 375px (iPhone SE)
   - 414px (iPhone Plus)
   - 768px (iPad)
   - 1024px (iPad landscape)
   - 1440px (desktop)
-- [ ] **P7-T29** Test error scenarios:
+- [x] **P7-T29** Test error scenarios:
   - Network error → retry button
   - Server error (500) → fallback page
   - 404 → custom 404 page
   - Rate limit → cooldown message
   - Empty data → empty state
-- [ ] **P7-T30** Test auth scenarios:
+- [x] **P7-T30** Test auth scenarios:
   - Token expired → redirect login
   - Wrong role → redirect dashboard sendiri
   - Multiple tabs → sync state
-- [ ] **P7-T31** Fix semua bug yang ditemukan
+- [x] **P7-T31** Fix semua bug yang ditemukan
 - [ ] **P7-T32** Code cleanup:
   - Hapus console.log
   - Hapus komentar yang tidak perlu
@@ -296,12 +296,12 @@ Fase terakhir! Fokus pada **native testing** (Capacitor di device sungguhan), **
 
 ### Integration Tests — All Flows (E2E)
 
-- [ ] **T-P7-1** Register buyer → login → marketplace → beli produk → payment → tracking
-- [ ] **T-P7-2** Register supplier → login → listing kayu → terima order
-- [ ] **T-P7-3** Register generator → login → setor limbah → dapat bid → pickup
-- [ ] **T-P7-4** Register aggregator → login → treasure map → bid → pickup → warehouse
-- [ ] **T-P7-5** Register converter → login → beli bahan → buat produk → QR
-- [ ] **T-P7-6** Register enabler → login → lihat dashboard → verifikasi user
+- [x] **T-P7-1** Register buyer → login → marketplace → beli produk → payment → tracking
+- [x] **T-P7-2** Register supplier → login → listing kayu → terima order
+- [x] **T-P7-3** Register generator → login → setor limbah → dapat bid → pickup
+- [x] **T-P7-4** Register aggregator → login → treasure map → bid → pickup → warehouse
+- [x] **T-P7-5** Register converter → login → beli bahan → buat produk → QR
+- [x] **T-P7-6** Register enabler → login → lihat dashboard → verifikasi user
 - [ ] **T-P7-7** Full circular flow: supplier → generator → aggregator → converter → buyer
 
 ### Performance Tests
@@ -324,11 +324,11 @@ Fase terakhir! Fokus pada **native testing** (Capacitor di device sungguhan), **
 
 ### Responsive Tests
 
-- [ ] **T-P7-20** Marketplace grid: 2 kolom di mobile, 4 kolom di desktop
-- [ ] **T-P7-21** Sidebar: Sheet di mobile, fixed di desktop
+- [x] **T-P7-20** Marketplace grid: 2 kolom di mobile, 4 kolom di desktop
+- [x] **T-P7-21** Sidebar: Sheet di mobile, fixed di desktop
 - [ ] **T-P7-22** Chat: single column di mobile, split di desktop
-- [ ] **T-P7-23** Treasure Map: full height di mobile
-- [ ] **T-P7-24** Forms: full width di mobile
+- [x] **T-P7-23** Treasure Map: full height di mobile
+- [x] **T-P7-24** Forms: full width di mobile
 
 ### Accessibility Tests
 
