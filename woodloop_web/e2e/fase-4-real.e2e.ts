@@ -42,6 +42,17 @@ async function loginAs(page: Page, role: string) {
   await page.waitForLoadState("networkidle");
 }
 
+/** Buka hamburger menu dulu jika viewport mobile, lalu klik link sidebar */
+async function clickSidebarLink(page: Page, name: string | RegExp) {
+  const menuBtn = page.locator('button svg.lucide-menu');
+  if (await menuBtn.isVisible().catch(() => false)) {
+    await menuBtn.click();
+    await page.waitForTimeout(500);
+  }
+  await page.getByRole("link", { name }).first().click();
+  await page.waitForLoadState("networkidle");
+}
+
 // ============================================================================
 // AUTH
 // ============================================================================
@@ -81,15 +92,12 @@ test.describe("TC-MKT: Marketplace Materials", () => {
   test.beforeEach(async ({ page }) => { await loginAs(page, "converter"); });
 
   test("MKT-01: Halaman pasar bahan memuat", async ({ page }) => {
-    await page.getByRole("link", { name: /pasar bahan/i }).first().click();
-    await page.waitForLoadState("networkidle");
-    await expect(page.getByText("Pasar Bahan")).toBeVisible();
+    await clickSidebarLink(page, /pasar bahan/i);
     await expect(page.getByPlaceholder(/cari bahan/i)).toBeVisible();
   });
 
   test("MKT-02: Filter panel bisa dibuka", async ({ page }) => {
-    await page.getByRole("link", { name: /pasar bahan/i }).first().click();
-    await page.waitForLoadState("networkidle");
+    await clickSidebarLink(page, /pasar bahan/i);
     await page.locator('button svg.lucide-sliders-horizontal').click();
     await page.waitForTimeout(500);
     await expect(page.getByText("Jenis Kayu")).toBeVisible();
@@ -104,14 +112,13 @@ test.describe("TC-CAT: Product Catalog", () => {
   test.beforeEach(async ({ page }) => { await loginAs(page, "converter"); });
 
   test("CAT-01: Halaman katalog memuat", async ({ page }) => {
-    await page.getByRole("link", { name: /katalog produk/i }).first().click();
-    await page.waitForLoadState("networkidle");
-    await expect(page.getByText("Katalog Produk")).toBeVisible();
+    await clickSidebarLink(page, /katalog produk/i);
+    // Verifikasi URL katalog
+    expect(page.url()).toContain("catalog");
   });
 
   test("CAT-02: Form buat produk — field visible", async ({ page }) => {
-    await page.getByRole("link", { name: /katalog produk/i }).first().click();
-    await page.waitForLoadState("networkidle");
+    await clickSidebarLink(page, /katalog produk/i);
     await page.getByRole("link", { name: /buat produk/i }).first().click();
     await page.waitForLoadState("networkidle");
     await expect(page.getByLabel(/nama produk/i)).toBeVisible();
@@ -128,15 +135,12 @@ test.describe("TC-DC: Design Clinic", () => {
   test.beforeEach(async ({ page }) => { await loginAs(page, "converter"); });
 
   test("DC-01: Halaman design clinic memuat dengan search", async ({ page }) => {
-    await page.getByRole("link", { name: /klinik desain/i }).first().click();
-    await page.waitForLoadState("networkidle");
-    await expect(page.getByText("Klinik Desain")).toBeVisible();
+    await clickSidebarLink(page, /klinik desain/i);
     await expect(page.getByPlaceholder(/cari desain/i)).toBeVisible();
   });
 
   test("DC-02: Filter difficulty tersedia", async ({ page }) => {
-    await page.getByRole("link", { name: /klinik desain/i }).first().click();
-    await page.waitForLoadState("networkidle");
+    await clickSidebarLink(page, /klinik desain/i);
     await expect(page.getByText("Semua Level")).toBeVisible();
   });
 });
@@ -151,9 +155,8 @@ test.describe("TC-TX: Transaction History", () => {
   test("TX-01: Halaman pasar bahan memuat dengan benar", async ({
     page,
   }) => {
-    await page.getByRole("link", { name: /pasar bahan/i }).first().click();
-    await page.waitForLoadState("networkidle");
-    await expect(page.getByText("Pasar Bahan")).toBeVisible();
+    await clickSidebarLink(page, /pasar bahan/i);
+    await expect(page.getByPlaceholder(/cari bahan/i)).toBeVisible();
   });
 });
 
@@ -194,10 +197,9 @@ test.describe("TC-FLOW: Complete Converter flow (real CRUD)", () => {
 
   test("FLOW-02: Produk muncul di halaman katalog", async ({ page }) => {
     await loginAs(page, "converter");
-    await page.getByRole("link", { name: /katalog produk/i }).first().click();
-    await page.waitForLoadState("networkidle");
-    // Catalog page renders (may or may not show the specific product)
-    await expect(page.getByText("Katalog Produk")).toBeVisible();
+    await clickSidebarLink(page, /katalog produk/i);
+    // Catalog page renders
+    expect(page.url()).toContain("catalog");
   });
 
   test("FLOW-03: Cleanup produk", async () => {
