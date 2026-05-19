@@ -65,53 +65,45 @@ test.describe("TC-02: Halaman Login", () => {
   });
 });
 
-test.describe("TC-03: Halaman Register", () => {
+test.describe("TC-03: Halaman Register (2-step, role from URL)", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/register");
+    // Register sekarang butuh ?role= dari role-selection
+    await page.goto("/register?role=supplier");
   });
 
-  test("should display multi-step form with progress bar", async ({ page }) => {
-    await expect(page.getByText("Daftar Akun")).toBeVisible();
+  test("should redirect to role-selection if no role param", async ({ page }) => {
+    await page.goto("/register");
+    await page.waitForURL("/role-selection");
+    expect(page.url()).toContain("role-selection");
+  });
+
+  test("should display multi-step form with role badge", async ({ page }) => {
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(1000);
+    await expect(page.getByText("Daftar Akun")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText("Supplier", { exact: true })).toBeVisible(); // role badge
     await expect(page.getByText("Nama Lengkap")).toBeVisible();
     await expect(page.getByText("Email")).toBeVisible();
     await expect(page.getByText("Kata Sandi")).toBeVisible();
-    // Progress bar
     await expect(page.locator('[role="progressbar"]')).toBeVisible();
   });
 
-  test("should show role selection after filling step 1", async ({ page }) => {
-    // Isi step 1
+  test("should proceed to step 2 (detail peran) after filling step 1", async ({ page }) => {
     await page.locator('input[placeholder="Nama Anda"]').fill("Test User");
     await page.locator('input[placeholder="nama@email.com"]').fill("test@test.com");
     await page.locator('input[placeholder="Minimal 6 karakter"]').fill("password123");
 
-    // Klik Lanjut
     await page.getByRole("button", { name: "Lanjut" }).click();
 
-    // Step 2: harusnya ada 6 role cards
-    await expect(page.getByText("Pilih Peran")).toBeVisible();
-    await expect(page.getByText("Supplier")).toBeVisible();
-    await expect(page.getByText("Generator")).toBeVisible();
-    await expect(page.getByText("Aggregator")).toBeVisible();
-    await expect(page.getByText("Converter")).toBeVisible();
-    await expect(page.getByText("Enabler")).toBeVisible();
-    await expect(page.getByText("Buyer")).toBeVisible();
-  });
-
-  test("should select role and proceed to step 3", async ({ page }) => {
-    // Isi step 1
-    await page.locator('input[placeholder="Nama Anda"]').fill("Test User");
-    await page.locator('input[placeholder="nama@email.com"]').fill("test@test.com");
-    await page.locator('input[placeholder="Minimal 6 karakter"]').fill("password123");
-    await page.getByRole("button", { name: "Lanjut" }).click();
-
-    // Pilih role Supplier
-    await page.getByText("Supplier").first().click();
-    await page.getByRole("button", { name: "Lanjut" }).click();
-
-    // Step 3: detail peran
+    // Step 2: detail peran — bukan role selection lagi
     await expect(page.getByText("Nomor Telepon")).toBeVisible();
     await expect(page.getByText("Nama Perusahaan")).toBeVisible();
+  });
+
+  test("should have link to re-select role", async ({ page }) => {
+    await expect(page.getByText("Pilih ulang")).toBeVisible();
+    await page.getByText("Pilih ulang").click();
+    await expect(page).toHaveURL(/role-selection/);
   });
 });
 
@@ -122,7 +114,7 @@ test.describe("TC-04: Role Selection", () => {
 
   test("should display 6 role cards in grid with all labels", async ({ page }) => {
     await expect(page.getByText("Pilih Peran Anda")).toBeVisible();
-    await expect(page.getByText("Supplier")).toBeVisible();
+    await expect(page.getByText("Supplier", { exact: true })).toBeVisible();
     await expect(page.getByText("Generator")).toBeVisible();
     await expect(page.getByText("Aggregator")).toBeVisible();
     await expect(page.getByText("Converter")).toBeVisible();

@@ -8,7 +8,7 @@ test.describe("TC-07: Proxy/Middleware Route Protection", () => {
   test("should allow access to public auth routes without redirect", async ({ page }) => {
     const publicRoutes = [
       "/login",
-      "/register",
+      "/register?role=supplier",
       "/onboarding",
       "/role-selection",
       "/forgot-password",
