@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">WoodLoop</string>
+    <string name="title_activity_main">WoodLoop</string>
+    <string name="package_name">com.woodloop.app</string>
+    <string name="custom_url_scheme">com.woodloop.app</string>
+</resources>

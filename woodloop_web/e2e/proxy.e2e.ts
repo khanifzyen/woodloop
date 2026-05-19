@@ -1,12 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 /**
- * UAT Fase 1: Foundation — Proxy/Middleware Route Protection
- *
- * Catatan: Proxy middleware saat ini hanya melindungi route groups
- * (supplier, generator, dll) yang belum dibuat. Route groups tidak
- * muncul di URL, jadi middleware belum bisa redirect berdasarkan path.
- * Test ini fokus pada public routes dan homepage redirect.
+ * UAT Fase 1: Foundation — Proxy/Middleware Route Protection + Dashboard Layout
  */
 
 test.describe("TC-07: Proxy/Middleware Route Protection", () => {
@@ -37,6 +32,42 @@ test.describe("TC-07: Proxy/Middleware Route Protection", () => {
     await page.goto("/");
     await page.waitForURL("/login");
     expect(page.url()).toContain("/login");
+  });
+
+  test("should redirect protected dashboard routes to /login when not authenticated", async ({ page }) => {
+    const dashboards = [
+      "/supplier/dashboard",
+      "/generator/dashboard",
+      "/aggregator/dashboard",
+      "/converter/dashboard",
+      "/enabler/dashboard",
+      "/buyer/dashboard",
+    ];
+
+    for (const route of dashboards) {
+      await page.goto(route);
+      await page.waitForURL(/login/);
+      expect(page.url()).toContain("login");
+    }
+  });
+});
+
+test.describe("TC-08: Layout & Dashboard Routes", () => {
+  test("dashboard routes should return 200 when accessed directly", async ({ page }) => {
+    const dashboards = [
+      "/supplier/dashboard",
+      "/generator/dashboard",
+      "/aggregator/dashboard",
+      "/converter/dashboard",
+      "/enabler/dashboard",
+      "/buyer/dashboard",
+    ];
+
+    for (const route of dashboards) {
+      const response = await page.goto(route);
+      // Will redirect to login since not authenticated, but shouldn't 404
+      expect(response?.status()).toBeLessThan(400);
+    }
   });
 });
 

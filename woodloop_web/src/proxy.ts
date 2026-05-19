@@ -4,14 +4,14 @@ import PocketBase from "pocketbase";
 
 const PB_URL = process.env.NEXT_PUBLIC_PB_URL || "http://127.0.0.1:8090";
 
-// Route groups → role yang diizinkan
+// Route paths → role yang diizinkan
 const protectedRoutes: Record<string, string[]> = {
-  "/(supplier)": ["supplier"],
-  "/(generator)": ["generator"],
-  "/(aggregator)": ["aggregator"],
-  "/(converter)": ["converter"],
-  "/(enabler)": ["enabler"],
-  "/(buyer)": ["buyer"],
+  "/supplier": ["supplier"],
+  "/generator": ["generator"],
+  "/aggregator": ["aggregator"],
+  "/converter": ["converter"],
+  "/enabler": ["enabler"],
+  "/buyer": ["buyer"],
 };
 
 // Halaman publik (no auth required)
