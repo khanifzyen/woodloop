@@ -20,6 +20,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Bell, LogOut, User, Wallet } from "lucide-react";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { useRouter } from "next/navigation";
 import { getPB } from "@/lib/pocketbase/client";
@@ -83,7 +85,9 @@ export function Navbar() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Notifications */}
+      {/* Theme toggle + Language + Notifications */}
+      <ThemeToggle />
+      <LanguageSwitcher />
       <Button variant="ghost" size="icon" className="relative">
         <Bell className="h-5 w-5" />
         <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]">
