@@ -8,9 +8,6 @@ import { useRouter } from "next/navigation";
 import type { LoginFormData, RegisterFormData } from "@/lib/validations/auth";
 import { setAuthCookie } from "./use-auth-cookie";
 
-/**
- * Hook: Login
- */
 export function useLogin() {
   const { setAuth } = useAuthStore();
   const router = useRouter();
@@ -18,16 +15,13 @@ export function useLogin() {
   return useMutation({
     mutationFn: async (data: LoginFormData) => {
       const pb = getPB();
-      const authData = await pb
-        .collection("users")
-        .authWithPassword(data.email, data.password);
-
+      const authData = await pb.collection("users").authWithPassword(data.email, data.password);
       const user = authData.record as unknown as AuthUser;
       return { user, token: authData.token };
     },
     onSuccess: ({ user, token }) => {
       setAuth(user, token);
-      setAuthCookie(token); // ⬅️ Set cookie untuk proxy middleware
+      setAuthCookie(token, user.role);
       toast.success(`Selamat datang, ${user.name}!`);
       router.push(`/${user.role}/dashboard`);
     },
@@ -37,9 +31,6 @@ export function useLogin() {
   });
 }
 
-/**
- * Hook: Register
- */
 export function useRegister() {
   const { setAuth } = useAuthStore();
   const router = useRouter();
@@ -47,7 +38,7 @@ export function useRegister() {
   return useMutation({
     mutationFn: async (data: RegisterFormData) => {
       const pb = getPB();
-      const record = await pb.collection("users").create({
+      await pb.collection("users").create({
         email: data.email,
         password: data.password,
         passwordConfirm: data.password,
@@ -57,16 +48,13 @@ export function useRegister() {
         workshop_name: data.workshop_name || "",
         is_verified: false,
       });
-      const authData = await pb
-        .collection("users")
-        .authWithPassword(data.email, data.password);
-
+      const authData = await pb.collection("users").authWithPassword(data.email, data.password);
       const user = authData.record as unknown as AuthUser;
       return { user, token: authData.token };
     },
     onSuccess: ({ user, token }) => {
       setAuth(user, token);
-      setAuthCookie(token); // ⬅️ Set cookie untuk proxy middleware
+      setAuthCookie(token, user.role);
       toast.success("Akun berhasil dibuat!");
       router.push(`/${user.role}/dashboard`);
     },
@@ -76,9 +64,6 @@ export function useRegister() {
   });
 }
 
-/**
- * Hook: Forgot Password
- */
 export function useForgotPassword() {
   return useMutation({
     mutationFn: async (email: string) => {
@@ -93,4 +78,3 @@ export function useForgotPassword() {
     },
   });
 }
-
