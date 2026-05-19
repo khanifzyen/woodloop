@@ -1,0 +1,91 @@
+/* ===========================================
+   WoodLoop Design Tokens — Tailwind CSS v4
+   =========================================== */
+
+@theme inline {
+  /* === Warna === */
+  --color-primary: #2D6A4F;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #7D5A38;
+  --color-secondary-foreground: #FFFFFF;
+  --color-accent: #F59E0B;
+  --color-accent-foreground: #FFFFFF;
+
+  --color-background: #FAFAF9;
+  --color-foreground: #222222;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #222222;
+  --color-muted: #EAE5DD;
+  --color-muted-foreground: #6B6B6B;
+  --color-border: #D4D0C9;
+  --color-ring: #2D6A4F;
+
+  --color-success: #2D6A4F;
+  --color-warning: #F59E0B;
+  --color-destructive: #E53E3E;
+  --color-info: #3182CE;
+
+  /* === Font === */
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* === Border Radius === */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+
+  /* === Shadow === */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-dropdown: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --shadow-modal: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+}
+
+/* === Dark Mode === */
+.dark {
+  --color-background: #1A1A1A;
+  --color-foreground: #EDEDED;
+  --color-card: #262626;
+  --color-card-foreground: #EDEDED;
+  --color-muted: #333333;
+  --color-muted-foreground: #9CA3AF;
+  --color-border: #404040;
+}
+
+/* === Utility Classes === */
+@layer utilities {
+  .heading-1 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  .heading-2 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.25;
+  }
+  .heading-3 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  .body-small {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .body-caption {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  /* Responsive headings */
+  @media (max-width: 768px) {
+    .heading-1 { font-size: 1.875rem; }
+    .heading-2 { font-size: 1.5rem; }
+    .heading-3 { font-size: 1.25rem; }
+  }
+}
