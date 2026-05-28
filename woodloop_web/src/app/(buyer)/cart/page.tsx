@@ -37,7 +37,7 @@ export default function CartPage() {
                 <CardContent className="pt-4">
                   <div className="flex items-center gap-4">
                     <div className="h-16 w-16 bg-muted rounded flex items-center justify-center shrink-0">
-                      {item.photo ? <img src={item.photo} alt={item.name} className="h-full w-full object-cover rounded" /> : <ShoppingCart className="h-6 w-6 text-muted-foreground" />}
+                      {item.photo ? <img src={item.photo} alt={item.name} loading="lazy" className="h-full w-full object-cover rounded" /> : <ShoppingCart className="h-6 w-6 text-muted-foreground" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate">{item.name}</p>

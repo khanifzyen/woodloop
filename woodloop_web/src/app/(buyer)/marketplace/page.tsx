@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useProducts } from "@/lib/hooks/use-buyer";
 import { useCartStore } from "@/lib/stores/cart-store";
@@ -17,6 +17,8 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, ShoppingCart, Store, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { buildBreadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
+import { ProductCard } from "@/components/features/product-card";
 
 export default function MarketplacePage() {
   const [category, setCategory] = useState("");
@@ -25,6 +27,19 @@ export default function MarketplacePage() {
   const { data, isLoading } = useProducts({ category: category || undefined, sort, search: search || undefined });
   const cart = useCartStore();
   const products = data?.items ?? [];
+
+  // Inject JSON-LD after mount
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = "jsonld-breadcrumb";
+    script.textContent = JSON.stringify(buildBreadcrumbJsonLd([
+      { name: "Beranda", url: "/" },
+      { name: "Marketplace", url: "/buyer/marketplace" },
+    ]));
+    document.head.appendChild(script);
+    return () => { document.getElementById("jsonld-breadcrumb")?.remove(); };
+  }, []);
 
   const categories = [
     { value: "", label: "Semua" },
@@ -96,33 +111,7 @@ export default function MarketplacePage() {
       ) : (
         <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {products.map((p) => (
-            <Card key={p.id} className="hover:border-primary/50 transition-colors overflow-hidden group">
-              <Link href={`/buyer/product/${p.id}`}>
-                <div className="aspect-[4/3] bg-muted flex items-center justify-center overflow-hidden">
-                  {p.photos?.[0] ? (
-                    <img src={p.photos[0]} alt={p.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform" />
-                  ) : (
-                    <Store className="h-10 w-10 text-muted-foreground" />
-                  )}
-                </div>
-              </Link>
-              <CardContent className="pt-3 pb-4">
-                <div className="flex items-start justify-between mb-1">
-                  <Badge variant="outline" className="text-xs">{p.category}</Badge>
-                </div>
-                <Link href={`/buyer/product/${p.id}`}>
-                  <p className="font-medium text-sm hover:text-primary transition-colors">{p.name}</p>
-                </Link>
-                <p className="font-bold text-sm mt-1">Rp {p.price.toLocaleString("id-ID")}</p>
-                {p.expand?.converter && (
-                  <p className="text-xs text-muted-foreground mt-1">oleh {p.expand.converter.name}</p>
-                )}
-                <Button size="sm" variant="default" className="w-full mt-2 gap-1"
-                  onClick={(e) => { e.preventDefault(); addToCart(p); }}>
-                  <Plus className="h-3 w-3" /> Keranjang
-                </Button>
-              </CardContent>
-            </Card>
+            <ProductCard key={p.id} product={p} onAddToCart={addToCart} />
           ))}
         </div>
       )}

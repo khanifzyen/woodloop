@@ -101,23 +101,14 @@ Fase terakhir! Fokus pada **native testing** (Capacitor di device sungguhan), **
   - Theme color: #2D6A4F (hijau)
   - Display: standalone
   - Start URL: /
-- [ ] **P7-T11** Setup Service Worker:
+- [x] **P7-T11** Setup Service Worker:
   - Strategi: Network first, cache fallback
   - Cache: pages, API responses, static assets
   - Offline page: "Kamu sedang offline" with retry button
-  - Update: prompt user saat SW baru tersedia
-- [ ] **P7-T12** Setup `next.config.ts` untuk PWA:
-  ```typescript
-  const withPWA = require('next-pwa')({
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-  });
-  ```
-  Atau pakai `serwist` (lebih modern):
-  ```bash
-  bun add @serwist/next @serwist/sw
-  ```
+  - Update: prompt user saat SW baru tersedia (skipWaiting)
+  - Implementasi: `public/sw.js` enhanced, `src/app/offline/page.tsx` dibuat
+- [x] **P7-T12** Setup `next.config.ts` untuk PWA:
+  - Remote patterns untuk PocketBase images (next/image support)
 - [ ] **P7-T13** Test install prompt:
   - Browser: tampilkan "Install WoodLoop" banner
   - After install: buka sebagai standalone app
@@ -137,23 +128,29 @@ Fase terakhir! Fokus pada **native testing** (Capacitor di device sungguhan), **
     - `/buyer/product/[id]`
   - Prioritas: produk = 1.0, kategori = 0.8, lainnya = 0.5
   - Change frequency: produk = daily, lainnya = weekly
+  - Tambahan: `/buyer/product/[id]` URLs, `/buyer/scan`
 - [x] **P7-T16** Setup `src/app/robots.ts`:
   - Allow: semua path publik
   - Disallow: semua path yang butuh auth (`/(supplier)/`, `/(generator)/`, dll)
   - Sitemap: https://woodloop.app/sitemap.xml
-- [ ] **P7-T17** Setup Open Graph tags untuk semua halaman publik:
+- [x] **P7-T17** Setup Open Graph tags untuk semua halaman publik:
   - `og:title` — nama produk
   - `og:description` — cerita traceability
-  - `og:image` — foto produk
+  - `og:image` — foto produk (icon-512.png sebagai fallback)
   - `og:url` — canonical URL
   - `og:type` — product
-- [ ] **P7-T18** Setup JSON-LD Structured Data:
+  - Implementasi: `metadataBase`, `alternates.canonical`, `openGraph.images` di root layout
+- [x] **P7-T18** Setup JSON-LD Structured Data:
   - Product schema: name, description, image, price, brand (Converter)
-  - BreadcrumbList schema
+  - BreadcrumbList schema (marketplace + product detail + traceability)
   - Organization schema (WoodLoop)
-- [ ] **P7-T19** Setup `next-seo` atau `generateMetadata`:
+  - WebSite schema with SearchAction
+  - Helper: `src/lib/seo.ts` with `buildProductJsonLd`, `buildBreadcrumbJsonLd`, `buildOrganizationJsonLd`, `buildWebSiteJsonLd`
+  - Implementasi: root layout (Organization + WebSite), marketplace page (BreadcrumbList), product detail (Product + BreadcrumbList), traceability SSR (Product + BreadcrumbList)
+- [x] **P7-T19** Setup `next-seo` atau `generateMetadata`:
   - Setiap halaman SSR harus punya metadata dinamis
   - Fallback metadata untuk halaman error
+  - Root layout + traceability page sudah punya dynamic `generateMetadata`
 - [ ] **P7-T20** Test dengan Google Rich Results Test:
   - URL produk → harus valid structured data
   - URL traceability → harus valid

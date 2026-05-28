@@ -1,11 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPB } from "@/lib/pocketbase/client";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import type { WalletTransaction, ChatMessage, Notification } from "@/lib/pocketbase/types";
+import type { WalletTransaction, ChatMessage } from "@/lib/pocketbase/types";
 
 const walletKeys = { all: ["wallet"] as const, transactions: () => [...walletKeys.all, "transactions"] as const };
 const chatKeys = { all: ["chat"] as const, conversations: () => [...chatKeys.all, "conversations"] as const, messages: (id: string) => [...chatKeys.all, "messages", id] as const };
-const notifKeys = { all: ["notifications"] as const, list: () => [...notifKeys.all, "list"] as const };
+
+// ─── Notifications (re-exported from use-notifications.ts) ───────────────
+export {
+  useNotifications,
+  useMarkNotifAsRead,
+  useUnreadCount,
+  useRealtimeNotifications,
+} from "./use-notifications";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────
 function getUserId(): string {
@@ -110,32 +117,5 @@ export function useSendMessage() {
       });
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: chatKeys.all }),
-  });
-}
-
-// ─── Notifications ───────────────────────────────────────────────────────
-export function useNotifications() {
-  const userId = getUserId();
-  const pb = getPB();
-  return useQuery({
-    queryKey: notifKeys.list(),
-    queryFn: async () => {
-      const result = await pb.collection<Notification>("notifications").getList(1, 50, {
-        filter: `user="${userId}"`,
-        sort: "-created",
-      });
-      return result;
-    },
-  });
-}
-
-export function useMarkNotifAsRead() {
-  const pb = getPB();
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await pb.collection("notifications").update(id, { is_read: true });
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: notifKeys.all }),
   });
 }

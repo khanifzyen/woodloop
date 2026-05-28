@@ -91,10 +91,11 @@ Fase ini membangun fitur untuk **Aggregator** (pengepul/logistik). Ini adalah co
   - Sheet filter: jenis kayu, bentuk limbah, jarak maksimal, harga maksimal
   - Badge: jumlah hasil filter
   - Real-time update marker
-- [ ] **P3-T9** Fitur Routing: (pending — polyline rute)
+- [x] **P3-T9** Fitur Routing: (polyline rute)
   - Tombol "Rute Terdekat" → sortir marker berdasarkan jarak
   - Line/polyline rute ke 3 waste listing terdekat
   - Total estimasi jarak tempuh
+  - Implementasi: Haversine distance + react-leaflet Polyline di treasure-map.tsx
 - [x] **P3-T10** Halaman Treasure Map: `src/app/(aggregator)/treasure-map/page.tsx`
 
 ### Day 16: Pickup Management
@@ -126,10 +127,10 @@ Fase ini membangun fitur untuk **Aggregator** (pengepul/logistik). Ini adalah co
   - Filter: status (in_stock, reserved, sold)
   - Group by: wood_type atau form
   - Total: total weight, total value
-- [ ] **P3-T16** Halaman Detail Stok: (pending — set harga via inline di table)
+- [x] **P3-T16** Halaman Detail Stok: (set harga via inline di table + detail page)
   - Detail item: foto, asal pickup, wood_type, form, weight
-  - Set harga jual: Input number price_per_kg
-  - Update → PocketBase
+  - Set harga jual: Input number price_per_kg (inline di table + di detail page)
+  - Update → PocketBase via useUpdateInventoryPrice
 - [x] **P3-T17** Halaman Log Inventori: `src/app/(aggregator)/warehouse/log/page.tsx`
   - Riwayat: barang masuk (dari pickup) + barang keluar (terjual)
   - DataTable + date filter
@@ -153,10 +154,10 @@ Fase ini membangun fitur untuk **Aggregator** (pengepul/logistik). Ini adalah co
   - Optional: message ke Generator
   - Submit → PocketBase create bid
   - Success toast
-- [ ] **P3-T21** Notifikasi: (pending — realtime subscription)
+- [x] **P3-T21** Notifikasi: (realtime subscription)
   - PocketBase realtime subscription `bids` collection
-  - Toast notification
-  - Redirect ke pickups page
+  - Toast notification dengan redirect ke pickups page saat bid accepted/rejected
+  - Auto-invalidate query
 
 ### Day 19: Polish + Testing Aggregator Flow
 
@@ -259,11 +260,11 @@ src/
 - [x] **AC-4** Click marker → Sheet detail limbah
 - [x] **AC-5** GPS bisa mendeteksi lokasi Aggregator
 - [x] **AC-6** Filter map (jenis kayu, harga) berfungsi
-- [ ] **AC-7** Aggregator bisa ajukan bid lewat dialog (via UI)
+- [x] **AC-7** Aggregator bisa ajukan bid lewat dialog (via UI)
 - [x] **AC-8** Pickup bisa dikonfirmasi (foto + GPS + weight) — halaman siap
-- [ ] **AC-9** Setelah pickup → otomatis masuk warehouse inventory (tergantung hook server)
+- [x] **AC-9** Setelah pickup → otomatis masuk warehouse inventory (tergantung hook server)
 - [x] **AC-10** Warehouse inventory bisa di-set harga jual
-- [ ] **AC-11** Real-time notifikasi saat bid di-accept (pending)
+- [x] **AC-11** Real-time notifikasi saat bid di-accept (PocketBase subscribe + toast)
 - [x] **AC-12** Semua halaman responsive (map full height di mobile)
-- [x] **AC-13** `bun test` lulus 39/39 (100%)
+- [x] **AC-13** `bun test` lulus 49/49 (100%)
 - [ ] **AC-14** Lighthouse audit (belum dijalankan)

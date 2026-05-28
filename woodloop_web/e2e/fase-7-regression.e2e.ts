@@ -245,7 +245,7 @@ test.describe("REGRESSION-09: Responsive & SEO", () => {
   test("Sitemap contains product URLs", async ({ page }) => {
     const res = await page.request.get("/sitemap.xml");
     const text = await res.text();
-    expect(text).toContain("woodloop.app");
+    expect(text).toContain("pasarjepara.com");
     expect(text).toContain("sitemap");
   });
 
@@ -254,5 +254,71 @@ test.describe("REGRESSION-09: Responsive & SEO", () => {
     const json = await res.json();
     expect(json.display).toBe("standalone");
     expect(json.theme_color).toBeTruthy();
+  });
+
+  test("Offline page renders with retry button", async ({ page }) => {
+    await page.goto("/offline");
+    await expect(page.getByText("Kamu Sedang Offline")).toBeVisible();
+    await expect(page.getByText("Coba Lagi")).toBeVisible();
+  });
+
+  test("JSON-LD Organization schema exists in root layout", async ({ page }) => {
+    await page.goto("/login");
+    const scripts = await page.locator('script[type="application/ld+json"]').all();
+    const allJson = await Promise.all(scripts.map((s) => s.textContent()));
+    const orgLd = allJson.find((j) => j?.includes('"Organization"'));
+    expect(orgLd).toBeTruthy();
+    expect(orgLd).toContain("WoodLoop");
+  });
+
+  test("JSON-LD WebSite schema with SearchAction", async ({ page }) => {
+    await page.goto("/login");
+    const scripts = await page.locator('script[type="application/ld+json"]').all();
+    const allJson = await Promise.all(scripts.map((s) => s.textContent()));
+    const webLd = allJson.find((j) => j?.includes('"WebSite"'));
+    expect(webLd).toBeTruthy();
+    expect(webLd).toContain("SearchAction");
+  });
+
+  test("JSON-LD BreadcrumbList di marketplace page", async ({ page }) => {
+    await page.goto("/buyer/marketplace");
+    await page.waitForLoadState("networkidle");
+    const scripts = await page.locator('script[type="application/ld+json"]').all();
+    const allJson = await Promise.all(scripts.map((s) => s.textContent()));
+    const breadLd = allJson.find((j) => j?.includes('"BreadcrumbList"'));
+    expect(breadLd).toBeTruthy();
+  });
+
+  test("PWA icons tersedia", async ({ page }) => {
+    const res192 = await page.request.get("/icon-192.png");
+    expect(res192.status()).toBe(200);
+    expect(res192.headers()["content-type"]).toContain("image/png");
+
+    const res512 = await page.request.get("/icon-512.png");
+    expect(res512.status()).toBe(200);
+    expect(res512.headers()["content-type"]).toContain("image/png");
+  });
+
+  test("Sitemap contains buyer product URLs and /scan", async ({ page }) => {
+    const res = await page.request.get("/sitemap.xml");
+    const text = await res.text();
+    expect(text).toContain("/buyer/product/");
+    expect(text).toContain("/buyer/scan");
+  });
+
+  test("JSON-LD Product schema di traceability page", async ({ page }) => {
+    await page.goto("/p/PRD-TEST");
+    await page.waitForLoadState("networkidle");
+    const scripts = await page.locator('script[type="application/ld+json"]').all();
+    const allJson = await Promise.all(scripts.map((s) => s.textContent()));
+    const hasProduct = allJson.some((j) => j?.includes('"Product"'));
+    expect(hasProduct).toBeTruthy();
+  });
+
+  test("Service worker script exists in layout", async ({ page }) => {
+    await page.goto("/login");
+    const swScript = await page.locator('script:has-text("serviceWorker")').textContent();
+    expect(swScript).toContain("register");
+    expect(swScript).toContain("sw.js");
   });
 });

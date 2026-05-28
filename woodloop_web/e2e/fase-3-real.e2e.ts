@@ -264,3 +264,51 @@ test.describe("TC-FLOW: Complete Aggregator flow (real CRUD)", () => {
     }
   });
 });
+
+// ============================================================================
+// NEW FEATURES: Routing Polyline, Warehouse Detail, Notification Badge
+// ============================================================================
+
+test.describe("TC-NEW: Routing Polyline (P3-T9)", () => {
+  test.beforeEach(async ({ page }) => { await loginAs(page, "aggregator"); });
+
+  test("RUTE-01: Tombol Rute Terdekat visible di treasure map", async ({ page }) => {
+    await clickSidebarLink(page, /peta/i);
+    await page.waitForTimeout(2000);
+    await expect(page.getByText("Rute Terdekat")).toBeVisible();
+  });
+});
+
+test.describe("TC-NEW: Warehouse Detail Page (P3-T16)", () => {
+  test.beforeEach(async ({ page }) => { await loginAs(page, "aggregator"); });
+
+  test("WH-03: Warehouse detail page loads with valid item", async ({ page }) => {
+    // Dapatkan ID item warehouse pertama (jika ada)
+    const { token } = await getAuthToken("aggregator");
+    const res = await fetch(`${PB_URL}/api/collections/warehouse_inventory/records?sort=-created&perPage=1`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json() as { items: { id: string }[] };
+
+    if (data.items.length > 0) {
+      const itemId = data.items[0].id;
+      await page.goto(`/aggregator/warehouse/${itemId}`);
+      await page.waitForLoadState("networkidle");
+      await expect(page.getByText("Detail stok gudang")).toBeVisible();
+    } else {
+      // No warehouse items — can only check the page structure
+      await page.goto("/aggregator/warehouse/999999");
+      await page.waitForLoadState("networkidle");
+      await expect(page.getByText("Item tidak ditemukan")).toBeVisible();
+    }
+  });
+});
+
+test.describe("TC-NEW: Notification Badge (AC-11)", () => {
+  test.beforeEach(async ({ page }) => { await loginAs(page, "aggregator"); });
+
+  test("NOTIF-01: Notification badge visible di navbar", async ({ page }) => {
+    // Notification bell button should be visible in navbar
+    await expect(page.locator('nav a[href="/notifications"]').first()).toBeVisible();
+  });
+});

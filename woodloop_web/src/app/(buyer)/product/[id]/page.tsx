@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useProductDetail } from "@/lib/hooks/use-buyer";
 import { useCartStore } from "@/lib/stores/cart-store";
@@ -12,11 +13,39 @@ import {
 } from "@/components/ui/card";
 import { ArrowLeft, ShoppingCart, TruckIcon, Leaf, Recycle } from "lucide-react";
 import { toast } from "sonner";
+import { buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
+import Image from "next/image";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const { data: product, isLoading } = useProductDetail(params.id as string);
   const cart = useCartStore();
+
+  // Inject JSON-LD after data loads
+  useEffect(() => {
+    if (!product) return;
+    const remove: (() => void)[] = [];
+
+    const productScript = document.createElement("script");
+    productScript.type = "application/ld+json";
+    productScript.id = "jsonld-product";
+    productScript.textContent = JSON.stringify(buildProductJsonLd(product));
+    document.head.appendChild(productScript);
+    remove.push(() => document.getElementById("jsonld-product")?.remove());
+
+    const breadScript = document.createElement("script");
+    breadScript.type = "application/ld+json";
+    breadScript.id = "jsonld-breadcrumb-product";
+    breadScript.textContent = JSON.stringify(buildBreadcrumbJsonLd([
+      { name: "Beranda", url: "/" },
+      { name: "Marketplace", url: "/buyer/marketplace" },
+      { name: product.name, url: `/buyer/product/${product.id}` },
+    ]));
+    document.head.appendChild(breadScript);
+    remove.push(() => document.getElementById("jsonld-breadcrumb-product")?.remove());
+
+    return () => remove.forEach((fn) => fn());
+  }, [product]);
 
   if (isLoading) return <div className="space-y-4"><Skeleton className="h-8 w-48" /><Skeleton className="h-64 w-full" /><Skeleton className="h-32 w-full" /></div>;
   if (!product) return <div className="py-12 text-center"><p className="text-muted-foreground">Produk tidak ditemukan</p></div>;
@@ -41,9 +70,9 @@ export default function ProductDetailPage() {
         {/* Photo */}
         <Card>
           <CardContent className="pt-6">
-            <div className="aspect-[4/3] bg-muted rounded-lg flex items-center justify-center">
+            <div className="aspect-[4/3] bg-muted rounded-lg relative flex items-center justify-center">
               {product.photos?.[0] ? (
-                <img src={product.photos[0]} alt={product.name} className="h-full w-full object-cover rounded-lg" />
+                <Image src={product.photos[0]} alt={product.name} fill className="object-cover rounded-lg" sizes="(max-width: 768px) 100vw, 50vw" />
               ) : (
                 <div className="text-muted-foreground">Tidak ada foto</div>
               )}

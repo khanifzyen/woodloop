@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/lib/hooks/query-provider";
@@ -17,10 +17,23 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://woodloop.pasarjepara.com";
+
+export const viewport: Viewport = {
+  themeColor: "#2D6A4F",
+  colorScheme: "light",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: { default: "WoodLoop — Jepara Circular Hub", template: "%s — WoodLoop" },
   description:
     "Platform ekonomi sirkular untuk industri kayu Jepara. Kelola limbah kayu, jual beli bahan daur ulang, dan lacak dampak lingkungan.",
+  alternates: {
+    canonical: BASE_URL,
+  },
   icons: {
     icon: "/favicon.ico",
     apple: "/icon-192.png",
@@ -30,16 +43,25 @@ export const metadata: Metadata = {
     title: "WoodLoop — Jepara Circular Hub",
     description:
       "Platform ekonomi sirkular untuk industri kayu Jepara. Kelola limbah kayu, jual beli bahan daur ulang, dan lacak dampak lingkungan.",
-    url: "https://woodloop.app",
+    url: BASE_URL,
     siteName: "WoodLoop",
     type: "website",
     locale: "id_ID",
+    images: [
+      {
+        url: "/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "WoodLoop — Jepara Circular Hub",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "WoodLoop — Jepara Circular Hub",
     description:
       "Platform ekonomi sirkular untuk industri kayu Jepara.",
+    images: ["/icon-512.png"],
   },
   robots: { index: true, follow: true },
 };
@@ -60,11 +82,43 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               if ("serviceWorker" in navigator) {
-                window.addEventListener("load", () => {
-                  navigator.serviceWorker.register("/sw.js");
+                navigator.serviceWorker.register("/sw.js").catch(function(err) {
+                  console.warn("[SW] Registration failed:", err);
                 });
               }
             `,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "WoodLoop",
+              url: BASE_URL,
+              description: "Platform ekonomi sirkular untuk industri kayu Jepara",
+              logo: BASE_URL + "/icon-512.png",
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "WoodLoop",
+              url: BASE_URL,
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: BASE_URL + "/buyer/marketplace?q={search_term_string}",
+                },
+                "query-input": "required name=search_term_string",
+              },
+            }),
           }}
         />
         <QueryProvider>

@@ -6,6 +6,7 @@ import {
   TileLayer,
   Marker,
   Popup,
+  Polyline,
   useMap,
 } from "react-leaflet";
 import L from "leaflet";
@@ -62,6 +63,22 @@ const ICON_AVAILABLE = createMarkerIcon("#22c55e", "●");
 const ICON_URGENT = createMarkerIcon("#ef4444", "●");
 const ICON_DEFAULT = createMarkerIcon("#eab308", "●");
 
+// ─── Haversine distance (km) ─────────────────────────────────────────────
+function haversineDistance(
+  lat1: number, lng1: number,
+  lat2: number, lng2: number
+): number {
+  const R = 6371; // Earth radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 // ─── Location Picker Component ───────────────────────────────────────────
 function LocationMarker({ onLocationFound }: { onLocationFound: (lat: number, lng: number) => void }) {
   const map = useMap();
@@ -111,6 +128,8 @@ export default function TreasureMap() {
   const [userLocation, setUserLocation] = useState<[number, number]>([-6.58, 110.67]);
   const [mapCenter, setMapCenter] = useState<[number, number]>([-6.58, 110.67]);
   const [showFilters, setShowFilters] = useState(false);
+  const [showRoutes, setShowRoutes] = useState(false);
+  const [routeWastes, setRouteWastes] = useState<{ id: string; lat: number; lng: number; name: string; dist: number }[]>([]);
   const [filters, setFilters] = useState<{ wood_type?: string; form?: string; max_price?: number }>({});
 
   const { data, isLoading, error } = useWasteListingsForMap(filters);
@@ -147,6 +166,33 @@ export default function TreasureMap() {
       );
     }
   }, []);
+
+  const handleToggleRoutes = useCallback(() => {
+    if (!showRoutes) {
+      // Calculate distances and pick top 3 nearest
+      const withDist = wasteItems
+        .map((w) => {
+          const lat = w.expand?.generator?.location_lat;
+          const lng = w.expand?.generator?.location_lng;
+          if (!lat || !lng) return null;
+          return {
+            id: w.id,
+            lat,
+            lng,
+            name: w.expand?.wood_type?.name || w.wood_type || "-",
+            dist: haversineDistance(userLocation[0], userLocation[1], lat, lng),
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a!.dist - b!.dist)
+        .slice(0, 3);
+      setRouteWastes(withDist as typeof routeWastes);
+      setShowRoutes(true);
+    } else {
+      setShowRoutes(false);
+      setRouteWastes([]);
+    }
+  }, [showRoutes, wasteItems, userLocation]);
 
   return (
     <div className="relative h-full">
@@ -194,7 +240,43 @@ export default function TreasureMap() {
             );
           })
         )}
+
+        {/* Routing Polylines — rute ke 3 waste listing terdekat */}
+        {showRoutes && routeWastes.map((rw, i) => (
+          <Polyline
+            key={rw.id}
+            positions={[
+              [userLocation[0], userLocation[1]],
+              [rw.lat, rw.lng],
+            ]}
+            color={["#3b82f6", "#10b981", "#f59e0b"][i]}
+            weight={3}
+            opacity={0.7}
+          />
+        ))}
       </MapContainer>
+
+      {/* Route Info Overlay */}
+      {showRoutes && routeWastes.length > 0 && (
+        <div className="absolute top-4 right-4 z-[1000] bg-background/90 backdrop-blur-sm rounded-lg border p-3 shadow-lg max-w-xs">
+          <p className="text-xs font-medium mb-2">Rute Terdekat</p>
+          <div className="space-y-1.5">
+            {routeWastes.map((rw, i) => (
+              <div key={rw.id} className="flex items-center gap-2 text-xs">
+                <span className="w-4 h-4 rounded-full flex items-center justify-center text-white font-bold"
+                  style={{ background: ["#3b82f6", "#10b981", "#f59e0b"][i] }}>
+                  {i + 1}
+                </span>
+                <span className="flex-1 truncate">{rw.name}</span>
+                <span className="text-muted-foreground">{rw.dist.toFixed(1)} km</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground mt-2 pt-2 border-t">
+            Total: {routeWastes.reduce((s, r) => s + r.dist, 0).toFixed(1)} km
+          </p>
+        </div>
+      )}
 
       {/* Overlay Controls */}
       <div className="absolute top-4 left-4 z-[1000] flex flex-col gap-2">
@@ -220,6 +302,15 @@ export default function TreasureMap() {
               {Object.keys(filters).length}
             </Badge>
           )}
+        </Button>
+        <Button
+          variant={showRoutes ? "default" : "secondary"}
+          size="sm"
+          className="shadow-lg gap-2"
+          onClick={handleToggleRoutes}
+        >
+          <MapPinIcon className="h-4 w-4" />
+          {showRoutes ? "Sembunyikan Rute" : "Rute Terdekat"}
         </Button>
       </div>
 

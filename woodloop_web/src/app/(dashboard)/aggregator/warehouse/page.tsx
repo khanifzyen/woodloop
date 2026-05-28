@@ -141,7 +141,9 @@ export default function WarehousePage() {
               {filteredItems.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">
-                    {item.expand?.wood_type?.name || "-"}
+                    <Link href={`/aggregator/warehouse/${item.id}`} className="hover:underline">
+                      {item.expand?.wood_type?.name || "-"}
+                    </Link>
                   </TableCell>
                   <TableCell>{item.form}</TableCell>
                   <TableCell>{item.weight}</TableCell>

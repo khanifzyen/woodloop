@@ -6,6 +6,7 @@ const mockGetList = vi.fn();
 const mockCreate = vi.fn();
 const mockUpdate = vi.fn();
 const mockDelete = vi.fn();
+const mockSubscribe = vi.fn();
 
 vi.mock("@/lib/pocketbase/client", () => ({
   getPB: () => ({
@@ -14,6 +15,7 @@ vi.mock("@/lib/pocketbase/client", () => ({
       create: mockCreate,
       update: mockUpdate,
       delete: mockDelete,
+      subscribe: mockSubscribe,
     }),
   }),
 }));

@@ -45,6 +45,7 @@ export function useProducts(filters?: {
         filter: filterParts.join(" && "),
         sort,
         expand: "converter",
+        fields: "id,name,price,photos,category,description,expand.converter.name",
       });
 
       let items = (result as unknown as {

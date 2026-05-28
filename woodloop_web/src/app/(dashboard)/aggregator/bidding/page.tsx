@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   useBids,
   useAvailableWasteForBid,
   useCreateBid,
   useWoodTypes,
 } from "@/lib/hooks/use-aggregator";
+import { useRealtimeSubscription } from "@/lib/hooks/use-realtime";
+import { useQueryClient } from "@tanstack/react-query";
+import { aggregatorKeys } from "@/lib/hooks/use-aggregator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,12 +34,45 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GavelIcon, DollarSignIcon, ClockIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import type { Bid } from "@/lib/pocketbase/types";
 
 export default function BiddingPage() {
+  const router = useRouter();
+  const qc = useQueryClient();
   const [tab, setTab] = useState("available");
   const { data: availableWaste, isLoading: loadingWaste } = useAvailableWasteForBid();
   const { data: myBids, isLoading: loadingBids } = useBids();
   const createBid = useCreateBid();
+
+  // Real-time subscription: listen to bid status changes
+  useRealtimeSubscription<Bid>(
+    "bids",
+    "*",
+    useCallback((event) => {
+      if (event.action === "update") {
+        const bid = event.record;
+        if (bid.status === "accepted") {
+          toast.success("Tawaran Diterima!", {
+            description: `Bid Anda untuk limbah kayu diterima. Buat jadwal penjemputan sekarang.`,
+            action: {
+              label: "Lihat Pickup",
+              onClick: () => window.location.href = "/aggregator/pickups",
+            },
+            duration: 8000,
+          });
+          qc.invalidateQueries({ queryKey: aggregatorKeys.bids() });
+          qc.invalidateQueries({ queryKey: aggregatorKeys.dashboard() });
+        } else if (bid.status === "rejected") {
+          toast.info("Tawaran Ditolak", {
+            description: `Bid Anda untuk limbah kayu ditolak. Coba bid yang lain.`,
+            duration: 5000,
+          });
+          qc.invalidateQueries({ queryKey: aggregatorKeys.bids() });
+        }
+      }
+    }, [qc]),
+  );
 
   const [bidDialog, setBidDialog] = useState<{ open: boolean; wasteId: string; woodName: string; priceEstimate: number }>({
     open: false, wasteId: "", woodName: "", priceEstimate: 0,

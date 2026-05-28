@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import { useNotifications, useMarkNotifAsRead } from "@/lib/hooks/use-wallet";
+import { useNotifications, useMarkNotifAsRead, useRealtimeNotifications } from "@/lib/hooks/use-wallet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,6 +20,9 @@ export default function NotificationsPage() {
   }, [isAuthenticated, router]);
 
   if (!isAuthenticated) return null;
+
+  // Activate real-time notification subscription
+  useRealtimeNotifications();
 
   const { data, isLoading } = useNotifications();
   const markRead = useMarkNotifAsRead();

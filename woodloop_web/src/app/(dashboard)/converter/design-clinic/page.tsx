@@ -62,7 +62,7 @@ export default function DesignClinicPage() {
               <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full overflow-hidden">
                 <div className="h-40 bg-muted flex items-center justify-center">
                   {r.photos?.[0] ? (
-                    <img src={r.photos[0]} alt={r.title} className="h-full w-full object-cover" />
+                    <img src={r.photos[0]} alt={r.title} loading="lazy" className="h-full w-full object-cover" />
                   ) : (
                     <BookOpen className="h-10 w-10 text-muted-foreground" />
                   )}

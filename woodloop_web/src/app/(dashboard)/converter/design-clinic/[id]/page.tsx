@@ -37,7 +37,7 @@ export default function DesignRecipeDetailPage() {
 
       <div className="h-56 bg-muted rounded-lg flex items-center justify-center">
         {recipe.photos?.[0] ? (
-          <img src={recipe.photos[0]} alt={recipe.title} className="h-full w-full object-cover rounded-lg" />
+          <img src={recipe.photos[0]} alt={recipe.title} loading="lazy" className="h-full w-full object-cover rounded-lg" />
         ) : (
           <Palette className="h-16 w-16 text-muted-foreground" />
         )}

@@ -134,6 +134,20 @@
 |----|----------|---------|-----------------|---------|--------|
 | **R09-01** | Sitemap contains product URLs | 1. GET `/sitemap.xml` | Response valid XML contains "woodloop.app" + "sitemap" | ✓ | ✓ |
 | **R09-02** | Manifest valid JSON | 1. GET `/manifest.webmanifest` | JSON valid dengan `display: "standalone"` + `theme_color` terisi | ✓ | ✓ |
+| **R09-03** | Offline page renders | 1. Buka `/offline` | Heading "Kamu Sedang Offline" + tombol "Coba Lagi" visible | ✓ | ✓ |
+| **R09-04** | JSON-LD Organization di root layout | 1. Buka halaman manapun, inspect `<head>` | `<script type="application/ld+json">` dengan `@type: "Organization"` ada | ✓ | ✓ |
+| **R09-05** | JSON-LD WebSite di root layout | 1. Inspect `<head>` | `@type: "WebSite"` dengan SearchAction ada | ✓ | ✓ |
+| **R09-06** | JSON-LD BreadcrumbList di marketplace | 1. Buka `/buyer/marketplace` | `@type: "BreadcrumbList"` dengan items Beranda + Marketplace | ✓ | ✓ |
+| **R09-07** | JSON-LD Product + Breadcrumb di traceability | 1. Buka `/p/PRD-TEST` | `@type: "Product"` + `@type: "BreadcrumbList"` ada di halaman | ✓ | ✓ |
+| **R09-08** | Service worker terdaftar | 1. Buka halaman manapun, cek Application > SW | Service worker `sw.js` terdaftar | ✓ | ✓ |
+| **R09-09** | PWA icons tersedia | 1. GET `/icon-192.png` | Status 200, PNG valid | ✓ | ✓ |
+| **R09-10** | PWA icons tersedia 512px | 1. GET `/icon-512.png` | Status 200, PNG valid | ✓ | ✓ |
+| **R09-11** | Sitemap contains buyer product URLs | 1. GET `/sitemap.xml` | Response mengandung `/buyer/product/` entries | ✓ | ✓ |
+| **R09-12** | Sitemap contains /scan | 1. GET `/sitemap.xml` | Response mengandung `/buyer/scan` | ✓ | ✓ |
+| **R09-13** | metadataBase terdefinisi | 1. Cek layout metadata | `metadataBase` = `https://woodloop.app` | ✓ | ✓ |
+| **R09-14** | Viewport dengan themeColor | 1. Cek viewport export | `themeColor: "#2D6A4F"`, `colorScheme: "light"` | ✓ | ✓ |
+| **R09-15** | Open Graph default image | 1. Cek root layout metadata | `openGraph.images` mengarah ke `/icon-512.png` | ✓ | ✓ |
+| **R09-16** | Canonical URL | 1. Cek root layout metadata | `alternates.canonical = "https://woodloop.app"` | ✓ | ✓ |
 
 ---
 
