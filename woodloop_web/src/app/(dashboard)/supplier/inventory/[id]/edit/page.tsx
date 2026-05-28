@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save, Trash2 } from "lucide-react";
@@ -62,6 +62,8 @@ export default function EditTimberListingPage() {
     grade: "" as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya",
     diameter: "",
     length: "",
+    width: "",
+    height: "",
     volume: "",
     price: "",
     unit: "m3" as "m3" | "batang" | "ton",
@@ -71,6 +73,44 @@ export default function EditTimberListingPage() {
   const [photos, setPhotos] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [priceDisplay, setPriceDisplay] = useState("");
+  const volumeRef = useRef<HTMLInputElement>(null);
+
+  // Auto-calculate volume when focusing
+  function handleVolumeFocus() {
+    setForm((prev) => {
+      if (prev.volume) return prev;
+      const d = Number(prev.diameter);
+      const l = Number(prev.length);
+      const w = Number(prev.width);
+      const h = Number(prev.height);
+      let vol = 0;
+
+      if (prev.shape === "log" && d > 0 && l > 0) {
+        const r = d / 2 / 100;
+        const panjangM = l / 100;
+        vol = Math.PI * r * r * panjangM;
+      } else if (prev.shape === "sawn" && l > 0 && w > 0 && h > 0) {
+        vol = (l / 100) * (w / 100) * (h / 100);
+      }
+
+      if (vol > 0) {
+        return { ...prev, volume: vol.toFixed(3) };
+      }
+      return prev;
+    });
+  }
+
+  function handlePriceChange(raw: string) {
+    const numeric = raw.replace(/[^0-9]/g, "");
+    if (numeric === "") {
+      setPriceDisplay("");
+      updateField("price", "");
+      return;
+    }
+    setPriceDisplay(Number(numeric).toLocaleString("id-ID"));
+    updateField("price", numeric);
+  }
 
   // Load existing data
   useEffect(() => {
@@ -87,6 +127,8 @@ export default function EditTimberListingPage() {
           grade: record.grade || "",
           diameter: record.diameter?.toString() || "",
           length: record.length?.toString() || "",
+          width: record.width?.toString() || "",
+          height: record.height?.toString() || "",
           volume: record.volume.toString(),
           price: record.price.toString(),
           unit: record.unit,
@@ -124,6 +166,8 @@ export default function EditTimberListingPage() {
       grade: form.grade || undefined,
       diameter: form.diameter ? Number(form.diameter) : undefined,
       length: form.length ? Number(form.length) : undefined,
+      width: form.width ? Number(form.width) : undefined,
+      height: form.height ? Number(form.height) : undefined,
       volume: Number(form.volume),
       price: Number(form.price),
       unit: form.unit,
@@ -320,27 +364,59 @@ export default function EditTimberListingPage() {
                   </Select>
                 </div>
 
-                {/* Diameter & Length */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="diameter">Diameter (cm)</Label>
-                    <Input
-                      id="diameter"
-                      type="number"
-                      value={form.diameter}
-                      onChange={(e) => updateField("diameter", e.target.value)}
-                    />
+                {/* Dimensions — depends on shape */}
+                {form.shape === "log" ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="diameter">Diameter (cm)</Label>
+                      <Input
+                        id="diameter"
+                        type="number"
+                        value={form.diameter}
+                        onChange={(e) => updateField("diameter", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="length">Panjang (cm)</Label>
+                      <Input
+                        id="length"
+                        type="number"
+                        value={form.length}
+                        onChange={(e) => updateField("length", e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="length">Panjang (cm)</Label>
-                    <Input
-                      id="length"
-                      type="number"
-                      value={form.length}
-                      onChange={(e) => updateField("length", e.target.value)}
-                    />
+                ) : (
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="length">Panjang (cm)</Label>
+                      <Input
+                        id="length"
+                        type="number"
+                        value={form.length}
+                        onChange={(e) => updateField("length", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="width">Lebar (cm)</Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        value={form.width}
+                        onChange={(e) => updateField("width", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="height">Tinggi (cm)</Label>
+                      <Input
+                        id="height"
+                        type="number"
+                        value={form.height}
+                        onChange={(e) => updateField("height", e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Volume & Unit */}
                 <div className="grid grid-cols-2 gap-4">
@@ -353,6 +429,8 @@ export default function EditTimberListingPage() {
                       type="number"
                       step="0.01"
                       value={form.volume}
+                      ref={volumeRef}
+                      onFocus={handleVolumeFocus}
                       onChange={(e) => updateField("volume", e.target.value)}
                       className={errors.volume ? "border-destructive" : ""}
                     />
@@ -389,9 +467,10 @@ export default function EditTimberListingPage() {
                   </Label>
                   <Input
                     id="price"
-                    type="number"
-                    value={form.price}
-                    onChange={(e) => updateField("price", e.target.value)}
+                    type="text"
+                    inputMode="numeric"
+                    value={priceDisplay || (form.price ? Number(form.price).toLocaleString("id-ID") : "")}
+                    onChange={(e) => handlePriceChange(e.target.value)}
                     className={errors.price ? "border-destructive" : ""}
                   />
                   {errors.price && (
@@ -441,6 +520,7 @@ export default function EditTimberListingPage() {
               <CardContent>
                 <FileDropzone
                   maxFiles={5}
+                  enableCamera
                   onFilesChange={setPhotos}
                   initialFiles={listing.photos}
                 />

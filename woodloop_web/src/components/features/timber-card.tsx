@@ -88,11 +88,15 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
           <span className="text-lg font-bold text-primary">
             {formatCurrency(listing.price)}
           </span>
-          {listing.diameter && (
+          {listing.shape === "log" && listing.diameter ? (
             <span className="text-xs text-muted-foreground">
               ⌀{listing.diameter}cm
             </span>
-          )}
+          ) : listing.shape === "sawn" && listing.width && listing.height ? (
+            <span className="text-xs text-muted-foreground">
+              {listing.width}×{listing.height}cm
+            </span>
+          ) : null}
         </div>
       </CardContent>
 

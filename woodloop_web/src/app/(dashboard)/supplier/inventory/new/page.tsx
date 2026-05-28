@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
@@ -40,6 +40,8 @@ export default function NewTimberListingPage() {
     grade: "" as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya",
     diameter: "",
     length: "",
+    width: "",
+    height: "",
     volume: "",
     price: "",
     unit: "m3" as "m3" | "batang" | "ton",
@@ -48,6 +50,49 @@ export default function NewTimberListingPage() {
   const [photos, setPhotos] = useState<File[]>([]);
   const [legalityDoc, setLegalityDoc] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [priceDisplay, setPriceDisplay] = useState("");
+  const volumeRef = useRef<HTMLInputElement>(null);
+
+  // Auto-calculate volume when focusing on volume field
+  function handleVolumeFocus() {
+    setForm((prev) => {
+      if (prev.volume) return prev; // skip if already filled
+      const d = Number(prev.diameter);
+      const l = Number(prev.length);
+      const w = Number(prev.width);
+      const h = Number(prev.height);
+      let vol = 0;
+
+      if (prev.shape === "log" && d > 0 && l > 0) {
+        // Volume silinder: π × r² × panjang (dalam m³)
+        // d dan l dalam cm → konversi ke m
+        const r = d / 2 / 100;
+        const panjangM = l / 100;
+        vol = Math.PI * r * r * panjangM;
+      } else if (prev.shape === "sawn" && l > 0 && w > 0 && h > 0) {
+        // Volume balok: p × l × t (dalam m³)
+        vol = (l / 100) * (w / 100) * (h / 100);
+      }
+
+      if (vol > 0) {
+        return { ...prev, volume: vol.toFixed(3) };
+      }
+      return prev;
+    });
+  }
+
+  // Format price dengan thousand separator
+  function handlePriceChange(raw: string) {
+    // Hanya angka
+    const numeric = raw.replace(/[^0-9]/g, "");
+    if (numeric === "") {
+      setPriceDisplay("");
+      updateField("price", "");
+      return;
+    }
+    setPriceDisplay(Number(numeric).toLocaleString("id-ID"));
+    updateField("price", numeric);
+  }
 
   function validate(): boolean {
     const errs: Record<string, string> = {};
@@ -104,6 +149,8 @@ export default function NewTimberListingPage() {
       grade: form.grade || undefined,
       diameter: form.diameter ? Number(form.diameter) : undefined,
       length: form.length ? Number(form.length) : undefined,
+      width: form.width ? Number(form.width) : undefined,
+      height: form.height ? Number(form.height) : undefined,
       volume: Number(form.volume),
       price: Number(form.price),
       unit: form.unit,
@@ -236,31 +283,64 @@ export default function NewTimberListingPage() {
                   </Select>
                 </div>
 
-                {/* Diameter & Length */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="diameter">Diameter (cm)</Label>
-                    <Input
-                      id="diameter"
-                      type="number"
-                      placeholder="0"
-                      value={form.diameter}
-                      onChange={(e) =>
-                        updateField("diameter", e.target.value)
-                      }
-                    />
+                {/* Dimensions — depends on shape */}
+                {form.shape === "log" ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="diameter">Diameter (cm)</Label>
+                      <Input
+                        id="diameter"
+                        type="number"
+                        placeholder="0"
+                        value={form.diameter}
+                        onChange={(e) => updateField("diameter", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="length">Panjang (cm)</Label>
+                      <Input
+                        id="length"
+                        type="number"
+                        placeholder="0"
+                        value={form.length}
+                        onChange={(e) => updateField("length", e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="length">Panjang (cm)</Label>
-                    <Input
-                      id="length"
-                      type="number"
-                      placeholder="0"
-                      value={form.length}
-                      onChange={(e) => updateField("length", e.target.value)}
-                    />
+                ) : (
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="length">Panjang (cm)</Label>
+                      <Input
+                        id="length"
+                        type="number"
+                        placeholder="0"
+                        value={form.length}
+                        onChange={(e) => updateField("length", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="width">Lebar (cm)</Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        placeholder="0"
+                        value={form.width}
+                        onChange={(e) => updateField("width", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="height">Tinggi (cm)</Label>
+                      <Input
+                        id="height"
+                        type="number"
+                        placeholder="0"
+                        value={form.height}
+                        onChange={(e) => updateField("height", e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Volume & Unit */}
                 <div className="grid grid-cols-2 gap-4">
@@ -274,6 +354,8 @@ export default function NewTimberListingPage() {
                       step="0.01"
                       placeholder="0.00"
                       value={form.volume}
+                      ref={volumeRef}
+                      onFocus={handleVolumeFocus}
                       onChange={(e) => updateField("volume", e.target.value)}
                       className={errors.volume ? "border-destructive" : ""}
                     />
@@ -313,10 +395,11 @@ export default function NewTimberListingPage() {
                   </Label>
                   <Input
                     id="price"
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
                     placeholder="0"
-                    value={form.price}
-                    onChange={(e) => updateField("price", e.target.value)}
+                    value={priceDisplay}
+                    onChange={(e) => handlePriceChange(e.target.value)}
                     className={errors.price ? "border-destructive" : ""}
                   />
                   {errors.price && (
@@ -353,6 +436,7 @@ export default function NewTimberListingPage() {
               <CardContent>
                 <FileDropzone
                   maxFiles={5}
+                  enableCamera
                   onFilesChange={setPhotos}
                 />
                 {errors.photos && (

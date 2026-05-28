@@ -34,7 +34,7 @@ export interface RawTimberListing {
   expand?: { supplier?: User; wood_type?: WoodType; };
   shape: TimberShape;
   grade?: TimberGrade;
-  diameter?: number; length?: number; volume: number;
+  diameter?: number; width?: number; height?: number; length?: number; volume: number;
   price: number; unit: "m3" | "batang" | "ton";
   photos: string[]; legality_doc?: string;
   status: "available" | "sold"; description?: string;

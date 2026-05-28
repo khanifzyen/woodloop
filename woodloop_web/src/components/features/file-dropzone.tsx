@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, type ChangeEvent } from "react";
-import { Upload, X, FileText } from "lucide-react";
+import { Upload, X, FileText, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,8 @@ interface FileDropzoneProps {
   initialFiles?: string[];
   /** Jika true, render sebagai single file document upload */
   documentMode?: boolean;
+  /** Tampilkan tombol kamera untuk capture langsung */
+  enableCamera?: boolean;
   className?: string;
 }
 
@@ -25,6 +27,7 @@ export function FileDropzone({
   initialFiles,
   documentMode = false,
   className,
+  enableCamera = false,
 }: FileDropzoneProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [existingPreviews, setExistingPreviews] = useState<string[]>(
@@ -32,7 +35,9 @@ export function FileDropzone({
   );
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [useCamera, setUseCamera] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
 
   const totalCount = files.length + existingPreviews.length;
 
@@ -199,28 +204,81 @@ export function FileDropzone({
 
       {/* Dropzone */}
       {totalCount < maxFiles && (
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDragOver(true);
-          }}
-          onDragLeave={() => setIsDragOver(false)}
-          onDrop={handleDrop}
-          onClick={() => inputRef.current?.click()}
-          className={cn(
-            "flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors",
-            isDragOver
-              ? "border-primary bg-primary/5"
-              : "border-muted-foreground/25 hover:bg-muted/50"
+        <div>
+          {useCamera ? (
+            <div className="space-y-2">
+              <input
+                ref={cameraRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={handleInputChange}
+              />
+              <div className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed rounded-lg">
+                <Camera className="h-8 w-8 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
+                  Ambil foto menggunakan kamera
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => cameraRef.current?.click()}
+                >
+                  <Camera className="h-4 w-4 mr-2" />
+                  Buka Kamera
+                </Button>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="w-full"
+                onClick={() => setUseCamera(false)}
+              >
+                Kembali ke upload file
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragOver(true);
+                }}
+                onDragLeave={() => setIsDragOver(false)}
+                onDrop={handleDrop}
+                onClick={() => inputRef.current?.click()}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors",
+                  isDragOver
+                    ? "border-primary bg-primary/5"
+                    : "border-muted-foreground/25 hover:bg-muted/50"
+                )}
+              >
+                <Upload className="h-8 w-8 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
+                  Seret foto ke sini atau klik untuk upload
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Maks {maxFiles} file, masing-masing {maxSizeMB}MB
+                </p>
+              </div>
+              {enableCamera && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full mt-2"
+                  onClick={() => setUseCamera(true)}
+                >
+                  <Camera className="h-4 w-4 mr-2" />
+                  Ambil Foto dari Kamera
+                </Button>
+              )}
+            </>
           )}
-        >
-          <Upload className="h-8 w-8 text-muted-foreground" />
-          <p className="text-sm font-medium text-muted-foreground">
-            Seret foto ke sini atau klik untuk upload
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Maks {maxFiles} file, masing-masing {maxSizeMB}MB
-          </p>
         </div>
       )}
 
