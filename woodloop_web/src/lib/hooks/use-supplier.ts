@@ -204,6 +204,8 @@ export function useWoodTypes() {
 // ---------------------------------------------------------------------------
 export interface CreateTimberData {
   wood_type: string;
+  shape: "log" | "sawn";
+  grade?: "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya";
   diameter?: number;
   length?: number;
   volume: number;

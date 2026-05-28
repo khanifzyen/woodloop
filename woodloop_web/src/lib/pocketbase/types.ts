@@ -26,9 +26,14 @@ export interface WoodType {
 }
 
 // ========== 3. Raw Timber Listings ==========
+export type TimberShape = "log" | "sawn";
+export type TimberGrade = "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya";
+
 export interface RawTimberListing {
   id: string; supplier: string; wood_type: string;
   expand?: { supplier?: User; wood_type?: WoodType; };
+  shape: TimberShape;
+  grade?: TimberGrade;
   diameter?: number; length?: number; volume: number;
   price: number; unit: "m3" | "batang" | "ton";
   photos: string[]; legality_doc?: string;

@@ -55,6 +55,8 @@ Kayu mentah (gelondongan) yang didaftarkan oleh Supplier untuk dijual ke Generat
 | :--- | :--- | :--- | :--- |
 | `supplier` | relation | → `users` (single, required, cascadeDelete) | Pemilik listing kayu mentah |
 | `wood_type` | relation | → `wood_types` (single, required) | Jenis kayu |
+| `shape` | select | `log`, `sawn` — required | Bentuk kayu: Gelondongan (log) atau Papan Gergajian (sawn). Menentukan prefix tracking_id (`LOG-...` / `SWN-...`) |
+| `grade` | select | `perhutani`, `kemplengan`, `kayu_rakyat`, `lainnya` — optional | Grade/kualitas kayu berdasarkan sumber |
 | `diameter` | number | - | Diameter log (cm) |
 | `length` | number | - | Panjang log (cm) |
 | `volume` | number | required | Volume (m³) |

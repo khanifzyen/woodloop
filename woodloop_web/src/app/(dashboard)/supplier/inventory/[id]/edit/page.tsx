@@ -58,6 +58,8 @@ export default function EditTimberListingPage() {
   const [listing, setListing] = useState<ListingWithExpand | null>(null);
   const [form, setForm] = useState({
     wood_type: "",
+    shape: "log" as "log" | "sawn",
+    grade: "" as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya",
     diameter: "",
     length: "",
     volume: "",
@@ -81,6 +83,8 @@ export default function EditTimberListingPage() {
         setListing(record);
         setForm({
           wood_type: record.wood_type,
+          shape: record.shape || "log",
+          grade: record.grade || "",
           diameter: record.diameter?.toString() || "",
           length: record.length?.toString() || "",
           volume: record.volume.toString(),
@@ -102,6 +106,7 @@ export default function EditTimberListingPage() {
   function validate(): boolean {
     const errs: Record<string, string> = {};
     if (!form.wood_type) errs.wood_type = "Pilih jenis kayu";
+    if (!form.shape) errs.shape = "Pilih bentuk kayu";
     if (!form.volume || Number(form.volume) <= 0)
       errs.volume = "Volume harus diisi";
     if (!form.price || Number(form.price) <= 0) errs.price = "Harga harus diisi";
@@ -115,6 +120,8 @@ export default function EditTimberListingPage() {
 
     const data = {
       wood_type: form.wood_type,
+      shape: form.shape,
+      grade: form.grade || undefined,
       diameter: form.diameter ? Number(form.diameter) : undefined,
       length: form.length ? Number(form.length) : undefined,
       volume: Number(form.volume),
@@ -270,6 +277,47 @@ export default function EditTimberListingPage() {
                       {errors.wood_type}
                     </p>
                   )}
+                </div>
+
+                {/* Shape */}
+                <div className="space-y-2">
+                  <Label htmlFor="shape">
+                    Bentuk Kayu <span className="text-destructive">*</span>
+                  </Label>
+                  <Select
+                    value={form.shape}
+                    onValueChange={(v) => updateField("shape", v as "log" | "sawn")}
+                  >
+                    <SelectTrigger id="shape" className={errors.shape ? "border-destructive" : ""}>
+                      <SelectValue placeholder="Pilih bentuk kayu" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="log">Gelondongan (Log)</SelectItem>
+                      <SelectItem value="sawn">Papan Gergajian (Sawn)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.shape && (
+                    <p className="text-xs text-destructive">{errors.shape}</p>
+                  )}
+                </div>
+
+                {/* Grade */}
+                <div className="space-y-2">
+                  <Label htmlFor="grade">Grade Kayu</Label>
+                  <Select
+                    value={form.grade}
+                    onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya")}
+                  >
+                    <SelectTrigger id="grade">
+                      <SelectValue placeholder="Pilih grade (opsional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="perhutani">Perhutani</SelectItem>
+                      <SelectItem value="kemplengan">Kemplengan</SelectItem>
+                      <SelectItem value="kayu_rakyat">Kayu Rakyat</SelectItem>
+                      <SelectItem value="lainnya">Lainnya</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Diameter & Length */}

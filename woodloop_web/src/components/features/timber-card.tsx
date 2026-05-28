@@ -71,6 +71,19 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
           </p>
         )}
 
+        <div className="flex flex-wrap items-center gap-1">
+          {listing.shape && (
+            <Badge variant="secondary" className="text-[10px]">
+              {listing.shape === "log" ? "Gelondongan" : "Papan Gergajian"}
+            </Badge>
+          )}
+          {listing.grade && (
+            <Badge variant="outline" className="text-[10px] capitalize">
+              {listing.grade === "kayu_rakyat" ? "Kayu Rakyat" : listing.grade}
+            </Badge>
+          )}
+        </div>
+
         <div className="flex items-center justify-between pt-1">
           <span className="text-lg font-bold text-primary">
             {formatCurrency(listing.price)}

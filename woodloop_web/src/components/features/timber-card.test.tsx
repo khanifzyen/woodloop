@@ -9,6 +9,8 @@ const mockListing: RawTimberListing & {
   id: "tl-1",
   supplier: "supplier-1",
   wood_type: "wt-1",
+  shape: "log",
+  grade: "perhutani",
   expand: {
     wood_type: { id: "wt-1", name: "Jati", carbon_factor: 0.5, created: "", updated: "" },
   },

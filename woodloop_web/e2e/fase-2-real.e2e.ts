@@ -334,6 +334,7 @@ test.describe("TC-FLOW: Complete Supplier→Generator flow (real CRUD)", () => {
         supplier: userId,
         wood_type: jatiId,
         shape: "log",
+        grade: "perhutani",
         volume: 3.0,
         price: 1500000,
         unit: "m3",

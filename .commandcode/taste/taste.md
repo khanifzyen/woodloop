@@ -11,6 +11,9 @@
 # deployment
 - Use Docker-based deployment with images hosted on GHCR.io and deployed to a VPS. Confidence: 0.65
 
+# project
+- Run migration scripts after editing/creating them (e.g., `node migration/file.js`) to apply schema changes to PocketBase. Confidence: 0.70
+
 # testing
 - Write unit tests that verify hook function names, query keys, and structure rather than testing async behavior directly. Confidence: 0.70
 
