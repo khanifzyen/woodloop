@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Camera, MapPin, Scale, ArrowLeft, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
+import { resizeImage } from "@/lib/resize-image";
 
 export default function ConfirmPickupPage() {
   const router = useRouter();

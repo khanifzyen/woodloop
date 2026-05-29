@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Store, Plus } from "lucide-react";
 
+import { getFileUrl } from "@/lib/pocketbase/client";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ProductLike = any;
 
@@ -21,7 +22,7 @@ export const ProductCard = React.memo(function ProductCard({ product, onAddToCar
         <div className="aspect-[4/3] bg-muted relative flex items-center justify-center overflow-hidden">
           {product.photos?.[0] ? (
             <Image
-              src={product.photos[0]}
+              src={getFileUrl(product, product.photos[0])}
               alt={product.name}
               fill
               className="object-cover group-hover:scale-105 transition-transform"

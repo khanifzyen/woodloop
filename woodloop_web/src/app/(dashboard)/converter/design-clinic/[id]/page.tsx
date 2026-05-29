@@ -10,6 +10,7 @@ import {
   Card, CardContent,
 } from "@/components/ui/card";
 import { ArrowLeft, Palette } from "lucide-react";
+import { getFileUrl } from "@/lib/pocketbase/client";
 
 export default function DesignRecipeDetailPage() {
   const params = useParams();
@@ -37,7 +38,7 @@ export default function DesignRecipeDetailPage() {
 
       <div className="h-56 bg-muted rounded-lg flex items-center justify-center">
         {recipe.photos?.[0] ? (
-          <img src={recipe.photos[0]} alt={recipe.title} loading="lazy" className="h-full w-full object-cover rounded-lg" />
+          <img src={getFileUrl(recipe, recipe.photos[0])} alt={recipe.title} loading="lazy" className="h-full w-full object-cover rounded-lg" />
         ) : (
           <Palette className="h-16 w-16 text-muted-foreground" />
         )}

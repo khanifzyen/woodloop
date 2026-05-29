@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package } from "lucide-react";
+import { getFileUrl } from "@/lib/pocketbase/client";
 
 const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "outline" | "destructive" }> = {
   payment_pending: { label: "Menunggu Bayar", variant: "secondary" },
@@ -72,7 +73,7 @@ export default function OrdersPage() {
                   <CardContent className="pt-4">
                     <div className="flex items-center gap-4">
                       <div className="h-14 w-14 bg-muted rounded flex items-center justify-center shrink-0">
-                        {product?.photos?.[0] ? <img src={product.photos[0]} alt="" loading="lazy" className="h-full w-full object-cover rounded" /> : <Package className="h-6 w-6 text-muted-foreground" />}
+                        {product?.photos?.[0] ? <img src={getFileUrl(product, product.photos[0])} alt="" loading="lazy" className="h-full w-full object-cover rounded" /> : <Package className="h-6 w-6 text-muted-foreground" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm truncate">{product?.name || "Produk"}</p>

@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useGeneratorProducts } from "@/lib/hooks/use-generator";
-import { getPB } from "@/lib/pocketbase/client";
+import { getPB, getFileUrl } from "@/lib/pocketbase/client";
 import { useQueryClient } from "@tanstack/react-query";
 
 function formatCurrency(val: number): string {

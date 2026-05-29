@@ -236,7 +236,7 @@ export default function NewGeneratorProductPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <FileDropzone maxFiles={5} onFilesChange={setPhotos} />
+              <FileDropzone maxFiles={5} enableCamera onFilesChange={setPhotos} />
               {errors.photos && (
                 <p className="text-xs text-destructive mt-2">
                   {errors.photos}

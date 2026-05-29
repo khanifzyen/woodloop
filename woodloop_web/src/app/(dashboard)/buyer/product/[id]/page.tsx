@@ -15,6 +15,7 @@ import { ArrowLeft, ShoppingCart, TruckIcon, Leaf, Recycle } from "lucide-react"
 import { toast } from "sonner";
 import { buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import Image from "next/image";
+import { getFileUrl } from "@/lib/pocketbase/client";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -72,7 +73,7 @@ export default function ProductDetailPage() {
           <CardContent className="pt-6">
             <div className="aspect-[4/3] bg-muted rounded-lg relative flex items-center justify-center">
               {product.photos?.[0] ? (
-                <Image src={product.photos[0]} alt={product.name} fill className="object-cover rounded-lg" sizes="(max-width: 768px) 100vw, 50vw" />
+                <Image src={getFileUrl(product, product.photos[0])} alt={product.name} fill className="object-cover rounded-lg" sizes="(max-width: 768px) 100vw, 50vw" />
               ) : (
                 <div className="text-muted-foreground">Tidak ada foto</div>
               )}
@@ -92,7 +93,7 @@ export default function ProductDetailPage() {
             <p className="text-sm">{product.description || "Tidak ada deskripsi"}</p>
             <div className="flex gap-2">
               <Button className="flex-1 gap-2" onClick={() => {
-                cart.addItem({ id: product.id, name: product.name, price: product.price, photo: product.photos?.[0] });
+                cart.addItem({ id: product.id, name: product.name, price: product.price, photo: product.photos?.[0] ? getFileUrl(product, product.photos[0]) : undefined });
                 toast.success("Ditambahkan ke keranjang!");
               }}>
                 <ShoppingCart className="h-4 w-4" />+ Keranjang

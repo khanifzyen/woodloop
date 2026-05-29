@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Package, CheckCircle, TruckIcon, CreditCard } from "lucide-react";
+import { getFileUrl } from "@/lib/pocketbase/client";
 
 const statusSteps = [
   { key: "payment_pending", label: "Menunggu Bayar", icon: CreditCard },
@@ -69,7 +70,7 @@ export default function OrderDetailPage() {
         <CardContent className="pt-6 space-y-3">
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 bg-muted rounded flex items-center justify-center">
-              {product?.photos?.[0] ? <img src={product.photos[0]} alt="" loading="lazy" className="h-full w-full object-cover rounded" /> : <Package className="h-6 w-6 text-muted-foreground" />}
+              {product?.photos?.[0] ? <img src={getFileUrl(product, product.photos[0])} alt="" loading="lazy" className="h-full w-full object-cover rounded" /> : <Package className="h-6 w-6 text-muted-foreground" />}
             </div>
             <div>
               <p className="font-medium">{product?.name || "-"}</p>

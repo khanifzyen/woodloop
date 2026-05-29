@@ -3,7 +3,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 
-// Buat PocketBase instance untuk server
+const PB_URL = process.env.NEXT_PUBLIC_PB_URL || "http://127.0.0.1:8090";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getFileUrlServer(record: any, filename: string) {
+  return `${PB_URL}/api/files/${record.collectionId ?? "products"}/${record.id}/${filename}`;
+}
 function createServerPB() {
   const PocketBase = require("pocketbase").default;
   const pb = new PocketBase(process.env.NEXT_PUBLIC_PB_URL || "http://127.0.0.1:8090");
@@ -105,7 +109,7 @@ export default async function PublicTraceabilityPage({
         <div className="space-y-4">
           {product.photos?.[0] && (
             <img
-              src={product.photos[0] as string}
+              src={getFileUrlServer(product, product.photos[0])}
               alt={product.name as string}
               className="w-full h-64 object-cover rounded-xl border"
             />

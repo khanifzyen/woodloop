@@ -18,5 +18,5 @@
 - Write unit tests that verify hook function names, query keys, and structure rather than testing async behavior directly. Confidence: 0.70
 
 # git
-- After completing code changes, stage all files (`git add .`), commit with a descriptive label, and push to remote. Confidence: 0.60
+- After completing code changes, stage all files (`git add .`), commit with a descriptive label, and push to remote. Confidence: 0.70
 

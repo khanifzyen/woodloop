@@ -19,6 +19,7 @@ import { Search, ShoppingCart, Store, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { buildBreadcrumbJsonLd, jsonLdScript } from "@/lib/seo";
 import { ProductCard } from "@/components/features/product-card";
+import { getFileUrl } from "@/lib/pocketbase/client";
 
 export default function MarketplacePage() {
   const [category, setCategory] = useState("");
@@ -55,7 +56,7 @@ export default function MarketplacePage() {
       id: product.id,
       name: product.name,
       price: product.price,
-      photo: product.photos?.[0],
+      photo: product.photos?.[0] ? getFileUrl(product, product.photos[0]) : undefined,
     });
     toast.success(`${product.name} ditambahkan ke keranjang`);
   }
