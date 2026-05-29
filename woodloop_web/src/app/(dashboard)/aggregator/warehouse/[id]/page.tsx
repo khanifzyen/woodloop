@@ -90,7 +90,7 @@ export default function WarehouseDetailPage({ params }: { params: Promise<{ id: 
   const wasteListing = pickup?.expand?.waste_listing;
   const originGenerator = wasteListing?.expand?.generator;
   const hasPhoto = data.photos && data.photos.length > 0;
-  const photoUrl = hasPhoto ? getFileUrl(data, data.photos![0]) : null;
+  const photoUrl = hasPhoto ? getFileUrl("warehouse_inventory", data.id, data.photos![0]) : null;
   const totalValue = (data.price_per_kg || 0) * (data.weight || 0);
 
   const currentPrice = priceInput ?? data.price_per_kg ?? 0;

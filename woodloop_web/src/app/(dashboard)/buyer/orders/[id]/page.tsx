@@ -70,7 +70,7 @@ export default function OrderDetailPage() {
         <CardContent className="pt-6 space-y-3">
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 bg-muted rounded flex items-center justify-center">
-              {product?.photos?.[0] ? <img src={getFileUrl(product, product.photos[0])} alt="" loading="lazy" className="h-full w-full object-cover rounded" /> : <Package className="h-6 w-6 text-muted-foreground" />}
+              {product?.photos?.[0] ? <img src={getFileUrl("products", product.id, product.photos[0])} alt="" loading="lazy" className="h-full w-full object-cover rounded" /> : <Package className="h-6 w-6 text-muted-foreground" />}
             </div>
             <div>
               <p className="font-medium">{product?.name || "-"}</p>

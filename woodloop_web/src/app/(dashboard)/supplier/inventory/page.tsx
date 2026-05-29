@@ -289,7 +289,7 @@ export default function InventoryPage() {
                           <TableCell>
                             {listing.photos?.[0] ? (
                               <img
-                                src={getFileUrl(listing, listing.photos[0])}
+                                src={getFileUrl("raw_timber_listings", listing.id, listing.photos[0])}
                                 alt="foto"
                                 className="h-10 w-10 object-cover rounded"
                               />

@@ -60,6 +60,7 @@ export function useSupplierDashboard() {
         pb.collection<RawTimberListing>("raw_timber_listings").getList(1, 200, {
           filter: `supplier="${supplierId}"`,
           sort: "-created",
+          expand: "wood_type",
         }),
         pb.collection<Order>("orders").getList(1, 200, {
           filter: `product ?~ "${supplierId}"`, // simplified; real filter may vary
@@ -97,7 +98,7 @@ export function useSupplierDashboard() {
         ...listings.items.slice(0, 3).map((l) => ({
           id: l.id,
           type: "listing_created" as const,
-          description: `Kayu ${l.wood_type} — ${l.volume} m³`,
+          description: `Kayu ${l.expand?.wood_type?.name || l.wood_type} — ${l.volume} m³`,
           amount: l.price,
           timestamp: l.created,
         })),
@@ -202,22 +203,6 @@ export function useWoodTypes() {
 // ---------------------------------------------------------------------------
 // useCreateRawTimberListing
 // ---------------------------------------------------------------------------
-export interface CreateTimberData {
-  wood_type: string;
-  shape: "log" | "sawn";
-  grade?: "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya";
-  diameter?: number;
-  length?: number;
-  width?: number;
-  height?: number;
-  volume: number;
-  price: number;
-  unit: "m3" | "batang" | "ton";
-  photos: string[];
-  legality_doc?: string;
-  description?: string;
-}
-
 export function useCreateRawTimberListing() {
   const pb = getPB();
   const qc = useQueryClient();
@@ -244,14 +229,14 @@ export function useUpdateRawTimberListing() {
   return useMutation({
     mutationFn: async ({
       id,
-      data,
+      formData,
     }: {
       id: string;
-      data: Partial<CreateTimberData & { status: "available" | "sold" }>;
+      formData: FormData;
     }) => {
       const record = await pb
         .collection("raw_timber_listings")
-        .update(id, data);
+        .update(id, formData);
       return record;
     },
     onSuccess: () => {

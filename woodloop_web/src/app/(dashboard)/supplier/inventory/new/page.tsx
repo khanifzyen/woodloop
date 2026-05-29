@@ -140,6 +140,11 @@ export default function NewTimberListingPage() {
       formData.append("photos", file);
     }
 
+    // Append legality document if any
+    for (const file of legalityDoc) {
+      formData.append("legality_doc", file);
+    }
+
     createMutation.mutate(
       formData,
       {

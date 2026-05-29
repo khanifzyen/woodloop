@@ -14,8 +14,12 @@ interface FileDropzoneProps {
   initialFiles?: string[];
   /** Jika true, render sebagai single file document upload */
   documentMode?: boolean;
+  /** URL dokumen existing (documentMode) — jika diisi, nama file jadi link */
+  docUrl?: string;
   /** Tampilkan tombol kamera untuk capture langsung */
   enableCamera?: boolean;
+  /** Callback saat foto existing diklik */
+  onPhotoClick?: (index: number) => void;
   className?: string;
 }
 
@@ -26,8 +30,10 @@ export function FileDropzone({
   onFilesChange,
   initialFiles,
   documentMode = false,
+  docUrl,
   className,
   enableCamera = false,
+  onPhotoClick,
 }: FileDropzoneProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [existingPreviews, setExistingPreviews] = useState<string[]>([]);
@@ -126,9 +132,25 @@ export function FileDropzone({
                 </>
               )}
               {existingPreviews[0] && (
-                <p className="text-sm text-muted-foreground">
-                  Dokumen terunggah
-                </p>
+                <>
+                  {docUrl ? (
+                    <a
+                      href={docUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium truncate text-primary hover:underline"
+                    >
+                      {existingPreviews[0].split("/").pop() || "Dokumen terunggah"}
+                    </a>
+                  ) : (
+                    <p className="text-sm font-medium truncate">
+                      {existingPreviews[0].split("/").pop() || "Dokumen terunggah"}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Dokumen terunggah
+                  </p>
+                </>
               )}
             </div>
             <Button
@@ -180,7 +202,8 @@ export function FileDropzone({
               <img
                 src={url}
                 alt={`Foto ${i + 1}`}
-                className="h-20 w-20 object-cover rounded-md border"
+                className={`h-20 w-20 object-cover rounded-md border ${onPhotoClick ? "cursor-pointer" : ""}`}
+                onClick={() => onPhotoClick?.(i)}
               />
               <button
                 type="button"

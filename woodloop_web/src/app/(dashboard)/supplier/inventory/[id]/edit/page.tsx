@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Trash2, ExternalLink } from "lucide-react";
+import { PhotoLightbox } from "@/components/features/photo-lightbox";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -57,6 +58,8 @@ export default function EditTimberListingPage() {
   const [loading, setLoading] = useState(true);
   const [listing, setListing] = useState<ListingWithExpand | null>(null);
   const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
+  const [existingDoc, setExistingDoc] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [form, setForm] = useState({
     wood_type: "",
     shape: "log" as "log" | "sawn",
@@ -125,9 +128,11 @@ export default function EditTimberListingPage() {
         setListing(record);
         // Convert photo filenames to full URLs
         const photoUrls = (record.photos || []).map((p: string) =>
-          getFileUrl(record, p)
+          getFileUrl("raw_timber_listings", record.id, p)
         );
         setExistingPhotos(photoUrls);
+        // Convert legality doc filename to full URL
+        setExistingDoc(record.legality_doc ? [getFileUrl("raw_timber_listings", record.id, record.legality_doc)] : []);
         setForm({
           wood_type: record.wood_type,
           shape: record.shape || "log",
@@ -168,23 +173,32 @@ export default function EditTimberListingPage() {
     e.preventDefault();
     if (!validate()) return;
 
-    const data = {
-      wood_type: form.wood_type,
-      shape: form.shape,
-      grade: form.grade || undefined,
-      diameter: form.diameter ? Number(form.diameter) : undefined,
-      length: form.length ? Number(form.length) : undefined,
-      width: form.width ? Number(form.width) : undefined,
-      height: form.height ? Number(form.height) : undefined,
-      volume: Number(form.volume),
-      price: Number(form.price),
-      unit: form.unit,
-      status: form.status,
-      description: form.description || undefined,
-    };
+    const formData = new FormData();
+    formData.append("wood_type", form.wood_type);
+    formData.append("shape", form.shape);
+    if (form.grade) formData.append("grade", form.grade);
+    if (form.diameter) formData.append("diameter", String(form.diameter));
+    if (form.length) formData.append("length", String(form.length));
+    if (form.width) formData.append("width", String(form.width));
+    if (form.height) formData.append("height", String(form.height));
+    formData.append("volume", String(form.volume));
+    formData.append("price", String(form.price));
+    formData.append("unit", form.unit);
+    formData.append("status", form.status);
+    if (form.description) formData.append("description", form.description);
+
+    // Append new photo files
+    for (const file of photos) {
+      formData.append("photos", file);
+    }
+
+    // Append legality document if any
+    for (const file of legalityDoc) {
+      formData.append("legality_doc", file);
+    }
 
     updateMutation.mutate(
-      { id, data },
+      { id, formData },
       {
         onSuccess: () => {
           toast.success("Kayu berhasil diperbarui");
@@ -534,6 +548,7 @@ export default function EditTimberListingPage() {
                   enableCamera
                   onFilesChange={setPhotos}
                   initialFiles={existingPhotos}
+                  onPhotoClick={(i) => setLightboxIndex(i)}
                 />
               </CardContent>
             </Card>
@@ -548,12 +563,25 @@ export default function EditTimberListingPage() {
                   documentMode
                   accept=".pdf"
                   maxFiles={1}
-                  onFilesChange={() => {}}
+                  onFilesChange={setLegalityDoc}
+                  initialFiles={existingDoc}
+                  docUrl={existingDoc[0] || undefined}
                 />
               </CardContent>
             </Card>
           </div>
         </div>
+
+        {/* Photo Lightbox */}
+        {lightboxIndex !== null && existingPhotos.length > 0 && (
+          <PhotoLightbox
+            photos={existingPhotos}
+            currentIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+            onNext={() => setLightboxIndex((prev) => prev !== null ? (prev + 1) % existingPhotos.length : 0)}
+            onPrev={() => setLightboxIndex((prev) => prev !== null ? (prev - 1 + existingPhotos.length) % existingPhotos.length : 0)}
+          />
+        )}
 
         {/* Submit */}
         <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t">

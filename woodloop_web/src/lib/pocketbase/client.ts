@@ -21,15 +21,13 @@ export function getAuthenticatedPB(token?: string): PocketBase {
 }
 
 /**
- * Helper: build full PocketBase file URL using the SDK's built-in method.
- * Accepts any object with `id` and optional `collectionId` (PocketBase records
- * always include these at runtime).
+ * Helper: build full PocketBase file URL directly.
+ * Uses collection name (always stable) and record id.
  */
 export function getFileUrl(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  record: any,
+  collectionName: string,
+  recordId: string,
   filename: string,
 ): string {
-  const pb = getPB();
-  return pb.files!.getURL(record, filename);
+  return `${PB_URL}/api/files/${collectionName}/${recordId}/${filename}`;
 }

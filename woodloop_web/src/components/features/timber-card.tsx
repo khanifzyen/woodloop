@@ -38,7 +38,7 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
       <div className="aspect-[4/3] bg-muted relative">
         {listing.photos?.[0] ? (
           <img
-            src={getFileUrl(listing, listing.photos[0])}
+            src={getFileUrl("raw_timber_listings", listing.id, listing.photos[0])}
             alt={woodName}
             className="w-full h-full object-cover"
           />

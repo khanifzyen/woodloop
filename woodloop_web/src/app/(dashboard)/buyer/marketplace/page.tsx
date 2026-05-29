@@ -56,7 +56,7 @@ export default function MarketplacePage() {
       id: product.id,
       name: product.name,
       price: product.price,
-      photo: product.photos?.[0] ? getFileUrl(product, product.photos[0]) : undefined,
+      photo: product.photos?.[0] ? getFileUrl("products", product.id, product.photos[0]) : undefined,
     });
     toast.success(`${product.name} ditambahkan ke keranjang`);
   }

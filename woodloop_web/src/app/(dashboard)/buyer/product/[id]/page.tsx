@@ -73,7 +73,7 @@ export default function ProductDetailPage() {
           <CardContent className="pt-6">
             <div className="aspect-[4/3] bg-muted rounded-lg relative flex items-center justify-center">
               {product.photos?.[0] ? (
-                <Image src={getFileUrl(product, product.photos[0])} alt={product.name} fill className="object-cover rounded-lg" sizes="(max-width: 768px) 100vw, 50vw" />
+                <Image src={getFileUrl("products", product.id, product.photos[0])} alt={product.name} fill className="object-cover rounded-lg" sizes="(max-width: 768px) 100vw, 50vw" />
               ) : (
                 <div className="text-muted-foreground">Tidak ada foto</div>
               )}
@@ -93,7 +93,7 @@ export default function ProductDetailPage() {
             <p className="text-sm">{product.description || "Tidak ada deskripsi"}</p>
             <div className="flex gap-2">
               <Button className="flex-1 gap-2" onClick={() => {
-                cart.addItem({ id: product.id, name: product.name, price: product.price, photo: product.photos?.[0] ? getFileUrl(product, product.photos[0]) : undefined });
+                cart.addItem({ id: product.id, name: product.name, price: product.price, photo: product.photos?.[0] ? getFileUrl("products", product.id, product.photos[0]) : undefined });
                 toast.success("Ditambahkan ke keranjang!");
               }}>
                 <ShoppingCart className="h-4 w-4" />+ Keranjang
