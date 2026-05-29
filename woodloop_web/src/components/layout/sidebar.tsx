@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { version } from "@/lib/version";
 import {
   Menu,
   LayoutDashboard,
@@ -68,7 +69,7 @@ export function Sidebar({ items, title = "WoodLoop", icon = "🌳" }: SidebarPro
       {/* Footer */}
       <div className="border-t p-4">
         <p className="text-xs text-muted-foreground text-center">
-          WoodLoop v0.1
+          WoodLoop {version}
         </p>
       </div>
     </div>

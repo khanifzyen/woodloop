@@ -26,7 +26,7 @@ export function useLogin() {
       router.push(`/${user.role}/dashboard`);
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Email atau password salah");
+      toast.error(`${error.message || "Email atau password salah"}\n\nPeriksa kembali email dan password Anda`);
     },
   });
 }
