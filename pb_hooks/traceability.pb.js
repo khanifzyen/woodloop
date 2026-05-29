@@ -70,7 +70,7 @@ onRecordCreateRequest((e) => {
         if (!trackingId || trackingId.trim() === "") {
             // 1. Prefix Category
             const shape = e.record.get("shape");
-            const prefix = shape === "log" ? "LOG" : (shape === "sawn" ? "SWN" : "RAW");
+            const prefix = shape === "log" ? "LOG" : (shape === "square" ? "SQR" : (shape === "balok" ? "BLK" : (shape === "papan" ? "PPN" : "RAW")));
 
             // 2. User Code
             const supplierId = e.record.get("supplier");

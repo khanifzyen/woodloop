@@ -115,18 +115,18 @@ test.describe("TC-NOTIF: Notifications", () => {
 
 // ============================================================================
 test.describe("TC-PROFILE: Profile", () => {
-  test.beforeEach(async ({ page }) => { await loginAs(page, "enabler"); });
+  test.beforeEach(async ({ page }) => { await loginAs(page, "supplier"); });
 
   test("PROFILE-01: Profile page renders after login", async ({
     page,
   }) => {
     // Login via API + navigate
-    const { token } = await getAuthToken("enabler");
+    const { token } = await getAuthToken("supplier");
     // Set auth cookie manually
     await page.context().addCookies([
       { name: "pb_auth", value: token, url: "http://localhost:3000" },
     ]);
-    await page.goto("/profile");
+    await page.goto("/supplier/profile");
     await page.waitForTimeout(2000);
     expect(page.url()).toContain("profile");
   });

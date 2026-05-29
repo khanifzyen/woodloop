@@ -26,6 +26,7 @@ import { migrateNotifications } from './collections/14_notifications.js';
 import { migrateDesignRecipes } from './collections/15_design_recipes.js';
 import { migrateBids } from './collections/16_bids.js';
 import { migrateGeneratorProducts } from './collections/17_generator_products.js';
+import { migrateUserDocuments } from './collections/18_user_documents.js';
 
 async function runAllMigrations() {
     console.log('🚀 WoodLoop — Starting PocketBase migrations...\n');
@@ -91,8 +92,12 @@ async function runAllMigrations() {
         console.log('\n🪑 [17/17] Migrating Generator Products...');
         await migrateGeneratorProducts();
 
+        // 9. User documents (depend on users)
+        console.log('\n📄 [18/18] Migrating User Documents...');
+        await migrateUserDocuments();
+
         console.log('\n' + '═'.repeat(50));
-        console.log('✅ All 17 migrations completed successfully!');
+        console.log('✅ All 18 migrations completed successfully!');
         console.log('═'.repeat(50));
 
     } catch (error) {

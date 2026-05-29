@@ -51,13 +51,13 @@ async function migrateRawTimberListings() {
             name: 'shape',
             type: 'select',
             required: true,
-            values: ['log', 'sawn']
+            values: ['log', 'square', 'balok', 'papan']
         },
         {
             name: 'grade',
             type: 'select',
             required: false,
-            values: ['perhutani', 'kemplengan', 'kayu_rakyat', 'lainnya']
+            values: ['perhutani', 'hutan_rakyat', 'lainnya']
         },
         { name: 'diameter', type: 'number', required: false },
         { name: 'width', type: 'number', required: false },

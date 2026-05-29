@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Manual Book WoodLoop — Supplier</title>
+<style>
+  @page { margin: 2cm 2.5cm; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 12pt; line-height: 1.6; color: #222; max-width: 720px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 22pt; color: #1a5c2a; border-bottom: 2px solid #1a5c2a; padding-bottom: 6px; margin-top: 30px; }
+  h2 { font-size: 16pt; color: #2d7d41; margin-top: 24px; }
+  h3 { font-size: 13pt; color: #333; margin-top: 18px; }
+  h4 { font-size: 11pt; color: #555; margin-top: 14px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 11pt; }
+  th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; }
+  th { background: #e8f5e9; }
+  figure { margin: 16px 0; text-align: center; }
+  pre, code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-size: 10pt; }
+  pre { padding: 10px; overflow-x: auto; }
+  blockquote { border-left: 4px solid #1a5c2a; margin: 12px 0; padding: 8px 16px; background: #f9fdf9; }
+  .page-break { page-break-before: always; }
+  .cover { text-align: center; padding-top: 120px; }
+  .cover h1 { font-size: 28pt; border: none; }
+  .cover h2 { font-size: 18pt; color: #555; }
+  .cover hr { width: 50%; margin: 20px auto; }
+  .toc a { color: #1a5c2a; text-decoration: none; }
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc ul ul { padding-left: 20px; }
+  .toc li { margin: 4px 0; }
+  .note { background: #fff3cd; border-left: 4px solid #ffc107; padding: 8px 14px; margin: 10px 0; font-size: 11pt; }
+  .warn { background: #f8d7da; border-left: 4px solid #dc3545; padding: 8px 14px; margin: 10px 0; font-size: 11pt; }
+  .tip { background: #d4edda; border-left: 4px solid #28a745; padding: 8px 14px; margin: 10px 0; font-size: 11pt; }
+  .ascii-box { font-family: 'Courier New', monospace; font-size: 10pt; line-height: 1.3; background: #f4f4f4; padding: 8px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover" style="page-break-after: always;">
+  <h1>🌳 WoodLoop</h1>
+  <h2>Manual Book — Supplier</h2>
+  <p style="font-size:14pt;color:#666;">Panduan Lengkap Pemasok Kayu</p>
+  <br/><br/>
+  <p><strong>Versi 1.0 — Mei 2026</strong></p>
+  <hr/>
+  <p><em>"Mengubah Limbah Kayu Menjadi Berkah untuk Jepara"</em></p>
+  <br/><br/><br/>
+  <table style="width:auto;margin:0 auto;">
+    <tr><td><strong>Peran</strong></td><td>Supplier (Pemasok Kayu)</td></tr>
+    <tr><td><strong>Platform</strong></td><td>Web</td></tr>
+    <tr><td><strong>Backend</strong></td><td>PocketBase</td></tr>
+  </table>
+  <br/>
+  <p style="font-size:10pt;color:#999;">woodloop.pasarjepara.com</p>
+</div>
+
+<!-- ============ KATA PENGANTAR ============ -->
+<div class="page-break"></div>
+<h1>Kata Pengantar</h1>
+<p>Puji syukur kehadirat Tuhan Yang Maha Esa atas terselesaikannya <strong>Manual Book WoodLoop — Panduan Khusus Supplier</strong>.</p>
+<p>Manual book ini disusun khusus untuk pengguna dengan peran <strong>Supplier (Pemasok Kayu)</strong> dalam ekosistem WoodLoop. Sebagai mata rantai pertama dalam alur ekonomi sirkular industri kayu Jepara, Supplier memegang peranan vital — memasok kayu gelondongan berkualitas yang akan diolah oleh para pengrajin menjadi produk bernilai.</p>
+<p>Buku ini membahas secara detail seluruh fitur yang tersedia untuk Supplier, mulai dari:</p>
+<ul>
+  <li><strong>Dashboard</strong> — ringkasan bisnis Anda</li>
+  <li><strong>Manajemen Inventaris</strong> — kelola stok kayu</li>
+  <li><strong>Pendaftaran Kayu Baru</strong> — dengan foto dan dokumen legalitas</li>
+  <li><strong>Pemrosesan Pesanan</strong> — dari para Generator</li>
+  <li><strong>Riwayat Penjualan</strong> — dan analisis grafik</li>
+  <li><strong>Profil Supplier</strong> — lokasi workshop di peta dan dokumen perizinan</li>
+</ul>
+<p>Kami berharap manual book ini membantu Anda memanfaatkan WoodLoop secara maksimal untuk mengembangkan bisnis kayu yang lebih transparan, efisien, dan berkelanjutan.</p>
+<br/>
+<p><strong>Jepara, Mei 2026</strong></p>
+<p><strong>Tim WoodLoop</strong></p>
+
+<!-- ============ DAFTAR ISI ============ -->
+<div class="page-break"></div>
+<h1>Daftar Isi</h1>
+<div class="toc">
+  <ul>
+    <li><a href="#bab1">Bab 1: Pendahuluan</a>
+      <ul>
+        <li>1.1 Apa Itu WoodLoop?</li>
+        <li>1.2 Peran Supplier dalam Ekosistem</li>
+        <li>1.3 Alur Bisnis Supplier</li>
+        <li>1.4 Istilah Penting</li>
+      </ul>
+    </li>
+    <li><a href="#bab2">Bab 2: Memulai</a>
+      <ul>
+        <li>2.1 Akses ke Aplikasi</li>
+        <li>2.2 Login</li>
+        <li>2.3 Navigasi Antarmuka</li>
+        <li>2.4 Mode Gelap &amp; Ganti Bahasa</li>
+      </ul>
+    </li>
+    <li><a href="#bab3">Bab 3: Dashboard Supplier</a>
+      <ul>
+        <li>3.1 Ringkasan Kartu</li>
+        <li>3.2 Aktivitas Terbaru</li>
+        <li>3.3 Menu Cepat</li>
+      </ul>
+    </li>
+    <li><a href="#bab4">Bab 4: Inventaris Kayu</a>
+      <ul>
+        <li>4.1 Melihat Daftar Inventaris</li>
+        <li>4.2 Filter &amp; Pencarian</li>
+        <li>4.3 Status Kayu</li>
+        <li>4.4 Edit Kayu</li>
+        <li>4.5 Hapus Kayu</li>
+      </ul>
+    </li>
+    <li><a href="#bab5">Bab 5: Tambah Kayu Baru</a>
+      <ul>
+        <li>5.1 Membuka Form</li>
+        <li>5.2 Jenis Kayu</li>
+        <li>5.3 Bentuk Kayu</li>
+        <li>5.4 Grade Kayu</li>
+        <li>5.5 Dimensi</li>
+        <li>5.6 Volume &amp; Harga</li>
+        <li>5.7 Upload Foto</li>
+        <li>5.8 Dokumen Legalitas</li>
+        <li>5.9 Menyimpan</li>
+      </ul>
+    </li>
+    <li><a href="#bab6">Bab 6: Pesanan &amp; Penjualan</a>
+      <ul>
+        <li>6.1 Pesanan Masuk</li>
+        <li>6.2 Status Pesanan</li>
+        <li>6.3 Riwayat Penjualan</li>
+        <li>6.4 Grafik Penjualan</li>
+      </ul>
+    </li>
+    <li><a href="#bab7">Bab 7: Profil Supplier</a>
+      <ul>
+        <li>7.1 Informasi Supplier</li>
+        <li>7.2 Alamat &amp; Lokasi</li>
+        <li>7.3 Map Picker</li>
+        <li>7.4 Dokumen Perizinan</li>
+        <li>7.5 Upload Dokumen Baru</li>
+      </ul>
+    </li>
+    <li><a href="#bab8">Bab 8: Troubleshooting</a>
+      <ul>
+        <li>8.1 Tidak Bisa Login</li>
+        <li>8.2 Foto Gagal Upload</li>
+        <li>8.3 Data Tidak Muncul</li>
+        <li>8.4 Lokasi GPS Tidak Akurat</li>
+        <li>8.5 Kontak Bantuan</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- ============ BAB 1 ============ -->
+<div class="page-break"></div>
+<h1 id="bab1">Bab 1: Pendahuluan</h1>
+
+<h2>1.1 Apa Itu WoodLoop?</h2>
+<p><strong>WoodLoop</strong> adalah platform digital ekonomi sirkular untuk industri kayu dan furnitur di Jepara, Jawa Tengah. Platform ini menghubungkan seluruh aktor dalam rantai nilai kayu — dari pemasok kayu gelondongan, pengrajin yang menghasilkan limbah, pengepul, pengrajin upcycle, pembeli, hingga pemerintah — dalam satu ekosistem terpadu.</p>
+<p>Tujuan utama WoodLoop adalah <strong>mengubah limbah kayu menjadi sumber daya bernilai ekonomi</strong> sekaligus melacak dampak lingkungannya.</p>
+
+<h2>1.2 Peran Supplier dalam Ekosistem</h2>
+<p><strong>Supplier</strong> adalah pihak yang memasok kayu gelondongan (<em>raw timber</em>) ke dalam ekosistem WoodLoop. Supplier menjadi <strong>mata rantai pertama</strong> dalam alur ekonomi sirkular.</p>
+<p><strong>Contoh pengguna Supplier:</strong></p>
+<ul>
+  <li>Pedagang kayu di Jepara</li>
+  <li>Pemilik sawmill / penggergajian kayu</li>
+  <li>Pemilik hutan rakyat</li>
+  <li>Distributor kayu gelondongan</li>
+</ul>
+<p><strong>Alur peran Supplier dalam ekosistem WoodLoop:</strong></p>
+<pre>Supplier → Generator → Aggregator → Converter → Buyer
+                            ↑
+                    Enabler (monitoring)</pre>
+
+<h2>1.3 Alur Bisnis Supplier</h2>
+<table>
+  <tr><th>Langkah</th><th>Aktivitas</th><th>Halaman</th></tr>
+  <tr><td>1</td><td>Login ke akun Supplier</td><td>/login</td></tr>
+  <tr><td>2</td><td>Melihat ringkasan bisnis</td><td>/supplier/dashboard</td></tr>
+  <tr><td>3</td><td>Mendaftarkan kayu baru</td><td>/supplier/inventory/new</td></tr>
+  <tr><td>4</td><td>Mengelola stok kayu</td><td>/supplier/inventory</td></tr>
+  <tr><td>5</td><td>Menerima &amp; memproses pesanan</td><td>/supplier/orders</td></tr>
+  <tr><td>6</td><td>Melihat riwayat penjualan</td><td>/supplier/sales</td></tr>
+  <tr><td>7</td><td>Mengelola profil &amp; dokumen</td><td>/supplier/profile</td></tr>
+</table>
+
+<h2>1.4 Istilah Penting</h2>
+<table>
+  <tr><th>Istilah</th><th>Arti</th></tr>
+  <tr><td>Raw Timber</td><td>Kayu gelondongan mentah yang belum diolah</td></tr>
+  <tr><td>Listing</td><td>Data kayu yang didaftarkan untuk dijual</td></tr>
+  <tr><td>Generator</td><td>Pengrajin yang membeli kayu dan menghasilkan limbah</td></tr>
+  <tr><td>Grade</td><td>Kualitas kayu (Perhutani, Hutan Rakyat, Lainnya)</td></tr>
+  <tr><td>Shape</td><td>Bentuk fisik kayu (Log, Square, Balok, Papan)</td></tr>
+  <tr><td>Tracking ID</td><td>Kode unik untuk melacak asal-usul kayu</td></tr>
+  <tr><td>Dompet Digital</td><td>Saldo untuk transaksi dalam ekosistem</td></tr>
+  <tr><td>Dokumen Legalitas</td><td>Surat izin dan sertifikasi (NIB, SVLK, dll)</td></tr>
+</table>
+
+<!-- ============ BAB 2 ============ -->
+<div class="page-break"></div>
+<h1 id="bab2">Bab 2: Memulai</h1>
+
+<h2>2.1 Akses ke Aplikasi</h2>
+<p>Akses WoodLoop melalui browser web di alamat:</p>
+<pre>https://woodloop.pasarjepara.com</pre>
+<p><strong>Kebutuhan Sistem:</strong></p>
+<ul>
+  <li>Browser: Chrome, Firefox, Edge, atau Safari versi terbaru</li>
+  <li>Koneksi internet stabil</li>
+  <li>Untuk fitur GPS: izin lokasi browser harus diaktifkan</li>
+</ul>
+
+<h2>2.2 Login</h2>
+<p>1. Buka halaman login di <code>https://woodloop.pasarjepara.com/login</code></p>
+<p>2. Masukkan <strong>email</strong> dan <strong>kata sandi</strong> yang sudah didaftarkan</p>
+<p>3. Klik tombol <strong>"Masuk"</strong></p>
+<p>4. Setelah berhasil, Anda akan diarahkan ke <strong>Dashboard Supplier</strong></p>
+<div class="note"><strong>Lupa Kata Sandi?</strong> Klik link "Lupa Kata Sandi?" di halaman login, masukkan email Anda, dan ikuti instruksi yang dikirim ke email.</div>
+<div class="warn"><strong>Perhatian:</strong> Pastikan email dan password benar. Browser tidak menampilkan pesan error detail untuk keamanan akun.</div>
+
+<h2>2.3 Navigasi Antarmuka</h2>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/supplier/01-supplier-dashboard.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 2.1 — Dashboard Supplier</figcaption>
+  </figure>
+
+<h3>Sidebar Kiri</h3>
+<table>
+  <tr><th>Menu</th><th>Fungsi</th><th>Link</th></tr>
+  <tr><td>Dashboard</td><td>Ringkasan bisnis</td><td>/supplier/dashboard</td></tr>
+  <tr><td>Inventaris Kayu</td><td>Kelola stok kayu</td><td>/supplier/inventory</td></tr>
+  <tr><td>Pesanan Masuk</td><td>Order dari Generator</td><td>/supplier/orders</td></tr>
+  <tr><td>Riwayat Penjualan</td><td>Grafik &amp; riwayat</td><td>/supplier/sales</td></tr>
+</table>
+
+<h3>Navigasi Atas (Navbar)</h3>
+<table>
+  <tr><th>Elemen</th><th>Fungsi</th></tr>
+  <tr><td>Mode Gelap</td><td>Tombol toggle gelap/terang</td></tr>
+  <tr><td>Ganti Bahasa</td><td>Beralih EN/ID</td></tr>
+  <tr><td>Notifikasi</td><td>Notifikasi masuk</td></tr>
+  <tr><td>Avatar</td><td>Dropdown: Profil | Dompet | Keluar</td></tr>
+</table>
+
+<h2>2.4 Mode Gelap &amp; Ganti Bahasa</h2>
+<p>Klik tombol 🌓 di pojok kanan atas navbar untuk mengganti antara Mode Terang (default) dan Mode Gelap.</p>
+<p>Klik tombol 🌐 di navbar untuk mengganti bahasa antarmuka: Bahasa Indonesia (default) atau English.</p>
+
+<!-- ============ BAB 3 ============ -->
+<div class="page-break"></div>
+<h1 id="bab3">Bab 3: Dashboard Supplier</h1>
+<p>Halaman Dashboard Supplier adalah halaman utama yang muncul setelah login. Dashboard menampilkan ringkasan bisnis kayu Anda dalam bentuk kartu statistik dan daftar aktivitas terbaru.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/supplier/01-supplier-dashboard.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 3.1 — Dashboard Supplier</figcaption>
+  </figure>
+
+<h2>3.1 Ringkasan Kartu (Summary Cards)</h2>
+<table>
+  <tr><th>Kartu</th><th>Menampilkan</th></tr>
+  <tr><td>Listing Aktif</td><td>Jumlah kayu yang sedang dijual (status available)</td></tr>
+  <tr><td>Order Masuk</td><td>Jumlah pesanan dari Generator yang belum diproses</td></tr>
+  <tr><td>Total Penjualan</td><td>Total pendapatan dari semua penjualan yang selesai</td></tr>
+  <tr><td>Saldo Dompet</td><td>Saldo dompet digital WoodLoop Anda</td></tr>
+</table>
+
+<h2>3.2 Aktivitas Terbaru</h2>
+<p>Di bawah ringkasan kartu, terdapat daftar <strong>Aktivitas Terbaru</strong> yang menampilkan riwayat kegiatan terkini. Setiap aktivitas menampilkan ikon (jenis aktivitas), deskripsi (jenis kayu, volume, atau nomor pesanan), dan waktu relatif sejak kejadian.</p>
+
+<h2>3.3 Menu Cepat (Quick Actions)</h2>
+<table>
+  <tr><th>Tombol</th><th>Tujuan</th><th>Fungsi</th></tr>
+  <tr><td>Daftarkan Kayu Baru</td><td>/supplier/inventory/new</td><td>Buka form tambah kayu</td></tr>
+  <tr><td>Inventaris Kayu</td><td>/supplier/inventory</td><td>Lihat &amp; kelola stok</td></tr>
+  <tr><td>Pesanan Masuk</td><td>/supplier/orders</td><td>Cek order Generator</td></tr>
+  <tr><td>Riwayat Penjualan</td><td>/supplier/sales</td><td>Lihat data penjualan</td></tr>
+</table>
+
+<!-- ============ BAB 4 ============ -->
+<div class="page-break"></div>
+<h1 id="bab4">Bab 4: Inventaris Kayu</h1>
+<p>Halaman <strong>Inventaris Kayu</strong> menampilkan semua kayu yang telah Anda daftarkan ke dalam sistem. Dari halaman ini Anda dapat melihat, mencari, menyaring, mengedit, dan menghapus listing kayu.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/supplier/02-supplier-inventory.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 4.1 — Halaman inventaris kayu Supplier</figcaption>
+  </figure>
+
+<h2>4.1 Melihat Daftar Inventaris</h2>
+<table>
+  <tr><th>Kolom</th><th>Keterangan</th></tr>
+  <tr><td>Foto</td><td>Thumbnail foto utama kayu</td></tr>
+  <tr><td>Jenis Kayu</td><td>Nama jenis kayu (Jati, Mahoni, dll)</td></tr>
+  <tr><td>Bentuk</td><td>Log, Square, Balok, atau Papan</td></tr>
+  <tr><td>Volume</td><td>Volume kayu dalam m³</td></tr>
+  <tr><td>Harga</td><td>Harga per satuan dalam Rupiah</td></tr>
+  <tr><td>Status</td><td>Tersedia / Terjual</td></tr>
+  <tr><td>Aksi</td><td>Edit / Hapus</td></tr>
+</table>
+
+<h2>4.2 Filter &amp; Pencarian</h2>
+<h3>Filter Status</h3>
+<table>
+  <tr><th>Opsi</th><th>Menampilkan</th></tr>
+  <tr><td>Semua</td><td>Seluruh listing</td></tr>
+  <tr><td>Tersedia</td><td>Kayu yang masih dijual</td></tr>
+  <tr><td>Terjual</td><td>Kayu yang sudah dibeli</td></tr>
+</table>
+<p><strong>Filter Jenis Kayu:</strong> Pilih jenis kayu spesifik dari dropdown. <strong>Pencarian Teks:</strong> Ketik kata kunci untuk mencari berdasarkan nama jenis kayu atau deskripsi. <strong>Reset Filter:</strong> Klik "Reset" untuk menghapus semua filter.</p>
+
+<h2>4.3 Status Kayu</h2>
+<table>
+  <tr><th>Status</th><th>Arti</th></tr>
+  <tr><td>Tersedia</td><td>Kayu siap dibeli oleh Generator</td></tr>
+  <tr><td>Terjual</td><td>Kayu sudah dibeli dan transaksi selesai</td></tr>
+</table>
+
+<h2>4.4 Edit Kayu</h2>
+<p><strong>Cara mengedit data kayu:</strong></p>
+<ol>
+  <li>Cari kayu yang ingin diedit di tabel inventaris</li>
+  <li>Klik ikon <strong>Edit</strong> pada baris kayu tersebut</li>
+  <li>Ubah field yang diperlukan: Jenis kayu, Bentuk, Grade, Dimensi, Volume, Harga, Deskripsi, Foto, Dokumen</li>
+  <li>Klik <strong>"Simpan Perubahan"</strong></li>
+</ol>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/supplier/03-supplier-add-timber.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 4.2 — Halaman form tambah/edit kayu</figcaption>
+  </figure>
+
+<h2>4.5 Hapus Kayu</h2>
+<p><strong>Cara menghapus data kayu:</strong></p>
+<ol>
+  <li>Cari kayu yang ingin dihapus di tabel inventaris</li>
+  <li>Klik ikon <strong>Hapus</strong> pada baris tersebut</li>
+  <li>Dialog konfirmasi akan muncul</li>
+  <li>Klik <strong>"Hapus"</strong> untuk mengonfirmasi</li>
+  <li>Data akan langsung terhapus dan tabel diperbarui otomatis</li>
+</ol>
+<div class="warn"><strong>Penting:</strong> Kayu yang sudah memiliki pesanan aktif tidak bisa dihapus.</div>
+
+<!-- ============ BAB 5 ============ -->
+<div class="page-break"></div>
+<h1 id="bab5">Bab 5: Tambah Kayu Baru</h1>
+<p>Ini adalah fitur utama Supplier — mendaftarkan kayu gelondongan yang ingin dijual ke Generator.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/supplier/03-supplier-add-timber.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 5.1 — Form pendaftaran kayu baru</figcaption>
+  </figure>
+
+<h2>5.1 Membuka Form Tambah Kayu</h2>
+<p><strong>Cara 1:</strong> Dari Dashboard → klik "Daftarkan Kayu Baru"<br/>
+<strong>Cara 2:</strong> Sidebar → Inventaris Kayu → "Daftarkan Kayu Baru"<br/>
+<strong>Cara 3:</strong> Langsung ke URL: <code>/supplier/inventory/new</code></p>
+
+<h2>5.2 Memilih Jenis Kayu</h2>
+<p>Pilih jenis kayu dari dropdown. Contoh: Jati, Mahoni, Sono Keling, Akasia, Trembesi. <span class="warn" style="display:inline;padding:2px 6px;">Wajib diisi.</span></p>
+
+<h2>5.3 Memilih Bentuk Kayu</h2>
+<table>
+  <tr><th>Bentuk</th><th>Input Dimensi</th></tr>
+  <tr><td>Log (Gelondongan)</td><td>Diameter + Panjang</td></tr>
+  <tr><td>Square (Persegi)</td><td>Lebar/Sisi + Panjang</td></tr>
+  <tr><td>Balok</td><td>Panjang + Lebar + Tinggi</td></tr>
+  <tr><td>Papan</td><td>Panjang + Lebar + Tinggi</td></tr>
+</table>
+<div class="tip">Input dimensi menyesuaikan secara otomatis saat bentuk kayu diganti.</div>
+
+<h2>5.4 Memilih Grade Kayu</h2>
+<table>
+  <tr><th>Grade</th><th>Keterangan</th></tr>
+  <tr><td>Perhutani</td><td>Kayu dari Perum Perhutani (legal, bersertifikat)</td></tr>
+  <tr><td>Hutan Rakyat</td><td>Kayu dari hutan rakyat / milik masyarakat</td></tr>
+  <tr><td>Lainnya</td><td>Sumber lainnya</td></tr>
+</table>
+<p>Field grade bersifat <strong>opsional</strong>.</p>
+
+<h2>5.5 Mengisi Dimensi</h2>
+<h3>Log (Gelondongan)</h3>
+<pre>┌──────────────┬──────────────┐
+│ Diameter (cm)│ Panjang (cm) │
+│     [  30  ] │    [ 200  ]  │
+└──────────────┴──────────────┘</pre>
+
+<h3>Square (Persegi)</h3>
+<pre>┌──────────────┬──────────────┐
+│ Lebar/Sisi   │ Panjang (cm) │
+│ (cm)         │              │
+│     [ 20  ]  │    [ 200  ]  │
+└──────────────┴──────────────┘</pre>
+
+<h3>Balok atau Papan</h3>
+<pre>┌──────────────┬──────────────┬──────────────┐
+│ Panjang (cm) │ Lebar (cm)   │ Tinggi (cm)  │
+│    [ 200  ]  │    [ 20  ]   │     [ 5  ]   │
+└──────────────┴──────────────┴──────────────┘</pre>
+
+<h2>5.6 Volume &amp; Harga</h2>
+<p><strong>Perhitungan volume otomatis:</strong></p>
+<table>
+  <tr><th>Bentuk</th><th>Rumus</th></tr>
+  <tr><td>Log</td><td>π × (diameter/200)² × (panjang/100)</td></tr>
+  <tr><td>Square</td><td>(lebar/100) × (lebar/100) × (panjang/100)</td></tr>
+  <tr><td>Balok / Papan</td><td>(panjang/100) × (lebar/100) × (tinggi/100)</td></tr>
+</table>
+<p><strong>Satuan:</strong> m³ (standar), Batang, atau Ton.<br/>
+<strong>Harga (Rp):</strong> Input dengan pemisah ribuan otomatis, misal <code>1.500.000</code>.</p>
+
+<h2>5.7 Upload Foto</h2>
+<table>
+  <tr><th>Ketentuan</th><th>Detail</th></tr>
+  <tr><td>Minimal</td><td>1 foto</td></tr>
+  <tr><td>Maksimal</td><td>5 foto</td></tr>
+  <tr><td>Format</td><td>JPG, PNG, WebP</td></tr>
+  <tr><td>Resolusi</td><td>Otomatis di-resize ke maks 1024px</td></tr>
+</table>
+<p>Cara upload: drag & drop, klik area dropzone, atau kamera.</p>
+
+<h2>5.8 Upload Dokumen Legalitas</h2>
+<p>Dokumen yang dapat dilampirkan: SVLK Certificate (PDF), FSC Certificate (PDF), SK Pengesahan (PDF), Izin Usaha/NIB (PDF). Maks 10 MB per file.</p>
+
+<h2>5.9 Menyimpan Kayu Baru</h2>
+<p>Klik tombol <strong>"Simpan Kayu"</strong>. Jika berhasil, notifikasi "Kayu berhasil didaftarkan!" muncul dan Anda diarahkan ke halaman Inventaris Kayu. Kayu baru muncul dengan status Tersedia.</p>
+
+<!-- ============ BAB 6 ============ -->
+<div class="page-break"></div>
+<h1 id="bab6">Bab 6: Pesanan &amp; Penjualan</h1>
+
+<h2>6.1 Pesanan Masuk</h2>
+<p>Halaman <strong>Pesanan Masuk</strong> menampilkan semua pesanan yang dibuat oleh Generator.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/supplier/04-supplier-orders.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 6.1 — Halaman pesanan masuk</figcaption>
+  </figure>
+
+<h2>6.2 Status Pesanan</h2>
+<table>
+  <tr><th>Status</th><th>Arti</th><th>Aksi Supplier</th></tr>
+  <tr><td>Menunggu Pembayaran</td><td>Generator sudah pesan</td><td>Tunggu konfirmasi</td></tr>
+  <tr><td>Dibayar</td><td>Pembayaran dikonfirmasi</td><td>Siapkan kiriman</td></tr>
+  <tr><td>Dikirim</td><td>Kayu dalam perjalanan</td><td>—</td></tr>
+  <tr><td>Diterima</td><td>Generator sudah terima</td><td>Transaksi selesai</td></tr>
+  <tr><td>Dibatalkan</td><td>Pesanan dibatalkan</td><td>—</td></tr>
+</table>
+
+<h2>6.3 Riwayat Penjualan</h2>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/supplier/05-supplier-sales.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 6.2 — Halaman riwayat penjualan</figcaption>
+  </figure>
+<p><strong>Ringkasan Kartu:</strong> Total Pendapatan, Pesanan Selesai, Total Transaksi.<br/>
+<strong>Tabel Transaksi:</strong> Tanggal, Pembeli, Produk, Volume, Total, Status.</p>
+
+<h2>6.4 Grafik Penjualan</h2>
+<p>Grafik batang (bar chart) menampilkan tren penjualan bulanan. Sumbu X: bulan, Sumbu Y: jumlah penjualan (Rp). Terisi otomatis seiring transaksi.</p>
+
+<!-- ============ BAB 7 ============ -->
+<div class="page-break"></div>
+<h1 id="bab7">Bab 7: Profil Supplier</h1>
+<p>Halaman <strong>Profil Supplier</strong> untuk mengelola data diri, lokasi workshop, dan dokumen perizinan. Diakses via dropdown avatar pojok kanan atas → Profil.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/supplier/06-supplier-profile.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 7.1 — Halaman profil Supplier</figcaption>
+  </figure>
+
+<h2>7.1 Informasi Supplier</h2>
+<table>
+  <tr><th>Field</th><th>Wajib</th><th>Contoh</th></tr>
+  <tr><td>Nama</td><td>Ya</td><td>UD. Kayu Jaya</td></tr>
+  <tr><td>Nama Workshop</td><td>Tidak</td><td>Workshop Kayu Jaya</td></tr>
+  <tr><td>Telepon</td><td>Tidak</td><td>08123456789</td></tr>
+</table>
+
+<h2>7.2 Alamat &amp; Lokasi Workshop</h2>
+<p>Field alamat berbentuk textarea. Koordinat GPS ditampilkan dalam format desimal: <code>Lat: -6.589100, Lng: 110.670500</code></p>
+
+<h2>7.3 Map Picker</h2>
+<p>Peta interaktif berbasis Leaflet (OpenStreetMap). Tiga cara menggunakan:</p>
+<ol>
+  <li><strong>Drag marker:</strong> Klik dan seret marker ke lokasi workshop</li>
+  <li><strong>Klik peta:</strong> Marker berpindah ke titik yang diklik</li>
+  <li><strong>Pakai Lokasi Saya:</strong> Gunakan GPS perangkat (butuh izin browser)</li>
+</ol>
+
+<h2>7.4 Dokumen Perizinan</h2>
+<p>Dokumen yang sudah diupload ditampilkan dalam kartu dengan: nama, jenis, status verifikasi, tombol buka PDF, dan tombol hapus.</p>
+
+<h2>7.5 Upload Dokumen Baru</h2>
+<p><strong>Jenis dokumen:</strong> NIB, SVLK, SK Pengesahan, Izin Usaha, Sertifikat Lainnya, Lainnya.<br/>
+<strong>Nama dokumen:</strong> Opsional, misal "SK Pengesahan 2026".<br/>
+<strong>File:</strong> PDF, maks 10 MB.</p>
+<p>Klik <strong>"Upload Dokumen"</strong> untuk mengirim. Jika berhasil, notifikasi muncul dan dokumen baru tampil di daftar.</p>
+
+<!-- ============ BAB 8 ============ -->
+<div class="page-break"></div>
+<h1 id="bab8">Bab 8: Troubleshooting</h1>
+
+<h2>8.1 Tidak Bisa Login</h2>
+<p><strong>Solusi:</strong> Pastikan email benar (tanpa spasi), password case-sensitive, cek koneksi internet. Jika lupa, klik "Lupa Kata Sandi?" untuk reset via email.</p>
+
+<h2>8.2 Foto Gagal Upload</h2>
+<p><strong>Solusi:</strong> Gunakan format JPG/PNG/WebP, maks 5 MB, maks 5 file. Coba browser lain (Chrome/Firefox) atau refresh halaman.</p>
+
+<h2>8.3 Data Tidak Muncul Setelah Hapus</h2>
+<p><strong>Solusi:</strong> Tunggu beberapa detik (cache otomatis diperbarui). Refresh halaman (F5). Clear cache browser jika masih muncul.</p>
+
+<h2>8.4 Lokasi GPS Tidak Akurat</h2>
+<p><strong>Solusi:</strong> Drag marker manual ke posisi benar. Pastikan izin lokasi browser aktif dan GPS perangkat menyala.</p>
+
+<h2>8.5 Kontak Bantuan</h2>
+<table>
+  <tr><th>Saluran</th><th>Detail</th></tr>
+  <tr><td>Email</td><td>woodloop.app@gmail.com</td></tr>
+  <tr><td>Website</td><td>woodloop.pasarjepara.com</td></tr>
+</table>
+<p>Siapkan: email akun, peran (Supplier), deskripsi masalah, dan langkah yang sudah dilakukan.</p>
+
+</body>
+</html>

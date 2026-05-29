@@ -45,7 +45,7 @@ describe("useBuyer hooks - structure & typing", () => {
       "products", { category: "furniture" },
     ]);
     expect(buyerKeys.productDetail("abc")).toEqual(["products", "abc"]);
-    expect(buyerKeys.orders()).toEqual(["buyer", "orders", undefined]);
+    expect(buyerKeys.orders()).toEqual(["buyer", "orders"]);
     expect(buyerKeys.traceability("PRD-ABC")).toEqual(["traceability", "PRD-ABC"]);
   });
 

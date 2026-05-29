@@ -26,8 +26,8 @@ export interface WoodType {
 }
 
 // ========== 3. Raw Timber Listings ==========
-export type TimberShape = "log" | "sawn";
-export type TimberGrade = "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya";
+export type TimberShape = "log" | "square" | "balok" | "papan";
+export type TimberGrade = "perhutani" | "hutan_rakyat" | "lainnya";
 
 export interface RawTimberListing {
   id: string; supplier: string; wood_type: string;
@@ -199,12 +199,18 @@ export interface GeneratorProduct {
 }
 
 // ========== 18. User Documents ==========
-export type DocStatus = "pending" | "verified" | "rejected";
+export type DocType =
+  | "NIB" | "SVLK" | "SK_Pengesahan"
+  | "Izin_Usaha" | "Sertifikat_Lainnya" | "Lainnya";
 
 export interface UserDocument {
   id: string; user: string;
   expand?: { user?: User; };
-  type: string; file: string; status: DocStatus; notes?: string;
+  doc_type: DocType;
+  doc_name?: string;
+  file: string;
+  verified: boolean;
+  notes?: string;
   created: string; updated: string;
 }
 

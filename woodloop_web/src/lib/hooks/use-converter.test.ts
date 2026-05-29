@@ -65,8 +65,8 @@ describe("useConverter hooks - structure & typing", () => {
     const { converterKeys } = await import("./use-converter");
     expect(Array.isArray(converterKeys.all)).toBe(true);
     expect(converterKeys.dashboard().length).toBe(2);
-    expect(converterKeys.marketplace().length).toBe(3);
+    expect(converterKeys.marketplace().length).toBe(2);
     expect(converterKeys.products().length).toBe(2);
-    expect(converterKeys.designRecipes().length).toBe(2);
+    expect(converterKeys.designRecipes().length).toBe(1);
   });
 });

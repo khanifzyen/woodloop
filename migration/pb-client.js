@@ -142,6 +142,17 @@ export async function upsertCollection(pb, schema) {
                     fieldChanged = true;
                 }
 
+                // Check select values
+                if (schemaField.type === 'select' && schemaField.values) {
+                    const existingValues = (existingField.values || []).sort();
+                    const newValues = [...schemaField.values].sort();
+                    if (JSON.stringify(existingValues) !== JSON.stringify(newValues)) {
+                        console.log(`      * Update field "${schemaField.name}": values ${existingValues.join(',')} -> ${newValues.join(',')}`);
+                        existingField.values = schemaField.values;
+                        fieldChanged = true;
+                    }
+                }
+
                 if (fieldChanged) hasChanges = true;
             }
         }

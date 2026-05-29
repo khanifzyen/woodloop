@@ -18,10 +18,14 @@ export const converterKeys = {
   all: ["converter"] as const,
   dashboard: () => [...converterKeys.all, "dashboard"] as const,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  marketplace: (filters?: any) => [...converterKeys.all, "marketplace", filters] as const,
+  marketplace: (filters?: any) =>
+    filters ? [...converterKeys.all, "marketplace", filters] as const
+            : [...converterKeys.all, "marketplace"] as const,
   transactions: () => [...converterKeys.all, "transactions"] as const,
   products: () => [...converterKeys.all, "products"] as const,
-  designRecipes: (filters?: object) => ["design-recipes", filters] as const,
+  designRecipes: (filters?: object) =>
+    filters ? ["design-recipes", filters] as const
+            : ["design-recipes"] as const,
   woodTypes: () => ["wood-types"] as const,
 };
 

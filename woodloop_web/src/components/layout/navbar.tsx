@@ -118,7 +118,7 @@ export function Navbar() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => router.push("/profile")}>
+          <DropdownMenuItem onClick={() => router.push(`/${user?.role}/profile`)}>
             <User className="mr-2 h-4 w-4" />
             Profil
           </DropdownMenuItem>

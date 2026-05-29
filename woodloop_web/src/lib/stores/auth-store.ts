@@ -11,6 +11,9 @@ export interface AuthUser {
   role: "supplier" | "generator" | "aggregator" | "converter" | "enabler" | "buyer";
   workshop_name?: string;
   phone?: string;
+  address?: string;
+  location_lat?: number;
+  location_lng?: number;
   is_verified: boolean;
 }
 

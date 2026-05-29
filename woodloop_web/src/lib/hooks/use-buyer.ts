@@ -9,10 +9,14 @@ import type {
 
 export const buyerKeys = {
   all: ["buyer"] as const,
-  products: (filters?: object) => ["products", filters] as const,
+  products: (filters?: object) =>
+    filters ? ["products", filters] as const
+            : ["products"] as const,
   productDetail: (id: string) => ["products", id] as const,
   traceability: (qrId: string) => ["traceability", qrId] as const,
-  orders: (filters?: object) => [...buyerKeys.all, "orders", filters] as const,
+  orders: (filters?: object) =>
+    filters ? [...buyerKeys.all, "orders", filters] as const
+            : [...buyerKeys.all, "orders"] as const,
   orderDetail: (id: string) => [...buyerKeys.all, "orders", id] as const,
   cart: () => [...buyerKeys.all, "cart"] as const,
 };

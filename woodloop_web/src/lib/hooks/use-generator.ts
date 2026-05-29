@@ -21,7 +21,8 @@ export const generatorKeys = {
   dashboard: () => [...generatorKeys.all, "dashboard"] as const,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wasteListings: (filters?: any) =>
-    [...generatorKeys.all, "waste-listings", filters] as const,
+    filters ? [...generatorKeys.all, "waste-listings", filters] as const
+            : [...generatorKeys.all, "waste-listings"] as const,
   generatorProducts: () => [...generatorKeys.all, "products"] as const,
   timberOrders: () => [...generatorKeys.all, "timber-orders"] as const,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

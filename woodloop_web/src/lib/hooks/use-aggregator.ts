@@ -17,12 +17,18 @@ import type {
 export const aggregatorKeys = {
   all: ["aggregator"] as const,
   dashboard: () => [...aggregatorKeys.all, "dashboard"] as const,
-  pickups: (filters?: object) => [...aggregatorKeys.all, "pickups", filters] as const,
+  pickups: (filters?: object) =>
+    filters ? [...aggregatorKeys.all, "pickups", filters] as const
+            : [...aggregatorKeys.all, "pickups"] as const,
   warehouse: () => [...aggregatorKeys.all, "warehouse"] as const,
   warehouseLog: () => [...aggregatorKeys.all, "warehouse-log"] as const,
   bids: () => [...aggregatorKeys.all, "bids"] as const,
-  availableWaste: (filters?: object) => [...aggregatorKeys.all, "available-waste", filters] as const,
-  wasteListings: (filters?: object) => ["waste-listings", filters] as const,
+  availableWaste: (filters?: object) =>
+    filters ? [...aggregatorKeys.all, "available-waste", filters] as const
+            : [...aggregatorKeys.all, "available-waste"] as const,
+  wasteListings: (filters?: object) =>
+    filters ? ["waste-listings", filters] as const
+            : ["waste-listings"] as const,
   woodTypes: () => ["wood-types"] as const,
 };
 

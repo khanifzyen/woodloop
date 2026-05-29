@@ -75,12 +75,12 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
         <div className="flex flex-wrap items-center gap-1">
           {listing.shape && (
             <Badge variant="secondary" className="text-[10px]">
-              {listing.shape === "log" ? "Gelondongan" : "Papan Gergajian"}
+              {listing.shape === "log" ? "Log" : listing.shape === "square" ? "Square" : listing.shape === "balok" ? "Balok" : "Papan"}
             </Badge>
           )}
           {listing.grade && (
             <Badge variant="outline" className="text-[10px] capitalize">
-              {listing.grade === "kayu_rakyat" ? "Kayu Rakyat" : listing.grade}
+              {listing.grade === "hutan_rakyat" ? "Hutan Rakyat" : listing.grade}
             </Badge>
           )}
         </div>
@@ -93,7 +93,11 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
             <span className="text-xs text-muted-foreground">
               ⌀{listing.diameter}cm
             </span>
-          ) : listing.shape === "sawn" && listing.width && listing.height ? (
+          ) : listing.shape === "square" && listing.width ? (
+            <span className="text-xs text-muted-foreground">
+              {listing.width}×{listing.width}cm
+            </span>
+          ) : (listing.shape === "balok" || listing.shape === "papan") && listing.width && listing.height ? (
             <span className="text-xs text-muted-foreground">
               {listing.width}×{listing.height}cm
             </span>

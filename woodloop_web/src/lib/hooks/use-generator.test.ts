@@ -54,7 +54,6 @@ describe("useGenerator hooks - structure & typing", () => {
     expect(generatorKeys.wasteListings()).toEqual([
       "generator",
       "waste-listings",
-      undefined,
     ]);
     expect(generatorKeys.generatorProducts()).toEqual([
       "generator",

@@ -14,7 +14,8 @@ export const supplierKeys = {
   dashboard: () => [...supplierKeys.all, "dashboard"] as const,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listings: (filters?: any) =>
-    [...supplierKeys.all, "listings", filters] as const,
+    filters ? [...supplierKeys.all, "listings", filters] as const
+            : [...supplierKeys.all, "listings"] as const,
   orders: () => [...supplierKeys.all, "orders"] as const,
   woodTypes: () => ["wood-types"] as const,
 };

@@ -40,7 +40,7 @@ import {
   useUpdateRawTimberListing,
   useDeleteRawTimberListing,
 } from "@/lib/hooks/use-supplier";
-import type { RawTimberListing, WoodType } from "@/lib/pocketbase/types";
+import type { RawTimberListing, TimberShape, WoodType } from "@/lib/pocketbase/types";
 
 interface ListingWithExpand extends RawTimberListing {
   expand?: { wood_type?: WoodType };
@@ -62,8 +62,8 @@ export default function EditTimberListingPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [form, setForm] = useState({
     wood_type: "",
-    shape: "log" as "log" | "sawn",
-    grade: "" as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya",
+    shape: "log" as TimberShape,
+    grade: "" as "" | "perhutani" | "hutan_rakyat" | "lainnya",
     diameter: "",
     length: "",
     width: "",
@@ -95,7 +95,9 @@ export default function EditTimberListingPage() {
         const r = d / 2 / 100;
         const panjangM = l / 100;
         vol = Math.PI * r * r * panjangM;
-      } else if (prev.shape === "sawn" && l > 0 && w > 0 && h > 0) {
+      } else if (prev.shape === "square" && w > 0 && l > 0) {
+        vol = (w / 100) * (w / 100) * (l / 100);
+      } else if ((prev.shape === "balok" || prev.shape === "papan") && l > 0 && w > 0 && h > 0) {
         vol = (l / 100) * (w / 100) * (h / 100);
       }
 
@@ -354,14 +356,16 @@ export default function EditTimberListingPage() {
                     </Label>
                     <Select
                       value={form.shape}
-                      onValueChange={(v) => updateField("shape", v as "log" | "sawn")}
+                      onValueChange={(v) => updateField("shape", v as TimberShape)}
                     >
                       <SelectTrigger id="shape" className={`w-full ${errors.shape ? "border-destructive" : ""}`}>
                         <SelectValue placeholder="Pilih bentuk kayu" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="log">Gelondongan (Log)</SelectItem>
-                        <SelectItem value="sawn">Papan Gergajian (Sawn)</SelectItem>
+                        <SelectItem value="log">Log (Gelondongan)</SelectItem>
+                        <SelectItem value="square">Square (Persegi)</SelectItem>
+                        <SelectItem value="balok">Balok</SelectItem>
+                        <SelectItem value="papan">Papan</SelectItem>
                       </SelectContent>
                     </Select>
                     {errors.shape && (
@@ -374,15 +378,14 @@ export default function EditTimberListingPage() {
                     <Label htmlFor="grade">Grade Kayu</Label>
                     <Select
                       value={form.grade}
-                      onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya")}
+                      onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "hutan_rakyat" | "lainnya")}
                     >
                       <SelectTrigger id="grade" className="w-full">
                         <SelectValue placeholder="Pilih grade (opsional)" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="perhutani">Perhutani</SelectItem>
-                        <SelectItem value="kemplengan">Kemplengan</SelectItem>
-                        <SelectItem value="kayu_rakyat">Kayu Rakyat</SelectItem>
+                        <SelectItem value="hutan_rakyat">Hutan Rakyat</SelectItem>
                         <SelectItem value="lainnya">Lainnya</SelectItem>
                       </SelectContent>
                     </Select>
@@ -399,6 +402,27 @@ export default function EditTimberListingPage() {
                         type="number"
                         value={form.diameter}
                         onChange={(e) => updateField("diameter", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="length">Panjang (cm)</Label>
+                      <Input
+                        id="length"
+                        type="number"
+                        value={form.length}
+                        onChange={(e) => updateField("length", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                ) : form.shape === "square" ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="width">Lebar/Sisi (cm)</Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        value={form.width}
+                        onChange={(e) => updateField("width", e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">

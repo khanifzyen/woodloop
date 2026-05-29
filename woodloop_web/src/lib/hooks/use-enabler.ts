@@ -5,8 +5,12 @@ import type { User, ImpactMetric } from "@/lib/pocketbase/types";
 
 export const enablerKeys = {
   all: ["enabler"] as const,
-  metrics: (period?: string) => [...enablerKeys.all, "metrics", period] as const,
-  users: (filters?: object) => [...enablerKeys.all, "users", filters] as const,
+  metrics: (period?: string) =>
+    period ? [...enablerKeys.all, "metrics", period] as const
+           : [...enablerKeys.all, "metrics"] as const,
+  users: (filters?: object) =>
+    filters ? [...enablerKeys.all, "users", filters] as const
+            : [...enablerKeys.all, "users"] as const,
   userDetail: (id: string) => [...enablerKeys.all, "users", id] as const,
 };
 
