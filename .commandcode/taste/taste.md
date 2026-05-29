@@ -18,7 +18,7 @@
 - Write unit tests that verify hook function names, query keys, and structure rather than testing async behavior directly. Confidence: 0.70
 
 # git
-- After completing code changes, stage all files (`git add .`), commit with a descriptive label, and push to remote. Confidence: 0.70
+- After completing code changes, stage all files (`git add .`), commit with a descriptive label, and push to remote. Confidence: 0.78
 
 # project
 - Use array fields (like `photos[]`) rather than single-value fields for file uploads in PocketBase, to support multiple file uploads consistently. Confidence: 0.70
