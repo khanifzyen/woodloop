@@ -1,0 +1,32 @@
+# ============================================================
+# WoodLoop Web — Docker Compose (local testing)
+# ============================================================
+# Usage:
+#   docker compose up -d        # Start
+#   docker compose logs -f      # Follow logs
+#   docker compose down         # Stop & remove
+#   docker compose build        # Rebuild after changes
+# ============================================================
+
+services:
+  woodloop-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Override jika URL backend berbeda
+        NEXT_PUBLIC_PB_URL: https://pb-woodloop.pasarjepara.com
+    image: woodloop-web:latest
+    container_name: woodloop-web
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

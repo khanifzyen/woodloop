@@ -1,0 +1,43 @@
+# Dependencies (installed in Docker)
+node_modules
+.bun
+bun.lock
+
+# Next.js build output
+.next
+out
+
+# Testing
+coverage
+test-results
+e2e-report
+playwright-report
+e2e
+
+# Environment files (use build args instead)
+.env
+.env.local
+.env.development
+
+# Git
+.git
+.gitignore
+AGENTS.md
+CLAUDE.md
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Debug artifacts
+*.png
+debug-*.png
+
+# OS
+.DS_Store
+
+# Misc
+README.md
+*.md
