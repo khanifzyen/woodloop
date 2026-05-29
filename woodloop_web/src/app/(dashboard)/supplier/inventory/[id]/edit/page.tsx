@@ -33,7 +33,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FileDropzone } from "@/components/features/file-dropzone";
-import { getPB } from "@/lib/pocketbase/client";
+import { getPB, getFileUrl } from "@/lib/pocketbase/client";
 import {
   useWoodTypes,
   useUpdateRawTimberListing,
@@ -56,6 +56,7 @@ export default function EditTimberListingPage() {
 
   const [loading, setLoading] = useState(true);
   const [listing, setListing] = useState<ListingWithExpand | null>(null);
+  const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
   const [form, setForm] = useState({
     wood_type: "",
     shape: "log" as "log" | "sawn",
@@ -71,6 +72,7 @@ export default function EditTimberListingPage() {
     description: "",
   });
   const [photos, setPhotos] = useState<File[]>([]);
+  const [legalityDoc, setLegalityDoc] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [priceDisplay, setPriceDisplay] = useState("");
@@ -119,8 +121,13 @@ export default function EditTimberListingPage() {
         const pb = getPB();
         const record = (await pb
           .collection("raw_timber_listings")
-          .getOne(id, { expand: "wood_type" })) as ListingWithExpand;
+          .getOne(id, { expand: "wood_type", requestKey: null })) as ListingWithExpand;
         setListing(record);
+        // Convert photo filenames to full URLs
+        const photoUrls = (record.photos || []).map((p: string) =>
+          getFileUrl(record, p)
+        );
+        setExistingPhotos(photoUrls);
         setForm({
           wood_type: record.wood_type,
           shape: record.shape || "log",
@@ -136,7 +143,8 @@ export default function EditTimberListingPage() {
           description: record.description || "",
         });
       } catch (err) {
-        toast.error("Gagal memuat data kayu");
+        console.error("Failed to load listing:", err);
+        toast.error("Gagal memuat data kayu: " + (err instanceof Error ? err.message : "Unknown error"));
         router.push("/supplier/inventory");
       } finally {
         setLoading(false);
@@ -289,79 +297,82 @@ export default function EditTimberListingPage() {
                 <CardTitle className="text-lg">Informasi Kayu</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* Wood Type */}
-                <div className="space-y-2">
-                  <Label htmlFor="wood_type">
-                    Jenis Kayu <span className="text-destructive">*</span>
-                  </Label>
-                  {wtLoading ? (
-                    <Skeleton className="h-10 w-full" />
-                  ) : (
-                    <Select
-                      value={form.wood_type}
-                      onValueChange={(v) => updateField("wood_type", v)}
-                    >
-                      <SelectTrigger
-                        id="wood_type"
-                        className={errors.wood_type ? "border-destructive" : ""}
+                {/* Jenis Kayu, Bentuk Kayu, Grade Kayu — responsive 3→2→1 columns */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Wood Type */}
+                  <div className="space-y-2">
+                    <Label htmlFor="wood_type">
+                      Jenis Kayu <span className="text-destructive">*</span>
+                    </Label>
+                    {wtLoading ? (
+                      <Skeleton className="h-10 w-full" />
+                    ) : (
+                      <Select
+                        value={form.wood_type}
+                        onValueChange={(v) => updateField("wood_type", v)}
                       >
-                        <SelectValue placeholder="Pilih jenis kayu" />
+                        <SelectTrigger
+                          id="wood_type"
+                          className={`w-full ${errors.wood_type ? "border-destructive" : ""}`}
+                        >
+                          <SelectValue placeholder="Pilih jenis kayu" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {woodTypes?.map((wt) => (
+                            <SelectItem key={wt.id} value={wt.id}>
+                              {wt.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                    {errors.wood_type && (
+                      <p className="text-xs text-destructive">
+                        {errors.wood_type}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Shape */}
+                  <div className="space-y-2">
+                    <Label htmlFor="shape">
+                      Bentuk Kayu <span className="text-destructive">*</span>
+                    </Label>
+                    <Select
+                      value={form.shape}
+                      onValueChange={(v) => updateField("shape", v as "log" | "sawn")}
+                    >
+                      <SelectTrigger id="shape" className={`w-full ${errors.shape ? "border-destructive" : ""}`}>
+                        <SelectValue placeholder="Pilih bentuk kayu" />
                       </SelectTrigger>
                       <SelectContent>
-                        {woodTypes?.map((wt) => (
-                          <SelectItem key={wt.id} value={wt.id}>
-                            {wt.name}
-                          </SelectItem>
-                        ))}
+                        <SelectItem value="log">Gelondongan (Log)</SelectItem>
+                        <SelectItem value="sawn">Papan Gergajian (Sawn)</SelectItem>
                       </SelectContent>
                     </Select>
-                  )}
-                  {errors.wood_type && (
-                    <p className="text-xs text-destructive">
-                      {errors.wood_type}
-                    </p>
-                  )}
-                </div>
+                    {errors.shape && (
+                      <p className="text-xs text-destructive">{errors.shape}</p>
+                    )}
+                  </div>
 
-                {/* Shape */}
-                <div className="space-y-2">
-                  <Label htmlFor="shape">
-                    Bentuk Kayu <span className="text-destructive">*</span>
-                  </Label>
-                  <Select
-                    value={form.shape}
-                    onValueChange={(v) => updateField("shape", v as "log" | "sawn")}
-                  >
-                    <SelectTrigger id="shape" className={errors.shape ? "border-destructive" : ""}>
-                      <SelectValue placeholder="Pilih bentuk kayu" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="log">Gelondongan (Log)</SelectItem>
-                      <SelectItem value="sawn">Papan Gergajian (Sawn)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.shape && (
-                    <p className="text-xs text-destructive">{errors.shape}</p>
-                  )}
-                </div>
-
-                {/* Grade */}
-                <div className="space-y-2">
-                  <Label htmlFor="grade">Grade Kayu</Label>
-                  <Select
-                    value={form.grade}
-                    onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya")}
-                  >
-                    <SelectTrigger id="grade">
-                      <SelectValue placeholder="Pilih grade (opsional)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="perhutani">Perhutani</SelectItem>
-                      <SelectItem value="kemplengan">Kemplengan</SelectItem>
-                      <SelectItem value="kayu_rakyat">Kayu Rakyat</SelectItem>
-                      <SelectItem value="lainnya">Lainnya</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {/* Grade */}
+                  <div className="space-y-2 md:col-span-2 lg:col-span-1">
+                    <Label htmlFor="grade">Grade Kayu</Label>
+                    <Select
+                      value={form.grade}
+                      onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya")}
+                    >
+                      <SelectTrigger id="grade" className="w-full">
+                        <SelectValue placeholder="Pilih grade (opsional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="perhutani">Perhutani</SelectItem>
+                        <SelectItem value="kemplengan">Kemplengan</SelectItem>
+                        <SelectItem value="kayu_rakyat">Kayu Rakyat</SelectItem>
+                        <SelectItem value="lainnya">Lainnya</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
                 {/* Dimensions — depends on shape */}
@@ -522,7 +533,22 @@ export default function EditTimberListingPage() {
                   maxFiles={5}
                   enableCamera
                   onFilesChange={setPhotos}
-                  initialFiles={listing.photos}
+                  initialFiles={existingPhotos}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Legality Document */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Dokumen Legalitas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FileDropzone
+                  documentMode
+                  accept=".pdf"
+                  maxFiles={1}
+                  onFilesChange={() => {}}
                 />
               </CardContent>
             </Card>

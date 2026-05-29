@@ -113,61 +113,45 @@ export default function NewTimberListingPage() {
     e.preventDefault();
     if (!validate()) return;
 
-    // Upload photos ke PocketBase
     const pb = (await import("@/lib/pocketbase/client")).getPB();
-    let photoUrls: string[] = [];
-
-    try {
-      for (const file of photos) {
-        const formData = new FormData();
-        formData.append("file", file);
-        // Upload via generic file upload or directly with listing
-        const uploadResult = await pb.collection("raw_timber_listings").create(
-          {
-            supplier: "", // temp, akan diupdate
-            wood_type: form.wood_type,
-            volume: Number(form.volume),
-            price: Number(form.price),
-            unit: form.unit,
-            status: "available",
-          },
-          { photos: [file] }
-        );
-        // Use the returned photos array
-        photoUrls = uploadResult.photos || [];
-        // Delete the temp record since we'll create properly
-        await pb.collection("raw_timber_listings").delete(uploadResult.id);
-        break; // Just use first file for now
-      }
-    } catch {
-      // Fallback: send as base64 via the mutation
+    const supplierId = (await import("@/lib/stores/auth-store")).useAuthStore.getState().user?.id;
+    if (!supplierId) {
+      toast.error("Sesi habis, silakan login ulang");
+      return;
     }
 
-    const data = {
-      wood_type: form.wood_type,
-      shape: form.shape,
-      grade: form.grade || undefined,
-      diameter: form.diameter ? Number(form.diameter) : undefined,
-      length: form.length ? Number(form.length) : undefined,
-      width: form.width ? Number(form.width) : undefined,
-      height: form.height ? Number(form.height) : undefined,
-      volume: Number(form.volume),
-      price: Number(form.price),
-      unit: form.unit,
-      photos: photoUrls,
-      description: form.description || undefined,
-      legality_doc: undefined as string | undefined,
-    };
+    const formData = new FormData();
+    formData.append("supplier", supplierId);
+    formData.append("wood_type", form.wood_type);
+    formData.append("shape", form.shape);
+    if (form.grade) formData.append("grade", form.grade);
+    if (form.diameter) formData.append("diameter", String(form.diameter));
+    if (form.length) formData.append("length", String(form.length));
+    if (form.width) formData.append("width", String(form.width));
+    if (form.height) formData.append("height", String(form.height));
+    formData.append("volume", String(form.volume));
+    formData.append("price", String(form.price));
+    formData.append("unit", form.unit);
+    formData.append("status", "available");
+    if (form.description) formData.append("description", form.description);
 
-    createMutation.mutate(data, {
-      onSuccess: () => {
-        toast.success("Kayu berhasil didaftarkan!");
-        router.push("/supplier/inventory");
-      },
-      onError: (err) => {
-        toast.error("Gagal mendaftarkan: " + err.message);
-      },
-    });
+    // Append each photo file
+    for (const file of photos) {
+      formData.append("photos", file);
+    }
+
+    createMutation.mutate(
+      formData,
+      {
+        onSuccess: () => {
+          toast.success("Kayu berhasil didaftarkan!");
+          router.push("/supplier/inventory");
+        },
+        onError: (err) => {
+          toast.error("Gagal mendaftarkan: " + err.message);
+        },
+      }
+    );
   }
 
   function updateField(key: string, value: string) {
@@ -208,79 +192,82 @@ export default function NewTimberListingPage() {
                 <CardTitle className="text-lg">Informasi Kayu</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* Wood Type */}
-                <div className="space-y-2">
-                  <Label htmlFor="wood_type">
-                    Jenis Kayu <span className="text-destructive">*</span>
-                  </Label>
-                  {wtLoading ? (
-                    <Skeleton className="h-10 w-full" />
-                  ) : (
-                    <Select
-                      value={form.wood_type}
-                      onValueChange={(v) => updateField("wood_type", v)}
-                    >
-                      <SelectTrigger
-                        id="wood_type"
-                        className={errors.wood_type ? "border-destructive" : ""}
+                {/* Jenis Kayu, Bentuk Kayu, Grade Kayu — responsive 3→2→1 columns */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Wood Type */}
+                  <div className="space-y-2">
+                    <Label htmlFor="wood_type">
+                      Jenis Kayu <span className="text-destructive">*</span>
+                    </Label>
+                    {wtLoading ? (
+                      <Skeleton className="h-10 w-full" />
+                    ) : (
+                      <Select
+                        value={form.wood_type}
+                        onValueChange={(v) => updateField("wood_type", v)}
                       >
-                        <SelectValue placeholder="Pilih jenis kayu" />
+                        <SelectTrigger
+                          id="wood_type"
+                          className={`w-full ${errors.wood_type ? "border-destructive" : ""}`}
+                        >
+                          <SelectValue placeholder="Pilih jenis kayu" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {woodTypes?.map((wt) => (
+                            <SelectItem key={wt.id} value={wt.id}>
+                              {wt.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                    {errors.wood_type && (
+                      <p className="text-xs text-destructive">
+                        {errors.wood_type}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Shape */}
+                  <div className="space-y-2">
+                    <Label htmlFor="shape">
+                      Bentuk Kayu <span className="text-destructive">*</span>
+                    </Label>
+                    <Select
+                      value={form.shape}
+                      onValueChange={(v) => updateField("shape", v as "log" | "sawn")}
+                    >
+                      <SelectTrigger id="shape" className={`w-full ${errors.shape ? "border-destructive" : ""}`}>
+                        <SelectValue placeholder="Pilih bentuk kayu" />
                       </SelectTrigger>
                       <SelectContent>
-                        {woodTypes?.map((wt) => (
-                          <SelectItem key={wt.id} value={wt.id}>
-                            {wt.name}
-                          </SelectItem>
-                        ))}
+                        <SelectItem value="log">Gelondongan (Log)</SelectItem>
+                        <SelectItem value="sawn">Papan Gergajian (Sawn)</SelectItem>
                       </SelectContent>
                     </Select>
-                  )}
-                  {errors.wood_type && (
-                    <p className="text-xs text-destructive">
-                      {errors.wood_type}
-                    </p>
-                  )}
-                </div>
+                    {errors.shape && (
+                      <p className="text-xs text-destructive">{errors.shape}</p>
+                    )}
+                  </div>
 
-                {/* Shape */}
-                <div className="space-y-2">
-                  <Label htmlFor="shape">
-                    Bentuk Kayu <span className="text-destructive">*</span>
-                  </Label>
-                  <Select
-                    value={form.shape}
-                    onValueChange={(v) => updateField("shape", v as "log" | "sawn")}
-                  >
-                    <SelectTrigger id="shape" className={errors.shape ? "border-destructive" : ""}>
-                      <SelectValue placeholder="Pilih bentuk kayu" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="log">Gelondongan (Log)</SelectItem>
-                      <SelectItem value="sawn">Papan Gergajian (Sawn)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.shape && (
-                    <p className="text-xs text-destructive">{errors.shape}</p>
-                  )}
-                </div>
-
-                {/* Grade */}
-                <div className="space-y-2">
-                  <Label htmlFor="grade">Grade Kayu</Label>
-                  <Select
-                    value={form.grade}
-                    onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya")}
-                  >
-                    <SelectTrigger id="grade">
-                      <SelectValue placeholder="Pilih grade (opsional)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="perhutani">Perhutani</SelectItem>
-                      <SelectItem value="kemplengan">Kemplengan</SelectItem>
-                      <SelectItem value="kayu_rakyat">Kayu Rakyat</SelectItem>
-                      <SelectItem value="lainnya">Lainnya</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {/* Grade */}
+                  <div className="space-y-2 md:col-span-2 lg:col-span-1">
+                    <Label htmlFor="grade">Grade Kayu</Label>
+                    <Select
+                      value={form.grade}
+                      onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya")}
+                    >
+                      <SelectTrigger id="grade" className="w-full">
+                        <SelectValue placeholder="Pilih grade (opsional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="perhutani">Perhutani</SelectItem>
+                        <SelectItem value="kemplengan">Kemplengan</SelectItem>
+                        <SelectItem value="kayu_rakyat">Kayu Rakyat</SelectItem>
+                        <SelectItem value="lainnya">Lainnya</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
                 {/* Dimensions — depends on shape */}

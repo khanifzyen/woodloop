@@ -208,6 +208,8 @@ export interface CreateTimberData {
   grade?: "perhutani" | "kemplengan" | "kayu_rakyat" | "lainnya";
   diameter?: number;
   length?: number;
+  width?: number;
+  height?: number;
   volume: number;
   price: number;
   unit: "m3" | "batang" | "ton";
@@ -217,17 +219,12 @@ export interface CreateTimberData {
 }
 
 export function useCreateRawTimberListing() {
-  const supplierId = getSupplierId();
   const pb = getPB();
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: CreateTimberData) => {
-      const record = await pb.collection("raw_timber_listings").create({
-        supplier: supplierId,
-        ...data,
-        status: "available",
-      });
+    mutationFn: async (formData: FormData) => {
+      const record = await pb.collection("raw_timber_listings").create(formData);
       return record;
     },
     onSuccess: () => {

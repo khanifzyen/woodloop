@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useCallback, type ChangeEvent } from "react";
+import { useState, useRef, useCallback, useEffect, type ChangeEvent } from "react";
 import { Upload, X, FileText, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { resizeImage } from "@/lib/resize-image";
 
 interface FileDropzoneProps {
   accept?: string;
@@ -30,9 +30,12 @@ export function FileDropzone({
   enableCamera = false,
 }: FileDropzoneProps) {
   const [files, setFiles] = useState<File[]>([]);
-  const [existingPreviews, setExistingPreviews] = useState<string[]>(
-    initialFiles ?? []
-  );
+  const [existingPreviews, setExistingPreviews] = useState<string[]>([]);
+
+  // Sync external initialFiles (for async data)
+  useEffect(() => {
+    setExistingPreviews(initialFiles ?? []);
+  }, [initialFiles]);
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [useCamera, setUseCamera] = useState(false);
@@ -42,7 +45,7 @@ export function FileDropzone({
   const totalCount = files.length + existingPreviews.length;
 
   const handleFiles = useCallback(
-    (newFiles: FileList | File[]) => {
+    async (newFiles: FileList | File[]) => {
       setError(null);
       const fileArray = Array.from(newFiles);
       const remaining = maxFiles - totalCount;
@@ -58,7 +61,18 @@ export function FileDropzone({
         return;
       }
 
-      const updated = [...files, ...fileArray].slice(0, maxFiles);
+      // Resize images client-side (max 1024px longest side)
+      const processed = await Promise.all(
+        fileArray.map(async (f) => {
+          if (f.type.startsWith("image/")) {
+            const blob = await resizeImage(f, 1024);
+            return new File([blob], f.name, { type: f.type });
+          }
+          return f;
+        }),
+      );
+
+      const updated = [...files, ...processed].slice(0, maxFiles);
       setFiles(updated);
       onFilesChange(updated);
     },

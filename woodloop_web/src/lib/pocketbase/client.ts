@@ -2,18 +2,11 @@ import PocketBase from "pocketbase";
 
 let pb: PocketBase | null = null;
 
-const PB_URL = process.env.NEXT_PUBLIC_PB_URL || "http://127.0.0.1:8090";
+export const PB_URL = process.env.NEXT_PUBLIC_PB_URL || "http://127.0.0.1:8090";
 
 export function getPB(): PocketBase {
   if (!pb) {
     pb = new PocketBase(PB_URL);
-
-    // Load auth dari cookie (SSR compatibility)
-    if (typeof window === "undefined") {
-      // Server-side: auth dari cookie di-handle oleh middleware
-    } else {
-      // Client-side: auto load dari localStorage (PocketBase SDK built-in)
-    }
   }
   return pb;
 }
@@ -25,4 +18,18 @@ export function getAuthenticatedPB(token?: string): PocketBase {
     client.authStore.save(token, null);
   }
   return client;
+}
+
+/**
+ * Helper: build full PocketBase file URL using the SDK's built-in method.
+ * Accepts any object with `id` and optional `collectionId` (PocketBase records
+ * always include these at runtime).
+ */
+export function getFileUrl(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  record: any,
+  filename: string,
+): string {
+  const pb = getPB();
+  return pb.files!.getURL(record, filename);
 }

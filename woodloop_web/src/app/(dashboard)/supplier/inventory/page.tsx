@@ -52,6 +52,7 @@ import {
   useWoodTypes,
   type TimberListingsFilter,
 } from "@/lib/hooks/use-supplier";
+import { getFileUrl } from "@/lib/pocketbase/client";
 
 function formatCurrency(val: number): string {
   return new Intl.NumberFormat("id-ID", {
@@ -288,7 +289,7 @@ export default function InventoryPage() {
                           <TableCell>
                             {listing.photos?.[0] ? (
                               <img
-                                src={listing.photos[0]}
+                                src={getFileUrl(listing, listing.photos[0])}
                                 alt="foto"
                                 className="h-10 w-10 object-cover rounded"
                               />

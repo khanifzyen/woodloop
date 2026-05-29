@@ -9,6 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getFileUrl } from "@/lib/pocketbase/client";
 import type { RawTimberListing, WoodType, User } from "@/lib/pocketbase/types";
 
 interface TimberCardProps {
@@ -37,7 +38,7 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
       <div className="aspect-[4/3] bg-muted relative">
         {listing.photos?.[0] ? (
           <img
-            src={listing.photos[0]}
+            src={getFileUrl(listing, listing.photos[0])}
             alt={woodName}
             className="w-full h-full object-cover"
           />
