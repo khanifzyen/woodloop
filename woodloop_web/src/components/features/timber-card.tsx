@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ImageOff } from "lucide-react";
+import { ImageOff, Plus } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -18,6 +18,10 @@ interface TimberCardProps {
     expand?: { wood_type?: WoodType; supplier?: User };
   };
   onOrder?: (id: string) => void;
+  onAddToCart?: (listing: RawTimberListing & {
+    expand?: { wood_type?: WoodType; supplier?: User };
+  }) => void;
+  cartDisabled?: boolean;
 }
 
 function formatCurrency(val: number): string {
@@ -29,7 +33,7 @@ function formatCurrency(val: number): string {
   }).format(val);
 }
 
-export function TimberCard({ listing, onOrder }: TimberCardProps) {
+export function TimberCard({ listing, onOrder, onAddToCart, cartDisabled }: TimberCardProps) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const woodName = listing.expand?.wood_type?.name || listing.wood_type;
   const supplierName = listing.expand?.supplier?.name || "Supplier";
@@ -173,7 +177,21 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
         </div>
       </CardContent>
 
-      {onOrder && (
+      {onAddToCart && (
+        <CardFooter className="p-4 pt-0 flex gap-2">
+          <Button
+            className="flex-1"
+            variant="default"
+            size="sm"
+            disabled={cartDisabled}
+            onClick={() => onAddToCart(listing)}
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Keranjang
+          </Button>
+        </CardFooter>
+      )}
+      {!onAddToCart && onOrder && (
         <CardFooter className="p-4 pt-0">
           <Button
             className="w-full"

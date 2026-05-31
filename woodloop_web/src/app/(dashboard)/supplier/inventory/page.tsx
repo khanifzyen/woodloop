@@ -271,6 +271,7 @@ export default function InventoryPage() {
                       <TableHead className="w-16">Foto</TableHead>
                       <TableHead>Jenis Kayu</TableHead>
                       <TableHead>Volume</TableHead>
+                      <TableHead>Stok</TableHead>
                       <TableHead>Harga</TableHead>
                       <TableHead>Unit</TableHead>
                       <TableHead>Status</TableHead>

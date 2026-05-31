@@ -437,64 +437,135 @@ onRecordAfterUpdateSuccess((e) => {
 
 // ══════════════════════════════════════════════════════════════
 // HOOK 6: After raw_timber_order Created (Generator beli kayu)
-//         → decrease stock on listing
+//         → iterate details, validate price server-side, decrease stock
 //         → create notification for supplier
+//
+// 🛡️ SECURITY: Server re-fetches listing.price and overrides any
+//    client-supplied unit_price to prevent price manipulation.
 // ══════════════════════════════════════════════════════════════
 onRecordAfterCreateSuccess((e) => {
     try {
         const order = e.record;
         const sellerId = order.getString("seller");
         const buyerId = order.getString("buyer");
-        const listingId = order.getString("listing");
-        const quantity = order.getInt("quantity") || 1;
         
-        if (!sellerId || !buyerId || !listingId) {
+        if (!sellerId || !buyerId) {
             e.next();
             return;
         }
         
-        // --- 6a. Decrease stock on raw_timber_listing ---
+        // --- 6a. Fetch all details for this order ---
+        let details = [];
         try {
-            const listing = $app.findRecordById("raw_timber_listings", listingId);
-            const currentStock = listing.getInt("stock") || 0;
+            details = $app.findRecordsByFilter(
+                "raw_timber_order_details",
+                `order = "${order.id}"`,
+                "",
+                100,
+                0
+            );
+        } catch (err) {
+            console.error("[WoodLoop] Hook 6: failed to fetch details:", err);
+            e.next(); return;
+        }
+        
+        if (details.length === 0) {
+            console.error("[WoodLoop] Hook 6: Order has no details, cancelling");
+            order.set("status", "cancelled");
+            $app.dao().saveRecord(order);
+            e.next(); return;
+        }
+        
+        let serverComputedTotal = 0;
+        let allProducts = [];
+        let cancelled = false;
+        
+        // --- 6b. Validate each detail server-side ---
+        for (const detail of details) {
+            const listingId = detail.getString("listing");
+            const clientQty = detail.getInt("quantity") || 1;
             
-            if (currentStock > 0) {
-                const newStock = Math.max(0, currentStock - quantity);
+            if (!listingId) { continue; }
+            
+            try {
+                const listing = $app.findRecordById("raw_timber_listings", listingId);
+                const serverPrice = listing.getFloat("price");
+                const serverStock = listing.getInt("stock") || 0;
+                
+                // 🛡️ Override unit_price with server price (client can't manipulate)
+                const correctUnitPrice = serverPrice;
+                const correctSubtotal = correctUnitPrice * clientQty;
+                
+                detail.set("unit_price", correctUnitPrice);
+                detail.set("subtotal", correctSubtotal);
+                $app.dao().saveRecord(detail);
+                
+                // 🛡️ Stock validation
+                if (serverStock < clientQty) {
+                    console.error(`[WoodLoop] Hook 6: INSUFFICIENT STOCK for ${listingId}: stock=${serverStock}, requested=${clientQty}`);
+                    order.set("status", "cancelled");
+                    $app.dao().saveRecord(order);
+                    
+                    createNotification(
+                        buyerId,
+                        "Pesanan Dibatalkan — Stok Habis",
+                        `Pesanan #${order.id.slice(0, 8)} dibatalkan karena stok kayu tidak mencukupi.`,
+                        "order",
+                        "raw_timber_orders",
+                        order.id
+                    );
+                    cancelled = true;
+                    break;
+                }
+                
+                // Decrease stock
+                const newStock = Math.max(0, serverStock - clientQty);
                 listing.set("stock", newStock);
                 if (newStock <= 0) {
                     listing.set("status", "sold");
                 }
                 $app.dao().saveRecord(listing);
-                console.log(`[WoodLoop] raw_timber_listing ${listingId} stock: ${currentStock} → ${newStock}`);
+                console.log(`[WoodLoop] raw_timber_listing ${listingId} stock: ${serverStock} → ${newStock}`);
+                
+                // Collect product name for notification
+                let timberName = "Kayu";
+                try {
+                    const wtId = listing.getString("wood_type");
+                    if (wtId) {
+                        const wt = $app.findRecordById("wood_types", wtId);
+                        timberName = wt.getString("name") || "Kayu";
+                    }
+                } catch (_) {}
+                allProducts.push(timberName);
+                
+                serverComputedTotal += correctSubtotal;
+                
+            } catch (err) {
+                console.error(`[WoodLoop] Hook 6: error processing detail ${detail.id}:`, err);
+                cancelled = true;
+                break;
             }
-        } catch (err) {
-            console.error("[WoodLoop] Hook 6a error:", err);
         }
         
-        // --- 6b. Get timber name for notification ---
-        let timberName = "Kayu";
-        try {
-            const listing = $app.findRecordById("raw_timber_listings", listingId);
-            const woodTypeId = listing.getString("wood_type");
-            if (woodTypeId) {
-                try {
-                    const woodType = $app.findRecordById("wood_types", woodTypeId);
-                    timberName = woodType.getString("name");
-                } catch (_) {}
-            }
-        } catch (_) {}
+        if (cancelled) { e.next(); return; }
         
-        // --- 6c. Get buyer name ---
+        // --- 6c. Update master order with server-computed total ---
+        order.set("total_price", serverComputedTotal);
+        $app.dao().saveRecord(order);
+        
+        // --- 6d. Notify supplier ---
         let buyerName = "Generator";
         try {
             const buyer = $app.findRecordById("users", buyerId);
             buyerName = buyer.getString("name") || buyer.getString("email") || "Generator";
         } catch (_) {}
         
+        const productList = allProducts.length > 0 ? allProducts.join(", ") : "Kayu";
+        
         createNotification(
             sellerId,
             "Pesanan Baru!",
-            `${buyerName} memesan ${timberName} dari Anda. Segera proses pesanan.`,
+            `${buyerName} memesan ${productList} dari Anda. Segera proses pesanan.`,
             "order",
             "raw_timber_orders",
             order.id

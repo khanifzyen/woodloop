@@ -228,6 +228,49 @@ Pembelian produk jadi oleh konsumen akhir (Buyer).
 
 ---
 
+## 9b. Koleksi: `raw_timber_orders` (Base Collection — Generator → Supplier) — Master
+
+Master pesanan kayu mentah. Satu order milik satu Supplier, dengan detail item di `raw_timber_order_details`.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `buyer` | relation | → `users` (single, required) | Generator pembeli |
+| `seller` | relation | → `users` (single, required) | Supplier penjual |
+| `total_price` | number | required | Total harga (dihitung dari subtotal details) |
+| `total_quantity` | number | - | Total jumlah (dihitung dari quantity details) |
+| `status` | select | `payment_pending`, `paid`, `processing`, `shipped`, `received`, `cancelled` — default: `payment_pending` | Status pesanan |
+| `notes` | text | - | Catatan |
+
+**PocketBase API Rules:**
+- **List/View:** `@request.auth.id = buyer || @request.auth.id = seller`
+- **Create:** `@request.auth.role = "generator"`
+- **Update:** `@request.auth.id = buyer || @request.auth.id = seller`
+- **Delete:** (tidak diizinkan)
+
+**PocketBase Hook (After Create):**
+- Iterasi `raw_timber_order_details`
+- Validasi harga (server override), kurangi stok
+- Kirim notifikasi ke Supplier
+
+## 9c. Koleksi: `raw_timber_order_details` (Base Collection — Generator → Supplier) — Detail
+
+Line items dari pesanan kayu mentah. Satu `raw_timber_orders` bisa memiliki banyak detail.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `order` | relation | → `raw_timber_orders` (single, required, cascadeDelete) | Master order |
+| `listing` | relation | → `raw_timber_listings` (single, required) | Kayu yang dipesan |
+| `quantity` | number | required, min: 1 | Jumlah |
+| `unit_price` | number | required — **server-validated** | Harga per unit (diambil dari listing, bukan dari client) |
+| `subtotal` | number | required | `quantity * unit_price` |
+
+**PocketBase API Rules:**
+- **List/View:** `@request.auth.id = order.buyer || @request.auth.id = order.seller`
+- **Create:** `@request.auth.role = "generator"`
+- **Update/Delete:** `""` (immutable — hanya via Hook)
+
+---
+
 ## 10. Koleksi: `cart_items` (Base Collection — Buyer)
 
 Item di keranjang belanja sebelum checkout.
@@ -455,7 +498,7 @@ Produk jadi (mebel/furniture) yang dijual langsung oleh Generator. Terpisah dari
 
 ---
 
-## Rangkuman Koleksi (17 Total)
+## Rangkuman Koleksi (19 Total)
 
 | # | Koleksi | Tipe PocketBase | Aktor Utama |
 | :--- | :--- | :--- | :--- |
@@ -468,6 +511,8 @@ Produk jadi (mebel/furniture) yang dijual langsung oleh Generator. Terpisah dari
 | 7 | `marketplace_transactions` | Base Collection | Converter ↔ Aggregator |
 | 8 | `products` | Base Collection | Converter |
 | 9 | `orders` | Base Collection | Buyer ↔ Converter |
+| 9b | `raw_timber_orders` | Base Collection | Generator ↔ Supplier |
+| 9c | `raw_timber_order_details` | Base Collection | Generator ↔ Supplier |
 | 10 | `cart_items` | Base Collection | Buyer |
 | 11 | `wallet_transactions` | Base Collection | Semua |
 | 12 | `impact_metrics` | Base Collection | Enabler (view) / Hook (create) |

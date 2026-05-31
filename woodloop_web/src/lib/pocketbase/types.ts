@@ -119,10 +119,21 @@ export interface Order {
 
 // ========== 9b. Raw Timber Orders (Generator → Supplier) ==========
 export interface RawTimberOrder {
-  id: string; buyer: string; seller: string; listing: string;
-  expand?: { buyer?: User; seller?: User; listing?: RawTimberListing; };
-  quantity: number; total_price: number; status: OrderStatus;
+  id: string; buyer: string; seller: string;
+  total_price: number; total_quantity: number; status: OrderStatus;
   notes?: string;
+  expand?: { buyer?: User; seller?: User; details?: RawTimberOrderDetail[]; };
+  created: string; updated: string;
+}
+
+// ========== 9c. Raw Timber Order Details ==========
+export interface RawTimberOrderDetail {
+  id: string; order: string; listing: string;
+  quantity: number; unit_price: number; subtotal: number;
+  expand?: {
+    order?: RawTimberOrder;
+    listing?: RawTimberListing & { expand?: { wood_type?: WoodType; supplier?: User } };
+  };
   created: string; updated: string;
 }
 

@@ -3,7 +3,6 @@ import { getPB } from "@/lib/pocketbase/client";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import type {
   RawTimberListing,
-  Order,
   WoodType,
 } from "@/lib/pocketbase/types";
 // ---------------------------------------------------------------------------
@@ -57,15 +56,30 @@ export function useSupplierDashboard() {
   return useQuery<SupplierDashboardData>({
     queryKey: supplierKeys.dashboard(),
     queryFn: async (): Promise<SupplierDashboardData> => {
-      const [listings, orders, walletTx] = await Promise.all([
+      const [listings, timberOrders, walletTx] = await Promise.all([
         pb.collection<RawTimberListing>("raw_timber_listings").getList(1, 200, {
           filter: `supplier="${supplierId}"`,
           sort: "-created",
           expand: "wood_type",
         }),
-        pb.collection<Order>("orders").getList(1, 200, {
-          filter: `product ?~ "${supplierId}"`, // simplified; real filter may vary
+        pb.collection("raw_timber_orders").getList(1, 200, {
+          filter: `seller="${supplierId}"`,
           sort: "-created",
+          expand: "details,details.listing,details.listing.wood_type,buyer",
+        }).then((r) => r as unknown as {
+          page: number; perPage: number; totalItems: number; totalPages: number;
+          items: (import("@/lib/pocketbase/types").RawTimberOrder & {
+            expand?: {
+              buyer?: import("@/lib/pocketbase/types").User;
+              details?: (import("@/lib/pocketbase/types").RawTimberOrderDetail & {
+                expand?: {
+                  listing?: import("@/lib/pocketbase/types").RawTimberListing & {
+                    expand?: { wood_type?: import("@/lib/pocketbase/types").WoodType };
+                  };
+                };
+              })[];
+            };
+          })[];
         }),
         pb.collection("wallet_transactions").getList(1, 50, {
           filter: `user="${supplierId}"`,
@@ -77,11 +91,11 @@ export function useSupplierDashboard() {
         (l) => l.status === "available"
       ).length;
 
-      const pendingOrders = orders.items.filter(
+      const pendingOrders = timberOrders.items.filter(
         (o) => o.status === "payment_pending" || o.status === "paid"
       ).length;
 
-      const completedOrders = orders.items.filter(
+      const completedOrders = timberOrders.items.filter(
         (o) => o.status === "received"
       );
 
@@ -103,15 +117,24 @@ export function useSupplierDashboard() {
           amount: l.price,
           timestamp: l.created,
         })),
-        ...orders.items.slice(0, 3).map((o) => ({
-          id: o.id,
-          type: (o.status === "received"
-            ? "order_completed"
-            : "order_received") as ActivityItem["type"],
-          description: `Pesanan #${o.id.slice(0, 8)}`,
-          amount: o.total_price,
-          timestamp: o.created,
-        })),
+        ...timberOrders.items.slice(0, 3).map((o) => {
+          const details = o.expand?.details || [];
+          const productNames = details
+            .map((d) => d.expand?.listing?.expand?.wood_type?.name)
+            .filter(Boolean)
+            .join(", ");
+          return {
+            id: o.id,
+            type: (o.status === "received"
+              ? "order_completed"
+              : "order_received") as ActivityItem["type"],
+            description: productNames
+              ? `${productNames} — #${o.id.slice(0, 8)}`
+              : `Pesanan #${o.id.slice(0, 8)}`,
+            amount: o.total_price,
+            timestamp: o.created,
+          };
+        }),
       ]
         .sort(
           (a, b) =>
@@ -122,7 +145,7 @@ export function useSupplierDashboard() {
       return {
         totalListings: listings.totalItems,
         activeListings: activeCount,
-        totalOrders: orders.totalItems,
+        totalOrders: timberOrders.totalItems,
         pendingOrders,
         totalRevenue,
         walletBalance,
@@ -266,7 +289,7 @@ export function useDeleteRawTimberListing() {
 }
 
 // ---------------------------------------------------------------------------
-// useSupplierOrders — fetch from raw_timber_orders where supplier is seller
+// useSupplierOrders — fetch from raw_timber_orders with details expand
 // ---------------------------------------------------------------------------
 export function useSupplierOrders() {
   const supplierId = getSupplierId();
@@ -278,7 +301,7 @@ export function useSupplierOrders() {
       const result = await pb.collection("raw_timber_orders").getList(1, 100, {
         filter: `seller="${supplierId}"`,
         sort: "-created",
-        expand: "buyer,listing.wood_type",
+        expand: "buyer",
       });
 
       return result as unknown as {
@@ -287,7 +310,9 @@ export function useSupplierOrders() {
         totalItems: number;
         totalPages: number;
         items: (import("@/lib/pocketbase/types").RawTimberOrder & {
-          expand?: { buyer?: import("@/lib/pocketbase/types").User; listing?: import("@/lib/pocketbase/types").RawTimberListing };
+          expand?: {
+            buyer?: import("@/lib/pocketbase/types").User;
+          };
         })[];
       };
     },

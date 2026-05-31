@@ -1,6 +1,7 @@
 "use client";
 
-import { X, Package } from "lucide-react";
+import { useState } from "react";
+import { X, Package, Eye } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -27,11 +28,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useTimberOrders } from "@/lib/hooks/use-generator";
 import { getPB } from "@/lib/pocketbase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import type { RawTimberOrder, RawTimberListing } from "@/lib/pocketbase/types";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DetailWithExpand = any;
 
 function formatCurrency(val: number): string {
   return new Intl.NumberFormat("id-ID", {
@@ -68,6 +80,25 @@ export default function TimberOrdersPage() {
   const { data, isLoading, isError, refetch } = useTimberOrders();
   const qc = useQueryClient();
   const orders = data?.items ?? [];
+  const [selectedOrder, setSelectedOrder] = useState<typeof orders[number] | null>(null);
+  const [orderDetails, setOrderDetails] = useState<DetailWithExpand[]>([]);
+  const [detailsLoading, setDetailsLoading] = useState(false);
+
+  async function loadDetails(orderId: string) {
+    setDetailsLoading(true);
+    try {
+      const pb = getPB();
+      const result = await pb.collection("raw_timber_order_details").getList(1, 100, {
+        filter: `order="${orderId}"`,
+        expand: "listing,listing.wood_type",
+      });
+      setOrderDetails(result.items as unknown as DetailWithExpand[]);
+    } catch {
+      setOrderDetails([]);
+    } finally {
+      setDetailsLoading(false);
+    }
+  }
 
   async function cancelOrder(id: string) {
     try {
@@ -141,30 +172,32 @@ export default function TimberOrdersPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-10 text-center">#</TableHead>
                       <TableHead>ID Pesanan</TableHead>
-                      <TableHead>Produk</TableHead>
+                      <TableHead>Supplier</TableHead>
                       <TableHead>Jumlah</TableHead>
                       <TableHead>Total</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Tanggal</TableHead>
-                      <TableHead className="w-24 text-right">Aksi</TableHead>
+                      <TableHead className="w-32 text-right">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {orders.map((order) => {
+                    {orders.map((order, idx) => {
                       const st = statusConfig[order.status] || {
                         label: order.status,
                         variant: "outline" as const,
                       };
                       return (
                         <TableRow key={order.id}>
+                          <TableCell className="text-center text-muted-foreground text-sm">{idx + 1}</TableCell>
                           <TableCell className="font-mono text-sm">
                             #{order.id.slice(0, 8)}
                           </TableCell>
                           <TableCell className="font-medium">
-                            {order.expand?.listing?.expand?.wood_type?.name || order.listing}
+                            {order.expand?.seller?.name || order.seller}
                           </TableCell>
-                          <TableCell>{order.quantity}</TableCell>
+                          <TableCell>{order.total_quantity ?? 0}</TableCell>
                           <TableCell>
                             {formatCurrency(order.total_price)}
                           </TableCell>
@@ -175,45 +208,111 @@ export default function TimberOrdersPage() {
                             {formatDate(order.created)}
                           </TableCell>
                           <TableCell className="text-right">
-                            {(order.status === "payment_pending" ||
-                              order.status === "paid") && (
-                              <Dialog>
-                                <DialogTrigger asChild>
+                            <div className="flex items-center justify-end gap-1">
+                              <Sheet>
+                                <SheetTrigger asChild>
                                   <Button
                                     variant="ghost"
-                                    size="sm"
-                                    className="text-destructive h-8 gap-1"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={() => {
+                                      setSelectedOrder(order);
+                                      loadDetails(order.id);
+                                    }}
                                   >
-                                    <X className="h-3.5 w-3.5" />
-                                    Batal
+                                    <Eye className="h-3.5 w-3.5" />
                                   </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      Batalkan Pesanan
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                      Apakah Anda yakin ingin membatalkan
-                                      pesanan ini?
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <DialogFooter>
-                                    <Button variant="outline">
-                                      Tidak
-                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent>
+                                  <SheetHeader>
+                                    <SheetTitle>Detail Pesanan</SheetTitle>
+                                    <SheetDescription>Informasi lengkap pesanan kayu</SheetDescription>
+                                  </SheetHeader>
+                                  <div className="mt-6 px-1 space-y-5">
+                                    <div>
+                                      <p className="text-sm font-medium">ID Pesanan</p>
+                                      <p className="text-sm font-mono text-muted-foreground">#{order.id.slice(0, 8)}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium">Supplier</p>
+                                      <p className="text-sm text-muted-foreground">{order.expand?.seller?.name || order.seller}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium">Status</p>
+                                      <Badge variant={st.variant}>{st.label}</Badge>
+                                    </div>
+                                    <Separator />
+                                    <p className="text-sm font-medium">Detail Item</p>
+                                    {detailsLoading ? (
+                                      <p className="text-sm text-muted-foreground">Memuat...</p>
+                                    ) : orderDetails.length === 0 ? (
+                                      <p className="text-sm text-muted-foreground">Tidak ada detail</p>
+                                    ) : (
+                                      orderDetails.map((d) => (
+                                        <div key={d.id} className="flex items-center justify-between text-sm">
+                                          <div>
+                                            <p className="font-medium">{d.expand?.listing?.expand?.wood_type?.name || "Kayu"}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                              {d.quantity} × {formatCurrency(d.unit_price)}
+                                            </p>
+                                          </div>
+                                          <p className="font-semibold">{formatCurrency(d.subtotal)}</p>
+                                        </div>
+                                      ))
+                                    )}
+                                    <Separator />
+                                    <div className="flex justify-between">
+                                      <p className="font-medium">Total</p>
+                                      <p className="font-bold text-primary">{formatCurrency(order.total_price)}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-sm font-medium">Tanggal Pesan</p>
+                                      <p className="text-sm text-muted-foreground">{formatDate(order.created)}</p>
+                                    </div>
+                                  </div>
+                                </SheetContent>
+                              </Sheet>
+
+                              {(order.status === "payment_pending" ||
+                                order.status === "paid") && (
+                                <Dialog>
+                                  <DialogTrigger asChild>
                                     <Button
-                                      variant="destructive"
-                                      onClick={() =>
-                                        cancelOrder(order.id)
-                                      }
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8 text-destructive"
+                                      title="Batalkan Pesanan"
                                     >
-                                      Ya, Batalkan
+                                      <X className="h-3.5 w-3.5" />
                                     </Button>
-                                  </DialogFooter>
-                                </DialogContent>
-                              </Dialog>
-                            )}
+                                  </DialogTrigger>
+                                  <DialogContent>
+                                    <DialogHeader>
+                                      <DialogTitle>
+                                        Batalkan Pesanan
+                                      </DialogTitle>
+                                      <DialogDescription>
+                                        Apakah Anda yakin ingin membatalkan
+                                        pesanan ini?
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                      <Button variant="outline">
+                                        Tidak
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        onClick={() =>
+                                          cancelOrder(order.id)
+                                        }
+                                      >
+                                        Ya, Batalkan
+                                      </Button>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
+                              )}
+                            </div>
                           </TableCell>
                         </TableRow>
                       );

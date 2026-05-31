@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search, SlidersHorizontal, ShoppingCart } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,9 +31,11 @@ import { TimberCard, TimberCardSkeleton } from "@/components/features/timber-car
 import {
   useTimberMarketplace,
   useWoodTypes,
-  useCreateTimberOrder,
 } from "@/lib/hooks/use-generator";
+import { useTimberCartStore } from "@/lib/stores/timber-cart-store";
+import { getFileUrl } from "@/lib/pocketbase/client";
 import type { TimberMarketplaceFilter } from "@/lib/hooks/use-generator";
+import type { RawTimberListing, WoodType, User } from "@/lib/pocketbase/types";
 
 export default function BuyTimberPage() {
   const [filters, setFilters] = useState<TimberMarketplaceFilter>({});
@@ -42,48 +45,62 @@ export default function BuyTimberPage() {
   const { data, isLoading, isError, refetch } =
     useTimberMarketplace(filters);
   const { data: woodTypes } = useWoodTypes();
-  const createOrder = useCreateTimberOrder();
+  const cartStore = useTimberCartStore();
 
   const listings = data?.items ?? [];
+  const cartCount = cartStore.getItemCount();
 
   function handleSearch() {
     setFilters((prev) => ({ ...prev, search: search || undefined }));
   }
 
-  function handleOrder(id: string) {
-    const listing = listings.find((l) => l.id === id);
-    if (!listing) return;
-    if (!listing.expand?.supplier?.id) {
+  function handleAddToCart(listing: RawTimberListing & {
+    expand?: { wood_type?: WoodType; supplier?: User };
+  }) {
+    if (!listing.expand?.supplier?.id || !listing.expand?.supplier?.name) {
       toast.error("Data supplier tidak ditemukan");
       return;
     }
 
-    createOrder.mutate(
-      {
-        listing: id,
-        seller: listing.expand.supplier.id,
-        quantity: 1,
-        total_price: listing.price,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Pesanan berhasil dibuat!");
-        },
-        onError: (err) => {
-          toast.error("Gagal memesan: " + err.message);
-        },
-      }
-    );
+    const photoUrl = listing.photos?.[0]
+      ? getFileUrl("raw_timber_listings", listing.id, listing.photos[0])
+      : undefined;
+
+    cartStore.addItem({
+      listing_id: listing.id,
+      listing_name: listing.expand?.wood_type?.name || listing.wood_type,
+      unit_price: listing.price,
+      stock_available: listing.stock ?? 0,
+      supplier_id: listing.expand.supplier.id,
+      supplier_name: listing.expand.supplier.name,
+      wood_type_name: listing.expand?.wood_type?.name || listing.wood_type,
+      photo_url: photoUrl,
+    });
+
+    toast.success("Ditambahkan ke keranjang");
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="heading-2">Beli Kayu Mentah</h1>
-        <p className="text-muted-foreground mt-1">
-          Cari dan pesan kayu gelondongan dari Supplier
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="heading-2">Beli Kayu Mentah</h1>
+          <p className="text-muted-foreground mt-1">
+            Cari dan pesan kayu gelondongan dari Supplier
+          </p>
+        </div>
+        <Button variant="outline" size="sm" className="gap-2 relative" asChild>
+          <Link href="/generator/cart">
+            <ShoppingCart className="h-4 w-4" />
+            Keranjang
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {cartCount > 99 ? "99+" : cartCount}
+              </span>
+            )}
+          </Link>
+        </Button>
       </div>
 
       {/* Search & Filter Bar */}
@@ -307,7 +324,8 @@ export default function BuyTimberPage() {
               <TimberCard
                 key={listing.id}
                 listing={listing}
-                onOrder={handleOrder}
+                onAddToCart={handleAddToCart}
+                cartDisabled={listing.stock !== undefined && listing.stock <= 0}
               />
             ))}
           </div>

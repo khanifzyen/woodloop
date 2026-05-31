@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Check, X, Eye, Package, Search } from "lucide-react";
+import { Check, X, Eye, Package, Search, Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -35,16 +35,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useSupplierOrders } from "@/lib/hooks/use-supplier";
 import { getPB } from "@/lib/pocketbase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import type { RawTimberOrder, User, RawTimberListing } from "@/lib/pocketbase/types";
+import type { RawTimberOrder, User } from "@/lib/pocketbase/types";
 
 interface OrderWithExpand extends RawTimberOrder {
   expand?: {
     buyer?: User;
-    listing?: RawTimberListing;
   };
 }
 
@@ -83,6 +83,8 @@ export default function SupplierOrdersPage() {
   const { data, isLoading, isError, refetch } = useSupplierOrders();
   const qc = useQueryClient();
   const [selectedOrder, setSelectedOrder] = useState<OrderWithExpand | null>(null);
+  const [orderDetails, setOrderDetails] = useState<Record<string, unknown>[]>([]);
+  const [detailsLoading, setDetailsLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [search, setSearch] = useState("");
 
@@ -94,8 +96,7 @@ export default function SupplierOrdersPage() {
       if (search) {
         const q = search.toLowerCase();
         const buyerName = o.expand?.buyer?.name?.toLowerCase() || "";
-        const woodName = o.expand?.listing?.expand?.wood_type?.name?.toLowerCase() || "";
-        if (!buyerName.includes(q) && !woodName.includes(q)) return false;
+        if (!buyerName.includes(q)) return false;
       }
       return true;
     });
@@ -112,6 +113,22 @@ export default function SupplierOrdersPage() {
       qc.invalidateQueries({ queryKey: ["supplier", "orders"] });
     } catch {
       toast.error("Gagal mengubah status");
+    }
+  }
+
+  async function loadDetails(orderId: string) {
+    setDetailsLoading(true);
+    try {
+      const pb = getPB();
+      const result = await pb.collection("raw_timber_order_details").getList(1, 100, {
+        filter: `order="${orderId}"`,
+        expand: "listing,listing.wood_type",
+      });
+      setOrderDetails(result.items as unknown as Record<string, unknown>[]);
+    } catch {
+      setOrderDetails([]);
+    } finally {
+      setDetailsLoading(false);
     }
   }
 
@@ -202,7 +219,6 @@ export default function SupplierOrdersPage() {
                       <TableHead className="w-10 text-center">#</TableHead>
                       <TableHead>ID Pesanan</TableHead>
                       <TableHead>Pembeli</TableHead>
-                      <TableHead>Produk</TableHead>
                       <TableHead>Jumlah</TableHead>
                       <TableHead>Total</TableHead>
                       <TableHead>Status</TableHead>
@@ -218,8 +234,7 @@ export default function SupplierOrdersPage() {
                           <TableCell className="text-center text-muted-foreground text-sm">{idx + 1}</TableCell>
                           <TableCell className="font-mono text-sm">#{order.id.slice(0, 8)}</TableCell>
                           <TableCell className="font-medium">{order.expand?.buyer?.name || order.buyer}</TableCell>
-                          <TableCell>{order.expand?.listing?.expand?.wood_type?.name || "-"}</TableCell>
-                          <TableCell>{order.quantity}</TableCell>
+                          <TableCell>{order.total_quantity ?? 0}</TableCell>
                           <TableCell>{formatCurrency(order.total_price)}</TableCell>
                           <TableCell>
                             <Badge variant={statusConf.variant}>{statusConf.label}</Badge>
@@ -229,7 +244,10 @@ export default function SupplierOrdersPage() {
                             <div className="flex items-center justify-end gap-1">
                               <Sheet>
                                 <SheetTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedOrder(order)}>
+                                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {
+                                    setSelectedOrder(order);
+                                    loadDetails(order.id);
+                                  }}>
                                     <Eye className="h-3.5 w-3.5" />
                                   </Button>
                                 </SheetTrigger>
@@ -248,16 +266,43 @@ export default function SupplierOrdersPage() {
                                       <p className="text-sm text-muted-foreground">{order.expand?.buyer?.name || order.buyer}</p>
                                     </div>
                                     <div>
-                                      <p className="text-sm font-medium">Produk</p>
-                                      <p className="text-sm text-muted-foreground">{order.expand?.listing?.expand?.wood_type?.name || "-"}</p>
+                                      <p className="text-sm font-medium">Status</p>
+                                      <Badge variant={statusConf.variant}>{statusConf.label}</Badge>
                                     </div>
-                                    <div>
-                                      <p className="text-sm font-medium">Jumlah</p>
-                                      <p className="text-sm text-muted-foreground">{order.quantity}</p>
-                                    </div>
-                                    <div>
-                                      <p className="text-sm font-medium">Total Harga</p>
-                                      <p className="text-sm font-semibold">{formatCurrency(order.total_price)}</p>
+                                    <Separator />
+                                    <p className="text-sm font-medium">Detail Item</p>
+                                    {detailsLoading ? (
+                                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                        Memuat...
+                                      </div>
+                                    ) : orderDetails.length === 0 ? (
+                                      <p className="text-sm text-muted-foreground">Tidak ada detail</p>
+                                    ) : (
+                                      orderDetails.map((d) => {
+                                        const expand = d.expand as Record<string, unknown> | undefined;
+                                        const listing = expand?.listing as Record<string, unknown> | undefined;
+                                        const lExpand = listing?.expand as Record<string, unknown> | undefined;
+                                        const wt = lExpand?.wood_type as Record<string, unknown> | undefined;
+                                        const name = (wt?.name as string) || "Kayu";
+                                        const qty = (d.quantity as number) || 0;
+                                        const price = (d.unit_price as number) || 0;
+                                        const subtotal = (d.subtotal as number) || 0;
+                                        return (
+                                          <div key={d.id as string} className="flex items-center justify-between text-sm">
+                                            <div>
+                                              <p className="font-medium">{name}</p>
+                                              <p className="text-xs text-muted-foreground">{qty} × {formatCurrency(price)}</p>
+                                            </div>
+                                            <p className="font-semibold">{formatCurrency(subtotal)}</p>
+                                          </div>
+                                        );
+                                      })
+                                    )}
+                                    <Separator />
+                                    <div className="flex justify-between">
+                                      <p className="font-medium">Total</p>
+                                      <p className="font-bold text-primary">{formatCurrency(order.total_price)}</p>
                                     </div>
                                     <div>
                                       <p className="text-sm font-medium">Tanggal Pesan</p>
@@ -280,6 +325,11 @@ export default function SupplierOrdersPage() {
                               {order.status === "processing" && (
                                 <Button variant="ghost" size="icon" className="h-8 w-8 text-info" onClick={() => updateStatus(order.id, "shipped")} title="Tandai Dikirim">
                                   <Package className="h-3.5 w-3.5" />
+                                </Button>
+                              )}
+                              {order.status === "shipped" && (
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-success" onClick={() => updateStatus(order.id, "received")} title="Tandai Diterima">
+                                  <Check className="h-3.5 w-3.5" />
                                 </Button>
                               )}
                               {(order.status === "paid" || order.status === "processing") && (

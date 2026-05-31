@@ -352,7 +352,7 @@ export function useTimberMarketplace(filters?: TimberMarketplaceFilter) {
 }
 
 // ---------------------------------------------------------------------------
-// useCreateTimberOrder — creates raw_timber_orders (Generator → Supplier)
+// useCreateTimberOrder — creates raw_timber_orders + details (Generator → Supplier)
 // ---------------------------------------------------------------------------
 export function useCreateTimberOrder() {
   const generatorId = getGeneratorId();
@@ -361,25 +361,89 @@ export function useCreateTimberOrder() {
 
   return useMutation({
     mutationFn: async ({
-      listing,
       seller,
-      quantity,
-      total_price,
+      items,
     }: {
-      listing: string;
       seller: string;
-      quantity: number;
-      total_price: number;
+      items: { listing: string; quantity: number; unit_price: number }[];
     }) => {
-      const record = await pb.collection("raw_timber_orders").create({
+      const totalPrice = items.reduce(
+        (sum, i) => sum + i.unit_price * i.quantity,
+        0
+      );
+      const totalQty = items.reduce((sum, i) => sum + i.quantity, 0);
+
+      // Create master order
+      const order = await pb.collection("raw_timber_orders").create({
         buyer: generatorId,
         seller,
-        listing,
-        quantity,
-        total_price,
+        total_price: totalPrice,
+        total_quantity: totalQty,
         status: "payment_pending",
       });
-      return record;
+
+      // Create detail records
+      for (const item of items) {
+        await pb.collection("raw_timber_order_details").create({
+          order: order.id,
+          listing: item.listing,
+          quantity: item.quantity,
+          unit_price: item.unit_price,
+          subtotal: item.unit_price * item.quantity,
+        });
+      }
+
+      return order;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: generatorKeys.timberOrders() });
+      qc.invalidateQueries({ queryKey: generatorKeys.dashboard() });
+    },
+  });
+}
+
+/**
+ * Create timber orders from cart — groups by supplier, creates master + details
+ */
+export function useCreateTimberOrderFromCart() {
+  const pb = getPB();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (
+      groups: { supplierId: string; items: { listing: string; quantity: number; unit_price: number }[] }[]
+    ) => {
+      const createdOrders = [];
+
+      for (const group of groups) {
+        const totalPrice = group.items.reduce(
+          (sum, i) => sum + i.unit_price * i.quantity,
+          0
+        );
+        const totalQty = group.items.reduce((sum, i) => sum + i.quantity, 0);
+
+        const order = await pb.collection("raw_timber_orders").create({
+          buyer: getGeneratorId(), // safe: will throw if not generator
+          seller: group.supplierId,
+          total_price: totalPrice,
+          total_quantity: totalQty,
+          status: "payment_pending",
+        });
+
+        for (const item of group.items) {
+          await pb.collection("raw_timber_order_details").create({
+            order: order.id,
+            listing: item.listing,
+            quantity: item.quantity,
+            unit_price: item.unit_price,
+            subtotal: item.unit_price * item.quantity,
+          });
+        }
+
+        createdOrders.push(order);
+      }
+
+      return createdOrders;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: generatorKeys.timberOrders() });
@@ -389,7 +453,7 @@ export function useCreateTimberOrder() {
 }
 
 // ---------------------------------------------------------------------------
-// useTimberOrders — fetch from raw_timber_orders
+// useTimberOrders — fetch from raw_timber_orders with details expand
 // ---------------------------------------------------------------------------
 export function useTimberOrders() {
   const generatorId = getGeneratorId();
@@ -401,7 +465,7 @@ export function useTimberOrders() {
       const result = await pb.collection("raw_timber_orders").getList(1, 100, {
         filter: `buyer="${generatorId}"`,
         sort: "-created",
-        expand: "listing,seller",
+        expand: "seller",
       });
 
       return result as unknown as {
@@ -410,7 +474,9 @@ export function useTimberOrders() {
         totalItems: number;
         totalPages: number;
         items: (import("@/lib/pocketbase/types").RawTimberOrder & {
-          expand?: { listing?: import("@/lib/pocketbase/types").RawTimberListing; seller?: import("@/lib/pocketbase/types").User };
+          expand?: {
+            seller?: import("@/lib/pocketbase/types").User;
+          };
         })[];
       };
     },

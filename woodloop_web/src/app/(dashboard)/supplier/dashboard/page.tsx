@@ -73,7 +73,7 @@ export default function SupplierDashboardPage() {
       trend: data?.activeListings ? undefined : undefined,
     },
     {
-      title: "Order Masuk",
+      title: "Order Pending",
       value: data?.pendingOrders ?? 0,
       icon: ClipboardList,
     },
