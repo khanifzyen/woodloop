@@ -37,6 +37,7 @@ export interface RawTimberListing {
   diameter?: number; width?: number; height?: number; length?: number; volume: number;
   price: number; unit: "m3" | "batang" | "ton";
   photos: string[]; legality_doc?: string;
+  stock?: number;
   status: "available" | "sold"; description?: string;
   created: string; updated: string;
 }
@@ -113,6 +114,15 @@ export interface Order {
   quantity: number; total_price: number; status: OrderStatus;
   shipping_address: string; snap_token?: string;
   snap_redirect_url?: string; payment_method?: string;
+  created: string; updated: string;
+}
+
+// ========== 9b. Raw Timber Orders (Generator → Supplier) ==========
+export interface RawTimberOrder {
+  id: string; buyer: string; seller: string; listing: string;
+  expand?: { buyer?: User; seller?: User; listing?: RawTimberListing; };
+  quantity: number; total_price: number; status: OrderStatus;
+  notes?: string;
   created: string; updated: string;
 }
 

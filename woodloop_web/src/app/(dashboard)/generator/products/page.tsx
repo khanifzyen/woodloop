@@ -179,7 +179,7 @@ export default function GeneratorProductsPage() {
                           <TableCell>
                             {product.photos?.[0] ? (
                               <img
-                                src={product.photos[0]}
+                                src={getFileUrl("generator_products", product.id, product.photos[0])}
                                 alt={product.name}
                                 className="h-10 w-10 object-cover rounded"
                               />

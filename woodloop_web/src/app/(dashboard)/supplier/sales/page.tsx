@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useSupplierOrders } from "@/lib/hooks/use-supplier";
-import type { Order } from "@/lib/pocketbase/types";
+import type { RawTimberOrder } from "@/lib/pocketbase/types";
 
 function formatCurrency(val: number): string {
   return new Intl.NumberFormat("id-ID", {
@@ -52,10 +52,10 @@ export default function SupplierSalesPage() {
   const orders = data?.items ?? [];
 
   const completedOrders = orders.filter(
-    (o: Order) => o.status === "received"
+    (o: RawTimberOrder) => o.status === "received"
   );
   const totalRevenue = completedOrders.reduce(
-    (sum: number, o: Order) => sum + o.total_price,
+    (sum: number, o: RawTimberOrder) => sum + o.total_price,
     0
   );
 
@@ -66,7 +66,7 @@ export default function SupplierSalesPage() {
       { revenue: number; count: number }
     > = {};
 
-    completedOrders.forEach((o: Order) => {
+    completedOrders.forEach((o: RawTimberOrder) => {
       const d = new Date(o.updated);
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
       if (!months[key]) months[key] = { revenue: 0, count: 0 };
@@ -244,7 +244,7 @@ export default function SupplierSalesPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {orders.map((order: Order) => {
+                  {orders.map((order: RawTimberOrder) => {
                     const st = statusConfig[order.status] || {
                       label: order.status,
                       variant: "outline" as const,

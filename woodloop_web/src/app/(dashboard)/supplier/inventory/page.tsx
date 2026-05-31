@@ -304,6 +304,7 @@ export default function InventoryPage() {
                               listing.wood_type}
                           </TableCell>
                           <TableCell>{listing.volume}</TableCell>
+                          <TableCell>{listing.stock ?? 0}</TableCell>
                           <TableCell>
                             {formatCurrency(listing.price)}
                           </TableCell>

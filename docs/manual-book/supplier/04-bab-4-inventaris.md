@@ -23,6 +23,7 @@ Setiap baris dalam tabel inventaris menampilkan:
 | **Jenis Kayu** | Nama jenis kayu (Jati, Mahoni, dll) |
 | **Bentuk** | Log, Square, Balok, atau Papan |
 | **Volume** | Volume kayu dalam m³ |
+| **Stok** | Jumlah unit kayu tersedia |
 | **Harga** | Harga per satuan dalam Rupiah |
 | **Status** | 🟢 Tersedia / 🔴 Terjual |
 | **Aksi** | ✏️ Edit / 🗑️ Hapus |

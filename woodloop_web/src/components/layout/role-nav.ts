@@ -12,6 +12,7 @@ import {
   Palette,
   BookOpen,
   Users,
+  Trash2,
   type LucideIcon,
 } from "lucide-react";
 import type { NavItem } from "./sidebar";
@@ -39,6 +40,7 @@ const nav: Record<string, RoleNav> = {
     sidebar: [
       { label: "Dashboard", href: "/generator/dashboard", icon: LayoutDashboard },
       { label: "Setor Limbah", href: "/generator/report-waste", icon: Truck },
+      { label: "Daftar Limbah", href: "/generator/waste", icon: Trash2 },
       { label: "Beli Kayu", href: "/generator/buy-timber", icon: ShoppingCart },
       { label: "Produk Saya", href: "/generator/products", icon: Package },
       { label: "Pesanan Kayu", href: "/generator/timber-orders", icon: ClipboardList },

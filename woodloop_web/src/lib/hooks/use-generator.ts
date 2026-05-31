@@ -205,13 +205,28 @@ export function useCreateWasteListing() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: CreateWasteData) => {
-      const record = await pb.collection("waste_listings").create({
-        generator: generatorId,
-        ...data,
-        status: "available",
-      });
+    mutationFn: async (formData: FormData) => {
+      formData.append("generator", generatorId);
+      const record = await pb.collection("waste_listings").create(formData);
       return record;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: generatorKeys.wasteListings() });
+      qc.invalidateQueries({ queryKey: generatorKeys.dashboard() });
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// useDeleteWasteListing
+// ---------------------------------------------------------------------------
+export function useDeleteWasteListing() {
+  const pb = getPB();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await pb.collection("waste_listings").delete(id);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: generatorKeys.wasteListings() });
@@ -270,12 +285,9 @@ export function useCreateGeneratorProduct() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: CreateGeneratorProductData) => {
-      const record = await pb.collection("generator_products").create({
-        generator: generatorId,
-        ...data,
-        status: "active",
-      });
+    mutationFn: async (formData: FormData) => {
+      formData.append("generator", generatorId);
+      const record = await pb.collection("generator_products").create(formData);
       return record;
     },
     onSuccess: () => {
@@ -301,7 +313,7 @@ export function useTimberMarketplace(filters?: TimberMarketplaceFilter) {
   return useQuery({
     queryKey: generatorKeys.timberMarketplace(filters),
     queryFn: async () => {
-      const filterParts = ['status="available"'];
+      const filterParts = ['status="available"', "stock>0"];
 
       if (filters?.wood_type) {
         filterParts.push(`wood_type="${filters.wood_type}"`);
@@ -314,7 +326,7 @@ export function useTimberMarketplace(filters?: TimberMarketplaceFilter) {
       }
       if (filters?.search) {
         filterParts.push(
-          `(description ~ "${filters.search}" || wood_type ~ "${filters.search}")`
+          `description ~ "${filters.search}"`
         );
       }
 
@@ -340,7 +352,7 @@ export function useTimberMarketplace(filters?: TimberMarketplaceFilter) {
 }
 
 // ---------------------------------------------------------------------------
-// useCreateTimberOrder
+// useCreateTimberOrder — creates raw_timber_orders (Generator → Supplier)
 // ---------------------------------------------------------------------------
 export function useCreateTimberOrder() {
   const generatorId = getGeneratorId();
@@ -349,21 +361,23 @@ export function useCreateTimberOrder() {
 
   return useMutation({
     mutationFn: async ({
-      product,
+      listing,
+      seller,
       quantity,
       total_price,
     }: {
-      product: string;
+      listing: string;
+      seller: string;
       quantity: number;
       total_price: number;
     }) => {
-      const record = await pb.collection("orders").create({
+      const record = await pb.collection("raw_timber_orders").create({
         buyer: generatorId,
-        product,
+        seller,
+        listing,
         quantity,
         total_price,
         status: "payment_pending",
-        shipping_address: "",
       });
       return record;
     },
@@ -375,7 +389,7 @@ export function useCreateTimberOrder() {
 }
 
 // ---------------------------------------------------------------------------
-// useTimberOrders
+// useTimberOrders — fetch from raw_timber_orders
 // ---------------------------------------------------------------------------
 export function useTimberOrders() {
   const generatorId = getGeneratorId();
@@ -384,10 +398,10 @@ export function useTimberOrders() {
   return useQuery({
     queryKey: generatorKeys.timberOrders(),
     queryFn: async () => {
-      const result = await pb.collection("orders").getList(1, 100, {
+      const result = await pb.collection("raw_timber_orders").getList(1, 100, {
         filter: `buyer="${generatorId}"`,
         sort: "-created",
-        expand: "product",
+        expand: "listing,seller",
       });
 
       return result as unknown as {
@@ -395,8 +409,8 @@ export function useTimberOrders() {
         perPage: number;
         totalItems: number;
         totalPages: number;
-        items: (import("@/lib/pocketbase/types").Order & {
-          expand?: { product?: import("@/lib/pocketbase/types").Product };
+        items: (import("@/lib/pocketbase/types").RawTimberOrder & {
+          expand?: { listing?: import("@/lib/pocketbase/types").RawTimberListing; seller?: import("@/lib/pocketbase/types").User };
         })[];
       };
     },

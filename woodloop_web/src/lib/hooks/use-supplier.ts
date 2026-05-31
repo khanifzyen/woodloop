@@ -266,7 +266,7 @@ export function useDeleteRawTimberListing() {
 }
 
 // ---------------------------------------------------------------------------
-// useSupplierOrders
+// useSupplierOrders — fetch from raw_timber_orders where supplier is seller
 // ---------------------------------------------------------------------------
 export function useSupplierOrders() {
   const supplierId = getSupplierId();
@@ -275,13 +275,21 @@ export function useSupplierOrders() {
   return useQuery({
     queryKey: supplierKeys.orders(),
     queryFn: async () => {
-      // Simplified: orders linked to supplier's timber listings
-      // In real implementation, this would use a relation or custom filter
-      const result = await pb.collection<Order>("orders").getList(1, 100, {
+      const result = await pb.collection("raw_timber_orders").getList(1, 100, {
+        filter: `seller="${supplierId}"`,
         sort: "-created",
-        expand: "buyer,product",
+        expand: "buyer,listing.wood_type",
       });
-      return result;
+
+      return result as unknown as {
+        page: number;
+        perPage: number;
+        totalItems: number;
+        totalPages: number;
+        items: (import("@/lib/pocketbase/types").RawTimberOrder & {
+          expand?: { buyer?: import("@/lib/pocketbase/types").User; listing?: import("@/lib/pocketbase/types").RawTimberListing };
+        })[];
+      };
     },
   });
 }

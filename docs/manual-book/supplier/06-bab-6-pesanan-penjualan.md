@@ -8,7 +8,7 @@ title: "Bab 6 — Pesanan & Penjualan"
 
 ## 6.1 Pesanan Masuk
 
-Halaman **Pesanan Masuk** menampilkan semua pesanan (*order*) yang dibuat oleh Generator untuk membeli kayu Anda.
+Halaman **Pesanan Masuk** menampilkan semua pesanan (*order*) yang dibuat oleh Generator untuk membeli kayu Anda. Halaman ini dilengkapi dengan fitur pencarian, filter, serta tombol aksi untuk mengelola setiap pesanan.
 
 ![Pesanan Masuk](04-supplier-orders.png)
 *Gambar 6.1 — Halaman pesanan masuk*
@@ -17,32 +17,71 @@ Setiap baris pesanan menampilkan:
 
 | Kolom | Keterangan |
 |-------|------------|
-| **ID Pesanan** | Nomor unik pesanan |
+| **#** | Nomor urut (counter) |
+| **ID Pesanan** | Kode unik pesanan (contoh: `#4pwxg9f2`) |
 | **Pembeli** | Nama Generator yang memesan |
 | **Produk** | Jenis kayu yang dipesan |
 | **Jumlah** | Volume yang dipesan |
 | **Total** | Total harga pesanan |
 | **Status** | Status terkini pesanan |
+| **Aksi** | Tombol aksi sesuai status |
+
+### Pencarian & Filter
+
+Halaman pesanan masuk menyediakan fitur pencarian dan filter untuk memudahkan Anda mencari pesanan tertentu:
+
+| Fitur | Cara Pakai |
+|-------|------------|
+| **🔍 Pencarian Teks** | Ketik nama pembeli atau jenis kayu di kolom pencarian |
+| **📋 Filter Status** | Pilih status pesanan dari dropdown (Semua Status, Menunggu Pembayaran, Dibayar, Diproses, Dikirim, Diterima) |
+| **🔄 Reset** | Klik "Reset" untuk menghapus semua filter |
 
 ---
 
-## 6.2 Status Pesanan
+## 6.2 Status & Aksi Pesanan
 
-| Status | Badge | Arti | Aksi Supplier |
-|--------|-------|------|---------------|
-| ⏳ **Menunggu Pembayaran** | Kuning | Generator sudah pesan, menunggu pembayaran | Tunggu konfirmasi pembayaran |
-| ✅ **Dibayar** | Hijau | Pembayaran sudah dikonfirmasi | Siapkan kayu untuk dikirim |
-| 🚚 **Dikirim** | Biru | Kayu sedang dikirim ke Generator | — |
-| 📦 **Diterima** | Hijau | Generator sudah menerima kayu | Transaksi selesai |
-| ❌ **Dibatalkan** | Merah | Pesanan dibatalkan | — |
+Supplier dapat mengubah status pesanan secara manual melalui tombol aksi yang tersedia di setiap baris tabel. Ini berguna ketika pembayaran dilakukan di luar sistem (transfer manual, WhatsApp, COD).
+
+| Status | Badge | Tombol Aksi | Keterangan |
+|--------|-------|-------------|------------|
+| ⏳ **Menunggu Pembayaran** | Kuning | ✅ **Konfirmasi Bayar** | Generator sudah pesan. Supplier konfirmasi setelah pembayaran diterima |
+| ✅ **Dibayar** | Hijau | 📦 **Proses Pesanan** | Kayu sedang disiapkan |
+| 🔄 **Diproses** | Biru | 🚚 **Tandai Dikirim** | Kayu mulai dikirim |
+| 🚚 **Dikirim** | Biru | — | Kayu dalam perjalanan |
+| 📦 **Diterima** | Hijau | — | Generator sudah terima, transaksi selesai |
+| ❌ **Dibatalkan** | Merah | — | Pesanan dibatalkan |
 
 **Alur status pesanan:**
 
 ```
-Generator pesan → Menunggu Bayar → Dibayar → Dikirim → Diterima
-                                                      ↓
-                                               Transaksi Selesai
+Generator pesan
+      ↓
+Menunggu Pembayaran ──→ [⚡ Konfirmasi Bayar] ──→ Dibayar
+                                                       ↓
+                                              [⚡ Proses Pesanan]
+                                                       ↓
+                                                   Diproses
+                                                       ↓
+                                              [⚡ Tandai Dikirim]
+                                                       ↓
+                                                   Dikirim
+                                                       ↓
+                                                  Diterima ✅
 ```
+
+> ⚡ **Catatan:** Tombol aksi hanya muncul sesuai dengan status saat ini. Anda juga dapat membatalkan pesanan yang masih berstatus *Menunggu Pembayaran, Dibayar,* atau *Diproses*.
+
+### Detail Pesanan
+
+Klik ikon **👁️ (Detail)** untuk melihat informasi lengkap pesanan dalam panel samping (*sheet*). Panel ini menampilkan:
+
+- **ID Pesanan** — Kode unik pesanan
+- **Pembeli** — Nama Generator
+- **Produk** — Jenis kayu
+- **Jumlah** — Volume yang dipesan
+- **Total Harga** — Jumlah pembayaran
+- **Tanggal Pesan** — Waktu pemesanan
+- **Tombol Aksi** — Tombol konfirmasi/pemrosesan yang sama
 
 ---
 

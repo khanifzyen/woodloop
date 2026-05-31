@@ -150,7 +150,7 @@ const html = `<!DOCTYPE html>
     <li><a href="#bab6">Bab 6: Pesanan &amp; Penjualan</a>
       <ul>
         <li>6.1 Pesanan Masuk</li>
-        <li>6.2 Status Pesanan</li>
+        <li>6.2 Status &amp; Aksi Pesanan</li>
         <li>6.3 Riwayat Penjualan</li>
         <li>6.4 Grafik Penjualan</li>
       </ul>
@@ -406,7 +406,7 @@ ${imgTag("03-supplier-add-timber.png", "Gambar 5.1 — Form pendaftaran kayu bar
 │    [ 200  ]  │    [ 20  ]   │     [ 5  ]   │
 └──────────────┴──────────────┴──────────────┘</pre>
 
-<h2>5.6 Volume &amp; Harga</h2>
+<h2>5.6 Volume, Stok &amp; Harga</h2>
 <p><strong>Perhitungan volume otomatis:</strong></p>
 <table>
   <tr><th>Bentuk</th><th>Rumus</th></tr>
@@ -438,18 +438,60 @@ ${imgTag("03-supplier-add-timber.png", "Gambar 5.1 — Form pendaftaran kayu bar
 <h1 id="bab6">Bab 6: Pesanan &amp; Penjualan</h1>
 
 <h2>6.1 Pesanan Masuk</h2>
-<p>Halaman <strong>Pesanan Masuk</strong> menampilkan semua pesanan yang dibuat oleh Generator.</p>
+<p>Halaman <strong>Pesanan Masuk</strong> menampilkan semua pesanan yang dibuat oleh Generator. Halaman ini dilengkapi fitur pencarian, filter, dan tombol aksi untuk mengelola setiap pesanan.</p>
 ${imgTag("04-supplier-orders.png", "Gambar 6.1 — Halaman pesanan masuk")}
 
-<h2>6.2 Status Pesanan</h2>
+<p>Setiap baris pesanan menampilkan:</p>
 <table>
-  <tr><th>Status</th><th>Arti</th><th>Aksi Supplier</th></tr>
-  <tr><td>Menunggu Pembayaran</td><td>Generator sudah pesan</td><td>Tunggu konfirmasi</td></tr>
-  <tr><td>Dibayar</td><td>Pembayaran dikonfirmasi</td><td>Siapkan kiriman</td></tr>
-  <tr><td>Dikirim</td><td>Kayu dalam perjalanan</td><td>—</td></tr>
-  <tr><td>Diterima</td><td>Generator sudah terima</td><td>Transaksi selesai</td></tr>
-  <tr><td>Dibatalkan</td><td>Pesanan dibatalkan</td><td>—</td></tr>
+  <tr><th>Kolom</th><th>Keterangan</th></tr>
+  <tr><td>#</td><td>Nomor urut (counter)</td></tr>
+  <tr><td>ID Pesanan</td><td>Kode unik pesanan, contoh: #4pwxg9f2</td></tr>
+  <tr><td>Pembeli</td><td>Nama Generator yang memesan</td></tr>
+  <tr><td>Produk</td><td>Jenis kayu yang dipesan</td></tr>
+  <tr><td>Jumlah</td><td>Volume yang dipesan</td></tr>
+  <tr><td>Total</td><td>Total harga pesanan</td></tr>
+  <tr><td>Status</td><td>Status terkini pesanan</td></tr>
+  <tr><td>Aksi</td><td>Tombol aksi sesuai status</td></tr>
 </table>
+
+<h3>Pencarian &amp; Filter</h3>
+<table>
+  <tr><th>Fitur</th><th>Cara Pakai</th></tr>
+  <tr><td>🔍 Pencarian Teks</td><td>Ketik nama pembeli atau jenis kayu di kolom pencarian</td></tr>
+  <tr><td>📋 Filter Status</td><td>Pilih status dari dropdown (Semua/Menunggu Bayar/Dibayar/dll)</td></tr>
+  <tr><td>🔄 Reset</td><td>Klik "Reset" untuk menghapus semua filter</td></tr>
+</table>
+
+<h2>6.2 Status &amp; Aksi Pesanan</h2>
+<p>Supplier dapat mengubah status pesanan secara manual melalui tombol aksi. Ini berguna saat pembayaran dilakukan di luar sistem (transfer manual, WhatsApp, COD).</p>
+<table>
+  <tr><th>Status</th><th>Tombol Aksi</th><th>Keterangan</th></tr>
+  <tr><td>⏳ Menunggu Pembayaran</td><td>✅ Konfirmasi Bayar</td><td>Supplier konfirmasi setelah pembayaran diterima</td></tr>
+  <tr><td>✅ Dibayar</td><td>📦 Proses Pesanan</td><td>Kayu sedang disiapkan</td></tr>
+  <tr><td>🔄 Diproses</td><td>🚚 Tandai Dikirim</td><td>Kayu mulai dikirim</td></tr>
+  <tr><td>🚚 Dikirim</td><td>—</td><td>Kayu dalam perjalanan</td></tr>
+  <tr><td>📦 Diterima</td><td>—</td><td>Transaksi selesai</td></tr>
+  <tr><td>❌ Dibatalkan</td><td>—</td><td>Pesanan dibatalkan</td></tr>
+</table>
+
+<p><strong>Alur status pesanan:</strong></p>
+<pre>Generator pesan
+      ↓
+Menunggu Pembayaran ──→ [Konfirmasi Bayar] ──→ Dibayar
+                                                     ↓
+                                            [Proses Pesanan]
+                                                     ↓
+                                                Diproses
+                                                     ↓
+                                            [Tandai Dikirim]
+                                                     ↓
+                                                Dikirim
+                                                     ↓
+                                              Diterima ✅</pre>
+<div class="note"><strong>Catatan:</strong> Tombol aksi hanya muncul sesuai status saat ini. Batalkan pesanan yang masih Menunggu Bayar, Dibayar, atau Diproses.</div>
+
+<h3>Detail Pesanan</h3>
+<p>Klik ikon 👁️ untuk melihat detail lengkap dalam panel samping: ID Pesanan, Pembeli, Produk, Jumlah, Total Harga, Tanggal Pesan, dan tombol aksi yang sama.</p>
 
 <h2>6.3 Riwayat Penjualan</h2>
 ${imgTag("05-supplier-sales.png", "Gambar 6.2 — Halaman riwayat penjualan")}

@@ -124,17 +124,7 @@ Saat Anda mengklik field volume (jika masih kosong), sistem akan menghitung berd
 | **Square** | `(lebar/100) × (lebar/100) × (panjang/100)` |
 | **Balok / Papan** | `(panjang/100) × (lebar/100) × (tinggi/100)` |
 
-### Satuan
 
-Pilih satuan penjualan kayu:
-
-| Satuan | Keterangan |
-|--------|------------|
-| **m³** | Meter kubik (standar) |
-| **Batang** | Per batang |
-| **Ton** | Per ton |
-
-### Harga (Rp)
 
 Masukkan harga jual kayu. Input harga menggunakan **pemisah ribuan** otomatis:
 
@@ -192,6 +182,20 @@ Anda dapat melampirkan dokumen legalitas kayu secara opsional:
 Setelah semua field terisi:
 
 1. Periksa kembali data yang dimasukkan
+2. Klik tombol **"Simpan Kayu"** di bagian bawah halaman
+3. Tunggu proses penyimpanan (tombol akan berubah menjadi **"Menyimpan..."**)
+4. Jika berhasil:
+   - Notifikasi **"Kayu berhasil didaftarkan!"**
+   - Anda akan diarahkan kembali ke halaman **Inventaris Kayu**
+   - Kayu baru akan muncul di daftar inventaris dengan status **🟢 Tersedia**
+
+5. Jika gagal:
+   - Notifikasi error akan muncul dengan keterangan penyebab
+   - Periksa field yang bermasalah dan coba lagi
+
+---
+➡️ **Lanjut ke [Bab 6: Pesanan & Penjualan](./06-bab-6-pesanan-penjualan.md)**
+embali data yang dimasukkan
 2. Klik tombol **"Simpan Kayu"** di bagian bawah halaman
 3. Tunggu proses penyimpanan (tombol akan berubah menjadi **"Menyimpan..."**)
 4. Jika berhasil:

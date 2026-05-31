@@ -7,11 +7,32 @@
  * Nama file bebas, asal ekstensi .pb.js
  * 
  * Hooks yang dicover:
- *   1. Pickup created      → set waste_listing.status = "booked"
- *   2. Pickup completed    → create warehouse_inventory, impact_metrics, wallet_tx
- *   3. Marketplace tx paid → update warehouse stock, create wallet_txs
- *   4. Bid accepted        → auto-create pickup, reject other bids
+ *   1. Pickup created          → set waste_listing.status = "booked"
+ *   2. Pickup completed        → create warehouse_inventory, impact_metrics, wallet_tx, notif → generator
+ *   3. Marketplace tx paid     → update warehouse stock, create wallet_txs
+ *   4. Bid accepted            → auto-create pickup, reject other bids, notif → aggregator
+ *   5. Order (products) paid   → decrease product stock, create wallet_tx, notif → converter
+ *   6. raw_timber_order create → notif → supplier (Generator beli kayu)
+ *   7. raw_timber_order update → notif → generator (processing/shipped)
  */
+
+// ─── Helper: create a notification record ─────────────────────────────────
+function createNotification(userId, title, body, type, referenceType, referenceId) {
+  try {
+    const notifColl = $app.findCollectionByNameOrId("notifications");
+    const notif = new Record(notifColl);
+    notif.set("user", userId);
+    notif.set("title", title);
+    notif.set("body", body);
+    notif.set("type", type);
+    notif.set("reference_type", referenceType);
+    notif.set("reference_id", referenceId);
+    $app.dao().saveRecord(notif);
+    console.log(`[WoodLoop] notif created for user ${userId}: "${title}"`);
+  } catch (err) {
+    console.error("[WoodLoop] Failed to create notification:", err);
+  }
+}
 
 // ══════════════════════════════════════════════════════════════
 // HOOK 1: After Pickup Created → mark waste_listing as "booked"
@@ -39,6 +60,7 @@ onRecordAfterCreateSuccess((e) => {
 //         → create warehouse_inventory entry
 //         → create impact_metrics entry
 //         → create wallet_transaction (credit for generator)
+//         → create notification for generator
 // ══════════════════════════════════════════════════════════════
 onRecordAfterUpdateSuccess((e) => {
     try {
@@ -129,7 +151,6 @@ onRecordAfterUpdateSuccess((e) => {
                     "-created",
                     { userId: generatorId }
                 );
-                // findFirstRecordByFilter throws if not found
                 const lastBalance = lastTx.getFloat("balance_after") || 0;
                 balanceAfter = lastBalance + priceEstimate;
             } catch (_) {
@@ -146,6 +167,18 @@ onRecordAfterUpdateSuccess((e) => {
             
             $app.dao().saveRecord(tx);
             console.log(`[WoodLoop] wallet_transaction: credit ${priceEstimate} to generator ${generatorId}`);
+        }
+        
+        // --- 2e. Create notification for generator ---
+        if (generatorId) {
+            createNotification(
+                generatorId,
+                "Limbah Berhasil Dijemput!",
+                `Limbah Anda seberat ${weightVerified}kg telah berhasil dijemput dan divalidasi oleh Aggregator.`,
+                "pickup",
+                "pickups",
+                pickup.id
+            );
         }
         
     } catch (err) {
@@ -244,6 +277,7 @@ onRecordAfterUpdateSuccess((e) => {
 //         → auto-create pickup record
 //         → set waste_listing to "booked"
 //         → reject all other bids on same listing
+//         → create notification for aggregator
 // ══════════════════════════════════════════════════════════════
 onRecordAfterUpdateSuccess((e) => {
     try {
@@ -282,7 +316,6 @@ onRecordAfterUpdateSuccess((e) => {
         console.log(`[WoodLoop] pickup created for accepted bid ${bid.id}`);
         
         // --- 4b. Set waste_listing → "booked" ---
-        // Note: the pickup create hook will also set this, but let's be explicit
         const wasteListing = $app.findRecordById("waste_listings", wasteListingId);
         wasteListing.set("status", "booked");
         $app.dao().saveRecord(wasteListing);
@@ -303,6 +336,16 @@ onRecordAfterUpdateSuccess((e) => {
             console.log(`[WoodLoop] bid ${otherBid.id} → rejected`);
         }
         
+        // --- 4d. Create notification for aggregator ---
+        createNotification(
+            bidderId,
+            "Tawaran Diterima!",
+            "Tawaran Anda untuk limbah kayu telah diterima. Silakan cek jadwal penjemputan.",
+            "pickup",
+            "pickups",
+            pickup.id
+        );
+        
     } catch (err) {
         console.error("[WoodLoop] Hook 4 error:", err);
     }
@@ -310,9 +353,10 @@ onRecordAfterUpdateSuccess((e) => {
 }, "bids");
 
 // ══════════════════════════════════════════════════════════════
-// HOOK 5: After Order Paid (Buyer checkout)
+// HOOK 5: After Order Paid (Buyer checkout → Converter products)
 //         → decrease product stock
 //         → create wallet_transaction untuk buyer
+//         → create notification for converter
 // ══════════════════════════════════════════════════════════════
 onRecordAfterUpdateSuccess((e) => {
     try {
@@ -341,6 +385,20 @@ onRecordAfterUpdateSuccess((e) => {
                 }
                 $app.dao().saveRecord(product);
                 console.log(`[WoodLoop] product ${productId} stock: ${currentStock} → ${newStock}`);
+                
+                // Notify the converter who owns this product
+                const converterId = product.getString("converter");
+                const productName = product.getString("name");
+                if (converterId) {
+                    createNotification(
+                        converterId,
+                        "Pesanan Baru Dibayar!",
+                        `Produk "${productName}" Anda telah dibayar. Segera proses pengiriman.`,
+                        "order",
+                        "orders",
+                        order.id
+                    );
+                }
             } catch (err) {
                 console.error("[WoodLoop] Hook 5a error:", err);
             }
@@ -376,5 +434,126 @@ onRecordAfterUpdateSuccess((e) => {
     }
     e.next();
 }, "orders");
+
+// ══════════════════════════════════════════════════════════════
+// HOOK 6: After raw_timber_order Created (Generator beli kayu)
+//         → decrease stock on listing
+//         → create notification for supplier
+// ══════════════════════════════════════════════════════════════
+onRecordAfterCreateSuccess((e) => {
+    try {
+        const order = e.record;
+        const sellerId = order.getString("seller");
+        const buyerId = order.getString("buyer");
+        const listingId = order.getString("listing");
+        const quantity = order.getInt("quantity") || 1;
+        
+        if (!sellerId || !buyerId || !listingId) {
+            e.next();
+            return;
+        }
+        
+        // --- 6a. Decrease stock on raw_timber_listing ---
+        try {
+            const listing = $app.findRecordById("raw_timber_listings", listingId);
+            const currentStock = listing.getInt("stock") || 0;
+            
+            if (currentStock > 0) {
+                const newStock = Math.max(0, currentStock - quantity);
+                listing.set("stock", newStock);
+                if (newStock <= 0) {
+                    listing.set("status", "sold");
+                }
+                $app.dao().saveRecord(listing);
+                console.log(`[WoodLoop] raw_timber_listing ${listingId} stock: ${currentStock} → ${newStock}`);
+            }
+        } catch (err) {
+            console.error("[WoodLoop] Hook 6a error:", err);
+        }
+        
+        // --- 6b. Get timber name for notification ---
+        let timberName = "Kayu";
+        try {
+            const listing = $app.findRecordById("raw_timber_listings", listingId);
+            const woodTypeId = listing.getString("wood_type");
+            if (woodTypeId) {
+                try {
+                    const woodType = $app.findRecordById("wood_types", woodTypeId);
+                    timberName = woodType.getString("name");
+                } catch (_) {}
+            }
+        } catch (_) {}
+        
+        // --- 6c. Get buyer name ---
+        let buyerName = "Generator";
+        try {
+            const buyer = $app.findRecordById("users", buyerId);
+            buyerName = buyer.getString("name") || buyer.getString("email") || "Generator";
+        } catch (_) {}
+        
+        createNotification(
+            sellerId,
+            "Pesanan Baru!",
+            `${buyerName} memesan ${timberName} dari Anda. Segera proses pesanan.`,
+            "order",
+            "raw_timber_orders",
+            order.id
+        );
+        
+    } catch (err) {
+        console.error("[WoodLoop] Hook 6 error:", err);
+    }
+    e.next();
+}, "raw_timber_orders");
+
+// ══════════════════════════════════════════════════════════════
+// HOOK 7: After raw_timber_order Status Updated
+//         → create notification for the buyer (Generator)
+// ══════════════════════════════════════════════════════════════
+onRecordAfterUpdateSuccess((e) => {
+    try {
+        const order = e.record;
+        const newStatus = order.getString("status");
+        const buyerId = order.getString("buyer");
+        
+        if (!buyerId) {
+            e.next();
+            return;
+        }
+        
+        if (newStatus === "processing") {
+            createNotification(
+                buyerId,
+                "Pesanan Sedang Diproses",
+                `Pesanan kayu #${order.id.slice(0, 8)} sedang diproses oleh Supplier.`,
+                "order",
+                "raw_timber_orders",
+                order.id
+            );
+        } else if (newStatus === "shipped") {
+            createNotification(
+                buyerId,
+                "Pesanan Telah Dikirim!",
+                `Pesanan kayu #${order.id.slice(0, 8)} telah dikirim oleh Supplier.`,
+                "order",
+                "raw_timber_orders",
+                order.id
+            );
+        } else if (newStatus === "cancelled") {
+            createNotification(
+                buyerId,
+                "Pesanan Dibatalkan",
+                `Pesanan kayu #${order.id.slice(0, 8)} telah dibatalkan.`,
+                "order",
+                "raw_timber_orders",
+                order.id
+            );
+        }
+        
+    } catch (err) {
+        console.error("[WoodLoop] Hook 7 error:", err);
+    }
+    e.next();
+}, "raw_timber_orders");
 
 console.log("[WoodLoop] All hooks registered successfully!");

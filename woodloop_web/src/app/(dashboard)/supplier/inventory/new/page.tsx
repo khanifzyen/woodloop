@@ -45,6 +45,7 @@ export default function NewTimberListingPage() {
     height: "",
     volume: "",
     price: "",
+    stock: "",
     unit: "m3" as "m3" | "batang" | "ton",
     description: "",
   });
@@ -134,6 +135,7 @@ export default function NewTimberListingPage() {
     if (form.height) formData.append("height", String(form.height));
     formData.append("volume", String(form.volume));
     formData.append("price", String(form.price));
+    if (form.stock) formData.append("stock", String(form.stock));
     formData.append("unit", form.unit);
     formData.append("status", "available");
     if (form.description) formData.append("description", form.description);
@@ -327,7 +329,7 @@ export default function NewTimberListingPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="length">Panjang (cm)</Label>
                       <Input
@@ -349,7 +351,7 @@ export default function NewTimberListingPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="height">Tinggi (cm)</Label>
+                      <Label htmlFor="height">Tebal (cm)</Label>
                       <Input
                         id="height"
                         type="number"
@@ -361,8 +363,8 @@ export default function NewTimberListingPage() {
                   </div>
                 )}
 
-                {/* Volume & Unit */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* Volume, Stock, Satuan */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="volume">
                       Volume <span className="text-destructive">*</span>
@@ -395,7 +397,7 @@ export default function NewTimberListingPage() {
                         )
                       }
                     >
-                      <SelectTrigger id="unit">
+                      <SelectTrigger id="unit" className="w-full">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -404,6 +406,17 @@ export default function NewTimberListingPage() {
                         <SelectItem value="ton">Ton</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="stock">Stok</Label>
+                    <Input
+                      id="stock"
+                      type="number"
+                      min="1"
+                      placeholder="1"
+                      value={form.stock}
+                      onChange={(e) => updateField("stock", e.target.value)}
+                    />
                   </div>
                 </div>
 

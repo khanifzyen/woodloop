@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import { useNotifications, useMarkNotifAsRead, useRealtimeNotifications } from "@/lib/hooks/use-wallet";
+import { useNotifications, useMarkNotifAsRead, useMarkAllAsRead } from "@/lib/hooks/use-wallet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,11 +21,9 @@ export default function NotificationsPage() {
 
   if (!isAuthenticated) return null;
 
-  // Activate real-time notification subscription
-  useRealtimeNotifications();
-
   const { data, isLoading } = useNotifications();
   const markRead = useMarkNotifAsRead();
+  const markAllAsRead = useMarkAllAsRead();
   const notifs = data?.items ?? [];
   const unreadCount = notifs.filter((n) => !n.is_read).length;
 
@@ -37,8 +35,8 @@ export default function NotificationsPage() {
           <p className="text-muted-foreground">{unreadCount} belum dibaca</p>
         </div>
         {unreadCount > 0 && (
-          <Button variant="outline" size="sm" className="gap-2">
-            <CheckCheck className="h-4 w-4" /> Tandai Semua Dibaca
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => markAllAsRead.mutate()} disabled={markAllAsRead.isPending}>
+            <CheckCheck className="h-4 w-4" /> {markAllAsRead.isPending ? "Memproses..." : "Tandai Semua Dibaca"}
           </Button>
         )}
       </div>

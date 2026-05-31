@@ -31,7 +31,7 @@ import { toast } from "sonner";
 import { useTimberOrders } from "@/lib/hooks/use-generator";
 import { getPB } from "@/lib/pocketbase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import type { Order } from "@/lib/pocketbase/types";
+import type { RawTimberOrder, RawTimberListing } from "@/lib/pocketbase/types";
 
 function formatCurrency(val: number): string {
   return new Intl.NumberFormat("id-ID", {
@@ -72,7 +72,7 @@ export default function TimberOrdersPage() {
   async function cancelOrder(id: string) {
     try {
       const pb = getPB();
-      await pb.collection("orders").update(id, { status: "cancelled" });
+      await pb.collection("raw_timber_orders").update(id, { status: "cancelled" });
       toast.success("Pesanan dibatalkan");
       qc.invalidateQueries({ queryKey: ["generator", "timber-orders"] });
     } catch {
@@ -162,7 +162,7 @@ export default function TimberOrdersPage() {
                             #{order.id.slice(0, 8)}
                           </TableCell>
                           <TableCell className="font-medium">
-                            {order.expand?.product?.name || order.product}
+                            {order.expand?.listing?.expand?.wood_type?.name || order.listing}
                           </TableCell>
                           <TableCell>{order.quantity}</TableCell>
                           <TableCell>

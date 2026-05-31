@@ -23,69 +23,43 @@ export default function ReportWastePage() {
   const createMutation = useCreateWasteListing();
 
   async function handleSubmit(formData: WasteFormData) {
-    // Upload photos first
-    const pb = getPB();
-    let photoUrls: string[] = [];
+    const files: File[] = [];
 
-    try {
-      for (const dataUrl of formData.photos) {
-        // Convert dataUrl to Blob
-        const res = await fetch(dataUrl);
-        const blob = await res.blob();
-        const file = new File([blob], `waste-${Date.now()}.jpg`, {
-          type: "image/jpeg",
-        });
-
-        // Upload via PocketBase
-        const form = new FormData();
-        form.append("file", file);
-        const uploadResult = await pb.collection("waste_listings").create(
-          {
-            generator: "",
-            wood_type: formData.wood_type,
-            form: formData.form,
-            condition: formData.condition,
-            volume: formData.volume,
-            unit: formData.unit,
-            price_estimate: formData.price_estimate,
-            status: "available",
-          },
-          { photos: [file] }
-        );
-        photoUrls = uploadResult.photos || [];
-        // Clean up temp record
-        await pb.collection("waste_listings").delete(uploadResult.id);
-        break;
-      }
-    } catch {
-      // Silently fail upload, will try direct create
+    for (const dataUrl of formData.photos) {
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      const file = new File([blob], `waste-${Date.now()}.jpg`, {
+        type: "image/jpeg",
+      });
+      files.push(file);
     }
 
-    createMutation.mutate(
-      {
-        wood_type: formData.wood_type,
-        form: formData.form,
-        condition: formData.condition,
-        volume: formData.volume,
-        unit: formData.unit,
-        photos: photoUrls,
-        price_estimate: formData.price_estimate,
-        description: formData.description || undefined,
+    const form = new FormData();
+    form.append("wood_type", formData.wood_type);
+    form.append("form", formData.form);
+    form.append("condition", formData.condition);
+    form.append("volume", String(formData.volume));
+    form.append("unit", formData.unit);
+    form.append("price_estimate", String(formData.price_estimate));
+    form.append("status", "available");
+    if (formData.description) form.append("description", formData.description);
+    for (const file of files) {
+      form.append("photos", file);
+    }
+
+    createMutation.mutate(form, {
+      onSuccess: () => {
+        toast.success("Limbah berhasil disetor!");
+        router.push("/generator/dashboard");
       },
-      {
-        onSuccess: () => {
-          toast.success("Limbah berhasil disetor!");
-          router.push("/generator/dashboard");
-        },
-        onError: (err) => {
-          toast.error("Gagal menyetor limbah: " + err.message);
-        },
-      }
-    );
+      onError: (err) => {
+        toast.error("Gagal menyetor limbah: " + err.message);
+      },
+    });
   }
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>

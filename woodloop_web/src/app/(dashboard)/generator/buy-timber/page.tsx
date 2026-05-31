@@ -53,10 +53,15 @@ export default function BuyTimberPage() {
   function handleOrder(id: string) {
     const listing = listings.find((l) => l.id === id);
     if (!listing) return;
+    if (!listing.expand?.supplier?.id) {
+      toast.error("Data supplier tidak ditemukan");
+      return;
+    }
 
     createOrder.mutate(
       {
-        product: id,
+        listing: id,
+        seller: listing.expand.supplier.id,
         quantity: 1,
         total_price: listing.price,
       },

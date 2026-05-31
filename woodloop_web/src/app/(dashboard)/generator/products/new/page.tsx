@@ -66,26 +66,26 @@ export default function NewGeneratorProductPage() {
     e.preventDefault();
     if (!validate()) return;
 
-    createMutation.mutate(
-      {
-        name: form.name,
-        description: form.description || undefined,
-        category: form.category,
-        price: Number(form.price),
-        stock: Number(form.stock),
-        photos: [], // Photo upload will be handled separately
-        wood_type: form.wood_type || undefined,
+    const fd = new FormData();
+    fd.append("name", form.name);
+    fd.append("category", form.category);
+    fd.append("price", String(form.price));
+    fd.append("stock", String(form.stock));
+    if (form.description) fd.append("description", form.description);
+    if (form.wood_type) fd.append("wood_type", form.wood_type);
+    for (const file of photos) {
+      fd.append("photos", file);
+    }
+
+    createMutation.mutate(fd, {
+      onSuccess: () => {
+        toast.success("Produk berhasil ditambahkan!");
+        router.push("/generator/products");
       },
-      {
-        onSuccess: () => {
-          toast.success("Produk berhasil ditambahkan!");
-          router.push("/generator/products");
-        },
-        onError: (err) => {
-          toast.error("Gagal menambahkan produk: " + err.message);
-        },
-      }
-    );
+      onError: (err) => {
+        toast.error("Gagal menambahkan produk: " + err.message);
+      },
+    });
   }
 
   function updateField(key: string, value: string) {

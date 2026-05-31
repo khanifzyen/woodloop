@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ImageOff } from "lucide-react";
 import {
   Card,
@@ -29,16 +30,23 @@ function formatCurrency(val: number): string {
 }
 
 export function TimberCard({ listing, onOrder }: TimberCardProps) {
+  const [photoIndex, setPhotoIndex] = useState(0);
   const woodName = listing.expand?.wood_type?.name || listing.wood_type;
   const supplierName = listing.expand?.supplier?.name || "Supplier";
+  const photos = listing.photos || [];
+  const hasMultiple = photos.length > 1;
+
+  const currentPhoto = photos[photoIndex]
+    ? getFileUrl("raw_timber_listings", listing.id, photos[photoIndex])
+    : null;
 
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
       {/* Image */}
-      <div className="aspect-[4/3] bg-muted relative">
-        {listing.photos?.[0] ? (
+      <div className="aspect-[4/3] bg-muted relative group">
+        {currentPhoto ? (
           <img
-            src={getFileUrl("raw_timber_listings", listing.id, listing.photos[0])}
+            src={currentPhoto}
             alt={woodName}
             className="w-full h-full object-cover"
           />
@@ -58,7 +66,57 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
             {listing.volume} m³
           </Badge>
         )}
+
+        {/* Navigation arrows for multiple photos */}
+        {hasMultiple && (
+          <>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPhotoIndex((i) => (i - 1 + photos.length) % photos.length);
+              }}
+              className="absolute left-1 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPhotoIndex((i) => (i + 1) % photos.length);
+              }}
+              className="absolute right-1 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              ›
+            </button>
+          </>
+        )}
       </div>
+
+      {/* Thumbnail strip */}
+      {hasMultiple && (
+        <div className="flex gap-1 px-4 pt-2 pb-0">
+          {photos.map((photo, i) => (
+            <button
+              key={photo}
+              type="button"
+              onClick={() => setPhotoIndex(i)}
+              className={`h-8 w-8 rounded border-2 overflow-hidden shrink-0 transition-all ${
+                i === photoIndex
+                  ? "border-primary opacity-100"
+                  : "border-transparent opacity-60 hover:opacity-90"
+              }`}
+            >
+              <img
+                src={getFileUrl("raw_timber_listings", listing.id, photo)}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
 
       <CardContent className="p-4 space-y-2">
         <div>
@@ -89,19 +147,29 @@ export function TimberCard({ listing, onOrder }: TimberCardProps) {
           <span className="text-lg font-bold text-primary">
             {formatCurrency(listing.price)}
           </span>
-          {listing.shape === "log" && listing.diameter ? (
-            <span className="text-xs text-muted-foreground">
-              ⌀{listing.diameter}cm
-            </span>
-          ) : listing.shape === "square" && listing.width ? (
-            <span className="text-xs text-muted-foreground">
-              {listing.width}×{listing.width}cm
-            </span>
-          ) : (listing.shape === "balok" || listing.shape === "papan") && listing.width && listing.height ? (
-            <span className="text-xs text-muted-foreground">
-              {listing.width}×{listing.height}cm
-            </span>
-          ) : null}
+          <div className="flex items-center gap-2">
+            {listing.stock !== undefined && listing.stock > 0 && (
+              <span className="text-xs text-muted-foreground">
+                Stok: {listing.stock}
+              </span>
+            )}
+            {listing.stock !== undefined && listing.stock <= 0 && (
+              <span className="text-xs text-destructive">Habis</span>
+            )}
+            {listing.shape === "log" && listing.diameter ? (
+              <span className="text-xs text-muted-foreground">
+                ⌀{listing.diameter}cm
+              </span>
+            ) : listing.shape === "square" && listing.width ? (
+              <span className="text-xs text-muted-foreground">
+                {listing.width}×{listing.width}cm
+              </span>
+            ) : (listing.shape === "balok" || listing.shape === "papan") && listing.width && listing.height ? (
+              <span className="text-xs text-muted-foreground">
+                {listing.width}×{listing.height}cm
+              </span>
+            ) : null}
+          </div>
         </div>
       </CardContent>
 

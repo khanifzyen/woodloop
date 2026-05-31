@@ -58,11 +58,13 @@ export function useUnreadCount() {
 
 /**
  * Subscribe to new notifications in realtime and auto-invalidate queries.
+ * Safe to call even when not authenticated — pass enabled=false to skip.
  */
-export function useRealtimeNotifications() {
-  const userId = getUserId();
-  const qc = useQueryClient();
+export function useRealtimeNotifications(enabled = true) {
+  const user = useAuthStore.getState().user;
+  const userId = user?.id;
 
+  const qc = useQueryClient();
   const handleEvent = useCallback(() => {
     qc.invalidateQueries({ queryKey: notifKeys.all });
   }, [qc]);
@@ -73,7 +75,8 @@ export function useRealtimeNotifications() {
     useCallback(() => {
       handleEvent();
     }, [handleEvent]),
-    `user="${userId}"`,
+    userId ? `user="${userId}"` : undefined,
+    enabled && !!userId,
   );
 }
 
@@ -87,6 +90,30 @@ export function useMarkNotifAsRead() {
   return useMutation({
     mutationFn: async (id: string) => {
       await pb.collection("notifications").update(id, { is_read: true });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: notifKeys.all });
+    },
+  });
+}
+
+/**
+ * Mark ALL unread notifications as read for the current user.
+ */
+export function useMarkAllAsRead() {
+  const userId = getUserId();
+  const pb = getPB();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const unread = await pb.collection<Notification>("notifications").getList(1, 100, {
+        filter: `user="${userId}" && is_read=false`,
+        fields: "id",
+      });
+      for (const n of unread.items) {
+        await pb.collection("notifications").update(n.id, { is_read: true });
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: notifKeys.all });

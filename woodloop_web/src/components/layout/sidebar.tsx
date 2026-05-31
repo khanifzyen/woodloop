@@ -11,6 +11,7 @@ import { version } from "@/lib/version";
 import {
   Menu,
   LayoutDashboard,
+  ExternalLink,
   type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -68,8 +69,14 @@ export function Sidebar({ items, title = "WoodLoop", icon = "🌳" }: SidebarPro
 
       {/* Footer */}
       <div className="border-t p-4">
-        <p className="text-xs text-muted-foreground text-center">
+        <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-1">
           WoodLoop {version}
+          <Link
+            href="/changelog"
+            className="underline underline-offset-2 hover:text-foreground transition-colors"
+          >
+            Changelog
+          </Link>
         </p>
       </div>
     </div>

@@ -10,6 +10,7 @@ const chatKeys = { all: ["chat"] as const, conversations: () => [...chatKeys.all
 export {
   useNotifications,
   useMarkNotifAsRead,
+  useMarkAllAsRead,
   useUnreadCount,
   useRealtimeNotifications,
 } from "./use-notifications";

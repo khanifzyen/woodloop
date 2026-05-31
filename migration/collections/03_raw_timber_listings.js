@@ -65,6 +65,7 @@ async function migrateRawTimberListings() {
         { name: 'length', type: 'number', required: false },
         { name: 'volume', type: 'number', required: true },
         { name: 'price', type: 'number', required: true },
+        { name: 'stock', type: 'number', required: false, min: 0 },
         {
             name: 'unit',
             type: 'select',

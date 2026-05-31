@@ -24,6 +24,8 @@ async function seedData() {
             { name: 'Mindi', carbon_factor: 1.1 },
             { name: 'Akasia', carbon_factor: 1.3 },
             { name: 'Pinus', carbon_factor: 1.0 },
+            { name: 'Sungkai', carbon_factor: 0.9 },
+            { name: 'Lainnya', carbon_factor: 0 },
         ];
 
         const woodTypesMap = {}; // name -> id

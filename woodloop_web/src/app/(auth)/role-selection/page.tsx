@@ -17,13 +17,13 @@ const ROLES = [
   {
     id: "supplier",
     label: "Supplier",
-    desc: "Pedagang kayu — pemasok kayu gelondongan",
+    desc: "Pedagang kayu — pemasok kayu log/kotak/papan/lainnya",
     icon: "🪵",
   },
   {
     id: "generator",
     label: "Generator",
-    desc: "Pengrajin/Sawmill — penghasil limbah kayu",
+    desc: "Pengrajin/Sawmill/UKM — penghasil limbah kayu",
     icon: "🏭",
   },
   {
@@ -35,7 +35,7 @@ const ROLES = [
   {
     id: "converter",
     label: "Converter",
-    desc: "Pengrajin kreatif — ubah limbah jadi produk",
+    desc: "UKM/Pengrajin limbah — ubah limbah jadi produk",
     icon: "🎨",
   },
   {
@@ -80,10 +80,9 @@ export default function RoleSelectionPage() {
               className={`
                 relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 text-center
                 transition-all duration-200 hover:shadow-md
-                ${
-                  selected === role.id
-                    ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary"
-                    : "border-border hover:border-muted-foreground/30"
+                ${selected === role.id
+                  ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary"
+                  : "border-border hover:border-muted-foreground/30"
                 }
               `}
             >
