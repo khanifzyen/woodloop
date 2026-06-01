@@ -96,8 +96,13 @@ async function runAllMigrations() {
         console.log('\n📄 [18/18] Migrating User Documents...');
         await migrateUserDocuments();
 
+        // 10. Payment fields for raw_timber_orders
+        console.log('\n💳 [19/19] Migrating Raw Timber Orders Payment Fields...');
+        const { addPaymentFields } = await import('./collections/23_raw_timber_orders_payment.js');
+        await addPaymentFields();
+
         console.log('\n' + '═'.repeat(50));
-        console.log('✅ All 18 migrations completed successfully!');
+        console.log('✅ All 19 migrations completed successfully!');
         console.log('═'.repeat(50));
 
     } catch (error) {

@@ -34,6 +34,9 @@
 # agent-browser
 - When running agent-browser for web testing, target the local dev server at `localhost:3001` instead of production URLs. Confidence: 0.70
 
+# ui-layout
+- For template/question selection, use inline radio buttons shown directly (not hidden in a dropdown/Select). Users should be able to see all options at a glance and either pick one or write their own message. Confidence: 0.70
+
 # navigation
 - Place profile page links in the top-right navbar avatar dropdown, not in the sidebar navigation. Profile is accessed via the existing top menu (avatar dropdown with profile + logout), not as a dedicated sidebar link. Confidence: 0.70
 - Use role-specific profile pages (e.g., `/supplier/profile`) instead of a shared generic `/profile` page. Delete the old shared page and use the role-specific route. Confidence: 0.70

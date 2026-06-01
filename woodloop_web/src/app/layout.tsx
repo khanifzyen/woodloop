@@ -82,9 +82,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               if ("serviceWorker" in navigator) {
-                navigator.serviceWorker.register("/sw.js").catch(function(err) {
-                  console.warn("[SW] Registration failed:", err);
-                });
+                if (location.hostname.includes("localhost") || location.hostname.includes("127.0.0.1")) {
+                  navigator.serviceWorker.getRegistrations().then(function(regs) {
+                    for (var r of regs) r.unregister();
+                  });
+                } else {
+                  navigator.serviceWorker.register("/sw.js").catch(function(err) {
+                    console.warn("[SW] Registration failed:", err);
+                  });
+                }
               }
             `,
           }}

@@ -34,9 +34,9 @@ export const generatorKeys = {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-function getGeneratorId(): string {
+function getGeneratorId(): string | undefined {
   const user = useAuthStore.getState().user;
-  if (!user || user.role !== "generator") throw new Error("Not a generator");
+  if (!user || user.role !== "generator") return undefined;
   return user.id;
 }
 
@@ -62,13 +62,14 @@ export interface GeneratorActivityItem {
 }
 
 export function useGeneratorDashboard() {
-  const generatorId = getGeneratorId();
   const pb = getPB();
 
   return useQuery<GeneratorDashboardData>({
     queryKey: generatorKeys.dashboard(),
+    enabled: !!getGeneratorId(),
     queryFn: async (): Promise<GeneratorDashboardData> => {
-      const [wasteListings, products, bids, walletTx] = await Promise.all([
+      const generatorId = getGeneratorId()!;
+      const [wasteListings, products, bids, walletTx, timberOrders] = await Promise.all([
         pb.collection<WasteListing>("waste_listings").getList(1, 200, {
           filter: `generator="${generatorId}"`,
           sort: "-created",
@@ -84,6 +85,10 @@ export function useGeneratorDashboard() {
         pb.collection("wallet_transactions").getList(1, 50, {
           filter: `user="${generatorId}"`,
           sort: "-created",
+        }),
+        pb.collection("raw_timber_orders").getList(1, 1, {
+          filter: `buyer="${generatorId}"`,
+          countOnly: true,
         }),
       ]);
 
@@ -136,7 +141,7 @@ export function useGeneratorDashboard() {
         wasteBalance: lastTx?.balance_after ?? 0,
         totalWasteReported: totalWaste,
         activeProducts,
-        totalTimberOrders: 0, // will be populated when timber orders collection is linked
+        totalTimberOrders: timberOrders.totalItems,
         pendingBids,
         recentActivity,
         walletBalance,
@@ -154,12 +159,13 @@ export interface WasteListingsFilter {
 }
 
 export function useWasteListings(filters?: WasteListingsFilter) {
-  const generatorId = getGeneratorId();
   const pb = getPB();
 
   return useQuery({
     queryKey: generatorKeys.wasteListings(filters),
+    enabled: !!getGeneratorId(),
     queryFn: async () => {
+      const generatorId = getGeneratorId()!;
       const filterParts = [`generator="${generatorId}"`];
       if (filters?.status) filterParts.push(`status="${filters.status}"`);
       if (filters?.form) filterParts.push(`form="${filters.form}"`);
@@ -200,12 +206,13 @@ export interface CreateWasteData {
 }
 
 export function useCreateWasteListing() {
-  const generatorId = getGeneratorId();
   const pb = getPB();
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
+      const generatorId = getGeneratorId();
+      if (!generatorId) throw new Error("Not a generator");
       formData.append("generator", generatorId);
       const record = await pb.collection("waste_listings").create(formData);
       return record;
@@ -239,12 +246,13 @@ export function useDeleteWasteListing() {
 // useGeneratorProducts
 // ---------------------------------------------------------------------------
 export function useGeneratorProducts() {
-  const generatorId = getGeneratorId();
   const pb = getPB();
 
   return useQuery({
     queryKey: generatorKeys.generatorProducts(),
+    enabled: !!getGeneratorId(),
     queryFn: async () => {
+      const generatorId = getGeneratorId()!;
       const result = await pb
         .collection<GeneratorProduct>("generator_products")
         .getList(1, 100, {
@@ -280,12 +288,13 @@ export interface CreateGeneratorProductData {
 }
 
 export function useCreateGeneratorProduct() {
-  const generatorId = getGeneratorId();
   const pb = getPB();
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
+      const generatorId = getGeneratorId();
+      if (!generatorId) throw new Error("Not a generator");
       formData.append("generator", generatorId);
       const record = await pb.collection("generator_products").create(formData);
       return record;
@@ -355,7 +364,6 @@ export function useTimberMarketplace(filters?: TimberMarketplaceFilter) {
 // useCreateTimberOrder — creates raw_timber_orders + details (Generator → Supplier)
 // ---------------------------------------------------------------------------
 export function useCreateTimberOrder() {
-  const generatorId = getGeneratorId();
   const pb = getPB();
   const qc = useQueryClient();
 
@@ -367,6 +375,8 @@ export function useCreateTimberOrder() {
       seller: string;
       items: { listing: string; quantity: number; unit_price: number }[];
     }) => {
+      const generatorId = getGeneratorId();
+      if (!generatorId) throw new Error("Not a generator");
       const totalPrice = items.reduce(
         (sum, i) => sum + i.unit_price * i.quantity,
         0
@@ -413,6 +423,8 @@ export function useCreateTimberOrderFromCart() {
     mutationFn: async (
       groups: { supplierId: string; items: { listing: string; quantity: number; unit_price: number }[] }[]
     ) => {
+      const generatorId = getGeneratorId();
+      if (!generatorId) throw new Error("Not a generator");
       const createdOrders = [];
 
       for (const group of groups) {
@@ -423,7 +435,7 @@ export function useCreateTimberOrderFromCart() {
         const totalQty = group.items.reduce((sum, i) => sum + i.quantity, 0);
 
         const order = await pb.collection("raw_timber_orders").create({
-          buyer: getGeneratorId(), // safe: will throw if not generator
+          buyer: generatorId,
           seller: group.supplierId,
           total_price: totalPrice,
           total_quantity: totalQty,
@@ -455,15 +467,19 @@ export function useCreateTimberOrderFromCart() {
 // ---------------------------------------------------------------------------
 // useTimberOrders — fetch from raw_timber_orders with details expand
 // ---------------------------------------------------------------------------
-export function useTimberOrders() {
-  const generatorId = getGeneratorId();
+export function useTimberOrders(filters?: { status?: string }) {
   const pb = getPB();
 
   return useQuery({
-    queryKey: generatorKeys.timberOrders(),
+    queryKey: [...generatorKeys.timberOrders(), filters],
+    enabled: !!getGeneratorId(),
     queryFn: async () => {
+      const generatorId = getGeneratorId()!;
+      const filterParts = [`buyer="${generatorId}"`];
+      if (filters?.status) filterParts.push(`status="${filters.status}"`);
+
       const result = await pb.collection("raw_timber_orders").getList(1, 100, {
-        filter: `buyer="${generatorId}"`,
+        filter: filterParts.join(" && "),
         sort: "-created",
         expand: "seller",
       });
@@ -479,6 +495,25 @@ export function useTimberOrders() {
           };
         })[];
       };
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// useUpdateGeneratorProduct
+// ---------------------------------------------------------------------------
+export function useUpdateGeneratorProduct() {
+  const pb = getPB();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
+      const record = await pb.collection("generator_products").update(id, formData);
+      return record;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: generatorKeys.generatorProducts() });
+      qc.invalidateQueries({ queryKey: generatorKeys.dashboard() });
     },
   });
 }

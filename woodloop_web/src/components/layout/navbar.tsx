@@ -19,13 +19,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User, Wallet } from "lucide-react";
+import { LogOut, User, Wallet, MessageSquare } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { useRouter } from "next/navigation";
 import { getPB } from "@/lib/pocketbase/client";
 import { NotificationBadge } from "@/components/features/notification-badge";
+import { useChatUnreadCount, useRealtimeChat, useWalletBalance } from "@/lib/hooks/use-wallet";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -54,6 +55,11 @@ export function Navbar() {
     .join("")
     .toUpperCase()
     .slice(0, 2);
+
+  const { data: unreadCountData } = useChatUnreadCount();
+  const unreadCount = unreadCountData ?? 0;
+  const { data: walletBalance } = useWalletBalance();
+  useRealtimeChat(true);
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 md:px-6 lg:ml-64">
@@ -89,11 +95,25 @@ export function Navbar() {
       <ThemeToggle />
       <LanguageSwitcher />
       <NotificationBadge />
+      <Button variant="ghost" size="icon" className="relative" asChild>
+        <Link href="/chat">
+          <MessageSquare className="h-4 w-4" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 h-4 min-w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center px-1">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
+          )}
+        </Link>
+      </Button>
 
       {/* Wallet */}
-      <Button variant="ghost" size="sm" className="gap-2 text-sm">
-        <Wallet className="h-4 w-4" />
-        <span className="hidden sm:inline font-medium">Rp 0</span>
+      <Button variant="ghost" size="sm" className="gap-2 text-sm" asChild>
+        <Link href="/wallet">
+          <Wallet className="h-4 w-4" />
+          <span className="hidden sm:inline font-medium">
+            Rp {(walletBalance ?? 0).toLocaleString("id-ID")}
+          </span>
+        </Link>
       </Button>
 
       {/* Avatar dropdown */}

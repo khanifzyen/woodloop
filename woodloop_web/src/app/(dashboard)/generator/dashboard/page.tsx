@@ -83,6 +83,11 @@ export default function GeneratorDashboardPage() {
       icon: Package,
     },
     {
+      title: "Pesanan Kayu",
+      value: data?.totalTimberOrders ?? 0,
+      icon: ShoppingCart,
+    },
+    {
       title: "Tawaran Masuk",
       value: data?.pendingBids ?? 0,
       icon: MessageCircle,

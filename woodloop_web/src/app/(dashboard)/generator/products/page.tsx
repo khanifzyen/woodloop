@@ -190,7 +190,12 @@ export default function GeneratorProductsPage() {
                             )}
                           </TableCell>
                           <TableCell className="font-medium">
-                            {product.name}
+                            <Link
+                              href={`/generator/products/${product.id}`}
+                              className="hover:text-primary transition-colors"
+                            >
+                              {product.name}
+                            </Link>
                           </TableCell>
                           <TableCell>
                             {categoryLabels[product.category] ||
@@ -212,8 +217,11 @@ export default function GeneratorProductsPage() {
                                 variant="ghost"
                                 size="icon"
                                 className="h-8 w-8"
+                                asChild
                               >
-                                <Edit className="h-3.5 w-3.5" />
+                                <Link href={`/generator/products/${product.id}/edit`}>
+                                  <Edit className="h-3.5 w-3.5" />
+                                </Link>
                               </Button>
                               <Dialog>
                                 <DialogTrigger asChild>

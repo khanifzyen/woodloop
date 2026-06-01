@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ImageOff, Plus } from "lucide-react";
+import { ImageOff, Plus, MessageSquare } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -21,6 +21,9 @@ interface TimberCardProps {
   onAddToCart?: (listing: RawTimberListing & {
     expand?: { wood_type?: WoodType; supplier?: User };
   }) => void;
+  onChat?: (listing: RawTimberListing & {
+    expand?: { wood_type?: WoodType; supplier?: User };
+  }) => void;
   cartDisabled?: boolean;
 }
 
@@ -33,7 +36,7 @@ function formatCurrency(val: number): string {
   }).format(val);
 }
 
-export function TimberCard({ listing, onOrder, onAddToCart, cartDisabled }: TimberCardProps) {
+export function TimberCard({ listing, onOrder, onAddToCart, onChat, cartDisabled }: TimberCardProps) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const woodName = listing.expand?.wood_type?.name || listing.wood_type;
   const supplierName = listing.expand?.supplier?.name || "Supplier";
@@ -189,6 +192,16 @@ export function TimberCard({ listing, onOrder, onAddToCart, cartDisabled }: Timb
             <Plus className="h-4 w-4 mr-1" />
             Keranjang
           </Button>
+          {onChat && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onChat(listing)}
+              title="Hubungi Supplier"
+            >
+              <MessageSquare className="h-4 w-4" />
+            </Button>
+          )}
         </CardFooter>
       )}
       {!onAddToCart && onOrder && (

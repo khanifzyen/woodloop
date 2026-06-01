@@ -82,10 +82,11 @@ export default function GeneratorCheckoutPage() {
         })),
       }));
 
-      await checkoutMutation.mutateAsync(groups);
+      const createdOrders = (await checkoutMutation.mutateAsync(groups)) as { id: string }[];
       clearCart();
       toast.success("Semua pesanan berhasil dibuat!");
-      router.push("/generator/timber-orders");
+      const orderIds = createdOrders.map((o) => o.id).join(",");
+      router.push(`/generator/order-success?orders=${orderIds}`);
     } catch {
       toast.error("Gagal checkout. Silakan coba lagi.");
     } finally {

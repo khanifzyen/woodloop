@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Plus, Trash2, Package } from "lucide-react";
+import { Plus, Trash2, Package, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -264,6 +264,12 @@ export default function GeneratorWastePage() {
                           </TableCell>
                           <TableCell className="text-right">
                             {listing.status === "available" && (
+                              <div className="flex items-center justify-end gap-1">
+                              <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                                <Link href={`/generator/waste/${listing.id}/edit`}>
+                                  <Edit className="h-3.5 w-3.5" />
+                                </Link>
+                              </Button>
                               <Dialog>
                                 <DialogTrigger asChild>
                                   <Button
@@ -302,6 +308,7 @@ export default function GeneratorWastePage() {
                                   </DialogFooter>
                                 </DialogContent>
                               </Dialog>
+                            </div>
                             )}
                           </TableCell>
                         </TableRow>

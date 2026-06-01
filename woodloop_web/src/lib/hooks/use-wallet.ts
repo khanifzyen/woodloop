@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPB } from "@/lib/pocketbase/client";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { useRealtimeSubscription } from "@/lib/hooks/use-realtime";
+import { useCallback } from "react";
 import type { WalletTransaction, ChatMessage } from "@/lib/pocketbase/types";
 
 const walletKeys = { all: ["wallet"] as const, transactions: () => [...walletKeys.all, "transactions"] as const };
@@ -54,6 +56,36 @@ export function useWalletTransactions() {
 }
 
 // ─── Chat ────────────────────────────────────────────────────────────────
+export function useChatUnreadCount() {
+  const userId = getUserId();
+  const pb = getPB();
+  return useQuery({
+    queryKey: [...chatKeys.all, "unread"],
+    queryFn: async () => {
+      const result = await pb.collection("chats").getList(1, 1, {
+        filter: `receiver="${userId}" && is_read=false`,
+        countOnly: true,
+      });
+      return result.totalItems;
+    },
+    refetchInterval: 30_000,
+  });
+}
+
+export function useRealtimeChat(enabled = true) {
+  const user = useAuthStore.getState().user;
+  const qc = useQueryClient();
+  const handleEvent = useCallback(() => {
+    qc.invalidateQueries({ queryKey: chatKeys.all });
+  }, [qc]);
+  useRealtimeSubscription<ChatMessage>(
+    "chats", "*",
+    useCallback(() => { handleEvent(); }, [handleEvent]),
+    undefined,
+    enabled && !!user,
+  );
+}
+
 export function useConversations() {
   const userId = getUserId();
   const pb = getPB();
@@ -91,6 +123,7 @@ export function useConversations() {
 export function useMessages(partnerId: string) {
   const userId = getUserId();
   const pb = getPB();
+  const qc = useQueryClient();
   return useQuery({
     queryKey: chatKeys.messages(partnerId),
     queryFn: async () => {
@@ -101,6 +134,25 @@ export function useMessages(partnerId: string) {
       });
       return result.items;
     },
+  });
+}
+
+export function useMarkChatAsRead() {
+  const userId = getUserId();
+  const pb = getPB();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (partnerId: string) => {
+      const unread = await pb.collection("chats").getList(1, 100, {
+        filter: `sender="${partnerId}" && receiver="${userId}" && is_read=false`,
+        fields: "id",
+      });
+      for (const msg of unread.items) {
+        await pb.collection("chats").update(msg.id, { is_read: true });
+      }
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: chatKeys.all }),
   });
 }
 

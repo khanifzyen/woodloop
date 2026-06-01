@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Search, SlidersHorizontal, ShoppingCart } from "lucide-react";
+import { Search, SlidersHorizontal, ShoppingCart, MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -38,6 +39,7 @@ import type { TimberMarketplaceFilter } from "@/lib/hooks/use-generator";
 import type { RawTimberListing, WoodType, User } from "@/lib/pocketbase/types";
 
 export default function BuyTimberPage() {
+  const router = useRouter();
   const [filters, setFilters] = useState<TimberMarketplaceFilter>({});
   const [search, setSearch] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -78,6 +80,17 @@ export default function BuyTimberPage() {
     });
 
     toast.success("Ditambahkan ke keranjang");
+  }
+
+  function handleChat(listing: RawTimberListing & {
+    expand?: { wood_type?: WoodType; supplier?: User };
+  }) {
+    const supplierId = listing.expand?.supplier?.id;
+    if (!supplierId) {
+      toast.error("Data supplier tidak ditemukan");
+      return;
+    }
+    router.push(`/chat?receiver=${supplierId}&product=${listing.id}&wood=${encodeURIComponent(listing.expand?.wood_type?.name || listing.wood_type)}`);
   }
 
   return (
@@ -325,6 +338,7 @@ export default function BuyTimberPage() {
                 key={listing.id}
                 listing={listing}
                 onAddToCart={handleAddToCart}
+                onChat={handleChat}
                 cartDisabled={listing.stock !== undefined && listing.stock <= 0}
               />
             ))}

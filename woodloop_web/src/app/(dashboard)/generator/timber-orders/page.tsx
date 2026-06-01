@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { X, Package, Eye } from "lucide-react";
+import { X, Package, Eye, CreditCard, Loader2, MessageSquare } from "lucide-react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -36,6 +37,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useTimberOrders } from "@/lib/hooks/use-generator";
@@ -77,12 +85,62 @@ const statusConfig: Record<
 };
 
 export default function TimberOrdersPage() {
-  const { data, isLoading, isError, refetch } = useTimberOrders();
+  const router = useRouter();
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const filters = statusFilter ? { status: statusFilter } : undefined;
+  const { data, isLoading, isError, refetch } = useTimberOrders(filters);
   const qc = useQueryClient();
   const orders = data?.items ?? [];
   const [selectedOrder, setSelectedOrder] = useState<typeof orders[number] | null>(null);
   const [orderDetails, setOrderDetails] = useState<DetailWithExpand[]>([]);
   const [detailsLoading, setDetailsLoading] = useState(false);
+  const [payingOrderId, setPayingOrderId] = useState<string | null>(null);
+
+  async function payOrder(orderId: string) {
+    setPayingOrderId(orderId);
+    try {
+      const res = await fetch("/api/midtrans/snap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal memproses pembayaran");
+
+      // Load Midtrans Snap script and open popup
+      const script = document.createElement("script");
+      script.src =
+        process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY
+          ? "https://app.midtrans.com/snap/snap.js"
+          : "https://app.sandbox.midtrans.com/snap/snap.js";
+      script.setAttribute(
+        "data-client-key",
+        process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || ""
+      );
+      script.onload = () => {
+        (window as any).snap.pay(data.token, {
+          onSuccess: () => {
+            toast.success("Pembayaran berhasil!");
+            qc.invalidateQueries({ queryKey: ["generator", "timber-orders"] });
+          },
+          onPending: () => {
+            toast.info("Pembayaran sedang diproses");
+            qc.invalidateQueries({ queryKey: ["generator", "timber-orders"] });
+          },
+          onError: () => {
+            toast.error("Pembayaran gagal");
+          },
+          onClose: () => {
+            setPayingOrderId(null);
+          },
+        });
+      };
+      document.body.appendChild(script);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Gagal memproses pembayaran");
+      setPayingOrderId(null);
+    }
+  }
 
   async function loadDetails(orderId: string) {
     setDetailsLoading(true);
@@ -119,6 +177,35 @@ export default function TimberOrdersPage() {
           Lacak status pesanan kayu dari Supplier
         </p>
       </div>
+
+      {/* Status Filter */}
+      <Card>
+        <CardContent className="pt-4">
+          <div className="flex items-center gap-3">
+            <div className="w-44">
+              <Select
+                value={statusFilter}
+                onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Semua Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Status</SelectItem>
+                  {Object.entries(statusConfig).map(([key, cfg]) => (
+                    <SelectItem key={key} value={key}>{cfg.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {statusFilter && (
+              <Button variant="ghost" size="sm" onClick={() => setStatusFilter("")}>
+                Reset
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {isLoading && (
         <Card>
@@ -209,6 +296,34 @@ export default function TimberOrdersPage() {
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => {
+                                  const sellerId = order.seller;
+                                  router.push(`/chat?receiver=${sellerId}&order=${order.id}`);
+                                }}
+                                title="Hubungi Supplier"
+                              >
+                                <MessageSquare className="h-3.5 w-3.5" />
+                              </Button>
+                              {order.status === "payment_pending" && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 gap-1 text-xs"
+                                  onClick={() => payOrder(order.id)}
+                                  disabled={payingOrderId === order.id}
+                                >
+                                  {payingOrderId === order.id ? (
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                  ) : (
+                                    <CreditCard className="h-3 w-3" />
+                                  )}
+                                  Bayar
+                                </Button>
+                              )}
                               <Sheet>
                                 <SheetTrigger asChild>
                                   <Button

@@ -121,6 +121,7 @@ export interface Order {
 export interface RawTimberOrder {
   id: string; buyer: string; seller: string;
   total_price: number; total_quantity: number; status: OrderStatus;
+  snap_token?: string; snap_redirect_url?: string; payment_method?: string;
   notes?: string;
   expand?: { buyer?: User; seller?: User; details?: RawTimberOrderDetail[]; };
   created: string; updated: string;
