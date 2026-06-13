@@ -65,42 +65,49 @@ title: "Daftar Isi"
 - [7.6 Katalog Produk Saya](./07-bab-7-converter.md#76-katalog-produk-saya)
 - [7.7 QR Code Produk](./07-bab-7-converter.md#77-qr-code-produk)
 
-## Bagian 8: Panduan Buyer
+## Bagian 8: Panduan Desainer
 
-- [8.1 Marketplace Produk](./08-bab-8-buyer.md#81-marketplace-produk)
-- [8.2 Detail Produk & Traceability](./08-bab-8-buyer.md#82-detail-produk--traceability)
-- [8.3 Keranjang Belanja (Cart)](./08-bab-8-buyer.md#83-keranjang-belanja-cart)
-- [8.4 Checkout & Pembayaran](./08-bab-8-buyer.md#84-checkout--pembayaran)
-- [8.5 Tracking Pesanan](./08-bab-8-buyer.md#85-tracking-pesanan)
-- [8.6 Scan QR Code Produk](./08-bab-8-buyer.md#86-scan-qr-code-produk)
+- [8.1 Dashboard Desainer](./09-bab-9-desainer.md#91-dashboard-desainer)
+- [8.2 Artikel Sirkular](./09-bab-9-desainer.md#92-artikel-sirkular)
+- [8.3 Catatan Desain](./09-bab-9-desainer.md#93-catatan-desain)
+- [8.4 Klinik Desain](./09-bab-9-desainer.md#94-klinik-desain)
 
-## Bagian 9: Panduan Enabler
+## Bagian 9: Panduan Buyer
 
-- [9.1 Dashboard Impact Analytics](./09-bab-9-enabler.md#91-dashboard-impact-analytics)
-- [9.2 Manajemen Pengguna](./09-bab-9-enabler.md#92-manajemen-pengguna)
+- [9.1 Marketplace Produk](./08-bab-8-buyer.md#81-marketplace-produk)
+- [9.2 Detail Produk & Traceability](./08-bab-8-buyer.md#82-detail-produk--traceability)
+- [9.3 Keranjang Belanja (Cart)](./08-bab-8-buyer.md#83-keranjang-belanja-cart)
+- [9.4 Checkout & Pembayaran](./08-bab-8-buyer.md#84-checkout--pembayaran)
+- [9.5 Tracking Pesanan](./08-bab-8-buyer.md#85-tracking-pesanan)
+- [9.6 Scan QR Code Produk](./08-bab-8-buyer.md#86-scan-qr-code-produk)
 
-## Bagian 10: Fitur Global
+## Bagian 10: Panduan Enabler
 
-- [10.1 Dompet Digital (Wallet)](./10-bab-10-fitur-global.md#101-dompet-digital-wallet)
-- [10.2 Pusat Notifikasi](./10-bab-10-fitur-global.md#102-pusat-notifikasi)
-- [10.3 Pesan & Chat](./10-bab-10-fitur-global.md#103-pesan--chat)
-- [10.4 Manajemen Dokumen Legalitas](./10-bab-10-fitur-global.md#104-manajemen-dokumen-legalitas)
-- [10.5 Profil B2B](./10-bab-10-fitur-global.md#105-profil-b2b)
+- [10.1 Dashboard Impact Analytics](./10-bab-10-enabler.md#101-dashboard-impact-analytics)
+- [10.2 Manajemen Pengguna](./10-bab-10-enabler.md#102-manajemen-pengguna)
 
-## Bagian 11: Traceability & QR Code
+## Bagian 11: Fitur Global
 
-- [11.1 Apa Itu QR Traceability?](./11-bab-11-traceability.md#111-apa-itu-qr-traceability)
-- [11.2 Cara Scan QR Code](./11-bab-11-traceability.md#112-cara-scan-qr-code)
-- [11.3 Halaman Traceability Publik](./11-bab-11-traceability.md#113-halaman-traceability-publik)
-- [11.4 Dampak Lingkungan](./11-bab-11-traceability.md#114-dampak-lingkungan)
+- [11.1 Dompet Digital (Wallet)](./11-bab-11-fitur-global.md#111-dompet-digital-wallet)
+- [11.2 Pusat Notifikasi](./11-bab-11-fitur-global.md#112-pusat-notifikasi)
+- [11.3 Pesan & Chat](./11-bab-11-fitur-global.md#113-pesan--chat)
+- [11.4 Manajemen Dokumen Legalitas](./11-bab-11-fitur-global.md#114-manajemen-dokumen-legalitas)
+- [11.5 Profil B2B](./11-bab-11-fitur-global.md#115-profil-b2b)
 
-## Bagian 12: Troubleshooting & FAQ
+## Bagian 12: Traceability & QR Code
 
-- [12.1 Masalah Login](./12-bab-12-troubleshooting.md#121-masalah-login)
-- [12.2 Masalah Upload Foto](./12-bab-12-troubleshooting.md#122-masalah-upload-foto)
-- [12.3 Masalah Pembayaran](./12-bab-12-troubleshooting.md#123-masalah-pembayaran)
-- [12.4 Masalah GPS & Lokasi](./12-bab-12-troubleshooting.md#124-masalah-gps--lokasi)
-- [12.5 Masalah Notifikasi](./12-bab-12-troubleshooting.md#125-masalah-notifikasi)
-- [12.6 Kontak Bantuan](./12-bab-12-troubleshooting.md#126-kontak-bantuan)
+- [12.1 Apa Itu QR Traceability?](./12-bab-12-traceability.md#121-apa-itu-qr-traceability)
+- [12.2 Cara Scan QR Code](./12-bab-12-traceability.md#122-cara-scan-qr-code)
+- [12.3 Halaman Traceability Publik](./12-bab-12-traceability.md#123-halaman-traceability-publik)
+- [12.4 Dampak Lingkungan](./12-bab-12-traceability.md#124-dampak-lingkungan)
+
+## Bagian 13: Troubleshooting & FAQ
+
+- [13.1 Masalah Login](./13-bab-13-troubleshooting.md#131-masalah-login)
+- [13.2 Masalah Upload Foto](./13-bab-13-troubleshooting.md#132-masalah-upload-foto)
+- [13.3 Masalah Pembayaran](./13-bab-13-troubleshooting.md#133-masalah-pembayaran)
+- [13.4 Masalah GPS & Lokasi](./13-bab-13-troubleshooting.md#134-masalah-gps--lokasi)
+- [13.5 Masalah Notifikasi](./13-bab-13-troubleshooting.md#135-masalah-notifikasi)
+- [13.6 Kontak Bantuan](./13-bab-13-troubleshooting.md#136-kontak-bantuan)
 
 </div>

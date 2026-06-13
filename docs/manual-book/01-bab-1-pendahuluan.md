@@ -192,7 +192,7 @@ Aplikasi Android dapat diinstall melalui:
 
 | Poin | Deskripsi |
 |------|-----------|
-| **Apa itu WoodLoop?** | Platform ekonomi sirkular kayu Jepara dengan 6 peran pengguna |
+| **Apa itu WoodLoop?** | Platform ekonomi sirkular kayu Jepara dengan 7 peran pengguna |
 | **Tujuan** | Mengubah limbah kayu menjadi nilai ekonomi, transparan, berkelanjutan |
 | **6 Peran** | Supplier, Generator, Aggregator, Converter, Buyer, Enabler |
 | **Platform** | Web (semua browser modern) + Android (Capacitor Hybrid) |

@@ -24,11 +24,12 @@ See [deployment/taste.md](deployment/taste.md)
 - In supplier inventory forms (new/edit), place Volume, Satuan, and Stok in a single 3-column grid (`grid-cols-3`) with equal width, ordered as Volume, Satuan, then Stok. Make sure SelectTrigger has `w-full` for consistent sizing. Confidence: 0.72
 
 # git
-- After completing code changes, stage all files (`git add .`), commit with a descriptive label, and push to remote. Confidence: 0.78
+- After completing code changes, stage all files (`git add .`), commit with a descriptive label, and push to remote. Confidence: 0.82
 
 # project
 - Use array fields (like `photos[]`) rather than single-value fields for file uploads in PocketBase, to support multiple file uploads consistently. Confidence: 0.70
 - Keep select option values in their original form without translating to more formal Indonesian (e.g., keep "perhutani", "hutan rakyat", "log", "square" as-is per user's "tidak usah ditranslate gpp" preference). Confidence: 0.65
+- When migration scripts use custom field-checking logic (not the `upsertCollection` utility), they only add missing fields and don't update values on existing select fields — a separate migration script using the `upsertCollection` utility or direct field update is needed to modify existing select field values in PocketBase. Confidence: 0.70
 
 # agent-browser
 - When running agent-browser for web testing, target the local dev server at `localhost:3001` instead of production URLs. Confidence: 0.70

@@ -1,12 +1,12 @@
 ---
-title: "Bab 12 — Troubleshooting & FAQ"
+title: "Bab 13 — Troubleshooting & FAQ"
 ---
 
 # Bab 12: Troubleshooting & FAQ
 
 ---
 
-## 12.1 Masalah Login
+## 13.1 Masalah Login
 
 | Masalah | Penyebab | Solusi |
 |---------|----------|--------|

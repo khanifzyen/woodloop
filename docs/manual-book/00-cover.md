@@ -35,7 +35,7 @@ date: "Mei 2026"
 |---|---|
 | **Platform** | Web + Android (Hybrid) |
 | **Backend** | PocketBase |
-| **Pengguna** | 6 Peran (Supplier, Generator, Aggregator, Converter, Enabler, Buyer) |
+| **Pengguna** | 7 Peran (Supplier, Generator, Aggregator, Converter, Desainer, Enabler, Buyer) |
 
 <br/>
 

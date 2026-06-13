@@ -237,4 +237,4 @@ Setiap produk upcycled memiliki **QR Code unik** yang bisa di-scan.
 | QR Scan | (scanner) | Scan QR → halaman traceability |
 
 ---
-➡️ **Lanjut ke [Bab 9: Panduan Enabler](./09-bab-9-enabler.md)**
+➡️ **Lanjut ke [Bab 9: Panduan Desainer](./09-bab-9-desainer.md)**

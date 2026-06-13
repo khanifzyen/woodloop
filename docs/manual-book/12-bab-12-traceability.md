@@ -2,7 +2,7 @@
 title: "Bab 11 — Traceability & QR Code"
 ---
 
-# Bab 11: Traceability & QR Code
+# Bab 12: Traceability & QR Code
 
 ---
 
@@ -10,7 +10,7 @@ title: "Bab 11 — Traceability & QR Code"
 
 ---
 
-## 11.1 Apa Itu QR Traceability?
+## 12.1 Apa Itu QR Traceability?
 
 ### Konsep
 

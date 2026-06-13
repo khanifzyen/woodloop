@@ -2,7 +2,7 @@
 title: "Bab 10 — Fitur Global"
 ---
 
-# Bab 10: Fitur Global (Semua Peran)
+# Bab 11: Fitur Global (Semua Peran)
 
 ---
 
@@ -99,7 +99,7 @@ Di aplikasi Android, notifikasi juga muncul sebagai **push notification**:
 **Fitur Chat** memungkinkan pengguna berkomunikasi secara realtime.
 
 ![Halaman Chat](screenshots/30-chat.png)
-*Gambar 10.3 — Halaman chat*
+*Gambar 11.3 — Halaman chat*
 
 ### Siapa Bisa Chat dengan Siapa?
 

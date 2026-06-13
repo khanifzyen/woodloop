@@ -80,6 +80,15 @@ Setiap peran memiliki menu sidebar yang berbeda. Berikut perbandingannya:
 └── 🎨 Klinik Desain
 ```
 
+### Desainer
+```
+✏️ Desainer
+├── 📊 Dashboard
+├── 📝 Artikel Sirkular
+├── 🎨 Catatan Desain
+└── 🏪 Klinik Desain
+```
+
 ### Buyer
 ```
 🛒 Buyer

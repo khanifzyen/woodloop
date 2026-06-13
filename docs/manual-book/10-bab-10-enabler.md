@@ -1,8 +1,8 @@
 ---
-title: "Bab 9 — Panduan Enabler"
+title: "Bab 10 — Panduan Enabler"
 ---
 
-# Bab 9: Panduan Enabler (Pemerintah & Asosiasi)
+# Bab 10: Panduan Enabler (Pemerintah & Asosiasi)
 
 ---
 
@@ -104,7 +104,7 @@ Enabler bisa mengekspor data untuk pelaporan:
 
 ---
 
-### Ringkasan Bab 9
+### Ringkasan Bab 10
 
 | Fitur | Halaman | Fungsi Utama |
 |-------|---------|-------------|
@@ -113,4 +113,4 @@ Enabler bisa mengekspor data untuk pelaporan:
 | Ekspor Data | (dari tabel) | Download laporan CSV/Excel |
 
 ---
-➡️ **Lanjut ke [Bab 10: Fitur Global](./10-bab-10-fitur-global.md)**
+➡️ **Lanjut ke [Bab 11: Fitur Global](./11-bab-11-fitur-global.md)**
