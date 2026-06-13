@@ -49,10 +49,6 @@ function readAndProcess(filepath) {
   content = content.replace(/^---[\s\S]*?---\n*/, "");
   // Remove nav line
   content = content.replace(/\n➡️.*\n*$/, "");
-  // Convert > **Penting:** etc
-  content = content.replace(/^> \*\*Penting:\*\*/gm, '<div class="warn"><strong>Penting:</strong>');
-  content = content.replace(/^> \*\*Catatan:\*\*/gm, '<div class="note"><strong>Catatan:</strong>');
-  content = content.replace(/^> \*\*Tips:\*\*/gm, '<div class="tip"><strong>Tips:</strong>');
   // Process images
   content = processImages(content);
   return content;
@@ -264,8 +260,18 @@ async function buildHtml() {
   for (const f of files) {
     const raw = readAndProcess(path.join(BOOK_DIR, f.file));
     if (!raw) continue;
+    let html = await marked.parse(raw, { breaks: true, gfm: true });
+    // Post-process: convert blockquotes with labels to styled divs
+    html = html.replace(
+      /<blockquote>\s*<p><strong>(Penting|Catatan|Tips):<\/strong>/g,
+      (match, label) => {
+        const cls = label === 'Penting' ? 'warn' : label === 'Catatan' ? 'note' : 'tip';
+        return `<div class="${cls}"><strong>${label}:</strong>`;
+      }
+    );
+    html = html.replace(/<\/blockquote>/g, '</div>');
     body += '<div class="page-break"></div>\n';
-    body += await marked.parse(raw, { breaks: true, gfm: true });
+    body += html;
   }
 
   body += `
