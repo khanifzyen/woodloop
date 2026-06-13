@@ -31,6 +31,9 @@ import { migrateDesignArticles } from './collections/24_design_articles.js';
 import { migrateDesignNotes } from './collections/25_design_notes.js';
 import { migrateDesignConsultations } from './collections/26_design_consultations.js';
 import { updateUsersRole } from './collections/27_update_users_role.js';
+import { migrateReviews } from './collections/28_reviews.js';
+import { migrateWishlist } from './collections/29_wishlist.js';
+import { updateOrdersFields } from './collections/30_update_orders_fields.js';
 
 async function runAllMigrations() {
     console.log('🚀 WoodLoop — Starting PocketBase migrations...\n');
@@ -118,8 +121,18 @@ async function runAllMigrations() {
         const { addPaymentFields } = await import('./collections/23_raw_timber_orders_payment.js');
         await addPaymentFields();
 
+        // 12. Buyer enhancements (Fase 5 gaps)
+        console.log('\n⭐ [23/25] Migrating Reviews...');
+        await migrateReviews();
+
+        console.log('\n❤️ [24/25] Migrating Wishlist...');
+        await migrateWishlist();
+
+        console.log('\n📋 [25/25] Updating Orders Fields...');
+        await updateOrdersFields();
+
         console.log('\n' + '═'.repeat(50));
-        console.log('✅ All 22 migrations completed successfully!');
+        console.log('✅ All 25 migrations completed successfully!');
         console.log('═'.repeat(50));
 
     } catch (error) {

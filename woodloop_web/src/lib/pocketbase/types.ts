@@ -112,7 +112,10 @@ export interface Order {
   id: string; buyer: string; product: string;
   expand?: { buyer?: User; product?: Product; };
   quantity: number; total_price: number; status: OrderStatus;
-  shipping_address: string; snap_token?: string;
+  shipping_address: string;
+  shipping_lat?: number; shipping_lng?: number;
+  cancel_reason?: string;
+  snap_token?: string;
   snap_redirect_url?: string; payment_method?: string;
   created: string; updated: string;
 }
@@ -268,6 +271,21 @@ export interface UserDocument {
   file: string;
   verified: boolean;
   notes?: string;
+  created: string; updated: string;
+}
+
+// ========== 22. Reviews ==========
+export interface Review {
+  id: string; product: string; buyer: string; order: string;
+  expand?: { product?: Product; buyer?: User; order?: Order; };
+  rating: number; comment?: string;
+  created: string; updated: string;
+}
+
+// ========== 23. Wishlist ==========
+export interface WishlistItem {
+  id: string; buyer: string; product: string;
+  expand?: { buyer?: User; product?: Product; };
   created: string; updated: string;
 }
 

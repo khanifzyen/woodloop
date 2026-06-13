@@ -212,6 +212,9 @@ Pembelian produk jadi oleh konsumen akhir (Buyer).
 | `total_price` | number | required | Total harga |
 | `status` | select | `payment_pending`, `paid`, `processing`, `shipped`, `received`, `cancelled` — default: `payment_pending` | Status pesanan |
 | `shipping_address` | text | required | Alamat pengiriman |
+| `shipping_lat` | number | - | Latitude koordinat pengiriman |
+| `shipping_lng` | number | - | Longitude koordinat pengiriman |
+| `cancel_reason` | text | - | Alasan pembatalan (jika status = cancelled) |
 | `snap_token` | text | - | Token Midtrans Snap (untuk pembayaran) |
 | `snap_redirect_url` | url | - | URL redirect Midtrans |
 | `payment_method` | select | `qris`, `virtual_account`, `bank_transfer`, `cod` | Metode pembayaran |
@@ -280,6 +283,39 @@ Item di keranjang belanja sebelum checkout.
 | `buyer` | relation | → `users` (single, required, cascadeDelete) | Pemilik keranjang |
 | `product` | relation | → `products` (single, required) | Produk di keranjang |
 | `quantity` | number | required, min: 1 | Jumlah |
+
+**PocketBase API Rules:**
+- **List/View/Create/Update/Delete:** `@request.auth.id = buyer`
+
+---
+
+## 10b. Koleksi: `reviews` (Base Collection — Buyer → Produk)
+
+Rating dan ulasan untuk produk dari pembeli yang sudah menyelesaikan pesanan.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `product` | relation | → `products` (single, required) | Produk yang diulas |
+| `buyer` | relation | → `users` (single, required) | Pembeli yang memberi ulasan |
+| `order` | relation | → `orders` (single, required) | Pesanan terkait (verifikasi pembelian) |
+| `rating` | number | required, min: 1, max: 5 | Rating bintang 1-5 |
+| `comment` | text | - | Teks ulasan |
+
+**PocketBase API Rules:**
+- **List/View:** `""` (publik)
+- **Create:** `@request.auth.role = "buyer" && @request.auth.id = buyer`
+- **Update/Delete:** `@request.auth.id = buyer`
+
+---
+
+## 10c. Koleksi: `wishlist` (Base Collection — Buyer)
+
+Produk favorit yang disimpan Buyer untuk dibeli nanti.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `buyer` | relation | → `users` (single, required, cascadeDelete) | Pemilik wishlist |
+| `product` | relation | → `products` (single, required) | Produk favorit |
 
 **PocketBase API Rules:**
 - **List/View/Create/Update/Delete:** `@request.auth.id = buyer`

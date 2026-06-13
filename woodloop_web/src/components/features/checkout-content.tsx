@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/lib/stores/cart-store";
-import { useCreateOrder } from "@/lib/hooks/use-buyer";
-import { useProductDetail } from "@/lib/hooks/use-buyer";
+import { useCreateMultiOrders, usePayOrder, useProductDetail } from "@/lib/hooks/use-buyer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +23,8 @@ export function CheckoutContent() {
   const searchParams = useSearchParams();
   const directProductId = searchParams.get("product");
   const cart = useCartStore();
-  const createOrder = useCreateOrder();
+  const createMultiOrders = useCreateMultiOrders();
+  const payOrder = usePayOrder();
   const { data: directProduct } = directProductId ? useProductDetail(directProductId) : { data: null };
 
   const items = directProduct
@@ -38,7 +38,7 @@ export function CheckoutContent() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handlePayNow(e: React.FormEvent) {
     e.preventDefault();
     const errs: Record<string, string> = {};
     if (!form.name.trim()) errs.name = "Nama wajib diisi";
@@ -46,21 +46,58 @@ export function CheckoutContent() {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
-    const firstItem = items[0];
+    const shippingAddr = `${form.name}, ${form.phone}, ${form.address}`;
+
     try {
-      await createOrder.mutateAsync({
-        product: firstItem.id,
-        quantity: firstItem.quantity,
-        total_price: firstItem.price * firstItem.quantity,
-        shipping_address: `${form.name}, ${form.phone}, ${form.address}`,
-        payment_method: form.payment_method,
+      // Create all orders
+      const createdOrders = await createMultiOrders.mutateAsync({
+        items: items.map((i) => ({
+          productId: i.id,
+          quantity: i.quantity,
+          price: i.price,
+        })),
+        shippingAddress: shippingAddr,
+        paymentMethod: form.payment_method,
       });
+
+      // Clear cart if not direct buy
       if (!directProduct) cart.clearCart();
-      toast.success("Pesanan berhasil dibuat!");
-      router.push("/buyer/orders");
+
+      // If paying via Midtrans (not COD), trigger payment for first order
+      if (form.payment_method !== "cod" && createdOrders.length > 0) {
+        // Launch Midtrans Snap
+        const firstOrder = createdOrders[0];
+        const { token } = await payOrder.mutateAsync(firstOrder.id);
+        await openMidtransSnap(token, () => {
+          toast.success("Pembayaran berhasil!");
+          router.push("/buyer/orders");
+        });
+      } else {
+        toast.success("Pesanan berhasil dibuat!");
+        router.push("/buyer/orders");
+      }
     } catch {
       toast.error("Gagal membuat pesanan");
     }
+  }
+
+  async function openMidtransSnap(token: string, onSuccess: () => void) {
+    const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
+    const snapUrl = clientKey
+      ? "https://app.midtrans.com/snap/snap.js"
+      : "https://app.sandbox.midtrans.com/snap/snap.js";
+
+    const script = document.createElement("script");
+    script.src = snapUrl;
+    script.setAttribute("data-client-key", clientKey || "");
+    script.onload = () => {
+      (window as any).snap.pay(token, {
+        onSuccess,
+        onPending: () => toast.info("Pembayaran sedang diproses"),
+        onError: () => toast.error("Pembayaran gagal"),
+      });
+    };
+    document.body.appendChild(script);
   }
 
   return (
@@ -86,7 +123,7 @@ export function CheckoutContent() {
         </CardContent>
       </Card>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handlePayNow}>
         <Card>
           <CardHeader><CardTitle>Alamat Pengiriman</CardTitle></CardHeader>
           <CardContent className="space-y-4">
@@ -111,7 +148,8 @@ export function CheckoutContent() {
               <Select value={form.payment_method} onValueChange={(v) => setForm((f) => ({ ...f, payment_method: v }))}>
                 <SelectTrigger id="payment"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="bank_transfer">Transfer Bank</SelectItem>
+                  <SelectItem value="midtrans">QRIS / Virtual Account / Bank Transfer</SelectItem>
+                  <SelectItem value="bank_transfer">Transfer Bank Manual</SelectItem>
                   <SelectItem value="cod">COD</SelectItem>
                 </SelectContent>
               </Select>
@@ -123,9 +161,12 @@ export function CheckoutContent() {
           </CardContent>
         </Card>
 
-        <Button type="submit" className="w-full gap-2" disabled={createOrder.isPending}>
+        <Button type="submit" className="w-full gap-2" disabled={createMultiOrders.isPending || payOrder.isPending}>
           <ShoppingCart className="h-4 w-4" />
-          {createOrder.isPending ? "Memproses..." : `Bayar Rp ${total.toLocaleString("id-ID")}`}
+          {createMultiOrders.isPending || payOrder.isPending
+            ? "Memproses..."
+            : `Bayar Rp ${total.toLocaleString("id-ID")}`
+          }
         </Button>
       </form>
     </div>

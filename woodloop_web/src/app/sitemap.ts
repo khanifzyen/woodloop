@@ -4,6 +4,8 @@ import PocketBase from "pocketbase";
 const PB_URL = process.env.NEXT_PUBLIC_PB_URL || "https://pb-woodloop.pasarjepara.com";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://woodloop.pasarjepara.com";
 
+const CATEGORIES = ["furniture", "decor", "accessories", "art", "other"];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
@@ -14,6 +16,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/buyer/marketplace`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
     { url: `${BASE_URL}/buyer/scan`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.5 },
   ];
+
+  // Category pages
+  const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.map((slug) => ({
+    url: `${BASE_URL}/buyer/marketplace?category=${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "daily" as const,
+    priority: 0.7,
+  }));
 
   // Dynamic product pages (traceability + buyer detail)
   let productUrls: MetadataRoute.Sitemap = [];
@@ -40,5 +50,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // skip if PocketBase unavailable
   }
 
-  return [...staticPages, ...productUrls];
+  return [...staticPages, ...categoryUrls, ...productUrls];
 }

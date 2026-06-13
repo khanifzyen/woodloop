@@ -13,6 +13,7 @@ import {
   BookOpen,
   Users,
   Trash2,
+  Heart,
   type LucideIcon,
 } from "lucide-react";
 import type { NavItem } from "./sidebar";
@@ -80,6 +81,7 @@ const nav: Record<string, RoleNav> = {
     icon: "🛍️",
     sidebar: [
       { label: "Marketplace", href: "/buyer/marketplace", icon: Store },
+      { label: "Wishlist", href: "/buyer/wishlist", icon: Heart },
       { label: "Pesanan Saya", href: "/buyer/orders", icon: ClipboardList },
     ],
   },

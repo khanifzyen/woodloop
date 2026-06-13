@@ -5,6 +5,8 @@ import type {
   Product,
   Order,
   CartItem,
+  Review,
+  WishlistItem,
 } from "@/lib/pocketbase/types";
 
 export const buyerKeys = {
@@ -19,6 +21,8 @@ export const buyerKeys = {
             : [...buyerKeys.all, "orders"] as const,
   orderDetail: (id: string) => [...buyerKeys.all, "orders", id] as const,
   cart: () => [...buyerKeys.all, "cart"] as const,
+  reviews: (productId: string) => ["reviews", productId] as const,
+  wishlist: () => [...buyerKeys.all, "wishlist"] as const,
 };
 
 function getBuyerId(): string {
@@ -44,6 +48,7 @@ export function useProducts(filters?: {
       let sort = "-created";
       if (filters?.sort === "price_asc") sort = "price";
       else if (filters?.sort === "price_desc") sort = "-price";
+      else if (filters?.sort === "best_selling") sort = "-sold_count";
 
       const result = await pb.collection("products").getList(1, 50, {
         filter: filterParts.join(" && "),
@@ -124,6 +129,21 @@ export function useBuyerOrders(filters?: { status?: string }) {
   });
 }
 
+export function useOrderDetail(id: string) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: buyerKeys.orderDetail(id),
+    queryFn: async () => {
+      const order = await pb.collection("orders").getOne(id, {
+        expand: "product,product.converter",
+      });
+      return order as unknown as Order & {
+        expand?: { product?: Product & { expand?: { converter?: import("@/lib/pocketbase/types").User } } };
+      };
+    },
+  });
+}
+
 export function useCreateOrder() {
   const buyerId = getBuyerId();
   const pb = getPB();
@@ -148,6 +168,197 @@ export function useCreateOrder() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: buyerKeys.orders() });
+    },
+  });
+}
+
+/** Create multiple orders (one per cart item) */
+export function useCreateMultiOrders() {
+  const buyerId = getBuyerId();
+  const pb = getPB();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      items: { productId: string; quantity: number; price: number }[];
+      shippingAddress: string;
+      paymentMethod?: string;
+    }) => {
+      const created: Order[] = [];
+      for (const item of data.items) {
+        const order = await pb.collection("orders").create({
+          buyer: buyerId,
+          product: item.productId,
+          quantity: item.quantity,
+          total_price: item.price * item.quantity,
+          shipping_address: data.shippingAddress,
+          status: "payment_pending",
+          payment_method: data.paymentMethod || "bank_transfer",
+        });
+        created.push(order as unknown as Order);
+      }
+      return created;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: buyerKeys.orders() });
+    },
+  });
+}
+
+/** Pay an order via Midtrans */
+export function usePayOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderId: string) => {
+      const res = await fetch("/api/midtrans/snap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal memproses pembayaran");
+      return data as { token: string; redirect_url: string };
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+}
+
+/** Cancel an order */
+export function useCancelOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ orderId, reason }: { orderId: string; reason?: string }) => {
+      const pb = getPB();
+      await pb.collection("orders").update(orderId, {
+        status: "cancelled",
+        cancel_reason: reason || "",
+      });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: buyerKeys.orders() });
+    },
+  });
+}
+
+/** Confirm received */
+export function useConfirmReceived() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderId: string) => {
+      const pb = getPB();
+      await pb.collection("orders").update(orderId, { status: "received" });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: buyerKeys.orders() });
+    },
+  });
+}
+
+// ─── Reviews ──────────────────────────────────────────────────────────────
+export function useReviews(productId: string) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: buyerKeys.reviews(productId),
+    queryFn: async () => {
+      const result = await pb.collection("reviews").getList(1, 50, {
+        filter: `product="${productId}"`,
+        sort: "-created",
+        expand: "buyer",
+      });
+      return result as unknown as {
+        items: (Review & { expand?: { buyer?: import("@/lib/pocketbase/types").User } })[];
+        page: number; perPage: number; totalItems: number; totalPages: number;
+      };
+    },
+  });
+}
+
+export function useCreateReview() {
+  const buyerId = getBuyerId();
+  const pb = getPB();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      productId: string;
+      orderId: string;
+      rating: number;
+      comment?: string;
+    }) => {
+      await pb.collection("reviews").create({
+        product: data.productId,
+        buyer: buyerId,
+        order: data.orderId,
+        rating: data.rating,
+        comment: data.comment || "",
+      });
+    },
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({ queryKey: buyerKeys.reviews(variables.productId) });
+    },
+  });
+}
+
+// ─── Wishlist ─────────────────────────────────────────────────────────────
+export function useWishlist() {
+  const { user, isAuthenticated } = useAuthStore();
+  const pb = getPB();
+  return useQuery({
+    queryKey: buyerKeys.wishlist(),
+    queryFn: async () => {
+      if (!isAuthenticated || !user || user.role !== "buyer") {
+        return { items: [], page: 1, perPage: 200, totalItems: 0, totalPages: 0 };
+      }
+      const result = await pb.collection("wishlist").getList(1, 200, {
+        filter: `buyer="${user.id}"`,
+        expand: "product",
+      });
+      return result as unknown as {
+        items: (WishlistItem & { expand?: { product?: Product } })[];
+        page: number; perPage: number; totalItems: number; totalPages: number;
+      };
+    },
+  });
+}
+
+export function useToggleWishlist() {
+  const buyerId = getBuyerId();
+  const pb = getPB();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (productId: string) => {
+      // Check if already in wishlist
+      const existing = await pb.collection("wishlist").getList(1, 1, {
+        filter: `buyer="${buyerId}" && product="${productId}"`,
+      });
+      if (existing.items.length > 0) {
+        await pb.collection("wishlist").delete(existing.items[0].id);
+        return { added: false };
+      } else {
+        await pb.collection("wishlist").create({
+          buyer: buyerId,
+          product: productId,
+        });
+        return { added: true };
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: buyerKeys.wishlist() });
+    },
+  });
+}
+
+export function useIsInWishlist(productId: string) {
+  const { user, isAuthenticated } = useAuthStore();
+  const pb = getPB();
+  return useQuery({
+    queryKey: [...buyerKeys.wishlist(), productId],
+    queryFn: async () => {
+      if (!isAuthenticated || !user || user.role !== "buyer") return false;
+      const result = await pb.collection("wishlist").getList(1, 1, {
+        filter: `buyer="${user.id}" && product="${productId}"`,
+      });
+      return result.items.length > 0;
     },
   });
 }
