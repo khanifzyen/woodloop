@@ -1,0 +1,44 @@
+{
+  "cookies": [
+    {
+      "name": "pb_auth",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJfcGJfdXNlcnNfYXV0aF8iLCJleHAiOjE3ODA4ODk0ODQsImlkIjoid2YwbmJrb21kYmFxbWh4IiwicmVmcmVzaGFibGUiOnRydWUsInR5cGUiOiJhdXRoIn0.j5OSf0uHelHdoYIn7UV_Dh4t8eGb1WHI3LSa3GnU_Nk",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1780889484.0,
+      "size": 231,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "pb_role",
+      "value": "supplier",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1780889484.0,
+      "size": 15,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:3001",
+      "localStorage": [
+        {
+          "name": "woodloop-auth",
+          "value": "{\"state\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJfcGJfdXNlcnNfYXV0aF8iLCJleHAiOjE3ODA4ODk0ODQsImlkIjoid2YwbmJrb21kYmFxbWh4IiwicmVmcmVzaGFibGUiOnRydWUsInR5cGUiOiJhdXRoIn0.j5OSf0uHelHdoYIn7UV_Dh4t8eGb1WHI3LSa3GnU_Nk\",\"user\":{\"address\":\"Menganti 17/04\",\"avatar\":\"\",\"bio\":\"\",\"collectionId\":\"_pb_users_auth_\",\"collectionName\":\"users\",\"created\":\"2026-02-26 14:48:39.863Z\",\"email\":\"demo.supplier@woodloop.id\",\"emailVisibility\":true,\"fleet_type\":\"\",\"id\":\"wf0nbkomdbaqmhx\",\"is_verified\":true,\"location_lat\":-6.661905158277346,\"location_lng\":110.67107262932045,\"machine_type\":\"\",\"name\":\"Demo Supplier\",\"phone\":\"08122890045\",\"production_capacity\":\"\",\"role\":\"supplier\",\"updated\":\"2026-05-31 17:12:04.515Z\",\"user_code\":\"SUP78D\",\"verified\":true,\"warehouse_capacity\":\"\",\"workshop_name\":\"Demo Supplier Workshop\"},\"isAuthenticated\":true,\"role\":\"supplier\"},\"version\":0}"
+        },
+        {
+          "name": "pocketbase_auth",
+          "value": "{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJfcGJfdXNlcnNfYXV0aF8iLCJleHAiOjE3ODA4ODk0ODQsImlkIjoid2YwbmJrb21kYmFxbWh4IiwicmVmcmVzaGFibGUiOnRydWUsInR5cGUiOiJhdXRoIn0.j5OSf0uHelHdoYIn7UV_Dh4t8eGb1WHI3LSa3GnU_Nk\",\"record\":{\"address\":\"Menganti 17/04\",\"avatar\":\"\",\"bio\":\"\",\"collectionId\":\"_pb_users_auth_\",\"collectionName\":\"users\",\"created\":\"2026-02-26 14:48:39.863Z\",\"email\":\"demo.supplier@woodloop.id\",\"emailVisibility\":true,\"fleet_type\":\"\",\"id\":\"wf0nbkomdbaqmhx\",\"is_verified\":true,\"location_lat\":-6.661905158277346,\"location_lng\":110.67107262932045,\"machine_type\":\"\",\"name\":\"Demo Supplier\",\"phone\":\"08122890045\",\"production_capacity\":\"\",\"role\":\"supplier\",\"updated\":\"2026-05-31 17:12:04.515Z\",\"user_code\":\"SUP78D\",\"verified\":true,\"warehouse_capacity\":\"\",\"workshop_name\":\"Demo Supplier Workshop\"}}"
+        }
+      ],
+      "sessionStorage": []
+    }
+  ]
+}

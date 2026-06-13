@@ -1,7 +1,6 @@
 # Dependencies (installed in Docker)
 node_modules
 .bun
-bun.lock
 
 # Next.js build output
 .next

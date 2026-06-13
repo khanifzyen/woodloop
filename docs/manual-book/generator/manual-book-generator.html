@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Manual Book WoodLoop — Generator</title>
+<style>
+  @page { margin: 2cm 2.5cm; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 12pt; line-height: 1.6; color: #222; max-width: 720px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 22pt; color: #1a5c2a; border-bottom: 2px solid #1a5c2a; padding-bottom: 6px; margin-top: 30px; }
+  h2 { font-size: 16pt; color: #2d7d41; margin-top: 24px; }
+  h3 { font-size: 13pt; color: #333; margin-top: 18px; }
+  h4 { font-size: 11pt; color: #555; margin-top: 14px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 11pt; }
+  th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; }
+  th { background: #e8f5e9; }
+  figure { margin: 16px 0; text-align: center; }
+  pre, code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-size: 10pt; }
+  pre { padding: 10px; overflow-x: auto; }
+  blockquote { border-left: 4px solid #1a5c2a; margin: 12px 0; padding: 8px 16px; background: #f9fdf9; }
+  .page-break { page-break-before: always; }
+  .cover { text-align: center; padding-top: 120px; }
+  .cover h1 { font-size: 28pt; border: none; }
+  .cover h2 { font-size: 18pt; color: #555; }
+  .cover hr { width: 50%; margin: 20px auto; }
+  .toc a { color: #1a5c2a; text-decoration: none; }
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc ul ul { padding-left: 20px; }
+  .toc li { margin: 4px 0; }
+  .note { background: #fff3cd; border-left: 4px solid #ffc107; padding: 8px 14px; margin: 10px 0; font-size: 11pt; }
+  .warn { background: #f8d7da; border-left: 4px solid #dc3545; padding: 8px 14px; margin: 10px 0; font-size: 11pt; }
+  .tip { background: #d4edda; border-left: 4px solid #28a745; padding: 8px 14px; margin: 10px 0; font-size: 11pt; }
+  .ascii-box { font-family: 'Courier New', monospace; font-size: 10pt; line-height: 1.3; background: #f4f4f4; padding: 8px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover" style="page-break-after: always;">
+  <h1>🌳 WoodLoop</h1>
+  <h2>Manual Book — Generator</h2>
+  <p style="font-size:14pt;color:#666;">Panduan Lengkap Penghasil Limbah Kayu</p>
+  <br/><br/>
+  <p><strong>Versi 1.0 — Juni 2026</strong></p>
+  <hr/>
+  <p><em>"Mengubah Limbah Kayu Menjadi Berkah untuk Jepara"</em></p>
+  <br/><br/><br/>
+  <table style="width:auto;margin:0 auto;">
+    <tr><td><strong>Peran</strong></td><td>Generator (Penghasil Limbah)</td></tr>
+    <tr><td><strong>Platform</strong></td><td>Web</td></tr>
+    <tr><td><strong>Backend</strong></td><td>PocketBase</td></tr>
+  </table>
+  <br/>
+  <p style="font-size:10pt;color:#999;">woodloop.pasarjepara.com</p>
+</div>
+
+<!-- ============ KATA PENGANTAR ============ -->
+<div class="page-break"></div>
+<h1>Kata Pengantar</h1>
+<p>Puji syukur kehadirat Tuhan Yang Maha Esa atas terselesaikannya <strong>Manual Book WoodLoop — Panduan Khusus Generator</strong>.</p>
+<p>Manual book ini disusun khusus untuk pengguna dengan peran <strong>Generator (Penghasil Limbah)</strong> dalam ekosistem WoodLoop. Sebagai mata rantai penting dalam alur ekonomi sirkular industri kayu Jepara, Generator memegang peranan vital — menghasilkan limbah kayu dari proses produksi yang akan diolah kembali menjadi produk bernilai oleh para Aggregator dan Converter.</p>
+<p>Buku ini membahas secara detail seluruh fitur yang tersedia untuk Generator, mulai dari:</p>
+<ul>
+  <li><strong>Dashboard</strong> — ringkasan bisnis Anda</li>
+  <li><strong>Setor Limbah</strong> — mendaftarkan limbah kayu yang ingin dijual</li>
+  <li><strong>Daftar Limbah</strong> — mengelola seluruh limbah yang sudah disetor</li>
+  <li><strong>Beli Kayu Mentah</strong> — membeli bahan baku dari Supplier</li>
+  <li><strong>Keranjang &amp; Checkout</strong> — proses pembelian kayu</li>
+  <li><strong>Pesanan Kayu</strong> — melacak status pembelian</li>
+  <li><strong>Produk Saya</strong> — mendaftarkan dan menjual produk furnitur</li>
+  <li><strong>Profil Generator</strong> — informasi kontak</li>
+</ul>
+<p>Kami berharap manual book ini membantu Anda memanfaatkan WoodLoop secara maksimal untuk mengembangkan bisnis kayu yang lebih transparan, efisien, dan berkelanjutan.</p>
+<br/>
+<p><strong>Jepara, Juni 2026</strong></p>
+<p><strong>Tim WoodLoop</strong></p>
+
+<!-- ============ DAFTAR ISI ============ -->
+<div class="page-break"></div>
+<h1>Daftar Isi</h1>
+<div class="toc">
+  <ul>
+    <li><a href="#bab1">Bab 1: Pendahuluan</a>
+      <ul>
+        <li>1.1 Apa Itu WoodLoop?</li>
+        <li>1.2 Peran Generator dalam Ekosistem</li>
+        <li>1.3 Alur Bisnis Generator</li>
+        <li>1.4 Istilah Penting</li>
+      </ul>
+    </li>
+    <li><a href="#bab2">Bab 2: Memulai</a>
+      <ul>
+        <li>2.1 Akses ke Aplikasi</li>
+        <li>2.2 Login</li>
+        <li>2.3 Navigasi Antarmuka</li>
+        <li>2.4 Mode Gelap &amp; Ganti Bahasa</li>
+      </ul>
+    </li>
+    <li><a href="#bab3">Bab 3: Dashboard Generator</a>
+      <ul>
+        <li>3.1 Ringkasan Kartu</li>
+        <li>3.2 Aktivitas Terbaru</li>
+        <li>3.3 Menu Cepat</li>
+      </ul>
+    </li>
+    <li><a href="#bab4">Bab 4: Setor Limbah</a>
+      <ul>
+        <li>4.1 Mengakses Halaman Setor Limbah</li>
+        <li>4.2 Langkah 1: Foto Limbah</li>
+        <li>4.3 Langkah 2: Jenis &amp; Bentuk Limbah</li>
+        <li>4.4 Langkah 3: Volume &amp; Harga</li>
+        <li>4.5 Langkah 4: Konfirmasi</li>
+        <li>4.6 Jenis &amp; Bentuk Limbah</li>
+      </ul>
+    </li>
+    <li><a href="#bab5">Bab 5: Daftar Limbah</a>
+      <ul>
+        <li>5.1 Melihat Daftar Limbah</li>
+        <li>5.2 Filter Status</li>
+        <li>5.3 Status Limbah</li>
+        <li>5.4 Edit Limbah</li>
+        <li>5.5 Hapus Limbah</li>
+        <li>5.6 Penawaran dari Aggregator</li>
+      </ul>
+    </li>
+    <li><a href="#bab6">Bab 6: Beli Kayu Mentah</a>
+      <ul>
+        <li>6.1 Marketplace Kayu</li>
+        <li>6.2 Filter &amp; Pencarian</li>
+        <li>6.3 Kartu Kayu</li>
+        <li>6.4 Memesan Kayu</li>
+      </ul>
+    </li>
+    <li><a href="#bab7">Bab 7: Keranjang &amp; Checkout</a>
+      <ul>
+        <li>7.1 Keranjang Belanja</li>
+        <li>7.2 Mengelola Item Keranjang</li>
+        <li>7.3 Checkout</li>
+        <li>7.4 Halaman Sukses</li>
+      </ul>
+    </li>
+    <li><a href="#bab8">Bab 8: Pesanan Kayu</a>
+      <ul>
+        <li>8.1 Daftar Pesanan</li>
+        <li>8.2 Status Pesanan</li>
+        <li>8.3 Pembayaran via Midtrans</li>
+        <li>8.4 Membatalkan Pesanan</li>
+      </ul>
+    </li>
+    <li><a href="#bab9">Bab 9: Produk Saya</a>
+      <ul>
+        <li>9.1 Daftar Produk</li>
+        <li>9.2 Menambahkan Produk Baru</li>
+        <li>9.3 Detail Produk</li>
+        <li>9.4 Edit &amp; Hapus Produk</li>
+      </ul>
+    </li>
+    <li><a href="#bab10">Bab 10: Profil Generator</a>
+      <ul>
+        <li>10.1 Informasi Profil</li>
+        <li>10.2 Edit Profil</li>
+      </ul>
+    </li>
+    <li><a href="#bab11">Bab 11: Troubleshooting</a>
+      <ul>
+        <li>11.1 Tidak Bisa Login</li>
+        <li>11.2 Foto Gagal Upload</li>
+        <li>11.3 Pembayaran Gagal</li>
+        <li>11.4 Tidak Ada Penawaran Masuk</li>
+        <li>11.5 Kontak Bantuan</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- ============ BAB 1 ============ -->
+<div class="page-break"></div>
+<h1 id="bab1">Bab 1: Pendahuluan</h1>
+
+<h2>1.1 Apa Itu WoodLoop?</h2>
+<p><strong>WoodLoop</strong> adalah platform digital ekonomi sirkular untuk industri kayu dan furnitur di Jepara, Jawa Tengah. Platform ini menghubungkan seluruh aktor dalam rantai nilai kayu — dari pemasok kayu gelondongan, pengrajin yang menghasilkan limbah, pengepul, pengrajin upcycle, pembeli, hingga pemerintah — dalam satu ekosistem terpadu.</p>
+<p>Tujuan utama WoodLoop adalah <strong>mengubah limbah kayu menjadi sumber daya bernilai ekonomi</strong> sekaligus melacak dampak lingkungannya.</p>
+
+<h2>1.2 Peran Generator dalam Ekosistem</h2>
+<p><strong>Generator</strong> adalah pihak yang <strong>menghasilkan limbah kayu</strong> dari proses produksi mebel atau penggergajian. Generator menjadi <strong>sumber utama limbah</strong> yang akan diolah kembali dalam ekonomi sirkular WoodLoop.</p>
+<p><strong>Contoh pengguna Generator:</strong></p>
+<ul>
+  <li>Pengrajin mebel di Jepara</li>
+  <li>Pemilik sawmill / penggergajian kayu</li>
+  <li>Workshop kayu</li>
+  <li>UKM furnitur</li>
+</ul>
+<p><strong>Alur peran Generator dalam ekosistem WoodLoop:</strong></p>
+<pre>Supplier → (kayu gelondongan) → Generator → (limbah) → Aggregator → (bahan baku) → Converter → (produk jadi) → Buyer
+                                     ↓
+                              (produk furnitur)
+                                     ↓
+                                Buyer langsung</pre>
+
+<p><strong>Generator memiliki tiga aktivitas utama:</strong></p>
+<ol>
+  <li><strong>Menjual limbah kayu</strong> — Limbah produksi dijual ke Aggregator</li>
+  <li><strong>Membeli kayu mentah</strong> — Bahan baku dari Supplier untuk produksi</li>
+  <li><strong>Menjual produk furnitur</strong> — Produk jadi langsung ke Buyer</li>
+</ol>
+
+<h2>1.3 Alur Bisnis Generator</h2>
+<table>
+  <tr><th>Langkah</th><th>Aktivitas</th><th>Halaman</th></tr>
+  <tr><td>1</td><td>Login ke akun Generator</td><td>/login</td></tr>
+  <tr><td>2</td><td>Melihat ringkasan bisnis</td><td>/generator/dashboard</td></tr>
+  <tr><td>3</td><td>Menyetor limbah kayu (foto + data)</td><td>/generator/report-waste</td></tr>
+  <tr><td>4</td><td>Mengelola daftar limbah</td><td>/generator/waste</td></tr>
+  <tr><td>5</td><td>Membeli kayu dari Supplier</td><td>/generator/buy-timber</td></tr>
+  <tr><td>6</td><td>Checkout &amp; pembayaran</td><td>/generator/checkout</td></tr>
+  <tr><td>7</td><td>Melacak pesanan kayu</td><td>/generator/timber-orders</td></tr>
+  <tr><td>8</td><td>Mengelola produk furnitur</td><td>/generator/products</td></tr>
+  <tr><td>9</td><td>Mengelola profil</td><td>/generator/profile</td></tr>
+</table>
+
+<h2>1.4 Istilah Penting</h2>
+<table>
+  <tr><th>Istilah</th><th>Arti</th></tr>
+  <tr><td>Limbah Kayu</td><td>Sisa potongan kayu dari proses produksi</td></tr>
+  <tr><td>Waste Listing</td><td>Data limbah yang didaftarkan untuk dijual</td></tr>
+  <tr><td>Offcut</td><td>Potongan kayu sisa produksi (besar/kecil)</td></tr>
+  <tr><td>Shaving</td><td>Serutan kayu tipis</td></tr>
+  <tr><td>Sawdust</td><td>Serbuk gergaji</td></tr>
+  <tr><td>Bid</td><td>Penawaran harga dari Aggregator</td></tr>
+  <tr><td>Pickup</td><td>Proses penjemputan limbah oleh Aggregator</td></tr>
+  <tr><td>Raw Timber</td><td>Kayu gelondongan mentah yang dibeli dari Supplier</td></tr>
+  <tr><td>Snap Midtrans</td><td>Gerbang pembayaran digital</td></tr>
+  <tr><td>Tracking ID</td><td>Kode unik untuk melacak transaksi</td></tr>
+</table>
+
+<!-- ============ BAB 2 ============ -->
+<div class="page-break"></div>
+<h1 id="bab2">Bab 2: Memulai</h1>
+
+<h2>2.1 Akses ke Aplikasi</h2>
+<p>WoodLoop dapat diakses melalui browser web di alamat:</p>
+<pre>https://woodloop.pasarjepara.com</pre>
+<p><strong>Persyaratan sistem:</strong></p>
+<ul>
+  <li>Browser modern (Chrome, Firefox, Edge, Safari)</li>
+  <li>Koneksi internet yang stabil</li>
+  <li>Akun Generator yang sudah terdaftar</li>
+</ul>
+
+<h2>2.2 Login</h2>
+<ol>
+  <li>Buka halaman utama WoodLoop</li>
+  <li>Klik tombol <strong>"Lanjut"</strong> atau <strong>"Mulai"</strong> pada layar onboarding</li>
+  <li>Pilih peran <strong>"Generator"</strong> pada layar pemilihan peran</li>
+  <li>Klik <strong>"Konfirmasi"</strong></li>
+  <li>Pada halaman login, masukkan email dan kata sandi</li>
+  <li>Klik tombol <strong>"Masuk"</strong></li>
+</ol>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/01-generator-dashboard.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 2.1 — Dashboard Generator setelah login</figcaption>
+  </figure>
+<div class="note"><strong>Lupa Kata Sandi?</strong> Klik tautan "Lupa Kata Sandi?" di halaman login dan ikuti petunjuk untuk mereset kata sandi melalui email.</div>
+
+<h2>2.3 Navigasi Antarmuka</h2>
+<p>Setelah login, Anda akan melihat <strong>sidebar navigasi</strong> di sebelah kiri dengan menu berikut:</p>
+<table>
+  <tr><th>Menu</th><th>Ikon</th><th>Halaman</th><th>Fungsi</th></tr>
+  <tr><td>Dashboard</td><td>📊</td><td>/generator/dashboard</td><td>Ringkasan bisnis</td></tr>
+  <tr><td>Setor Limbah</td><td>🗑️</td><td>/generator/report-waste</td><td>Mendaftarkan limbah baru</td></tr>
+  <tr><td>Daftar Limbah</td><td>📋</td><td>/generator/waste</td><td>Mengelola limbah yang sudah disetor</td></tr>
+  <tr><td>Beli Kayu</td><td>🪵</td><td>/generator/buy-timber</td><td>Marketplace kayu dari Supplier</td></tr>
+  <tr><td>Produk Saya</td><td>📦</td><td>/generator/products</td><td>Mengelola produk furnitur</td></tr>
+  <tr><td>Pesanan Kayu</td><td>📑</td><td>/generator/timber-orders</td><td>Melacak pembelian kayu</td></tr>
+</table>
+
+<h3>Elemen Antarmuka Lainnya</h3>
+<table>
+  <tr><th>Elemen</th><th>Lokasi</th><th>Fungsi</th></tr>
+  <tr><td>Breadcrumb</td><td>Atas halaman</td><td>Menunjukkan posisi halaman saat ini</td></tr>
+  <tr><td>Notifikasi</td><td>Ikon lonceng</td><td>Pemberitahuan sistem</td></tr>
+  <tr><td>Akun</td><td>Kanan atas (inisial)</td><td>Menu profil, logout</td></tr>
+  <tr><td>Mode Gelap</td><td>Atas</td><td>Toggle tema terang/gelap</td></tr>
+  <tr><td>Ganti Bahasa</td><td>Atas</td><td>Switch Indonesia/English</td></tr>
+</table>
+<div class="warn"><strong>Penting:</strong> Menu navigasi hanya menampilkan fitur yang relevan dengan peran Generator. Setiap peran (Supplier, Aggregator, dll) memiliki menu yang berbeda.</div>
+
+<h2>2.4 Mode Gelap &amp; Ganti Bahasa</h2>
+<p>Klik tombol <strong>"Mode Gelap"</strong> di bagian atas halaman untuk beralih antara tema terang dan gelap. Klik tombol <strong>"Ganti Bahasa"</strong> untuk beralih antara Bahasa Indonesia dan English. Pengaturan akan tersimpan secara otomatis untuk kunjungan berikutnya.</p>
+
+<!-- ============ BAB 3 ============ -->
+<div class="page-break"></div>
+<h1 id="bab3">Bab 3: Dashboard Generator</h1>
+<p>Dashboard Generator adalah halaman utama yang muncul setelah login. Di sini Anda dapat melihat ringkasan bisnis secara sekilas.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/01-generator-dashboard.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 3.1 — Dashboard Generator</figcaption>
+  </figure>
+
+<h2>3.1 Ringkasan Kartu (Summary Cards)</h2>
+<table>
+  <tr><th>Kartu</th><th>Ikon</th><th>Menampilkan</th></tr>
+  <tr><td>Saldo Dompet</td><td>👛</td><td>Saldo dari penjualan limbah yang sudah dijemput</td></tr>
+  <tr><td>Limbah Disetor</td><td>🗑️</td><td>Total limbah yang sudah disetorkan</td></tr>
+  <tr><td>Produk Aktif</td><td>📦</td><td>Jumlah produk generator yang aktif</td></tr>
+  <tr><td>Tawaran Masuk</td><td>📨</td><td>Jumlah penawaran (bidding) dari Aggregator</td></tr>
+</table>
+
+<h2>3.2 Aktivitas Terbaru</h2>
+<p>Di bagian bawah dashboard, terdapat daftar <strong>aktivitas terbaru</strong> yang menampilkan riwayat transaksi seperti:</p>
+<ul>
+  <li>Limbah disetor — "Anda menyetor limbah Jati — Offcut Besar"</li>
+  <li>Tawaran masuk — "Aggregator menawar limbah Anda sebesar Rp50.000"</li>
+  <li>Pickup dijadwalkan — "Pickup limbah dijadwalkan besok"</li>
+  <li>Pembayaran diterima — "Saldo dompet bertambah Rp100.000"</li>
+  <li>Pesanan kayu — "Pesanan kayu dari Supplier sedang diproses"</li>
+</ul>
+
+<h2>3.3 Menu Cepat (Quick Actions)</h2>
+<table>
+  <tr><th>Tombol</th><th>Fungsi</th><th>Tujuan</th></tr>
+  <tr><td>🗑️ Setor Limbah</td><td>Membuka form setor limbah</td><td>/generator/report-waste</td></tr>
+  <tr><td>🪵 Beli Kayu</td><td>Membuka marketplace kayu</td><td>/generator/buy-timber</td></tr>
+  <tr><td>📦 Produk Saya</td><td>Mengelola produk furnitur</td><td>/generator/products</td></tr>
+</table>
+
+<!-- ============ BAB 4 ============ -->
+<div class="page-break"></div>
+<h1 id="bab4">Bab 4: Setor Limbah</h1>
+<p>Fitur <strong>Setor Limbah</strong> adalah fitur utama Generator — melaporkan limbah kayu yang ingin dijual ke Aggregator. Prosesnya terdiri dari <strong>4 langkah</strong> dalam satu formulir berurutan.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/02-generator-report-waste.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 4.1 — Halaman Setor Limbah — Langkah 1</figcaption>
+  </figure>
+
+<h2>4.1 Mengakses Halaman Setor Limbah</h2>
+<table>
+  <tr><th>Metode</th><th>Cara</th></tr>
+  <tr><td>Sidebar</td><td>Klik menu "Setor Limbah" di sidebar navigasi</td></tr>
+  <tr><td>Dashboard</td><td>Klik tombol "Setor Limbah" pada menu cepat</td></tr>
+  <tr><td>Daftar Limbah</td><td>Klik tombol "Setor Limbah Baru"</td></tr>
+</table>
+
+<h2>4.2 Langkah 1: Foto Limbah</h2>
+<table>
+  <tr><th>Ketentuan</th><th>Detail</th></tr>
+  <tr><td>Minimal foto</td><td>1 foto</td></tr>
+  <tr><td>Maksimal foto</td><td>5 foto</td></tr>
+  <tr><td>Format</td><td>JPG, PNG, WebP</td></tr>
+  <tr><td>Ukuran maks.</td><td>5 MB per file</td></tr>
+</table>
+<ol>
+  <li>Klik area <strong>"Ambil Foto Limbah"</strong> — kamera akan terbuka di perangkat mobile, atau file dialog di desktop</li>
+  <li>Ambil foto dari beberapa sudut untuk hasil terbaik</li>
+  <li>Foto akan muncul sebagai thumbnail pratinjau</li>
+  <li>Klik <strong>"Lanjut"</strong> untuk ke langkah berikutnya</li>
+</ol>
+<div class="tip">Ambil foto dengan pencahayaan yang cukup agar Aggregator bisa melihat kondisi limbah dengan jelas.</div>
+
+<h2>4.3 Langkah 2: Jenis &amp; Bentuk Limbah</h2>
+<table>
+  <tr><th>Field</th><th>Tipe Input</th><th>Keterangan</th></tr>
+  <tr><td>Jenis Kayu</td><td>Dropdown</td><td>Pilih jenis kayu (Jati, Mahoni, Trembesi, dll)</td></tr>
+  <tr><td>Bentuk Limbah</td><td>Pilihan grid</td><td>Offcut besar/kecil, Shaving, Sawdust, Logs end</td></tr>
+  <tr><td>Kondisi</td><td>Dropdown</td><td>Kering, Basah, Berminyak, Campuran</td></tr>
+</table>
+
+<h2>4.4 Langkah 3: Volume &amp; Harga</h2>
+<table>
+  <tr><th>Field</th><th>Tipe Input</th><th>Contoh</th></tr>
+  <tr><td>Volume</td><td>Angka</td><td>50</td></tr>
+  <tr><td>Satuan</td><td>Dropdown</td><td>kg, m³, karung (sack), pickup</td></tr>
+  <tr><td>Estimasi Harga</td><td>Angka (Rp)</td><td>50000</td></tr>
+  <tr><td>Deskripsi</td><td>Textarea</td><td>Limbah potongan kursi, ukuran 10-20cm</td></tr>
+</table>
+
+<h3>Satuan yang Tersedia</h3>
+<table>
+  <tr><th>Satuan</th><th>Penggunaan</th></tr>
+  <tr><td>kg</td><td>Untuk limbah ringan (offcut kecil, serutan)</td></tr>
+  <tr><td>m³</td><td>Untuk limbah dalam volume besar</td></tr>
+  <tr><td>sack</td><td>Untuk limbah dalam karungan (serbuk gergaji)</td></tr>
+  <tr><td>pickup</td><td>Untuk limbah dalam muatan pick-up</td></tr>
+</table>
+
+<h2>4.5 Langkah 4: Konfirmasi</h2>
+<p>Pada langkah terakhir, Anda akan melihat ringkasan data yang sudah diisi:</p>
+<ol>
+  <li><strong>Preview foto</strong> — Thumbnail foto yang sudah diupload</li>
+  <li><strong>Detail limbah</strong> — Jenis kayu, bentuk, kondisi</li>
+  <li><strong>Volume &amp; harga</strong> — Estimasi harga yang diminta</li>
+  <li>Klik <strong>"Setor Limbah"</strong> untuk mengirim</li>
+</ol>
+<div class="note"><strong>Berhasil!</strong> Limbah Anda akan muncul di Daftar Limbah dengan status "Tersedia" dan bisa dilihat oleh Aggregator.</div>
+
+<h3>Progress Bar</h3>
+<pre>Langkah 1: [████████░░░░] 25% — Foto Limbah
+Langkah 2: [████████████░░] 50% — Jenis &amp; Bentuk
+Langkah 3: [██████████████░░] 75% — Volume &amp; Harga
+Langkah 4: [████████████████] 100% — Konfirmasi</pre>
+
+<h2>4.6 Jenis &amp; Bentuk Limbah</h2>
+<table>
+  <tr><th>Bentuk Limbah</th><th>Ilustrasi</th><th>Contoh Penggunaan</th></tr>
+  <tr><td>Offcut Besar</td><td>Potongan kayu &gt; 30cm</td><td>Bisa diolah jadi produk kecil</td></tr>
+  <tr><td>Offcut Kecil</td><td>Potongan kayu &lt; 30cm</td><td>Cocok untuk sambungan, inlay</td></tr>
+  <tr><td>Shaving</td><td>Serutan tipis</td><td>Bahan baku particle board, kompos</td></tr>
+  <tr><td>Sawdust</td><td>Serbuk gergaji</td><td>Bahan baku briket, jamur</td></tr>
+  <tr><td>Logs End</td><td>Ujung kayu gelondongan</td><td>Bisa diolah jadi ukiran kecil</td></tr>
+</table>
+
+<table>
+  <tr><th>Kondisi</th><th>Arti</th></tr>
+  <tr><td>Kering</td><td>Kadar air rendah, siap pakai</td></tr>
+  <tr><td>Basah</td><td>Baru dipotong, kadar air tinggi</td></tr>
+  <tr><td>Berminyak</td><td>Mengandung minyak kayu alami</td></tr>
+  <tr><td>Campuran</td><td>Berbagai jenis/kondisi dalam satu lot</td></tr>
+</table>
+
+<!-- ============ BAB 5 ============ -->
+<div class="page-break"></div>
+<h1 id="bab5">Bab 5: Daftar Limbah</h1>
+<p>Halaman <strong>Daftar Limbah</strong> menampilkan seluruh limbah yang sudah Anda setorkan, lengkap dengan status dan aksi pengelolaan.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/03-generator-waste-list.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 5.1 — Halaman Daftar Limbah</figcaption>
+  </figure>
+
+<h2>5.1 Melihat Daftar Limbah</h2>
+<table>
+  <tr><th>Kolom</th><th>Keterangan</th></tr>
+  <tr><td>Foto</td><td>Thumbnail foto utama limbah</td></tr>
+  <tr><td>Jenis Kayu</td><td>Nama jenis kayu (Jati, Mahoni, dll)</td></tr>
+  <tr><td>Bentuk</td><td>Bentuk limbah (Offcut, Shaving, dll)</td></tr>
+  <tr><td>Volume</td><td>Jumlah dengan satuan</td></tr>
+  <tr><td>Estimasi Harga</td><td>Harga yang diharapkan</td></tr>
+  <tr><td>Status</td><td>Status ketersediaan limbah</td></tr>
+  <tr><td>Tanggal</td><td>Tanggal disetorkan</td></tr>
+  <tr><td>Aksi</td><td>Tombol edit / tindakan lainnya</td></tr>
+</table>
+
+<h2>5.2 Filter Status</h2>
+<table>
+  <tr><th>Filter</th><th>Hasil</th></tr>
+  <tr><td>Semua Status</td><td>Menampilkan seluruh limbah</td></tr>
+  <tr><td>Tersedia</td><td>Limbah yang masih menunggu penawaran</td></tr>
+  <tr><td>Dibooking</td><td>Limbah yang sudah ditawar dan menunggu penjemputan</td></tr>
+  <tr><td>Terjual</td><td>Limbah yang sudah dijemput</td></tr>
+</table>
+
+<h2>5.3 Status Limbah</h2>
+<table>
+  <tr><th>Status</th><th>Arti</th></tr>
+  <tr><td>Tersedia</td><td>Limbah siap ditawar Aggregator</td></tr>
+  <tr><td>Dibooking</td><td>Ada Aggregator yang menawar dan menunggu pickup</td></tr>
+  <tr><td>Terjual / Terkumpul</td><td>Limbah sudah dijemput Aggregator</td></tr>
+</table>
+<pre>Tersedia → Dibooking → Terjual/Terkumpul</pre>
+
+<h2>5.4 Edit Limbah</h2>
+<ol>
+  <li>Klik ikon <strong>pensil</strong> pada baris limbah yang ingin diedit</li>
+  <li>Anda akan diarahkan ke halaman edit</li>
+  <li>Ubah field yang diperlukan (Jenis Kayu, Bentuk, Kondisi, Volume, Satuan, Estimasi Harga, Foto, Deskripsi)</li>
+  <li>Klik <strong>"Simpan"</strong> untuk menyimpan perubahan</li>
+</ol>
+<div class="warn">Limbah dengan status "Dibooking" atau "Terjual" tidak dapat diedit karena sudah dalam proses transaksi.</div>
+
+<h2>5.5 Hapus Limbah</h2>
+<ol>
+  <li>Klik ikon <strong>tong sampah</strong> pada baris limbah</li>
+  <li>Konfirmasi dialog penghapusan yang muncul</li>
+  <li>Klik <strong>"Hapus"</strong> untuk mengonfirmasi</li>
+</ol>
+<div class="warn">Hanya limbah dengan status "Tersedia" yang bisa dihapus. Penghapusan bersifat permanen.</div>
+
+<h2>5.6 Penawaran dari Aggregator</h2>
+<p>Setelah limbah disetor dengan status <strong>Tersedia</strong>, Aggregator dapat melihat dan mengirimkan penawaran (bid). Prosesnya:</p>
+<ul>
+  <li>Anda melihat jumlah penawaran masuk di Dashboard</li>
+  <li>Jika Anda menerima penawaran: status limbah → "Dibooking", pickup otomatis dijadwalkan, penawaran lain ditolak</li>
+  <li>Saat Aggregator menyelesaikan pickup: status → "Terjual", saldo dompet bertambah, notifikasi "Limbah Berhasil Dijemput!"</li>
+</ul>
+
+<!-- ============ BAB 6 ============ -->
+<div class="page-break"></div>
+<h1 id="bab6">Bab 6: Beli Kayu Mentah</h1>
+<p>Generator dapat <strong>membeli kayu mentah (raw timber)</strong> dari Supplier untuk bahan baku produksi melalui halaman marketplace.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/04-generator-buy-timber.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 6.1 — Halaman Beli Kayu Mentah</figcaption>
+  </figure>
+
+<h2>6.1 Marketplace Kayu</h2>
+<p>Setiap kayu ditampilkan dalam bentuk <strong>kartu</strong> berisi informasi lengkap:</p>
+<table>
+  <tr><th>Info pada Kartu</th><th>Keterangan</th></tr>
+  <tr><td>Foto</td><td>Gambar utama kayu</td></tr>
+  <tr><td>Jenis Kayu</td><td>Nama jenis kayu (Jati, Mahoni, dll)</td></tr>
+  <tr><td>Volume</td><td>Ukuran dalam m³</td></tr>
+  <tr><td>Harga</td><td>Harga per m³ atau total</td></tr>
+  <tr><td>Supplier</td><td>Nama pemasok kayu</td></tr>
+  <tr><td>Tombol</td><td>"Pesan Sekarang" atau tambah ke keranjang</td></tr>
+</table>
+
+<h2>6.2 Filter &amp; Pencarian</h2>
+<table>
+  <tr><th>Fitur</th><th>Fungsi</th></tr>
+  <tr><td>Pencarian</td><td>Cari kayu berdasarkan jenis atau kata kunci</td></tr>
+  <tr><td>Filter Jenis Kayu</td><td>Tampilkan hanya jenis kayu tertentu</td></tr>
+  <tr><td>Filter Harga</td><td>Tentukan range harga (minimal — maksimal)</td></tr>
+  <tr><td>Reset Filter</td><td>Kembalikan semua filter ke default</td></tr>
+</table>
+
+<h2>6.3 Kartu Kayu</h2>
+<pre>┌────────────────────────────────────┐
+│ [Foto Kayu]                         │
+│                                     │
+│ 🪵 Jati                           │
+│ 📏 2.5 m³                         │
+│ 💰 Rp 5.000.000                   │
+│ 👤 Supplier: CV Kayu Jati Abadi   │
+│                                     │
+│     [Pesan Sekarang]  [💬 Chat]   │
+└────────────────────────────────────┘</pre>
+
+<h2>6.4 Memesan Kayu</h2>
+<p><strong>Cara 1: Pesan Langsung</strong></p>
+<ol>
+  <li>Klik tombol <strong>"Pesan Sekarang"</strong> pada kartu kayu</li>
+  <li>Masukkan jumlah yang diinginkan</li>
+  <li>Kayu langsung masuk ke keranjang</li>
+</ol>
+<p><strong>Cara 2: Tambah ke Keranjang</strong></p>
+<ol>
+  <li>Klik tombol keranjang pada kartu kayu</li>
+  <li>Lanjutkan browsing dan tambah kayu lain</li>
+  <li>Buka halaman Keranjang untuk checkout</li>
+</ol>
+<p>Klik tombol <strong>Chat</strong> untuk menghubungi Supplier jika ada pertanyaan sebelum memesan.</p>
+
+<!-- ============ BAB 7 ============ -->
+<div class="page-break"></div>
+<h1 id="bab7">Bab 7: Keranjang &amp; Checkout</h1>
+<p>Setelah memilih kayu dari marketplace, Anda dapat mengelola pesanan di halaman <strong>Keranjang</strong> sebelum melanjutkan ke <strong>Checkout</strong>.</p>
+
+<h2>7.1 Keranjang Belanja</h2>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/07-generator-cart.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 7.1 — Halaman Keranjang Belanja</figcaption>
+  </figure>
+<p>Item dikelompokkan berdasarkan Supplier dengan subtotal per Supplier dan grand total seluruh pesanan.</p>
+
+<h2>7.2 Mengelola Item Keranjang</h2>
+<table>
+  <tr><th>Aksi</th><th>Cara</th></tr>
+  <tr><td>Tambah jumlah</td><td>Klik tombol + pada item</td></tr>
+  <tr><td>Kurangi jumlah</td><td>Klik tombol - pada item</td></tr>
+  <tr><td>Hapus item</td><td>Klik ikon tong sampah pada item</td></tr>
+  <tr><td>Kosongkan keranjang</td><td>Klik tombol "Kosongkan"</td></tr>
+</table>
+<div class="tip">Data keranjang disimpan secara lokal di browser Anda, sehingga tetap tersimpan meskipun Anda menutup halaman.</div>
+
+<h2>7.3 Checkout</h2>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/11-generator-checkout.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 7.2 — Halaman Checkout</figcaption>
+  </figure>
+<ol>
+  <li><strong>Review pesanan</strong> — Periksa kembali item yang dipesan, dikelompokkan per Supplier</li>
+  <li><strong>Total harga</strong> — Pastikan jumlah total sudah sesuai</li>
+  <li>Klik <strong>"Buat Pesanan"</strong> untuk mengonfirmasi</li>
+</ol>
+<p><strong>Proses di backend:</strong> Sistem membuat pesanan induk untuk setiap Supplier, detail pesanan untuk setiap item, memvalidasi harga dari sisi server, mengurangi stok kayu Supplier, dan memberi notifikasi ke Supplier.</p>
+
+<h2>7.4 Halaman Sukses</h2>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/12-generator-order-success.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 7.3 — Halaman Sukses Pesanan</figcaption>
+  </figure>
+<ul>
+  <li>Pesan sukses — Konfirmasi bahwa pesanan berhasil dibuat</li>
+  <li>ID Pesanan — Nomor referensi untuk setiap pesanan</li>
+  <li>Total tagihan — Jumlah yang harus dibayar</li>
+  <li>Tombol <strong>"Lihat Pesanan Saya"</strong> — ke halaman Pesanan Kayu</li>
+</ul>
+
+<!-- ============ BAB 8 ============ -->
+<div class="page-break"></div>
+<h1 id="bab8">Bab 8: Pesanan Kayu</h1>
+<p>Halaman <strong>Pesanan Kayu</strong> menampilkan semua pesanan pembelian kayu yang Anda buat ke Supplier, lengkap dengan status dan aksi pembayaran.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/06-generator-timber-orders.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 8.1 — Halaman Pesanan Kayu</figcaption>
+  </figure>
+
+<h2>8.1 Daftar Pesanan</h2>
+<table>
+  <tr><th>Kolom</th><th>Keterangan</th></tr>
+  <tr><td>ID Pesanan</td><td>Nomor unik pesanan</td></tr>
+  <tr><td>Supplier</td><td>Nama pemasok kayu</td></tr>
+  <tr><td>Total</td><td>Jumlah tagihan</td></tr>
+  <tr><td>Status</td><td>Status pemrosesan</td></tr>
+  <tr><td>Tanggal</td><td>Tanggal pemesanan</td></tr>
+  <tr><td>Aksi</td><td>Tombol bayar, detail, atau batal</td></tr>
+</table>
+
+<h2>8.2 Status Pesanan</h2>
+<table>
+  <tr><th>Status</th><th>Arti</th></tr>
+  <tr><td>Menunggu Pembayaran</td><td>Pesanan dibuat, menunggu pembayaran via Midtrans</td></tr>
+  <tr><td>Dibayar</td><td>Pembayaran berhasil, Supplier akan memproses</td></tr>
+  <tr><td>Diproses</td><td>Supplier sedang memproses pesanan</td></tr>
+  <tr><td>Dikirim</td><td>Kayu sedang dalam pengiriman</td></tr>
+  <tr><td>Diterima</td><td>Kayu sudah sampai ke Generator</td></tr>
+  <tr><td>Dibatalkan</td><td>Pesanan dibatalkan</td></tr>
+</table>
+<pre>Menunggu Pembayaran → Dibayar → Diproses → Dikirim → Diterima
+         ↓
+    Dibatalkan</pre>
+
+<h2>8.3 Pembayaran via Midtrans</h2>
+<p>WoodLoop menggunakan <strong>Midtrans Snap</strong> sebagai gerbang pembayaran:</p>
+<ol>
+  <li>Klik tombol <strong>"Bayar"</strong> pada pesanan dengan status "Menunggu Pembayaran"</li>
+  <li>Dialog Midtrans Snap akan terbuka</li>
+  <li>Pilih metode pembayaran: Transfer Bank, Kartu Kredit, E-Wallet, atau Convenience Store</li>
+  <li>Ikuti instruksi pembayaran yang muncul</li>
+  <li>Setelah berhasil, status berubah menjadi "Dibayar"</li>
+</ol>
+
+<h2>8.4 Membatalkan Pesanan</h2>
+<p>Pesanan dengan status <strong>"Menunggu Pembayaran"</strong> bisa dibatalkan dengan klik tombol <strong>"Batal"</strong> dan konfirmasi di dialog.</p>
+<div class="warn">Pesanan dengan status "Dibayar" atau selanjutnya tidak bisa dibatalkan melalui sistem. Hubungi Supplier langsung.</div>
+
+<!-- ============ BAB 9 ============ -->
+<div class="page-break"></div>
+<h1 id="bab9">Bab 9: Produk Saya</h1>
+<p>Generator dapat mendaftarkan <strong>produk furnitur atau kerajinan kayu</strong> yang dijual melalui halaman Produk Saya.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/05-generator-products.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 9.1 — Halaman Produk Saya</figcaption>
+  </figure>
+
+<h2>9.1 Daftar Produk</h2>
+<table>
+  <tr><th>Kolom</th><th>Keterangan</th></tr>
+  <tr><td>Foto</td><td>Thumbnail foto utama produk</td></tr>
+  <tr><td>Nama</td><td>Nama produk</td></tr>
+  <tr><td>Kategori</td><td>Furniture, Custom Order, Raw Material, Lainnya</td></tr>
+  <tr><td>Harga</td><td>Harga jual produk</td></tr>
+  <tr><td>Stok</td><td>Jumlah unit tersedia</td></tr>
+  <tr><td>Status</td><td>Aktif, Sold Out, atau Draft</td></tr>
+  <tr><td>Tanggal</td><td>Tanggal dibuat</td></tr>
+  <tr><td>Aksi</td><td>Tombol edit / hapus</td></tr>
+</table>
+
+<h2>9.2 Menambahkan Produk Baru</h2>
+<p>Klik tombol <strong>"Tambah Produk"</strong> untuk membuka form produk baru.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/09-generator-product-new.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 9.2 — Form Tambah Produk Baru</figcaption>
+  </figure>
+<table>
+  <tr><th>Field</th><th>Wajib</th><th>Keterangan</th></tr>
+  <tr><td>Nama Produk</td><td>Ya</td><td>Contoh: "Meja Jati Minimalis"</td></tr>
+  <tr><td>Kategori</td><td>Ya</td><td>Furniture, Custom Order, Raw Material, Lainnya</td></tr>
+  <tr><td>Status</td><td>Ya</td><td>Aktif, Sold Out, atau Draft</td></tr>
+  <tr><td>Jenis Kayu</td><td>Tidak</td><td>Pilih jenis kayu yang digunakan</td></tr>
+  <tr><td>Harga</td><td>Ya</td><td>Dalam Rupiah</td></tr>
+  <tr><td>Stok</td><td>Tidak</td><td>Jumlah unit tersedia</td></tr>
+  <tr><td>Deskripsi</td><td>Tidak</td><td>Cerita atau spesifikasi produk</td></tr>
+  <tr><td>Foto</td><td>Ya</td><td>Minimal 1 foto, maksimal 5</td></tr>
+</table>
+<p>Upload foto menggunakan FileDropzone (drag &amp; drop, klik untuk upload, atau kamera). Klik <strong>"Simpan"</strong> untuk menyimpan.</p>
+
+<h2>9.3 Detail Produk</h2>
+<p>Klik pada nama produk untuk melihat detail lengkap: galeri foto dengan lightbox, info dasar produk, harga &amp; stok, deskripsi, dan tombol edit/hapus.</p>
+
+<h2>9.4 Edit &amp; Hapus Produk</h2>
+<p><strong>Edit:</strong> Klik ikon pensil pada baris produk, ubah field, lalu klik "Simpan".<br/>
+<strong>Hapus:</strong> Klik ikon tong sampah, konfirmasi dialog.</p>
+<div class="warn">Penghapusan produk bersifat permanen dan tidak dapat dibatalkan.</div>
+
+<h3>Status Produk</h3>
+<table>
+  <tr><th>Status</th><th>Arti</th></tr>
+  <tr><td>Aktif</td><td>Produk tampil dan bisa dibeli</td></tr>
+  <tr><td>Sold Out</td><td>Stok habis, produk masih tampil tapi tidak bisa dibeli</td></tr>
+  <tr><td>Draft</td><td>Produk tidak tampil, masih dalam penyusunan</td></tr>
+</table>
+
+<!-- ============ BAB 10 ============ -->
+<div class="page-break"></div>
+<h1 id="bab10">Bab 10: Profil Generator</h1>
+<p>Halaman profil menampilkan informasi pribadi akun Generator dan dapat diedit sesuai kebutuhan.</p>
+<figure>
+    <img src="file:///home/khanif/www/woodloop/docs/manual-book/generator/08-generator-profile.png" style="max-width:100%;border:1px solid #ddd;border-radius:4px;" />
+    <figcaption style="text-align:center;font-size:12px;color:#666;margin-top:4px;">Gambar 10.1 — Halaman Profil Generator</figcaption>
+  </figure>
+
+<h2>10.1 Informasi Profil</h2>
+<table>
+  <tr><th>Field</th><th>Keterangan</th></tr>
+  <tr><td>Nama</td><td>Nama lengkap atau nama usaha</td></tr>
+  <tr><td>Email</td><td>Alamat email terdaftar (tidak bisa diubah)</td></tr>
+  <tr><td>No. Telepon</td><td>Nomor kontak yang bisa dihubungi</td></tr>
+  <tr><td>Alamat</td><td>Alamat workshop atau tempat usaha</td></tr>
+</table>
+
+<h2>10.2 Edit Profil</h2>
+<ol>
+  <li>Klik tombol <strong>"Edit Profil"</strong></li>
+  <li>Ubah field yang diperlukan: Nama (wajib), No. Telepon (opsional), Alamat (opsional)</li>
+  <li>Klik <strong>"Simpan"</strong> untuk menyimpan perubahan</li>
+</ol>
+<div class="tip">Pastikan nomor telepon dan alamat selalu terbaru agar Aggregator bisa menjemput limbah ke lokasi yang tepat.</div>
+
+<p>Profil Generator dapat diakses melalui dropdown avatar pojok kanan atas atau URL langsung <code>/generator/profile</code>.</p>
+
+<!-- ============ BAB 11 ============ -->
+<div class="page-break"></div>
+<h1 id="bab11">Bab 11: Troubleshooting</h1>
+
+<h2>11.1 Tidak Bisa Login</h2>
+<table>
+  <tr><th>Masalah</th><th>Solusi</th></tr>
+  <tr><td>Lupa password</td><td>Klik "Lupa Kata Sandi?" di halaman login, ikuti instruksi reset</td></tr>
+  <tr><td>Email tidak terdaftar</td><td>Pastikan mendaftar dengan peran Generator terlebih dahulu</td></tr>
+  <tr><td>Salah peran</td><td>Pastikan memilih Generator saat login, bukan peran lain</td></tr>
+  <tr><td>Browser error</td><td>Coba gunakan browser berbeda atau mode incognito</td></tr>
+</table>
+
+<h2>11.2 Foto Gagal Upload</h2>
+<table>
+  <tr><th>Masalah</th><th>Solusi</th></tr>
+  <tr><td>File terlalu besar</td><td>Maksimal 5 MB per file</td></tr>
+  <tr><td>Format tidak didukung</td><td>Gunakan JPG, PNG, atau WebP</td></tr>
+  <tr><td>Koneksi terputus</td><td>Pastikan koneksi internet stabil</td></tr>
+  <tr><td>Terlalu banyak foto</td><td>Maksimal 5 foto per limbah atau produk</td></tr>
+</table>
+
+<h2>11.3 Pembayaran Gagal</h2>
+<table>
+  <tr><th>Masalah</th><th>Solusi</th></tr>
+  <tr><td>Snap Midtrans tidak muncul</td><td>Aktifkan pop-up di browser, refresh halaman</td></tr>
+  <tr><td>Waktu habis</td><td>Midtrans Snap memiliki batas waktu, ulangi dari awal</td></tr>
+  <tr><td>Status tidak berubah</td><td>Refresh halaman, jika masih sama hubungi support</td></tr>
+</table>
+
+<h2>11.4 Tidak Ada Penawaran Masuk</h2>
+<table>
+  <tr><th>Kemungkinan</th><th>Saran</th></tr>
+  <tr><td>Belum ada Aggregator yang tertarik</td><td>Pastikan foto dan deskripsi limbah jelas</td></tr>
+  <tr><td>Harga terlalu tinggi</td><td>Coba turunkan estimasi harga</td></tr>
+  <tr><td>Baru sebentar</td><td>Tunggu beberapa saat, Aggregator perlu waktu melihat</td></tr>
+</table>
+
+<h2>11.5 Kontak Bantuan</h2>
+<table>
+  <tr><th>Saluran</th><th>Detail</th></tr>
+  <tr><td>Email</td><td>woodloop.app@gmail.com</td></tr>
+  <tr><td>Website</td><td>woodloop.pasarjepara.com</td></tr>
+</table>
+<p>Sertakan informasi berikut saat melapor: nama akun, deskripsi masalah (jelaskan langkah yang sudah dilakukan), screenshot jika ada pesan error, dan waktu kejadian.</p>
+
+</body>
+</html>

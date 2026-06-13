@@ -1,0 +1,48 @@
+{
+  "cookies": [
+    {
+      "name": "pb_auth",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJfcGJfdXNlcnNfYXV0aF8iLCJleHAiOjE3ODA4ODgzNjEsImlkIjoiMWRnbHQyYjVjYWtyYWw4IiwicmVmcmVzaGFibGUiOnRydWUsInR5cGUiOiJhdXRoIn0.y5i37Bz71UpIQiHmMbsLjYAmOjph_7hkp5W_J_XImFA",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1780888361.0,
+      "size": 231,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "pb_role",
+      "value": "generator",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1780888361.0,
+      "size": 16,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:3001",
+      "localStorage": [
+        {
+          "name": "woodloop-auth",
+          "value": "{\"state\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJfcGJfdXNlcnNfYXV0aF8iLCJleHAiOjE3ODA4ODgzNjEsImlkIjoiMWRnbHQyYjVjYWtyYWw4IiwicmVmcmVzaGFibGUiOnRydWUsInR5cGUiOiJhdXRoIn0.y5i37Bz71UpIQiHmMbsLjYAmOjph_7hkp5W_J_XImFA\",\"user\":{\"address\":\"Jl. Pemuda No. 1, Jepara\",\"avatar\":\"\",\"bio\":\"\",\"collectionId\":\"_pb_users_auth_\",\"collectionName\":\"users\",\"created\":\"2026-02-26 14:48:40.063Z\",\"email\":\"demo.generator@woodloop.id\",\"emailVisibility\":true,\"fleet_type\":\"\",\"id\":\"1dglt2b5cakral8\",\"is_verified\":false,\"location_lat\":-6.58,\"location_lng\":110.66,\"machine_type\":\"\",\"name\":\"Demo Generator\",\"phone\":\"081234567898\",\"production_capacity\":\"\",\"role\":\"generator\",\"updated\":\"2026-05-31 06:41:53.313Z\",\"user_code\":\"\",\"verified\":true,\"warehouse_capacity\":\"\",\"workshop_name\":\"Demo Generator Workshop\"},\"isAuthenticated\":true,\"role\":\"generator\"},\"version\":0}"
+        },
+        {
+          "name": "pocketbase_auth",
+          "value": "{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJfcGJfdXNlcnNfYXV0aF8iLCJleHAiOjE3ODA4ODgzNjEsImlkIjoiMWRnbHQyYjVjYWtyYWw4IiwicmVmcmVzaGFibGUiOnRydWUsInR5cGUiOiJhdXRoIn0.y5i37Bz71UpIQiHmMbsLjYAmOjph_7hkp5W_J_XImFA\",\"record\":{\"address\":\"Jl. Pemuda No. 1, Jepara\",\"avatar\":\"\",\"bio\":\"\",\"collectionId\":\"_pb_users_auth_\",\"collectionName\":\"users\",\"created\":\"2026-02-26 14:48:40.063Z\",\"email\":\"demo.generator@woodloop.id\",\"emailVisibility\":true,\"fleet_type\":\"\",\"id\":\"1dglt2b5cakral8\",\"is_verified\":false,\"location_lat\":-6.58,\"location_lng\":110.66,\"machine_type\":\"\",\"name\":\"Demo Generator\",\"phone\":\"081234567898\",\"production_capacity\":\"\",\"role\":\"generator\",\"updated\":\"2026-05-31 06:41:53.313Z\",\"user_code\":\"\",\"verified\":true,\"warehouse_capacity\":\"\",\"workshop_name\":\"Demo Generator Workshop\"}}"
+        },
+        {
+          "name": "woodloop_onboarding_done",
+          "value": "true"
+        }
+      ],
+      "sessionStorage": []
+    }
+  ]
+}

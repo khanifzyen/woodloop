@@ -10,8 +10,7 @@
 - Extract notification hooks into a separate file (`use-notifications.ts`) with re-exports from the original file for backward compatibility. Confidence: 0.70
 
 # deployment
-- Use Docker-based deployment with images hosted on GHCR.io and deployed to a VPS. Confidence: 0.65
-
+See [deployment/taste.md](deployment/taste.md)
 # project
 - Use localStorage for cart items rather than a PocketBase collection — cart is temporary session data that doesn't need cross-device sync or realtime updates. Confidence: 0.60
 - Validate prices server-side on checkout (in PB hooks) to prevent client-side price manipulation — ensure the price stored in the listing/order_detail is fetched from the actual listing record, not from the client's request body. Confidence: 0.70
@@ -33,6 +32,9 @@
 
 # agent-browser
 - When running agent-browser for web testing, target the local dev server at `localhost:3001` instead of production URLs. Confidence: 0.70
+
+# pdf-generation
+- For manual book PDF generation, use the existing `docs/generate-pdf.js` (Puppeteer-based) approach with A4 format, 2cm top/bottom and 2.5cm left/right margins, page-number footers, and `file://` absolute paths for screenshots — following the established supplier documentation approach, not Chrome's `--print-to-pdf` flag. Confidence: 0.65
 
 # ui-layout
 - For template/question selection, use inline radio buttons shown directly (not hidden in a dropdown/Select). Users should be able to see all options at a glance and either pick one or write their own message. Confidence: 0.70
