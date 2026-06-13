@@ -17,7 +17,7 @@ Kami telah menambahkan akses cepat ke fitur **Chat** dan **Notifikasi** di selur
 Kami telah melengkapi dokumen teknis dan bisnis agar proyek siap untuk dipresentasikan atau dilanjutkan oleh tim lain.
 
 *   **`README.md`**: Membuat halaman depan repositori yang berisi deskripsi proyek, fitur utama, teknologi, dan cara instalasi.
-*   **`docs/04-prd.md` (Product Requirement Document)**: Menyusun spesifikasi kebutuhan produk secara mendalam (Bahasa Indonesia), mencakup alur kerja 6 role pengguna dan roadmap.
+*   **`docs/04-prd.md` (Product Requirement Document)**: Menyusun spesifikasi kebutuhan produk secara mendalam (Bahasa Indonesia), mencakup alur kerja 7 role pengguna dan roadmap.
 *   **`docs/05-rab.md` (Rencana Anggaran Biaya)**:
     *   Versi Awal: Estimasi standar agensi profesional (Rp 160jt+).
     *   **Revisi Final:** Paket Hemat / MVP Mahasiswa dengan optimasi budget (Rp 12jt).
@@ -102,7 +102,7 @@ Kami telah menyelesaikan implementasi dukungan multi-bahasa (Inggris dan Indones
     *   Memperbaiki seluruh linting error yang timbul akibat transisi teks konstan (seperti menghapus `const` pada widget `Text`, `Row`, `Column`, `Padding`, dsb. yang kini memuat teks dinamis). 0 errors pada `flutter analyze`.
 
 ## 8. Implementasi Halaman UI Baru & Refactor Navigasi (26 Februari 2026)
-Kami telah menyelesaikan pembuatan 5 halaman UI baru, refaktor navigasi menggunakan `StatefulShellRoute`, dan modifikasi halaman yang sudah ada.
+Kami telah menyelesaikan pembuatan UI baru, refaktor navigasi menggunakan `StatefulShellRoute`, dan modifikasi halaman yang sudah ada.
 
 *   **Halaman Baru:**
     *   `unified_registration_page.dart`: Halaman registrasi dinamis yang menggabungkan 5 form registrasi role menjadi 1 halaman dengan field khusus per role (Supplier: upload sertifikat, Generator: jenis limbah, Aggregator: kapasitas gudang, Converter: spesialisasi, Buyer: alamat pengiriman).

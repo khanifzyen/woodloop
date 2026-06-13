@@ -11,14 +11,15 @@ Nama Proyek: **JEPARA CIRCULAR HUB**
 Tujuan: Menghubungkan aktor-aktor industri kayu yang terfragmentasi (terpisah-pisah) untuk mengubah limbah menjadi sumber daya baru, mencatat jejak karbon (lingkungan), dan efisiensi logistik.
 
 ### 2. Aktor (Pengguna) & Peran Mereka
-Aplikasi ini memiliki **Satu Back-end** (pusat data) tetapi **5 Tampilan Front-end (UI)** yang berbeda tergantung siapa yang login:
+Aplikasi ini memiliki **Satu Back-end** (pusat data) tetapi **7 Tampilan Front-end (UI)** yang berbeda tergantung siapa yang login:
 
 | Aktor | Peran Nyata | Fungsi di Aplikasi |
 | :--- | :--- | :--- |
 | **Supplier** | Pedagang Kayu Gelondongan | Memasukkan data kayu mentah (awal rantai pasok). |
 | **Generator** | Pengrajin Mebel / Sawmill (UKM) | Penghasil limbah. Mereka memfoto tumpukan sisa kayu dan menjualnya via aplikasi. |
 | **Aggregator** | Pengepul / Logistik | "Uber"-nya sampah. Melihat peta lokasi limbah, menjemput, dan menyortir. |
-| **Converter & Desainer** | Pengrajin Souvenir / Energi | Pembeli limbah. Mereka membeli sampah kayu untuk diubah jadi produk baru (misal: tatakan gelas, wall panel). |
+| **Converter** | Pengrajin Kreatif | Pembeli limbah. Membeli bahan daur ulang untuk diubah jadi produk baru. |
+| **Desainer** | Konsultan Desain Sirkular | Memberi saran desain, menulis artikel sirkular, membuka klinik desain berbayar. |
 | **Enabler** | Pemerintah (Dinas LH) / Asosiasi | Pemantau. Melihat dashboard statistik (berapa pohon terselamatkan, emisi CO2 berkurang). |
 | **Buyer (Publik)** | Pembeli Produk Jadi | Konsumen akhir yang men-scan QR Code untuk melihat cerita asal-usul produk. |
 

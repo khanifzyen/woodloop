@@ -105,7 +105,7 @@ Setelah mengisi data diri, Anda akan diminta memilih **peran**:
 ![Halaman Pemilihan Peran](screenshots/04-role-selection.png)
 *Gambar 2.2 — Pilih peran sesuai kegiatan Anda*
 
-Pilih salah satu dari 6 peran. Lihat [Bab 1.2](./01-bab-1-pendahuluan.md#12-siapa-saja-penggunanya) jika bingung memilih peran.
+Pilih salah satu dari 7 peran. Lihat [Bab 1.2](./01-bab-1-pendahuluan.md#12-siapa-saja-penggunanya) jika bingung memilih peran.
 
 > ⚠️ **Penting:** Peran **tidak bisa diubah** setelah registrasi. Pastikan Anda memilih peran yang tepat.
 
@@ -208,7 +208,7 @@ Saat pertama kali membuka WoodLoop (tanpa login), Anda akan melihat **3 slide on
 
 ### 2.4.2 Pemilihan Peran
 
-Setelah onboarding (atau saat registrasi), Anda akan memilih **1 dari 6 peran**:
+Setelah onboarding (atau saat registrasi), Anda akan memilih **1 dari 7 peran**:
 
 | Role | Icon | Warna |
 |------|------|-------|

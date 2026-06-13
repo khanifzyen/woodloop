@@ -114,7 +114,7 @@ Dokumen ini mencatat hasil analisis mendalam terhadap codebase `woodloop_app`, b
 
 ### C1. Registrasi: Perlu Halaman Per-Role atau Form Dinamis?
 
-**Status saat ini:** Ada 5 halaman registrasi terpisah (`supplier_registration_page.dart`, `generator_registration_page.dart`, dll).
+**Status saat ini:** Ada 6 halaman registrasi terpisah (`supplier_registration_page.dart`, `generator_registration_page.dart`, dll).
 
 **Saran:** Pertimbangkan menggabungkan menjadi 1 halaman registrasi dengan field dinamis berdasarkan role yang dipilih. Ini mengurangi duplikasi kode dan memudahkan maintenance.
 

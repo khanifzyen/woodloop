@@ -54,7 +54,7 @@
 | Buka `/register` | Form multi-step tampil | ⬜ |
 | Step 1: isi email, password, nama | Field tersedia | ⬜ |
 | Step 1: klik "Lanjut" tanpa isi | Error validasi | ⬜ |
-| Step 2: pilih role | 6 card role muncul | ⬜ |
+| Step 2: pilih role | 7 card role muncul | ⬜ |
 | Step 2: klik salah satu card | Card ter-highlight | ⬜ |
 | Step 2: klik "Lanjut" tanpa pilih | Error/disabled | ⬜ |
 | Step 3: field spesifik sesuai role | Berubah dinamis | ⬜ |

@@ -383,7 +383,7 @@ sudo certbot certificates
 | 4 | ⬜ Nginx berjalan | `sudo systemctl status nginx` → active (running) |
 | 5 | ⬜ Domain pointing ke VPS | `dig +short woodloop.app` → IP VPS |
 | 6 | ⬜ SSL aktif | `curl -sI https://woodloop.app` → 200 OK |
-| 7 | ⬜ Test login 6 role | Buka web, login sebagai supplier/generator/aggregator/converter/enabler/buyer |
+| 7 | ⬜ Test login 7 role (Supplier, Generator, Aggregator, Converter, Desainer, Enabler, Buyer) | Buka web, login sebagai supplier/generator/aggregator/converter/enabler/buyer |
 | 8 | ⬜ Sitemap valid | Buka `https://woodloop.app/sitemap.xml` → XML valid |
 | 9 | ⬜ Robots.txt valid | Buka `https://woodloop.app/robots.txt` → ada isi |
 | 10 | ⬜ Manifest valid | Buka `https://woodloop.app/manifest.webmanifest` → JSON valid |

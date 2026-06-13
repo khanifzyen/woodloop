@@ -58,7 +58,7 @@ Fase ini membangun fitur untuk **Converter** (pengrajin kreatif). Ini adalah cor
     - Total Investasi (💰)
     - Desain Tersedia (📐)
   - Recent purchases list
-  - Quick actions: "Cari Bahan" + "Buat Produk" + "Klinik Desain"
+  - Quick actions: "Cari Bahan" + "Buat Produk" + "Klinik Desain (redirect ke /designer/design-clinic)"
 
 ### Day 21: Marketplace Bahan Limbah
 

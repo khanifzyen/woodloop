@@ -62,7 +62,7 @@
 - [x] **P1-T25** i18n EN/ID + LanguageSwitcher component ✅ **Baru**
 - [x] **P1-T26** Layout components: Sidebar, Navbar, DashboardLayout ✅
 - [x] **P1-T27** Route groups (dashboard) + layout per role ✅
-- [x] **P1-T28** Dashboard placeholder (6 role) ✅
+- [x] **P1-T28** Dashboard placeholder (7 role — tambah Desainer) ✅
 - [x] **P1-T29** Init Capacitor + Android platform ✅
 - [x] **P1-T30** E2E testing (50 tests pass) ✅
 

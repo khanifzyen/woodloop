@@ -203,7 +203,7 @@ Siapkan informasi berikut agar kami bisa membantu lebih cepat:
 | — | [Cover](./00-cover.md) | — |
 | — | [Kata Pengantar](./00-kata-pengantar.md) | — |
 | — | [Daftar Isi](./00-daftar-isi.md) | — |
-| 1 | [Pendahuluan](./01-bab-1-pendahuluan.md) | Apa itu WoodLoop, 6 peran, platform, glossary |
+| 1 | [Pendahuluan](./01-bab-1-pendahuluan.md) | Apa itu WoodLoop, 7 peran, platform, glossary |
 | 2 | [Memulai](./02-bab-2-memulai.md) | Akses, registrasi, login, onboarding, profil |
 | 3 | [Navigasi Umum](./03-bab-3-navigasi-umum.md) | Struktur halaman, sidebar, breadcrumb, dark mode, bahasa |
 | 4 | [Supplier](./04-bab-4-supplier.md) | Dashboard, inventaris, tambah kayu, pesanan, penjualan |

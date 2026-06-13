@@ -60,7 +60,8 @@ Urutan pengerjaan:
     *   Filter: Jenis Kayu, Bentuk, Lokasi.
 16. **Product Detail:** Halaman detail limbah dengan tombol "Beli" atau "Tawar".
 17. **Checkout / Transaksi:** Flow pembelian sederhana (bisa integrasi Payment Gateway atau COD dulu).
-18. **Klinik Desain / Resep:** Halaman statis berisi upload PDF/Gambar sketsa desain (bisa dikerjakan paralel karena tidak terlalu bergantung data *live*).
+18. **Klinik Desain / Resep:** Halaman statis berisi upload PDF/Gambar sketsa desain (bisa dikerjakan paralel).
+19. **Desainer Flow:** Dashboard, artikel sirkular, catatan desain, klinik desain marketplace.
 
 ---
 

@@ -9,6 +9,7 @@ const protectedRoutes: Record<string, string[]> = {
   "/converter": ["converter"],
   "/enabler": ["enabler"],
   "/buyer": ["buyer"],
+  "/designer": ["designer"],
 };
 
 // Halaman publik (no auth required)

@@ -97,30 +97,15 @@ Proses pembelian bahan limbah dari Aggregator.
 
 ## 7.4 Klinik Desain (Design Clinic)
 
-**Klinik Desain** adalah galeri inspirasi yang menampilkan resep desain (*design recipes*) — panduan cara mengolah limbah kayu menjadi produk kreatif.
+Klinik Desain telah dipindahkan ke peran **Desainer**. Converter dapat mengaksesnya melalui menu **"Klinik Desain"** di sidebar yang akan mengarahkan ke `/designer/design-clinic`.
 
-![Klinik Desain](screenshots/21-converter-design-clinic.png)
-*Gambar 7.4 — Halaman Klinik Desain*
+Di sana Anda dapat:
+- Menemukan **resep desain** dan inspirasi produk dari limbah kayu
+- **Menghubungi desainer** untuk konsultasi produk secara personal
+- **Mengajukan permintaan** jasa desain sesuai kebutuhan
+- Melihat **catatan desain** yang mungkin sudah diberikan oleh Desainer pada produk Anda
 
-### Fitur Klinik Desain
-
-| Fitur | Fungsi |
-|-------|--------|
-| 🔍 **Pencarian Desain** | Cari desain berdasarkan nama atau bahan |
-| 📂 **Kategori** | Filter: Furniture, Dekorasi, Aksesoris, Mainan |
-| 🪵 **Filter Bahan** | Tampilkan desain berdasarkan jenis limbah |
-| 📋 **Detail Resep** | Bahan yang diperlukan, langkah pembuatan |
-
-### Resep Desain
-
-Setiap resep berisi:
-- 🖼️ **Foto hasil jadi**
-- 📝 **Nama & deskripsi produk**
-- 🪵 **Bahan limbah yang diperlukan** (jenis, volume)
-- 🔧 **Alat yang dibutuhkan**
-- 👣 **Langkah pembuatan** (step-by-step)
-- ⏱️ **Estimasi waktu pengerjaan**
-- 💰 **Estimasi biaya produksi**
+> **💡 Tips:** Sebelum membeli bahan dari Aggregator, cek dulu Klinik Desain untuk melihat kemungkinan produk yang bisa dibuat dari limbah yang tersedia.
 
 ---
 
@@ -213,7 +198,7 @@ Setiap produk yang dibuat Converter akan otomatis mendapatkan **QR Code unik**.
 | Dashboard | `/converter/dashboard` | Ringkasan bahan & produk |
 | Pasar Bahan | `/converter/marketplace/materials` | Beli limbah dari Aggregator |
 | Katalog Produk | `/converter/catalog` | Kelola produk upcycled |
-| Klinik Desain | `/converter/design-clinic` | Inspirasi & resep desain |
+| Klinik Desain | `/designer/design-clinic` | Inspirasi & resep desain (redirect) |
 | QR Code | (dari detail produk) | Generate QR untuk traceability |
 
 ---

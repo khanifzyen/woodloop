@@ -234,7 +234,7 @@ src/
 - [x] **T-P6-1** `useImpactMetrics` return aggregated data
 - [x] **T-P6-2** `useImpactMetrics` filter by period
 - [x] **T-P6-3** `useAllUsers` return paginated list
-- [x] **T-P6-4** `useAllUsers` filter by role
+- [x] **T-P6-4** `useAllUsers` filter by role (termasuk desainer)
 - [x] **T-P6-5** `useUpdateUserVerification` mutation
 
 ### Hooks — useWallet

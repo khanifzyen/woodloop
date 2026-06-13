@@ -50,6 +50,12 @@ const ROLES = [
     desc: "Konsumen akhir — beli produk daur ulang",
     icon: "🛍️",
   },
+  {
+    id: "designer",
+    label: "Desainer",
+    desc: "Konsultan desain — saran produk, artikel sirkular",
+    icon: "✏️",
+  },
 ] as const;
 
 export default function RoleSelectionPage() {

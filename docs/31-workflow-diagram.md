@@ -1,6 +1,6 @@
 # Workflow Diagram — WoodLoop Circular Economy
 
-## 6 Role & Alur Utama
+## 7 Role & Alur Utama
 
 ```
                     ┌─────────────────────────────────────────────────────────────┐
@@ -190,13 +190,29 @@ STEP 6 ─── ENABLER ──────────────────�
 
 ## Hubungan Antar Role (Matriks)
 
-| Role | Supplier | Generator | Aggregator | Converter | Buyer | Enabler |
-|------|----------|-----------|------------|-----------|-------|---------|
-| **Supplier** | — | Jual kayu | — | — | — | — |
-| **Generator** | Beli kayu | — | Setor limbah | — | Jual produk | — |
-| **Aggregator** | — | Ambil limbah | — | Jual bahan | — | — |
-| **Converter** | — | — | Beli bahan | — | Jual produk | — |
-| **Buyer** | — | — | — | Beli produk | — | — |
+| Role | Supplier | Generator | Aggregator | Converter | Desainer | Buyer | Enabler |
+|------|----------|-----------|------------|-----------|----------|-------|---------|
+| **Supplier** | — | Jual kayu | — | — | — | — | — |
+| **Generator** | Beli kayu | — | Setor limbah | — | Konsultasi desain | Jual produk | — |
+| **Aggregator** | — | Ambil limbah | — | Jual bahan | — | — | — |
+| **Converter** | — | — | Beli bahan | — | Konsultasi desain | Jual produk | — |
+| **Desainer** | — | Saran desain | — | Saran desain | — | — | — |
+| **Buyer** | — | — | — | Beli produk | — | — | — |
+| **Enabler** | Verifikasi | Verifikasi | Verifikasi | Verifikasi | Verifikasi | Verifikasi | — |
+
+---
+
+## Teknologi per Role
+
+| Role | Halaman Utama | Fitur Kunci |
+|------|---------------|-------------|
+| **Supplier** | Dashboard, Inventaris, Pesanan, Penjualan | CRUD kayu, manajemen stok |
+| **Generator** | Dashboard, Setor Limbah, Beli Kayu, Produk | Waste form stepper, bidding |
+| **Aggregator** | Dashboard, Treasure Map, Pickup, Gudang, Lelang | Leaflet map, GPS, polyline routing |
+| **Converter** | Dashboard, Pasar Bahan, Katalog, Klinik Desain | QR code, design clinic |
+| **Buyer** | Marketplace, Pesanan, Cart, Checkout, Scan QR | SSR/ISR, checkout flow |
+| **Enabler** | Dashboard, Manajemen User | Charts, impact metrics |
+� | — | Beli produk | — | — |
 | **Enabler** | Verifikasi | Verifikasi | Verifikasi | Verifikasi | Verifikasi | — |
 
 ---

@@ -30,7 +30,7 @@ Menciptakan platform digital terpadu yang mampu:
 
 ## 2. Peran Pengguna & Persona
 
-Platform ini melayani enam peran pengguna yang berbeda, masing-masing dengan alur kerja spesifik:
+Platform ini melayani tujuh peran pengguna yang berbeda, masing-masing dengan alur kerja spesifik:
 
 | Peran | Deskripsi | Kebutuhan Utama |
 | :--- | :--- | :--- |
@@ -38,6 +38,7 @@ Platform ini melayani enam peran pengguna yang berbeda, masing-masing dengan alu
 | **Generator** | Pengrajin mebel (UKM) penghasil limbah. | Kemudahan menjual limbah, pembayaran cepat, pengangkutan limbah. |
 | **Aggregator** | Logistik/Pengepul. | Perencanaan rute efisien, manajemen gudang, pencocokan permintaan. |
 | **Converter** | Industri kreatif/Pengolah limbah. | Akses ke bahan daur ulang berkualitas, inspirasi desain, ketertelusuran bahan. |
+| **Desainer** | Konsultan desain sirkular. | Memberi saran desain, menulis artikel prinsip sirkular, klinik desain berbayar. |
 | **Enabler** | Pemerintah (Dinas LH) / Asosiasi. | Pemantauan dampak lingkungan, data untuk pembuatan kebijakan. |
 | **Buyer** | Masyarakat umum (Konsumen akhir). | Membeli produk berkelanjutan, memverifikasi asal produk (storytelling). |
 
@@ -48,7 +49,7 @@ Platform ini melayani enam peran pengguna yang berbeda, masing-masing dengan alu
 ### 3.1 Autentikasi & Onboarding
 - **Layar Pembuka (Splash Screen):** Pengenalan branding aplikasi.
 - **Onboarding:** Tutorial 3 slide yang menjelaskan masalah, solusi, dan manfaat aplikasi.
-- **Pemilihan Peran:** Pengguna wajib memilih satu dari 6 peran saat pertama kali masuk.
+- **Pemilihan Peran:** Pengguna wajib memilih satu dari 7 peran saat pertama kali masuk.
 - **Registrasi:** Formulir spesifik per peran (contoh: lokasi GPS untuk Generator).
 - **Login:** Autentikasi berbasis Nomor HP/Email (Prototipe menggunakan mock localStorage).
 - **Manajemen Profil:** Mengelola alamat/lokasi, melihat lencana (badge), edit profil, dan logout.

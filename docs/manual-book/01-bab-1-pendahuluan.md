@@ -89,7 +89,7 @@ title: "Bab 1 — Pendahuluan"
 
 ## 1.2 Siapa Saja Penggunanya?
 
-WoodLoop memiliki **6 peran pengguna** yang merepresentasikan setiap mata rantai dalam ekosistem industri kayu Jepara:
+WoodLoop memiliki **7 peran pengguna** yang merepresentasikan setiap mata rantai dalam ekosistem industri kayu Jepara:
 
 | Peran | Deskripsi | Contoh |
 |-------|-----------|--------|
@@ -97,6 +97,7 @@ WoodLoop memiliki **6 peran pengguna** yang merepresentasikan setiap mata rantai
 | 🏭 **Generator** | Penghasil limbah kayu | Pengrajin mebel, workshop |
 | 🚛 **Aggregator** | Pengepul & logistik | Pengumpul limbah, gudang sortir |
 | ♻️ **Converter** | Pengolah limbah jadi produk | Pengrajin kreatif, startup daur ulang |
+| ✏️ **Desainer** | Konsultan desain sirkular | Desainer produk, konsultan kreatif |
 | 🛒 **Buyer** | Konsumen akhir | Pembeli perorangan, toko retail |
 | 📊 **Enabler** | Pemantau ekosistem | Dinas LH, Asosiasi mebel |
 

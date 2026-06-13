@@ -4,7 +4,7 @@
 
 | Area | Detail |
 |---|---|
-| **Auth + Onboarding** | Login, register 6 role, forgot password, role selection, onboarding carousel |
+| **Auth + Onboarding** | Login, register 7 role (termasuk desainer), forgot password, role selection, onboarding carousel |
 | **Supplier** | Dashboard, inventory CRUD, orders, sales history + SummaryCards |
 | **Generator** | Dashboard + saldo, report waste (4-step stepper), buy timber, products CRUD, timber orders |
 | **Aggregator** | Dashboard, treasure map (Leaflet + marker + routing), pickups, warehouse, bidding |

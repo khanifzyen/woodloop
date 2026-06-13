@@ -60,7 +60,7 @@ title: "Daftar Isi"
 - [7.1 Dashboard Converter](./07-bab-7-converter.md#71-dashboard-converter)
 - [7.2 Pasar Bahan Limbah](./07-bab-7-converter.md#72-pasar-bahan-limbah)
 - [7.3 Checkout & Pembelian Bahan](./07-bab-7-converter.md#73-checkout--pembelian-bahan)
-- [7.4 Klinik Desain (Design Clinic)](./07-bab-7-converter.md#74-klinik-desain-design-clinic)
+- [7.4 Klinik Desain (redirect ke Desainer)](./07-bab-7-converter.md#74-klinik-desain-design-clinic)
 - [7.5 Membuat Produk Upcycled](./07-bab-7-converter.md#75-membuat-produk-upcycled)
 - [7.6 Katalog Produk Saya](./07-bab-7-converter.md#76-katalog-produk-saya)
 - [7.7 QR Code Produk](./07-bab-7-converter.md#77-qr-code-produk)

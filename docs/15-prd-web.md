@@ -30,7 +30,7 @@
 
 ### 1.1 Latar Belakang
 
-WoodLoop saat ini merupakan aplikasi **Flutter** (mobile-first) dengan arsitektur Clean Architecture + BLoC, backend **PocketBase**, dan 17 koleksi database. Aplikasi ini melayani ekosistem ekonomi sirkular industri kayu di Jepara dengan 6 peran pengguna.
+WoodLoop saat ini merupakan aplikasi **Flutter** (mobile-first) dengan arsitektur Clean Architecture + BLoC, backend **PocketBase**, dan 17 koleksi database. Aplikasi ini melayani ekosistem ekonomi sirkular industri kayu di Jepara dengan 7 peran pengguna.
 
 **Dokumen ini mendefinisikan ulang (rewrite) WoodLoop dari Flutter menjadi aplikasi web + hybrid mobile** menggunakan stack teknologi modern yang lebih sesuai untuk kebutuhan platform ini.
 
@@ -47,7 +47,7 @@ WoodLoop saat ini merupakan aplikasi **Flutter** (mobile-first) dengan arsitektu
 ### 1.3 Tujuan
 
 1. Membangun ulang WoodLoop sebagai **PWA + Hybrid Mobile App** dengan satu codebase.
-2. Mempertahankan **semua fitur dan 6 role** yang sudah ada di versi Flutter.
+2. Mempertahankan **semua fitur dan 7 role** yang sudah ada di versi Flutter.
 3. Menggunakan **PocketBase yang sama** (migration, schema, hooks) — tidak perlu rewrite backend.
 4. Memberikan **pengalaman native** (kamera, GPS, push notif) untuk role yang bertugas di lapangan.
 5. Memberikan **akses web cepat** (tanpa install) untuk Buyer dan Enabler.
@@ -421,6 +421,7 @@ Setiap role group punya layout sendiri:
 | Generator | `SidebarGenerator` | Dashboard, Setor Limbah, Beli Kayu, Produk, Profile |
 | Aggregator | `SidebarAggregator` | Dashboard, Peta, Penjemputan, Gudang, Lelang, Profile |
 | Converter | `SidebarConverter` | Dashboard, Marketplace, Checkout, Katalog, Klinik Desain, Profile |
+| Desainer | `SidebarDesainer` | Dashboard, Artikel Sirkular, Catatan Desain, Klinik Desain, Profile |
 | Enabler | `SidebarEnabler` | Dashboard, Manajemen User, Profile |
 | Buyer | `NavbarBuyer` | Marketplace, Cart, Orders, Profile |
 
@@ -1129,4 +1130,6 @@ shadcn/ui + Tailwind + Pi skill = Open design langsung jadi kode.
 
 **Dokumen ini disusun untuk acuan pengembangan ulang (rewrite) WoodLoop**
 **dari Flutter ke Next.js + Tailwind + shadcn/ui + Bun + Capacitor + PocketBase**
+**dengan integrasi Pi Agent design system skill untuk mempercepat development.**
++ Bun + Capacitor + PocketBase**
 **dengan integrasi Pi Agent design system skill untuk mempercepat development.**

@@ -112,7 +112,7 @@ test.describe("TC-04: Role Selection", () => {
     await page.goto("/role-selection");
   });
 
-  test("should display 6 role cards in grid with all labels", async ({ page }) => {
+  test("should display 7 role cards in grid with all labels", async ({ page }) => {
     await expect(page.getByText("Pilih Peran Anda")).toBeVisible();
     await expect(page.getByText("Supplier", { exact: true })).toBeVisible();
     await expect(page.getByText("Generator")).toBeVisible();

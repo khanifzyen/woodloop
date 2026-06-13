@@ -11,7 +11,7 @@ Semua pengguna melewati alur yang sama sebelum masuk ke dashboard masing-masing.
 ```
 Splash Screen
   └─→ Onboarding (3 slide: Problem → Solution → Action)
-        └─→ Role Selection (pilih 1 dari 6 peran)
+        └─→ Role Selection (pilih 1 dari 7 peran)
               ├─→ Register (form spesifik per role)
               │     └─→ Dashboard sesuai role
               └─→ Login

@@ -64,7 +64,7 @@ const nav: Record<string, RoleNav> = {
       { label: "Dashboard", href: "/converter/dashboard", icon: LayoutDashboard },
       { label: "Pasar Bahan", href: "/converter/marketplace/materials", icon: Store },
       { label: "Katalog Produk", href: "/converter/catalog", icon: Package },
-      { label: "Klinik Desain", href: "/converter/design-clinic", icon: BookOpen },
+      { label: "Klinik Desain", href: "/designer/design-clinic", icon: BookOpen },
     ],
   },
   enabler: {
@@ -81,6 +81,16 @@ const nav: Record<string, RoleNav> = {
     sidebar: [
       { label: "Marketplace", href: "/buyer/marketplace", icon: Store },
       { label: "Pesanan Saya", href: "/buyer/orders", icon: ClipboardList },
+    ],
+  },
+  designer: {
+    title: "Desainer",
+    icon: "✏️",
+    sidebar: [
+      { label: "Dashboard", href: "/designer/dashboard", icon: LayoutDashboard },
+      { label: "Artikel Sirkular", href: "/designer/articles", icon: BookOpen },
+      { label: "Catatan Desain", href: "/designer/design-notes", icon: Palette },
+      { label: "Klinik Desain", href: "/designer/design-clinic", icon: Store },
     ],
   },
 };

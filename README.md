@@ -4,7 +4,7 @@
 
 ## 🌟 Fitur Utama
 
-- **Multi-Role System**: Mendukung 6 peran pengguna (Supplier, Generator, Aggregator, Converter, Enabler, Buyer).
+- **Multi-Role System**: Mendukung 7 peran pengguna (Supplier, Generator, Aggregator, Converter, Desainer, Enabler, Buyer).
 - **Generator Dashboard**: Generator (pengrajin) dapat memoto dan menjual limbah kayu dengan mudah.
 - **Aggregator Map**: Peta interaktif untuk penjemputan limbah yang efisien.
 - **Marketplace Bahan Baku**: Katalog bahan daur ulang untuk industri kreatif.

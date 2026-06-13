@@ -1,6 +1,6 @@
 # 🪵 WoodLoop Web — Jepara Circular Hub
 
-Platform ekonomi sirkular untuk industri kayu dan furnitur di Jepara, Jawa Tengah. Menghubungkan **6 peran pengguna** — Supplier, Generator, Aggregator, Converter, Buyer, dan Enabler — dalam satu ekosistem untuk mengelola limbah kayu menjadi produk bernilai tambah.
+Platform ekonomi sirkular untuk industri kayu dan furnitur di Jepara, Jawa Tengah. Menghubungkan **7 peran pengguna** — Supplier, Generator, Aggregator, Converter, Desainer, Buyer, dan Enabler — dalam satu ekosistem untuk mengelola limbah kayu menjadi produk bernilai tambah.
 
 ## Fitur Utama
 

@@ -12,7 +12,7 @@ Menggunakan **Auth Collection** bawaan PocketBase untuk autentikasi. Field bawaa
 | :--- | :--- | :--- | :--- |
 | `name` | text | required | Nama lengkap / nama pemilik |
 | `avatar` | file | image, max 1 file | Foto profil |
-| `role` | select | `supplier`, `generator`, `aggregator`, `converter`, `enabler`, `buyer` — required | Peran utama pengguna |
+| `role` | select | `supplier`, `generator`, `aggregator`, `converter`, `enabler`, `buyer`, `designer` — required | Peran utama pengguna |
 | `workshop_name` | text | - | Nama bengkel / perusahaan / toko |
 | `address` | text | - | Alamat lengkap fisik |
 | `location_lat` | number | min: -90, max: 90 | Koordinat Lintang (untuk peta) |
@@ -498,7 +498,81 @@ Produk jadi (mebel/furniture) yang dijual langsung oleh Generator. Terpisah dari
 
 ---
 
-## Rangkuman Koleksi (19 Total)
+---
+
+## 18. Koleksi: `design_articles` (Base Collection — Desainer)
+
+Artikel edukasi tentang prinsip desain sirkular yang ditulis oleh Desainer.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `author` | relation | → `users` (single, required, cascadeDelete) | Desainer penulis artikel |
+| `title` | text | required | Judul artikel |
+| `slug` | text | required, unique | URL slug |
+| `content` | text | required (editor) | Isi artikel (markdown/WYSIWYG) |
+| `excerpt` | text | - | Ringkasan singkat |
+| `cover_image` | file | image, max 1 file | Gambar sampul |
+| `category` | select | `dematerialization`, `design_for_disassembly`, `product_longevity`, `upcycling`, `general` | Kategori prinsip sirkular |
+| `published` | bool | default: `false` | Status publikasi |
+| `tags` | text | - | Tags (dipisah koma) |
+
+**PocketBase API Rules:**
+- **List/View:** `""` (publik — artikel edukasi)
+- **Create/Update/Delete:** `@request.auth.role = "designer"`
+
+---
+
+## 19. Koleksi: `design_notes` (Base Collection — Desainer)
+
+Catatan/saran desain dari Desainer untuk produk Generator atau Converter.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `designer` | relation | → `users` (single, required) | Desainer pemberi catatan |
+| `target_type` | select | `generator_product`, `converter_product` | Jenis produk target |
+| `target_id` | text | required | ID produk Generator/Converter |
+| `content` | text | required | Catatan desain / saran |
+| `sketch` | file | image, max 3 files | Gambar sketsa pendukung |
+| `is_public` | bool | default: `true` | Tampil di publik / profil desainer |
+
+**PocketBase API Rules:**
+- **List/View:** `@request.auth.id != ""` (publik jika is_public)
+- **Create/Update/Delete:** `@request.auth.role = "designer"`
+
+---
+
+## 20. Koleksi: `design_consultations` (Base Collection — Marketplace Jasa Desain)
+
+Permintaan dan transaksi jasa konsultasi desain antara Desainer dengan Generator/Converter.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `designer` | relation | → `users` (single) | Desainer yang ditunjuk (jika desainer yg bid) |
+| `client` | relation | → `users` (single, required) | Generator/Converter peminta jasa |
+| `title` | text | required | Judul permintaan konsultasi |
+| `description` | text | - | Deskripsi kebutuhan desain |
+| `budget` | number | - | Anggaran (dari client) atau tarif (dari desainer) |
+| `status` | select | `open`, `negotiation`, `in_progress`, `completed`, `cancelled` | Status konsultasi |
+| `type` | select | `client_request`, `designer_offer` | Arah: client minta atau desainer pasang tarif |
+
+**PocketBase API Rules:**
+- **List/View:** `@request.auth.id = designer || @request.auth.id = client`
+- **Create:** `@request.auth.role = "designer" || @request.auth.role = "generator" || @request.auth.role = "converter"`
+- **Update:** `@request.auth.id = designer || @request.auth.id = client`
+
+---
+
+## 21. Perubahan API Rule: `design_recipes`
+
+Tambahkan role `designer` sebagai penulis yang diizinkan:
+
+**PocketBase API Rules:**
+- **List/View:** `""` (publik)
+- **Create/Update/Delete:** `@request.auth.role = "converter" || @request.auth.role = "designer" || @request.auth.role = "enabler"`
+
+---
+
+## Rangkuman Koleksi (22 Total)
 
 | # | Koleksi | Tipe PocketBase | Aktor Utama |
 | :--- | :--- | :--- | :--- |

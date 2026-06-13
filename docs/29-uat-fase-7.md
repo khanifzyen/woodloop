@@ -29,7 +29,7 @@
 
 | ID | Skenario | Langkah | Expected Result | Desktop | Mobile |
 |----|----------|---------|-----------------|---------|--------|
-| **R01-01** | Login all 6 roles sequentially | 1. Login sebagai supplier<br>2. Login sebagai generator<br>3. Login sebagai aggregator<br>4. Login sebagai converter<br>5. Login sebagai enabler<br>6. Login sebagai buyer | Semua login berhasil, redirect ke dashboard masing-masing | ✓ | ✓ |
+| **R01-01** | Login all 7 roles sequentially | 1. Login sebagai supplier<br>2. Login sebagai generator<br>3. Login sebagai aggregator<br>4. Login sebagai converter<br>5. Login sebagai enabler<br>6. Login sebagai buyer | Semua login berhasil, redirect ke dashboard masing-masing | ✓ | ✓ |
 | **R01-02** | Wrong password | 1. Masukkan email valid<br>2. Masukkan password salah<br>3. Klik Masuk | Tetap di halaman `/login`, tidak redirect | ✓ | ✓ |
 | **R01-03** | Protected route tanpa auth | 1. Buka `/supplier/dashboard` tanpa login | Redirect ke `/login` | ✓ | ✓ |
 

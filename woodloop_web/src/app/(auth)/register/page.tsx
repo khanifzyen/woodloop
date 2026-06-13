@@ -35,6 +35,7 @@ const ROLE_INFO: Record<string, { label: string; icon: string }> = {
   converter: { label: "Converter", icon: "🎨" },
   enabler: { label: "Enabler", icon: "📊" },
   buyer: { label: "Buyer", icon: "🛍️" },
+  designer: { label: "Desainer", icon: "✏️" },
 };
 
 const TOTAL_STEPS = 2;

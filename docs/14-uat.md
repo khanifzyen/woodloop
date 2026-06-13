@@ -28,7 +28,7 @@ Test dilakukan di app Flutter yang terhubung ke PocketBase production/staging.
 ### Sebelum Mulai
 
 - [ ] Pastikan PocketBase server running (`curl pb-woodloop.pasarjepara.com/api/health`)
-- [ ] Pastikan 6 akun test sudah terverifikasi admin (`is_verified = true`)
+- [ ] Pastikan 7 akun test sudah terverifikasi admin (`is_verified = true`)
 - [ ] Hapus semua data test sebelumnya (opsional, via Admin UI)
 
 ---

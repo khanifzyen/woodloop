@@ -6,7 +6,7 @@
 // ========== 1. Users (Auth Collection) ==========
 export type UserRole =
   | "supplier" | "generator" | "aggregator"
-  | "converter" | "enabler" | "buyer";
+  | "converter" | "enabler" | "buyer" | "designer";
 
 export interface User {
   id: string; email: string; username: string;
@@ -220,7 +220,42 @@ export interface GeneratorProduct {
   created: string; updated: string;
 }
 
-// ========== 18. User Documents ==========
+// ========== 18. Design Articles (Desainer) ==========
+export type ArticleCategory = "dematerialization" | "design_for_disassembly" | "product_longevity" | "upcycling" | "general";
+
+export interface DesignArticle {
+  id: string; author: string;
+  expand?: { author?: User; };
+  title: string; slug: string; content: string;
+  excerpt?: string; cover_image?: string;
+  category: ArticleCategory; published: boolean;
+  tags?: string; created: string; updated: string;
+}
+
+// ========== 19. Design Notes (Desainer) ==========
+export interface DesignNote {
+  id: string; designer: string;
+  expand?: { designer?: User; };
+  target_type: "generator_product" | "converter_product";
+  target_id: string; content: string;
+  sketch?: string[]; is_public: boolean;
+  created: string; updated: string;
+}
+
+// ========== 20. Design Consultations (Marketplace Jasa Desain) ==========
+export type ConsultationStatus = "open" | "negotiation" | "in_progress" | "completed" | "cancelled";
+export type ConsultationType = "client_request" | "designer_offer";
+
+export interface DesignConsultation {
+  id: string; designer?: string; client: string;
+  expand?: { designer?: User; client?: User; };
+  title: string; description?: string;
+  budget?: number; status: ConsultationStatus;
+  type: ConsultationType;
+  created: string; updated: string;
+}
+
+// ========== 21. User Documents ==========
 export type DocType =
   | "NIB" | "SVLK" | "SK_Pengesahan"
   | "Izin_Usaha" | "Sertifikat_Lainnya" | "Lainnya";

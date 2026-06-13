@@ -1,7 +1,7 @@
 /**
  * UAT Fase 7 — Final Regression Test
  * Menguji semua flow utama dengan real PocketBase auth
- * Covers: all 6 roles + public traceability
+ * Covers: all 7 roles + public traceability
  */
 
 import { test, expect, type Page } from "@playwright/test";
@@ -36,7 +36,7 @@ async function clickSidebarLink(page: Page, name: string | RegExp) {
 
 // ============================================================================
 test.describe("REGRESSION-01: Auth Flow", () => {
-  test("Login all 6 roles", async ({ page }) => {
+  test("Login all 7 roles", async ({ page }) => {
     for (const role of ["supplier", "generator", "aggregator", "converter", "enabler", "buyer"]) {
       await loginAs(page, role);
       expect(page.url()).toContain(`${role}/dashboard`);

@@ -12,7 +12,7 @@
 
 | # | Task | Detail |
 | :--- | :--- | :--- |
-| 1 | **[x] Unified Registration Page** | Gabungkan 5 halaman registrasi (`supplier`, `generator`, `aggregator`, `converter`, `buyer`) menjadi 1 halaman dinamis. Field muncul berdasarkan `role` dari `RoleSelectionPage`. |
+| 1 | **[x] Unified Registration Page** | Gabungkan 6 halaman registrasi (`supplier`, `generator`, `aggregator`, `converter`, `buyer`, `designer`) menjadi 1 halaman dinamis. Field muncul berdasarkan `role` dari `RoleSelectionPage`. |
 | 2 | **[x] Bottom Navigation Bar** per Role | Implementasi `StatefulShellRoute` di `go_router` untuk setiap role dashboard |
 | 3 | **[x] Cleanup** | Hapus 5 file registrasi lama, perbarui routing di `app_router.dart` |
 

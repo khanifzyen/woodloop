@@ -62,12 +62,14 @@ Sistem menggunakan konsep **"Satu Database, Lima Lensa"**. Semua data tersimpan 
 #### **2. AUTHENTICATION (Register & Login)**
 
 *   **Halaman Pilih Peran (Role Selector) - *Sangat Krusial***
-    *   **Visual:** 5 Kartu Besar dengan Ikon & Judul:
+    *   **Visual:** 7 Kartu Besar dengan Ikon & Judul:
         1.  🌲 **Supplier** (Penyedia Kayu)
         2.  🪚 **Generator** (Penghasil Limbah/UKM)
         3.  🚚 **Aggregator** (Logistik/Pengepul)
-        4.  🎨 **Converter/Desainer** (Pengolah & Kreatif)
-        5.  🏛️ **Enabler** (Pemerintah/Asosiasi)
+        4.  🎨 **Converter** (Pengolah Limbah)
+        5.  ✏️ **Desainer** (Konsultan Desain)
+        6.  🏛️ **Enabler** (Pemerintah/Asosiasi)
+        7.  🛍️ **Buyer** (Konsumen)
     *   **Interaksi:** Saat diklik, warna kartu berubah aktif, lalu muncul tombol "Lanjut Daftar".
 
 *   **Halaman Register (Form Dinamis sesuai PDF Hal 1-2)**

@@ -34,7 +34,7 @@ Dokumen ini mencatat keputusan yang telah dikonfirmasi berdasarkan `docs/10-need
 
 | # | Item | Keputusan |
 | :--- | :--- | :--- |
-| **C1** | Registrasi per-role atau dinamis? | ✅ **Dinamis** — Gabungkan 5 halaman jadi 1 dengan field berdasarkan role |
+| **C1** | Registrasi per-role atau dinamis? | ✅ **Dinamis** — Gabungkan 6 halaman jadi 1 dengan field berdasarkan role (termasuk desainer) |
 | **C2** | Bottom Navigation Bar | ✅ **Dieksekusi** — Tambahkan BottomNavigationBar di semua dashboard per role |
 | **C3** | State Management (BLoC) | ⏸️ **Planning dulu** — Akan dijalankan di MVP ini |
 | **C4** | QR Code integration | ⏸️ **Planning dulu** — Akan dijalankan di MVP ini |

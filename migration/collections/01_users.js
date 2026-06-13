@@ -34,7 +34,7 @@ async function migrateUsers() {
             name: 'role',
             type: 'select',
             required: true,
-            values: ['supplier', 'generator', 'aggregator', 'converter', 'enabler', 'buyer']
+            values: ['supplier', 'generator', 'aggregator', 'converter', 'enabler', 'buyer', 'designer']
         },
         { name: 'workshop_name', type: 'text', required: false },
         { name: 'address', type: 'text', required: false },

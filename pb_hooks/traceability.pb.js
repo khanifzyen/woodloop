@@ -36,6 +36,7 @@ onRecordCreateRequest((e) => {
         else if (role === "converter") prefix = "CNV";
         else if (role === "buyer") prefix = "BYR";
         else if (role === "enabler") prefix = "ENB";
+        else if (role === "designer") prefix = "DSN";
 
         // Generate a 5-character string: Prefix (3) + Random (2) -> Actually let's make it Prefix + 3 random to avoid collisions
         // e.g., SUP-A7X

@@ -60,7 +60,13 @@ Berdasarkan hasil analisis, layar-layar yang diimpor dari Stitch telah dibagi ke
 ### 📊 1.7 Enabler Flow (`feature_enabler`)
 *   Impact Analytics Dashboard (`5aee7761704944c19582afe4af8e3e76`)
 
-### 🌐 1.8 Shared / Cross-Role Features
+### ✏️ 1.8 Designer Flow (`feature_designer`)
+*   Designer Dashboard (ringkasan artikel & catatan)
+*   Artikel Sirkular (CRUD)
+*   Catatan Desain (saran pada produk Generator/Converter)
+*   Klinik Desain (marketplace jasa konsultasi)
+
+### 🌐 1.9 Shared / Cross-Role Features
 *   **Messaging (`feature_chat`)**
     *   Messages List (`8defdd39626447f58b51975bb8325bec`)
     *   Direct Message Conversation (`0d9f4dd25fbd485d909def6f0323d389`)
