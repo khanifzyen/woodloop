@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useAllUsers, useUpdateUserVerification } from "@/lib/hooks/use-enabler";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,8 +16,18 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Search, Users as UsersIcon, ShieldCheck } from "lucide-react";
+import { Search, Users as UsersIcon, ShieldCheck, Eye } from "lucide-react";
 import { toast } from "sonner";
+
+const ROLE_LABELS: Record<string, string> = {
+  supplier: "Supplier",
+  generator: "Generator",
+  aggregator: "Aggregator",
+  converter: "Converter",
+  buyer: "Buyer",
+  enabler: "Enabler",
+  designer: "Desainer",
+};
 
 export default function UsersPage() {
   const [role, setRole] = useState("all");
@@ -24,11 +35,22 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const { data, isLoading } = useAllUsers({ role, search: search || undefined, verified: verified === "all" ? undefined : verified });
   const verifyUser = useUpdateUserVerification();
-  const users = data?.items ?? [];
+  const users = (data?.items ?? []) as unknown as Array<Record<string, unknown>>;
+
+  function getField(u: Record<string, unknown>, key: string): string {
+    return (u[key] as string) || "";
+  }
+
+  function getBool(u: Record<string, unknown>, key: string): boolean {
+    return !!(u[key] as boolean);
+  }
 
   return (
     <div className="space-y-6">
-      <div><h1 className="heading-2">Manajemen User</h1><p className="text-muted-foreground mt-1">Kelola dan verifikasi pengguna platform</p></div>
+      <div>
+        <h1 className="heading-2">Manajemen User</h1>
+        <p className="text-muted-foreground mt-1">Kelola dan verifikasi pengguna platform — klik baris untuk detail</p>
+      </div>
 
       <div className="flex gap-3 flex-wrap">
         <div className="relative flex-1 max-w-sm">
@@ -45,6 +67,7 @@ export default function UsersPage() {
             <SelectItem value="converter">Converter</SelectItem>
             <SelectItem value="buyer">Buyer</SelectItem>
             <SelectItem value="enabler">Enabler</SelectItem>
+            <SelectItem value="designer">Desainer</SelectItem>
           </SelectContent>
         </Select>
         <Select value={verified} onValueChange={setVerified}>
@@ -65,7 +88,7 @@ export default function UsersPage() {
           <p className="font-medium">Tidak ada user</p>
         </CardContent></Card>
       ) : (
-        <div className="rounded-lg border">
+        <div className="rounded-lg border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -74,37 +97,57 @@ export default function UsersPage() {
                 <TableHead>Role</TableHead>
                 <TableHead>Workshop</TableHead>
                 <TableHead>Verifikasi</TableHead>
-                <TableHead>Aksi</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((u) => (
-                <TableRow key={(u as unknown as Record<string, string>).id}>
-                  <TableCell className="font-medium">{(u as unknown as Record<string, string>).name}</TableCell>
-                  <TableCell>{(u as unknown as Record<string, string>).email}</TableCell>
-                  <TableCell><Badge variant="outline">{(u as unknown as Record<string, string>).role}</Badge></TableCell>
-                  <TableCell>{(u as unknown as Record<string, string>).workshop_name || "-"}</TableCell>
-                  <TableCell>
-                    {(u as unknown as Record<string, boolean>).is_verified ? (
-                      <Badge variant="default" className="bg-green-600">Terverifikasi</Badge>
-                    ) : (
-                      <Badge variant="secondary">Belum</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Button size="sm" variant="ghost" className="gap-1"
-                      onClick={() => {
-                        const newStatus = !(u as unknown as Record<string, boolean>).is_verified;
-                        verifyUser.mutate(
-                          { userId: (u as unknown as Record<string, string>).id, is_verified: newStatus },
-                          { onSuccess: () => toast.success(newStatus ? "User diverifikasi" : "Verifikasi dibatalkan") }
-                        );
-                      }}>
-                      <ShieldCheck className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {users.map((u) => {
+                const id = getField(u, "id");
+                return (
+                  <TableRow
+                    key={id}
+                    className="cursor-pointer group"
+                    onClick={() => window.location.href = `/enabler/users/${id}`}
+                  >
+                    <TableCell className="font-medium">{getField(u, "name")}</TableCell>
+                    <TableCell className="text-muted-foreground">{getField(u, "email")}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{ROLE_LABELS[getField(u, "role")] || getField(u, "role")}</Badge>
+                    </TableCell>
+                    <TableCell>{getField(u, "workshop_name") || "-"}</TableCell>
+                    <TableCell>
+                      {getBool(u, "is_verified") ? (
+                        <Badge variant="default" className="bg-green-600">Terverifikasi</Badge>
+                      ) : (
+                        <Badge variant="secondary">Belum</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button size="sm" variant="ghost" className="gap-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.location.href = `/enabler/users/${id}`;
+                          }}>
+                          <Eye className="h-4 w-4" />
+                          Detail
+                        </Button>
+                        <Button size="sm" variant="ghost" className="gap-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const newStatus = !getBool(u, "is_verified");
+                            verifyUser.mutate(
+                              { userId: id, is_verified: newStatus },
+                              { onSuccess: () => toast.success(newStatus ? "User diverifikasi" : "Verifikasi dibatalkan") }
+                            );
+                          }}>
+                          <ShieldCheck className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>

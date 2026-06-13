@@ -34,6 +34,7 @@ import { updateUsersRole } from './collections/27_update_users_role.js';
 import { migrateReviews } from './collections/28_reviews.js';
 import { migrateWishlist } from './collections/29_wishlist.js';
 import { updateOrdersFields } from './collections/30_update_orders_fields.js';
+import { updateUserDocumentsRule } from './collections/31_update_user_documents_rule.js';
 
 async function runAllMigrations() {
     console.log('🚀 WoodLoop — Starting PocketBase migrations...\n');
@@ -131,8 +132,11 @@ async function runAllMigrations() {
         console.log('\n📋 [25/25] Updating Orders Fields...');
         await updateOrdersFields();
 
+        console.log('\n📄 [26/26] Updating User Documents Rules...');
+        await updateUserDocumentsRule();
+
         console.log('\n' + '═'.repeat(50));
-        console.log('✅ All 25 migrations completed successfully!');
+        console.log('✅ All 26 migrations completed successfully!');
         console.log('═'.repeat(50));
 
     } catch (error) {

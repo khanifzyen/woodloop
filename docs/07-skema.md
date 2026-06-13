@@ -536,7 +536,35 @@ Produk jadi (mebel/furniture) yang dijual langsung oleh Generator. Terpisah dari
 
 ---
 
-## 18. Koleksi: `design_articles` (Base Collection — Desainer)
+## 18. Koleksi: `user_documents` (Base Collection — Dokumen Legalitas)
+
+Dokumen legalitas/perizinan yang diunggah oleh pengguna (Supplier, Generator, dll) untuk diverifikasi oleh Enabler.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `user` | relation | → `users` (single, required, cascadeDelete) | Pemilik dokumen |
+| `doc_type` | select | `NIB`, `SVLK`, `SK_Pengesahan`, `Izin_Usaha`, `Sertifikat_Lainnya`, `Lainnya` — required | Jenis dokumen |
+| `doc_name` | text | - | Nama custom dokumen (opsional) |
+| `file` | file | max 1 file, max 10MB | File dokumen (PDF) |
+| `verified` | bool | default: `false` | Status verifikasi oleh Enabler |
+| `notes` | text | - | Catatan admin/Enabler |
+
+**PocketBase API Rules:**
+- **List:** `@request.auth.id = user` (hanya pemilik)
+- **View:** `@request.auth.id = user || @request.auth.role = "enabler"` (pemilik + Enabler)
+- **Create:** `@request.auth.id != ""` (semua user login)
+- **Update:** `@request.auth.id = user || @request.auth.role = "enabler"` (pemilik atau Enabler)
+- **Delete:** `@request.auth.id = user` (hanya pemilik)
+
+**Indexes:**
+```sql
+CREATE INDEX idx_user_documents_user ON user_documents (user);
+CREATE INDEX idx_user_documents_type ON user_documents (doc_type);
+```
+
+---
+
+## 20. Koleksi: `design_articles` (Base Collection — Desainer)
 
 Artikel edukasi tentang prinsip desain sirkular yang ditulis oleh Desainer.
 
@@ -558,7 +586,7 @@ Artikel edukasi tentang prinsip desain sirkular yang ditulis oleh Desainer.
 
 ---
 
-## 19. Koleksi: `design_notes` (Base Collection — Desainer)
+## 21. Koleksi: `design_notes` (Base Collection — Desainer)
 
 Catatan/saran desain dari Desainer untuk produk Generator atau Converter.
 
@@ -577,7 +605,7 @@ Catatan/saran desain dari Desainer untuk produk Generator atau Converter.
 
 ---
 
-## 20. Koleksi: `design_consultations` (Base Collection — Marketplace Jasa Desain)
+## 22. Koleksi: `design_consultations` (Base Collection — Marketplace Jasa Desain)
 
 Permintaan dan transaksi jasa konsultasi desain antara Desainer dengan Generator/Converter.
 
@@ -608,7 +636,7 @@ Tambahkan role `designer` sebagai penulis yang diizinkan:
 
 ---
 
-## Rangkuman Koleksi (22 Total)
+## Rangkuman Koleksi (23 Total)
 
 | # | Koleksi | Tipe PocketBase | Aktor Utama |
 | :--- | :--- | :--- | :--- |
@@ -631,3 +659,4 @@ Tambahkan role `designer` sebagai penulis yang diizinkan:
 | 15 | `design_recipes` | Base Collection | Converter / Enabler |
 | 16 | `bids` | Base Collection | Aggregator ↔ Generator |
 | 17 | `generator_products` | Base Collection | Generator |
+| 18 | `user_documents` | Base Collection | Semua (upload) / Enabler (verifikasi) |

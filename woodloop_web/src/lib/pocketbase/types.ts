@@ -14,6 +14,7 @@ export interface User {
   workshop_name?: string; address?: string;
   location_lat?: number; location_lng?: number;
   phone?: string; is_verified: boolean; bio?: string;
+  user_code?: string;
   production_capacity?: string; machine_type?: string;
   fleet_type?: string; warehouse_capacity?: string;
   created: string; updated: string;
@@ -272,6 +273,10 @@ export interface UserDocument {
   verified: boolean;
   notes?: string;
   created: string; updated: string;
+}
+
+export interface UserDocWithUrl extends UserDocument {
+  fileUrl: string;
 }
 
 // ========== 22. Reviews ==========

@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getPB } from "@/lib/pocketbase/client";
-import { useAuthStore } from "@/lib/stores/auth-store";
-import type { User, ImpactMetric } from "@/lib/pocketbase/types";
+import { getPB, getFileUrl } from "@/lib/pocketbase/client";
+import type { User, ImpactMetric, UserDocument, UserDocWithUrl } from "@/lib/pocketbase/types";
 
 export const enablerKeys = {
   all: ["enabler"] as const,
@@ -12,13 +11,8 @@ export const enablerKeys = {
     filters ? [...enablerKeys.all, "users", filters] as const
             : [...enablerKeys.all, "users"] as const,
   userDetail: (id: string) => [...enablerKeys.all, "users", id] as const,
+  userDocs: (userId: string) => [...enablerKeys.all, "users", userId, "documents"] as const,
 };
-
-function getEnablerId(): string {
-  const user = useAuthStore.getState().user;
-  if (!user || user.role !== "enabler") throw new Error("Not an enabler");
-  return user.id;
-}
 
 // ─── Impact Metrics ──────────────────────────────────────────────────────
 export interface ImpactSummary {
@@ -46,7 +40,6 @@ export function useImpactMetrics(period?: string) {
       const totalCO2 = metrics.items.reduce((s, m) => s + (m.co2_saved || 0), 0);
       const totalValue = metrics.items.reduce((s, m) => s + (m.economic_value || 0), 0);
 
-      // Monthly aggregation
       const monthlyMap: Record<string, { waste: number; co2: number; value: number }> = {};
       metrics.items.forEach((m) => {
         const month = m.created?.substring(0, 7) || "unknown";
@@ -118,6 +111,149 @@ export function useUpdateUserVerification() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: enablerKeys.users() });
+    },
+  });
+}
+
+// ─── User Detail ─────────────────────────────────────────────────────────
+export function useUserDetail(userId: string) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: enablerKeys.userDetail(userId),
+    queryFn: async () => {
+      const record = await pb.collection("users").getOne(userId);
+      return record as unknown as User;
+    },
+    enabled: !!userId,
+  });
+}
+
+// ─── Enabler: View All Documents for a Specific User ─────────────────────
+export function useEnablerUserDocuments(userId: string) {
+  const pb = getPB();
+  return useQuery<UserDocWithUrl[]>({
+    queryKey: enablerKeys.userDocs(userId),
+    queryFn: async () => {
+      const result = await pb.collection("user_documents").getList(1, 50, {
+        filter: `user="${userId}"`,
+        sort: "-created",
+      });
+      const items = result.items as unknown as UserDocument[];
+      return items.map((doc) => ({
+        ...doc,
+        fileUrl: getFileUrl("user_documents", doc.id, doc.file),
+      }));
+    },
+    enabled: !!userId,
+  });
+}
+
+// ─── Enabler: Update Document Review (approve/reject + notes) ──────────
+export function useUpdateDocumentReview() {
+  const pb = getPB();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      docId,
+      verified,
+      notes,
+    }: {
+      docId: string;
+      verified: boolean;
+      notes?: string;
+    }) => {
+      return pb.collection("user_documents").update(docId, { verified, notes: notes || "" });
+    },
+    onSuccess: (_data, variables) => {
+      // Invalidate all document queries since we don't know the user ID here
+      qc.invalidateQueries({ queryKey: ["enabler", "users"] });
+    },
+  });
+}
+
+// ─── User Activity ───────────────────────────────────────────────────────
+export interface UserActivity {
+  wasteListings: number;
+  timberListings: number;
+  orders: number;
+  pickups: number;
+  documents: number;
+}
+
+export function useUserActivity(userId: string) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: [...enablerKeys.userDetail(userId), "activity"],
+    queryFn: async () => {
+      const [wasteListings, timberListings, ordersAsBuyer, ordersAsSeller, pickups, documents] =
+        await Promise.all([
+          pb.collection("waste_listings").getList(1, 1, { filter: `generator="${userId}"`, skipTotal: true }).catch(() => null),
+          pb.collection("raw_timber_listings").getList(1, 1, { filter: `supplier="${userId}"`, skipTotal: true }).catch(() => null),
+          pb.collection("orders").getList(1, 1, { filter: `buyer="${userId}"`, skipTotal: true }).catch(() => null),
+          pb.collection("raw_timber_orders").getList(1, 1, { filter: `seller="${userId}"`, skipTotal: true }).catch(() => null),
+          pb.collection("pickups").getList(1, 1, { filter: `aggregator="${userId}"`, skipTotal: true }).catch(() => null),
+          pb.collection("user_documents").getList(1, 1, { filter: `user="${userId}"`, skipTotal: true }).catch(() => null),
+        ]);
+
+      return {
+        wasteListings: wasteListings?.totalItems || 0,
+        timberListings: timberListings?.totalItems || 0,
+        orders: (ordersAsBuyer?.totalItems || 0) + (ordersAsSeller?.totalItems || 0),
+        pickups: pickups?.totalItems || 0,
+        documents: documents?.totalItems || 0,
+      };
+    },
+    enabled: !!userId,
+  });
+}
+
+// ─── Export Impact Data to CSV ──────────────────────────────────────────
+export function useExportImpactData() {
+  const pb = getPB();
+  return useMutation({
+    mutationFn: async () => {
+      const metrics = await pb.collection<ImpactMetric>("impact_metrics").getList(1, 5000, {
+        sort: "-created",
+      });
+      const allUsers = await pb.collection("users").getList(1, 200, { sort: "-created" });
+
+      const rows = [
+        ["Periode", "Limbah (kg)", "CO2 (kg)", "Nilai Ekonomi (Rp)", "Total Pengguna"].join(","),
+      ];
+
+      // Aggregate by month
+      const monthlyMap: Record<string, { waste: number; co2: number; value: number }> = {};
+      metrics.items.forEach((m) => {
+        const month = m.created?.substring(0, 7) || "unknown";
+        if (!monthlyMap[month]) monthlyMap[month] = { waste: 0, co2: 0, value: 0 };
+        monthlyMap[month].waste += m.waste_diverted || 0;
+        monthlyMap[month].co2 += m.co2_saved || 0;
+        monthlyMap[month].value += m.economic_value || 0;
+      });
+
+      const totalUsers = allUsers.totalItems;
+      Object.entries(monthlyMap)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .forEach(([month, data]) => {
+          rows.push([month, data.waste.toString(), data.co2.toString(), data.value.toString(), totalUsers.toString()].join(","));
+        });
+
+      // Add summary row
+      const totalWaste = metrics.items.reduce((s, m) => s + (m.waste_diverted || 0), 0);
+      const totalCO2 = metrics.items.reduce((s, m) => s + (m.co2_saved || 0), 0);
+      const totalValue = metrics.items.reduce((s, m) => s + (m.economic_value || 0), 0);
+      rows.push(["TOTAL", totalWaste.toString(), totalCO2.toString(), totalValue.toString(), totalUsers.toString()].join(","));
+
+      const csv = rows.join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `woodloop-impact-data-${new Date().toISOString().split("T")[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      return true;
     },
   });
 }
