@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useConverterProducts, useDeleteProduct } from "@/lib/hooks/use-converter";
 import { Button } from "@/components/ui/button";
@@ -11,13 +12,15 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger,
 } from "@/components/ui/dialog";
-import { Package, Plus, Trash2 } from "lucide-react";
+import { QRCodeDisplay } from "@/components/features/qr-code-display";
+import { Package, Plus, Trash2, QrCode } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CatalogPage() {
   const { data, isLoading } = useConverterProducts();
   const deleteProduct = useDeleteProduct();
   const products = data?.items ?? [];
+  const [qrProduct, setQrProduct] = useState<string | null>(null);
 
   return (
     <div className="space-y-6">
@@ -64,10 +67,13 @@ export default function CatalogPage() {
                 <p className="font-medium">{p.name}</p>
                 <p className="text-sm text-muted-foreground">{p.category} • Stok: {p.stock}</p>
                 <p className="font-semibold mt-2">Rp {p.price.toLocaleString("id-ID")}</p>
-                <p className="text-xs text-muted-foreground mt-1">QR: {p.qr_code_id}</p>
                 <div className="flex gap-2 mt-3">
                   <Button size="sm" variant="outline" className="flex-1" asChild>
                     <Link href={`/converter/catalog/${p.id}/edit`}>Edit</Link>
+                  </Button>
+                  <Button size="sm" variant="outline" className="gap-1" onClick={() => setQrProduct(p.qr_code_id)}>
+                    <QrCode className="h-3.5 w-3.5" />
+                    QR
                   </Button>
                 </div>
               </CardContent>
@@ -75,6 +81,18 @@ export default function CatalogPage() {
           ))}
         </div>
       )}
+
+      <Dialog open={!!qrProduct} onOpenChange={(o) => !o && setQrProduct(null)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>QR Code Produk</DialogTitle>
+            <DialogDescription>
+              Scan QR untuk melihat halaman traceability produk
+            </DialogDescription>
+          </DialogHeader>
+          {qrProduct && <QRCodeDisplay qrCodeId={qrProduct} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
