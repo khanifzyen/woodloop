@@ -62,9 +62,9 @@ async function migrateDesignRecipes() {
         type: 'base',
         listRule: '@request.auth.id != ""',
         viewRule: '@request.auth.id != ""',
-        createRule: '@request.auth.role = "converter" || @request.auth.role = "enabler"',
-        updateRule: '@request.auth.role = "converter" || @request.auth.role = "enabler"',
-        deleteRule: '@request.auth.role = "converter" || @request.auth.role = "enabler"',
+        createRule: '@request.auth.role = "converter" || @request.auth.role = "designer" || @request.auth.role = "enabler"',
+        updateRule: '@request.auth.role = "converter" || @request.auth.role = "designer" || @request.auth.role = "enabler"',
+        deleteRule: '@request.auth.role = "converter" || @request.auth.role = "designer" || @request.auth.role = "enabler"',
         fields,
         indexes: [
             'CREATE INDEX idx_recipes_author ON design_recipes (author)',

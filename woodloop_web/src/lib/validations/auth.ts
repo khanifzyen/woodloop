@@ -18,6 +18,7 @@ export const registerSchema = z.object({
     "converter",
     "enabler",
     "buyer",
+    "designer",
   ]),
   phone: z.string().optional(),
   workshop_name: z.string().optional(),

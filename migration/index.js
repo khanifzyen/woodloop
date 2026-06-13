@@ -27,6 +27,10 @@ import { migrateDesignRecipes } from './collections/15_design_recipes.js';
 import { migrateBids } from './collections/16_bids.js';
 import { migrateGeneratorProducts } from './collections/17_generator_products.js';
 import { migrateUserDocuments } from './collections/18_user_documents.js';
+import { migrateDesignArticles } from './collections/24_design_articles.js';
+import { migrateDesignNotes } from './collections/25_design_notes.js';
+import { migrateDesignConsultations } from './collections/26_design_consultations.js';
+import { updateUsersRole } from './collections/27_update_users_role.js';
 
 async function runAllMigrations() {
     console.log('🚀 WoodLoop — Starting PocketBase migrations...\n');
@@ -36,6 +40,9 @@ async function runAllMigrations() {
         // 1. Auth & Master Data (no dependencies)
         console.log('\n📦 [1/17] Migrating Users...');
         await migrateUsers();
+
+        console.log('\n🔄 [1b/22] Updating users role field...');
+        await updateUsersRole();
 
         console.log('\n🌳 [2/17] Migrating Wood Types...');
         await migrateWoodTypes();
@@ -96,13 +103,23 @@ async function runAllMigrations() {
         console.log('\n📄 [18/18] Migrating User Documents...');
         await migrateUserDocuments();
 
-        // 10. Payment fields for raw_timber_orders
-        console.log('\n💳 [19/19] Migrating Raw Timber Orders Payment Fields...');
+        // 10. Designer role collections (depend on users)
+        console.log('\n📝 [19/22] Migrating Design Articles...');
+        await migrateDesignArticles();
+
+        console.log('\n📋 [20/22] Migrating Design Notes...');
+        await migrateDesignNotes();
+
+        console.log('\n🤝 [21/22] Migrating Design Consultations...');
+        await migrateDesignConsultations();
+
+        // 11. Payment fields for raw_timber_orders
+        console.log('\n💳 [22/22] Migrating Raw Timber Orders Payment Fields...');
         const { addPaymentFields } = await import('./collections/23_raw_timber_orders_payment.js');
         await addPaymentFields();
 
         console.log('\n' + '═'.repeat(50));
-        console.log('✅ All 19 migrations completed successfully!');
+        console.log('✅ All 22 migrations completed successfully!');
         console.log('═'.repeat(50));
 
     } catch (error) {

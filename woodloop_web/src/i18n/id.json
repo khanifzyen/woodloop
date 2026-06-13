@@ -19,6 +19,8 @@
     "checkout": "Checkout",
     "catalog": "Katalog",
     "design_clinic": "Klinik Desain",
+    "articles": "Artikel Sirkular",
+    "design_notes": "Catatan Desain",
     "users": "Pengguna",
     "cart": "Keranjang",
     "wallet": "Dompet",
@@ -55,7 +57,9 @@
     "enabler": "Enabler",
     "enabler_desc": "Pemerintah/Asosiasi — pantau dampak lingkungan",
     "buyer": "Buyer",
-    "buyer_desc": "Konsumen akhir — beli produk daur ulang"
+    "buyer_desc": "Konsumen akhir — beli produk daur ulang",
+    "designer": "Desainer",
+    "designer_desc": "Konsultan desain — saran produk, artikel sirkular"
   },
   "common": {
     "save": "Simpan",

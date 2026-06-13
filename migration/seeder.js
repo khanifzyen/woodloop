@@ -50,7 +50,7 @@ async function seedData() {
 
         // 2. Seed Demo Users
         console.log("\n👥 Seeding Demo Users...");
-        const roles = ['supplier', 'generator', 'aggregator', 'converter', 'enabler', 'buyer'];
+        const roles = ['supplier', 'generator', 'aggregator', 'converter', 'enabler', 'buyer', 'designer'];
         const usersMap = {}; // role -> user id
 
         for (const role of roles) {

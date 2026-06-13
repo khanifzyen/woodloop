@@ -19,6 +19,8 @@
     "checkout": "Checkout",
     "catalog": "Catalog",
     "design_clinic": "Design Clinic",
+    "articles": "Circular Articles",
+    "design_notes": "Design Notes",
     "users": "Users",
     "cart": "Cart",
     "wallet": "Wallet",
@@ -55,7 +57,9 @@
     "enabler": "Enabler",
     "enabler_desc": "Government/Association — monitor impact",
     "buyer": "Buyer",
-    "buyer_desc": "End consumer — buy upcycled products"
+    "buyer_desc": "End consumer — buy upcycled products",
+    "designer": "Designer",
+    "designer_desc": "Design consultant — product advice, circular articles"
   },
   "common": {
     "save": "Save",

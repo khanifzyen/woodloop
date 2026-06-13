@@ -8,7 +8,7 @@ export interface AuthUser {
   username: string;
   name: string;
   avatar?: string;
-  role: "supplier" | "generator" | "aggregator" | "converter" | "enabler" | "buyer";
+  role: "supplier" | "generator" | "aggregator" | "converter" | "enabler" | "buyer" | "designer";
   workshop_name?: string;
   phone?: string;
   address?: string;
