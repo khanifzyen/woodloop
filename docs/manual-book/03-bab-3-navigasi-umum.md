@@ -10,24 +10,6 @@ title: "Bab 3 — Navigasi Umum"
 
 Setelah login, setiap halaman WoodLoop memiliki struktur yang sama:
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  ┌──────────────┐  HEADER                               │
-│  │              │  ☰ Menu  │  🔔 Notif  │ 💰 Wallet  │ 👤 |
-│  │   SIDEBAR    ├──────────────────────────────────────┤
-│  │   (Navigasi) │  BREADCRUMB                           │
-│  │              ├──────────────────────────────────────┤
-│  │  • Dashboard │                                      │
-│  │  • Fitur 1   │          KONTEN UTAMA                 │
-│  │  • Fitur 2   │        (Card, Table, Form,           │
-│  │  • Fitur 3   │         Chart, dll.)                  │
-│  │  • ...       │                                      │
-│  │              │                                      │
-│  │  • Profil    │                                      │
-│  │  • Logout    │                                      │
-│  └──────────────┴──────────────────────────────────────┘
-```
-
 | Area | Letak | Fungsi |
 |------|-------|--------|
 | **Header** | Pojok kanan atas | Notifikasi, wallet, avatar, dark mode, bahasa |
@@ -38,8 +20,6 @@ Setelah login, setiap halaman WoodLoop memiliki struktur yang sama:
 ---
 
 ## 3.2 Sidebar per Peran
-
-Setiap peran memiliki menu sidebar yang berbeda. Berikut perbandingannya:
 
 ### Supplier
 ```
@@ -105,14 +85,7 @@ Setiap peran memiliki menu sidebar yang berbeda. Berikut perbandingannya:
 └── 👥 Manajemen User
 ```
 
-### Pada Perangkat Mobile (≤ 768px)
-
-Di layar kecil, sidebar berubah menjadi **Sheet** yang muncul dari kiri:
-
-1. Ketuk ikon **☰ (hamburger menu)** di pojok kiri atas
-2. Sidebar akan muncul sebagai panel dari kiri
-3. Ketuk menu yang diinginkan
-4. Panel akan tertutup otomatis setelah memilih menu
+Pada perangkat mobile (≤ 768px), sidebar berubah menjadi **Sheet** yang muncul dari kiri dengan mengetuk ikon **☰ (hamburger menu)**.
 
 ---
 
@@ -124,61 +97,32 @@ Breadcrumb menunjukkan posisi Anda dalam hirarki halaman. Contoh:
 Supplier  ›  Inventaris Kayu  ›  Tambah Kayu Baru
 ```
 
-Breadcrumb membantu Anda:
-- Mengetahui halaman sedang aktif
-- Kembali ke halaman sebelumnya dengan mengklik tautan di breadcrumb
-- Memahami struktur navigasi aplikasi
+Klik tautan di breadcrumb untuk kembali ke halaman sebelumnya.
 
 ---
 
-## 3.4 Mode Gelap / Terang
+## 3.4 Mode Gelap & Ganti Bahasa
 
-WoodLoop mendukung **Dark Mode** dan **Light Mode**.
+### Mode Gelap / Terang
 
-**Cara mengganti mode:**
-1. Klik ikon **🌙 / ☀️** di pojok kanan header
-2. Mode akan berubah otomatis
+Klik ikon **🌙 / ☀️** di pojok kanan header untuk mengganti mode:
 
-**Pilihan mode:**
-| Mode | Tampilan | Cocok untuk |
-|------|----------|-------------|
-| ☀️ **Terang (Light)** | Latar putih, teks hitam | Penggunaan di siang hari / ruangan terang |
-| 🌙 **Gelap (Dark)** | Latar gelap, teks terang | Penggunaan malam hari / ruangan redup |
-| 🔄 **Ikuti Sistem** | Otomatis mengikuti pengaturan perangkat | Pengguna yang sering berpindah lingkungan |
+| Mode | Tampilan |
+|------|----------|
+| **Terang (Light)** | Latar putih, teks hitam |
+| **Gelap (Dark)** | Latar gelap, teks terang |
+| **Ikuti Sistem** | Otomatis mengikuti pengaturan perangkat |
 
-> Pengaturan mode tersimpan di browser dan akan diingat saat下次 login.
+### Ganti Bahasa
 
----
+Klik tombol **"ID"** atau **"EN"** di pojok kanan header untuk mengganti bahasa.
 
-## 3.5 Ganti Bahasa (EN/ID)
+| Bahasa | Tombol |
+|--------|--------|
+| **Bahasa Indonesia** | ID |
+| **English** | EN |
 
-WoodLoop mendukung **dua bahasa**:
-
-| Bahasa | Kode | Tombol |
-|--------|------|--------|
-| 🇮🇩 **Bahasa Indonesia** | id | Tampilkan "ID" |
-| 🇬🇧 **English** | en | Tampilkan "EN" |
-
-**Cara mengganti bahasa:**
-1. Klik tombol **"ID"** atau **"EN"** di pojok kanan header
-2. Bahasa akan berubah seketika
-3. Semua teks di aplikasi akan mengikuti bahasa yang dipilih
-
-> **Catatan:** Bahasa yang dipilih akan tersimpan di pengaturan akun Anda.
-
----
-
-### Ringkasan Bab 3
-
-| Fitur | Shortcut / Letak | Fungsi |
-|-------|-----------------|--------|
-| Sidebar | Kiri (desktop) / ☰ (mobile) | Navigasi menu per peran |
-| Breadcrumb | Atas konten utama | Menunjukkan posisi halaman |
-| Dark Mode | 🌙 / ☀️ di header | Mengubah tema tampilan |
-| Ganti Bahasa | ID / EN di header | Mengubah bahasa aplikasi |
-| Notifikasi | 🔔 di header | Melihat notifikasi masuk |
-| Wallet | 💰 di header | Cek saldo dompet |
-| Profil | 👤 di header | Edit profil & logout |
+> Pengaturan mode dan bahasa tersimpan di akun Anda.
 
 ---
 ➡️ **Lanjut ke [Bab 4: Panduan Supplier](./04-bab-4-supplier.md)**

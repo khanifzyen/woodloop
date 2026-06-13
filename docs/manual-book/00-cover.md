@@ -9,9 +9,9 @@ date: "Mei 2026"
 
 # 🌳 **WoodLoop**
 
-## Manual Book Aplikasi
+## Manual Book
 
-### Platform Ekonomi Sirkular Industri Kayu Jepara
+### Panduan Lengkap Seluruh Peran
 
 <br/>
 <br/>
@@ -33,9 +33,8 @@ date: "Mei 2026"
 
 | | |
 |---|---|
-| **Platform** | Web + Android (Hybrid) |
-| **Backend** | PocketBase |
-| **Pengguna** | 7 Peran (Supplier, Generator, Aggregator, Converter, Desainer, Enabler, Buyer) |
+| **Platform** | Web + Android |
+| **Pengguna** | 7 Peran (Supplier, Generator, Aggregator, Converter, Desainer, Buyer, Enabler) |
 
 <br/>
 

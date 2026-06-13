@@ -35,7 +35,7 @@ See [deployment/taste.md](deployment/taste.md)
 - When running agent-browser for web testing, target the local dev server at `localhost:3001` instead of production URLs. Confidence: 0.70
 
 # pdf-generation
-- For manual book PDF generation, use a direct HTML template approach (matching the supplier manual's `docs/generate-pdf.js`) with A4 format, 2cm top/bottom and 2.5cm left/right margins, page-number footers, and `file://` absolute paths for screenshots — inline CSS, no markdown-to-HTML conversion pipeline that produces messy layout. Confidence: 0.80
+- For manual book PDF generation, create markdown source files (e.g., `00-cover.md`, `01-bab-*.md`) first following the master manual pattern, then generate HTML/PDF from them — not direct inline HTML. Users expect `.md` files to be created and reviewed before PDF generation. Confidence: 0.75
 
 # ui-layout
 - For template/question selection, use inline radio buttons shown directly (not hidden in a dropdown/Select). Users should be able to see all options at a glance and either pick one or write their own message. Confidence: 0.70

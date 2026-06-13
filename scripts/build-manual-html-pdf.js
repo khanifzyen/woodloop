@@ -22,9 +22,10 @@ const FILES = [
   "01-bab-1-pendahuluan.md", "02-bab-2-memulai.md",
   "03-bab-3-navigasi-umum.md", "04-bab-4-supplier.md",
   "05-bab-5-generator.md", "06-bab-6-aggregator.md",
-  "07-bab-7-converter.md", "08-bab-8-buyer.md",
-  "09-bab-9-enabler.md", "10-bab-10-fitur-global.md",
-  "11-bab-11-traceability.md", "12-bab-12-troubleshooting.md",
+  "07-bab-7-converter.md", "08-bab-8-desainer.md",
+  "09-bab-9-buyer.md", "10-bab-10-enabler.md",
+  "11-bab-11-fitur-global.md", "12-bab-12-traceability.md",
+  "13-bab-13-troubleshooting.md",
 ];
 
 // ─── CSS ─────────────────────────────────────────────────────
@@ -242,7 +243,7 @@ async function main() {
   <table class="info-table">
     <tr><td>Platform</td><td>Web + Android (Hybrid)</td></tr>
     <tr><td>Backend</td><td>PocketBase</td></tr>
-    <tr><td>Pengguna</td><td>6 Peran (Supplier, Generator, Aggregator, Converter, Enabler, Buyer)</td></tr>
+    <tr><td>Pengguna</td><td>7 Peran (Supplier, Generator, Aggregator, Converter, Desainer, Buyer, Enabler)</td></tr>
   </table>
   <p style="margin-top:60px;font-size:10pt;color:#888;">📧 woodloop.app@gmail.com &nbsp;|&nbsp; 🌐 woodloop.github.io/app</p>
 </div>
