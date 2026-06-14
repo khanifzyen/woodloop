@@ -108,6 +108,10 @@ Fase ini membangun fitur untuk **Supplier** (hulu rantai pasok) dan **Generator*
 - [x] **P2-T9** Halaman Riwayat Penjualan: `src/app/(dashboard)/supplier/sales/page.tsx`
   - DataTable transaksi + monthly bar chart (custom CSS, bukan recharts)
   - Summary: total revenue, total complete orders
+- [x] **P2-T9b** Halaman Profil Supplier: `src/app/(dashboard)/supplier/profile/page.tsx`
+  - Edit profil: nama, workshop, telepon, alamat
+  - Upload avatar
+  - Dokumen legalitas (upload + view)
 
 ### Day 9: Generator Dashboard ✅
 
@@ -156,6 +160,13 @@ Fase ini membangun fitur untuk **Supplier** (hulu rantai pasok) dan **Generator*
   - Props: `onSubmit(data: WasteFormData) => void`
   - State per-step di dalam komponen
   - Validasi per-step (manual, bukan Zod form)
+- [x] **P2-T13b** Halaman Daftar Limbah: `src/app/(dashboard)/generator/waste/page.tsx`
+  - DataTable waste listings milik Generator
+  - Columns: foto, jenis kayu, bentuk, volume, status
+  - Click row → edit page
+- [x] **P2-T13c** Halaman Edit Limbah: `src/app/(dashboard)/generator/waste/[id]/edit/page.tsx`
+  - Pre-filled form edit limbah
+  - Delete button dengan konfirmasi
 - [x] **P2-T14** Buat komponen `CameraCapture`:
   - `src/components/features/camera-capture.tsx`
   - Client component
@@ -176,6 +187,20 @@ Fase ini membangun fitur untuk **Supplier** (hulu rantai pasok) dan **Generator*
   - Badge status + volume
   - Price + volume info
   - Skeleton component
+- [x] **P2-T16b** Halaman Keranjang Beli Kayu: `src/app/(dashboard)/generator/cart/page.tsx`
+  - Zustand `timber-cart-store` — cart khusus beli kayu (group by supplier)
+  - List item: foto, jenis kayu, volume, harga, quantity
+  - Total per item + keseluruhan
+  - Empty state + "Checkout" button
+- [x] **P2-T16c** Halaman Checkout Beli Kayu: `src/app/(dashboard)/generator/checkout/page.tsx`
+  - Ringkasan pesanan: group by supplier
+  - Alamat pengiriman
+  - Metode pembayaran
+  - Submit → PocketBase create `raw_timber_orders`
+- [x] **P2-T16d** Halaman Sukses Order: `src/app/(dashboard)/generator/order-success/page.tsx`
+  - Konfirmasi order berhasil
+  - Detail order
+  - CTA: lihat status pesanan
 - [x] **P2-T17** Halaman Produk Saya: `src/app/(dashboard)/generator/products/page.tsx`
   - DataTable `generator_products`
   - Columns: foto, nama, kategori, harga, stock, status
@@ -183,10 +208,20 @@ Fase ini membangun fitur untuk **Supplier** (hulu rantai pasok) dan **Generator*
   - Filter by category
 - [x] **P2-T18** Halaman Tambah Produk Generator: `src/app/(dashboard)/generator/products/new/page.tsx`
   - Form: nama, deskripsi, kategori (Select), harga, stock, foto, wood_type
+- [x] **P2-T18b** Halaman Detail Produk Generator: `src/app/(dashboard)/generator/products/[id]/page.tsx`
+  - Detail produk: foto, nama, deskripsi, harga, stock
+  - Edit & Delete actions
+- [x] **P2-T18c** Halaman Edit Produk Generator: `src/app/(dashboard)/generator/products/[id]/edit/page.tsx`
+  - Pre-filled form edit produk
+  - Update stock, price, photos
 - [x] **P2-T19** Halaman Pesanan Kayu: `src/app/(dashboard)/generator/timber-orders/page.tsx`
   - DataTable: status pesanan kayu ke Supplier
   - Status: payment_pending, paid, processing, shipped, received, cancelled
   - Action: Cancel (jika masih pending/paid)
+- [x] **P2-T19b** Halaman Profil Generator: `src/app/(dashboard)/generator/profile/page.tsx`
+  - Edit profil: nama, workshop, telepon, alamat, bio
+  - Upload avatar
+  - Dokumen legalitas (upload + view)
 
 ### Day 12: Polish + Testing Supplier/Generator Flow ✅
 
@@ -210,15 +245,25 @@ src/
 │   │   ├── new/page.tsx
 │   │   └── [id]/edit/page.tsx
 │   ├── orders/page.tsx
+│   ├── profile/page.tsx
 │   └── sales/page.tsx
 ├── app/(generator)/
+│   ├── cart/page.tsx
+│   ├── checkout/page.tsx
 │   ├── dashboard/page.tsx
-│   ├── report-waste/page.tsx
-│   ├── buy-timber/page.tsx
+│   ├── order-success/page.tsx
 │   ├── products/
 │   │   ├── page.tsx
-│   │   └── new/page.tsx
-│   └── timber-orders/page.tsx
+│   │   ├── new/page.tsx
+│   │   ├── [id]/page.tsx
+│   │   └── [id]/edit/page.tsx
+│   ├── profile/page.tsx
+│   ├── report-waste/page.tsx
+│   ├── buy-timber/page.tsx
+│   ├── timber-orders/page.tsx
+│   ├── waste/
+│   │   ├── page.tsx
+│   │   └── [id]/edit/page.tsx
 ├── components/
 │   └── features/
 │       ├── summary-cards.tsx

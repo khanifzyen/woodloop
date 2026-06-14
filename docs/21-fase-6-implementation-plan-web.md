@@ -114,8 +114,8 @@ Fase ini membangun fitur untuk **Enabler** (pemerintah/asosiasi) — dashboard i
 
 ### Day 34: Chat System (Shared)
 
-- [x] **P6-T11** Buat hooks chat:
-  - `src/lib/hooks/use-chat.ts`
+- [x] **P6-T11** Buat hooks chat (di dalam `use-wallet.ts`):
+  - `src/lib/hooks/use-wallet.ts` — contains chat hooks alongside wallet hooks
   - `useConversations()` — list percakapan (group by partner)
   - `useMessages(partnerId)` — messages dengan user tertentu
   - `useSendMessage()` — mutation
@@ -162,6 +162,10 @@ Fase ini membangun fitur untuk **Enabler** (pemerintah/asosiasi) — dashboard i
   - Mark all as read button
   - Click → redirect ke halaman terkait (order, pickup, dll)
   - Empty: "Belum ada notifikasi"
+- [x] **P6-T16b** Halaman Changelog: `src/app/(shared)/changelog/page.tsx`
+  - Version history app
+  - Daftar fitur baru, improvements, bug fixes per rilis
+  - Sidebar footer link: "WoodLoop {version} Changelog"
 - [x] **P6-T17** Buat komponen `NotificationBadge`:
   - `src/components/features/notification-badge.tsx`
   - Show di navbar
@@ -172,7 +176,10 @@ Fase ini membangun fitur untuk **Enabler** (pemerintah/asosiasi) — dashboard i
   - Subscribe ke topic per user
   - Handle notification click → redirect
   - Web fallback: in-app notification
-- [x] **P6-T19** Halaman Profil: `src/app/(shared)/profile/page.tsx`
+- [x] **P6-T19** Halaman Profil (role-specific):
+  - `src/app/(dashboard)/supplier/profile/page.tsx` — profil Supplier
+  - `src/app/(dashboard)/generator/profile/page.tsx` — profil Generator
+  - Catatan: role lain menggunakan profile pages role-specific masing-masing, bukan `(shared)/profile/`
   - Avatar (upload)
   - Edit profil: name, workshop, phone, address, bio
   - Lokasi GPS (map picker)
@@ -202,6 +209,7 @@ src/
 │   │       ├── page.tsx
 │   │       └── [id]/page.tsx
 │   ├── (shared)/
+│   │   ├── changelog/page.tsx
 │   │   ├── wallet/page.tsx
 │   │   ├── chat/page.tsx
 │   │   ├── notifications/page.tsx
@@ -217,9 +225,8 @@ src/
 │       └── map-picker.tsx
 ├── lib/
 │   ├── hooks/
-│   │   ├── use-enabler.ts
-│   │   ├── use-wallet.ts
-│   │   ├── use-chat.ts
+│   │   ├── use-enabler.ts       (chat hooks — useConversations, useMessages, useSendMessage — live in use-wallet.ts)
+│   │   ├── use-wallet.ts        (also contains chat hooks)
 │   │   └── use-notifications.ts
 │   └── stores/
 │       └── wallet-store.ts

@@ -72,6 +72,17 @@ Fase ini membangun fitur untuk **Buyer** (konsumen akhir). Buyer bisa browsing p
   - Nama Converter
   - Hover: scale + shadow
   - Click → product detail
+- [x] **P5-T4b** Halaman Seller Profile: `src/app/(buyer)/seller/[id]/page.tsx`
+  - Display nama, avatar, bio, lokasi Converter
+  - List produk dari Converter tersebut
+- [x] **P5-T4c** Halaman Wishlist: `src/app/(buyer)/wishlist/page.tsx`
+  - Grid produk yang di-wishlist Buyer
+  - Remove from wishlist button
+  - Empty state
+- [x] **P5-T4d** Halaman Dashboard Buyer: `src/app/(buyer)/dashboard/page.tsx`
+  - Ringkasan: total orders, wishlist items
+  - Quick links: marketplace, orders, wishlist
+  - Recent activity
 
 ### Day 27: Product Detail + Traceability
 
@@ -193,12 +204,15 @@ src/
 │   │   ├── marketplace/
 │   │   │   ├── page.tsx                 # SSR/ISR
 │   │   │   └── category/[slug]/page.tsx # SSR
+│   │   ├── dashboard/page.tsx            # Buyer landing page
 │   │   ├── product/[id]/page.tsx         # SSR
 │   │   ├── cart/page.tsx
 │   │   ├── checkout/page.tsx
 │   │   ├── orders/
 │   │   │   ├── page.tsx
 │   │   │   └── [id]/page.tsx
+│   │   ├── seller/[id]/page.tsx          # Seller profile page
+│   │   ├── wishlist/page.tsx
 │   │   └── scan/page.tsx
 │   ├── p/
 │   │   └── [qr_code_id]/page.tsx        # RSC (zero JS)
