@@ -16,14 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Loader2, Leaf, LogIn } from "lucide-react";
+import { Loader2, Mail, Lock, LogIn, Sparkles } from "lucide-react";
 
 export default function LoginPage() {
   const loginMutation = useLogin();
@@ -41,29 +34,41 @@ export default function LoginPage() {
   }
 
   return (
-    <Card>
-      <CardHeader className="text-center">
-        <CardTitle className="text-xl font-heading">Masuk</CardTitle>
-        <CardDescription>
-          Masuk ke akun WoodLoop Anda
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="space-y-2 text-center">
+        <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/25">
+          <LogIn className="h-6 w-6" />
+        </div>
+        <h1 className="text-2xl font-heading font-bold tracking-tight">
+          Selamat datang kembali
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Masuk untuk melanjutkan ke WoodLoop
+        </p>
+      </div>
+
+      {/* Form Card */}
+      <div className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm sm:p-8">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-sm font-medium">Email</FormLabel>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="nama@email.com"
-                      autoComplete="email"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        type="email"
+                        placeholder="nama@email.com"
+                        autoComplete="email"
+                        className="h-11 pl-10"
+                        {...field}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,32 +80,37 @@ export default function LoginPage() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Kata Sandi</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel className="text-sm font-medium">
+                      Kata Sandi
+                    </FormLabel>
+                    <Link
+                      href="/forgot-password"
+                      className="text-xs font-medium text-primary hover:underline"
+                    >
+                      Lupa?
+                    </Link>
+                  </div>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      autoComplete="current-password"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                        className="h-11 pl-10"
+                        {...field}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="text-right">
-              <Link
-                href="/forgot-password"
-                className="text-sm text-primary hover:underline"
-              >
-                Lupa Kata Sandi?
-              </Link>
-            </div>
-
             <Button
               type="submit"
-              className="w-full"
+              className="h-11 w-full bg-gradient-to-r from-primary to-primary/85 text-sm font-semibold shadow-md shadow-primary/20 transition-all hover:shadow-lg hover:shadow-primary/30"
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? (
@@ -110,31 +120,42 @@ export default function LoginPage() {
                 </>
               ) : (
                 <>
-                  <LogIn className="mr-2 h-4 w-4" />
                   Masuk
+                  <LogIn className="ml-2 h-4 w-4" />
                 </>
               )}
             </Button>
           </form>
         </Form>
 
-        <div className="mt-6 text-center text-sm">
-          <span className="text-muted-foreground">Belum punya akun? </span>
-          <Link href="/register" className="text-primary hover:underline font-medium">
-            Daftar
-          </Link>
+        <div className="mt-6 flex items-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            atau
+          </span>
+          <div className="h-px flex-1 bg-border" />
         </div>
 
-        <div className="mt-4 text-center">
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          Belum punya akun?{" "}
           <Link
-            href="/onboarding"
-            className="text-xs text-muted-foreground hover:underline"
-            onClick={() => localStorage.removeItem("woodloop_onboarding_done")}
+            href="/role-selection"
+            className="font-semibold text-primary hover:underline"
           >
-            🎬 Lihat onboarding lagi
+            Daftar sekarang
           </Link>
-        </div>
-      </CardContent>
-    </Card>
+        </p>
+      </div>
+
+      {/* Footer link */}
+      <Link
+        href="/onboarding"
+        onClick={() => localStorage.removeItem("woodloop_onboarding_done")}
+        className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <Sparkles className="h-3 w-3" />
+        Lihat onboarding lagi
+      </Link>
+    </div>
   );
 }

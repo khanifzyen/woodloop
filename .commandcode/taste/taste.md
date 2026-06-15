@@ -29,6 +29,7 @@ See [deployment/taste.md](deployment/taste.md)
 
 # agent-browser
 - When running agent-browser for web testing, target the local dev server at `localhost:3000` instead of production URLs — production may be outdated. Confidence: 0.75
+- Place the `--full-page` flag before the filename in `agent-browser screenshot` commands (e.g., `agent-browser screenshot --full-page path/to/file.png`), not after — placing it after causes the flag to be treated as the filename. Confidence: 0.70
 
 # project
 - Use `bun run dev` (not `npm run dev`) to start the Next.js dev server. Confidence: 0.65
