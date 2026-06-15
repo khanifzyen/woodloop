@@ -166,4 +166,56 @@ test.describe("TC-FLOW: Complete Enabler flow (real CRUD)", () => {
       console.log(`  ⚠️ No test user found`);
     }
   });
+
+  test("FLOW-02: Document review — approve & reject", async () => {
+    const { token } = await getAuthToken("enabler");
+    // Cari dokumen milik e2e.supplier
+    const users = await fetch(`${PB_URL}/api/collections/users/records?filter=${encodeURIComponent('email="e2e.supplier@woodloop.id"')}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const userData = await users.json() as { items: { id: string }[] };
+    if (!userData.items?.length) {
+      console.log(`  ⚠️ No supplier user found`);
+      return;
+    }
+    const supplierId = userData.items[0].id;
+
+    // Cari dokumen yang sudah ada untuk user ini
+    const docsRes = await fetch(`${PB_URL}/api/collections/user_documents/records?filter=${encodeURIComponent(`user="${supplierId}"`)}&perPage=5`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const docsData = await docsRes.json() as { items: { id: string; verified: boolean; notes?: string }[] };
+
+    if (docsData.items?.length > 0) {
+      const doc = docsData.items[0];
+      const originalVerified = doc.verified;
+
+      // Approve
+      const approveRes = await fetch(`${PB_URL}/api/collections/user_documents/records/${doc.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ verified: true, notes: "[E2E] Approved by test" }),
+      });
+      expect(approveRes.status).toBe(200);
+      console.log(`  ✅ Approved user_documents/${doc.id}`);
+
+      // Reject
+      await fetch(`${PB_URL}/api/collections/user_documents/records/${doc.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ verified: false, notes: "[E2E] Rejected by test" }),
+      });
+      console.log(`  ✅ Rejected user_documents/${doc.id}`);
+
+      // Restore original state
+      await fetch(`${PB_URL}/api/collections/user_documents/records/${doc.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ verified: originalVerified, notes: "[E2E] Restored" }),
+      });
+      console.log(`  ✅ Restored user_documents/${doc.id} → ${originalVerified}`);
+    } else {
+      console.log(`  ⚠️ No documents found for supplier user`);
+    }
+  });
 });

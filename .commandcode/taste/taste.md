@@ -3,12 +3,7 @@
 [cmd]: https://commandcode.ai/
 
 # project
-- Use `todo_write` with detailed task breakdown before implementing features. Confidence: 0.75
-- Discuss business logic decisions and UI placement with the user first before implementing — when the user says "jawab dulu jangan coding" or asks for opinion first, provide analysis/options verbally before writing code. Confidence: 0.78
-- Use `use` hook from React to unwrap Next.js App Router `params: Promise<>` in page components. Confidence: 0.80
-- Create a dedicated `.ts` file for PocketBase subscription hooks rather than inlining realtime logic in components. Confidence: 0.70
-- Extract notification hooks into a separate file (`use-notifications.ts`) with re-exports from the original file for backward compatibility. Confidence: 0.70
-
+See [project/taste.md](project/taste.md)
 # deployment
 See [deployment/taste.md](deployment/taste.md)
 # project
@@ -19,6 +14,7 @@ See [deployment/taste.md](deployment/taste.md)
 
 # testing
 - Write unit tests that verify hook function names, query keys, and structure rather than testing async behavior directly. Confidence: 0.70
+- Avoid `page.waitForLoadState(\"networkidle\")` in Playwright E2E tests — PocketBase realtime subscriptions (long-polling) keep the connection active indefinitely, causing networkidle to time out. Use element visibility assertions instead. Confidence: 0.70
 
 # ui-layout
 - In supplier inventory forms (new/edit), place Volume, Satuan, and Stok in a single 3-column grid (`grid-cols-3`) with equal width, ordered as Volume, Satuan, then Stok. Make sure SelectTrigger has `w-full` for consistent sizing. Confidence: 0.72

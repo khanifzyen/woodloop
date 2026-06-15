@@ -312,3 +312,141 @@ test.describe("TC-NEW: Notification Badge (AC-11)", () => {
     await expect(page.locator('nav a[href="/notifications"]').first()).toBeVisible();
   });
 });
+
+// ============================================================================
+// CRUD — Aggregator bid + pickup via API
+// ============================================================================
+test.describe("TC-CRUD: Aggregator bid & pickup (real)", () => {
+  let wasteId = "";
+  let wasteToken = "";
+  let bidId = "";
+  let pickupId = "";
+
+  test("CRUD-01: Create waste listing (as generator) → create bid (as aggregator)", async () => {
+    // Login as generator to create waste — we need userId too
+    const genPBAuth = await fetch(`${PB_URL}/api/collections/users/auth-with-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identity: emailFor("generator"), password: PASSWORD }),
+    });
+    const genData = await genPBAuth.json() as { token: string; record: { id: string } };
+    wasteToken = genData.token;
+    const wasteRes = await fetch(`${PB_URL}/api/collections/waste_listings/records`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${wasteToken}` },
+      body: JSON.stringify({
+        generator: genData.record.id,
+        wood_type: "r7ay7mmr0vy5bgj",
+        form: "offcut_large",
+        condition: "dry",
+        volume: 20,
+        unit: "kg",
+        price_estimate: 100000,
+        status: "available",
+        description: `[E2E-CRUD] Waste for bid ${Date.now()}`,
+      }),
+    });
+    const wasteData = await wasteRes.json() as { id: string };
+    wasteId = wasteData.id;
+    expect(wasteId).toBeTruthy();
+    console.log(`  ✅ Created waste_listings/${wasteId} for bidding`);
+
+    // Login as aggregator to create bid
+    const aggPBAuth = await fetch(`${PB_URL}/api/collections/users/auth-with-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identity: emailFor("aggregator"), password: PASSWORD }),
+    });
+    const aggData = await aggPBAuth.json() as { token: string; record: { id: string } };
+    const bidRes = await fetch(`${PB_URL}/api/collections/bids/records`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${aggData.token}` },
+      body: JSON.stringify({
+        bidder: aggData.record.id,
+        waste_listing: wasteId,
+        bid_amount: 85000,
+        message: "[E2E-CRUD] Bid test",
+        status: "pending",
+      }),
+    });
+    const bidData = await bidRes.json() as { id: string };
+    bidId = bidData.id;
+    expect(bidId).toBeTruthy();
+    console.log(`  ✅ Created bids/${bidId}`);
+  });
+
+  test("CRUD-02: Create pickup from waste listing & update status", async () => {
+    const aggPBAuth2 = await fetch(`${PB_URL}/api/collections/users/auth-with-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identity: emailFor("aggregator"), password: PASSWORD }),
+    });
+    const aggData2 = await aggPBAuth2.json() as { token: string; record: { id: string } };
+    // Create pickup
+    const pickupRes = await fetch(`${PB_URL}/api/collections/pickups/records`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${aggData2.token}` },
+      body: JSON.stringify({
+        aggregator: aggData2.record.id,
+        waste_listing: wasteId,
+        status: "pending",
+      }),
+    });
+    const pickupData = await pickupRes.json() as { id: string };
+    pickupId = pickupData.id;
+    expect(pickupId).toBeTruthy();
+    console.log(`  ✅ Created pickups/${pickupId}`);
+
+    // Update to in_transit
+    const transitRes = await fetch(`${PB_URL}/api/collections/pickups/records/${pickupId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${aggData2.token}` },
+      body: JSON.stringify({ status: "in_transit" }),
+    });
+    expect(transitRes.status).toBe(200);
+    console.log(`  ✅ Updated pickups/${pickupId} → in_transit`);
+
+    // Update to completed
+    const completedRes = await fetch(`${PB_URL}/api/collections/pickups/records/${pickupId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${aggData2.token}` },
+      body: JSON.stringify({ status: "completed" }),
+    });
+    expect(completedRes.status).toBe(200);
+    console.log(`  ✅ Updated pickups/${pickupId} → completed`);
+  });
+
+  test("CRUD-03: Cleanup all", async () => {
+    const aggAuth = await getAuthToken("aggregator");
+    // Delete bid
+    if (bidId) {
+      await fetch(`${PB_URL}/api/collections/bids/records/${bidId}`, {
+        method: "DELETE", headers: { Authorization: `Bearer ${aggAuth.token}` },
+      });
+      console.log(`  🗑️ Deleted bids/${bidId}`);
+    }
+    // Delete pickup
+    if (pickupId) {
+      await fetch(`${PB_URL}/api/collections/pickups/records/${pickupId}`, {
+        method: "DELETE", headers: { Authorization: `Bearer ${aggAuth.token}` },
+      });
+      console.log(`  🗑️ Deleted pickups/${pickupId}`);
+    }
+    // Delete waste listing
+    if (wasteId) {
+      await fetch(`${PB_URL}/api/collections/waste_listings/records/${wasteId}`, {
+        method: "DELETE", headers: { Authorization: `Bearer ${wasteToken}` },
+      });
+      console.log(`  🗑️ Deleted waste_listings/${wasteId}`);
+    }
+
+    // Verify all deleted
+    if (wasteId) {
+      const check = await fetch(`${PB_URL}/api/collections/waste_listings/records/${wasteId}`, {
+        headers: { Authorization: `Bearer ${wasteToken}` },
+      });
+      expect(check.status).toBe(404);
+      console.log(`  ✅ Verified all deleted`);
+    }
+  });
+});

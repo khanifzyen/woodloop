@@ -183,7 +183,57 @@ test.describe("TC-FLOW: Complete Buyer flow (real CRUD)", () => {
     }
   });
 
-  test("FLOW-02: Cleanup order", async () => {
+  test("FLOW-02: Cancel order via API", async () => {
+    if (!orderId) return;
+    const { token } = await getAuthToken("buyer");
+    const res = await fetch(`${PB_URL}/api/collections/orders/records/${orderId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ status: "cancelled", cancel_reason: "[E2E] Test cancel" }),
+    });
+    expect(res.status).toBe(200);
+    const updated = await res.json() as { status: string };
+    expect(updated.status).toBe("cancelled");
+    console.log(`  ✅ Cancelled orders/${orderId}`);
+  });
+
+  test("FLOW-03: Toggle wishlist via API", async () => {
+    const { token } = await getAuthToken("buyer");
+    // Cari produk yang tersedia
+    const products = await fetch(`${PB_URL}/api/collections/products/records?perPage=1`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const prodData = await products.json() as { items: { id: string }[] };
+    if (!prodData.items?.length) {
+      console.log(`  ⚠️ No products for wishlist test`);
+      return;
+    }
+
+    // Toggle add to wishlist
+    const buyerAuth = await fetch(`${PB_URL}/api/collections/users/auth-with-password`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identity: emailFor("buyer"), password: PASSWORD }),
+    });
+    const buyerData = await buyerAuth.json() as { record: { id: string } };
+    const productId = prodData.items[0].id;
+
+    const wishRes = await fetch(`${PB_URL}/api/collections/wishlist/records`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ buyer: buyerData.record.id, product: productId }),
+    });
+    expect(wishRes.status).toBe(200);
+    const wishItem = await wishRes.json() as { id: string };
+    console.log(`  ✅ Added wishlist/${wishItem.id}`);
+
+    // Toggle remove
+    await fetch(`${PB_URL}/api/collections/wishlist/records/${wishItem.id}`, {
+      method: "DELETE", headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(`  🗑️ Removed wishlist/${wishItem.id}`);
+  });
+
+  test("FLOW-04: Cleanup order", async () => {
     if (orderId) {
       await deleteRecord("orders", orderId, "buyer");
       console.log(`  🗑️ Deleted orders/${orderId}`);

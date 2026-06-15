@@ -76,6 +76,26 @@ async function seedData() {
             }
         }
 
+        // Indonesian spelling variant for aggregator
+        const agregatorEmail = 'demo.agregator@woodloop.id';
+        try {
+            await pb.collection('users').getFirstListItem(`email="${agregatorEmail}"`);
+            console.log(`  - User "${agregatorEmail}" already exists`);
+        } catch (err) {
+            if (err.status === 404 && usersMap['aggregator']) {
+                await pb.collection('users').create({
+                    email: agregatorEmail, password: DEFAULT_PASSWORD, passwordConfirm: DEFAULT_PASSWORD,
+                    name: 'Demo Agregator', role: 'aggregator', emailVisibility: true, verified: true,
+                    phone: '081234567999',
+                    workshop_name: 'Demo Agregator Workshop',
+                    address: 'Jl. Pemuda No. 1, Jepara',
+                    location_lat: -6.58 + (Math.random() - 0.5) * 0.05,
+                    location_lng: 110.66 + (Math.random() - 0.5) * 0.05,
+                });
+                console.log(`  + Created user "${agregatorEmail}"`);
+            }
+        }
+
         // ====================================================================
         // 3. RAW TIMBER LISTINGS (Supplier)
         // ====================================================================

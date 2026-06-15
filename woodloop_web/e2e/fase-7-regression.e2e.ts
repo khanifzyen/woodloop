@@ -37,7 +37,7 @@ async function clickSidebarLink(page: Page, name: string | RegExp) {
 // ============================================================================
 test.describe("REGRESSION-01: Auth Flow", () => {
   test("Login all 7 roles", async ({ page }) => {
-    for (const role of ["supplier", "generator", "aggregator", "converter", "enabler", "buyer"]) {
+    for (const role of ["supplier", "generator", "aggregator", "converter", "enabler", "buyer", "designer"]) {
       await loginAs(page, role);
       expect(page.url()).toContain(`${role}/dashboard`);
       console.log(`  ✅ ${role} login OK`);
@@ -241,7 +241,34 @@ test.describe("REGRESSION-08: Enabler & Shared", () => {
 });
 
 // ============================================================================
-test.describe("REGRESSION-09: Responsive & SEO", () => {
+test.describe("REGRESSION-09: Designer Flow", () => {
+  test.beforeEach(async ({ page }) => { await loginAs(page, "designer"); });
+
+  test("Dashboard renders", async ({ page }) => {
+    await expect(page.getByRole("heading", { name: "Dashboard Desainer" })).toBeVisible();
+    await expect(page.getByText("Tulis Artikel Baru")).toBeVisible();
+    // Menu Cepat — always rendered (not dependent on API data)
+    await expect(page.getByText("Menu Cepat")).toBeVisible();
+  });
+
+  test("Articles page accessible", async ({ page }) => {
+    await clickSidebarLink(page, /artikel sirkular/i);
+    await expect(page.getByRole("heading", { name: "Artikel Sirkular" })).toBeVisible();
+  });
+
+  test("Design Notes page accessible", async ({ page }) => {
+    await clickSidebarLink(page, /catatan desain/i);
+    await expect(page.getByRole("heading", { name: "Catatan Desain" })).toBeVisible();
+  });
+
+  test("Design Clinic page accessible", async ({ page }) => {
+    await clickSidebarLink(page, /klinik desain/i);
+    await expect(page.getByRole("heading", { name: "Klinik Desain" })).toBeVisible();
+  });
+});
+
+// ============================================================================
+test.describe("REGRESSION-10: Responsive & SEO", () => {
   test("Sitemap contains product URLs", async ({ page }) => {
     const res = await page.request.get("/sitemap.xml");
     const text = await res.text();

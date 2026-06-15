@@ -202,7 +202,33 @@ test.describe("TC-FLOW: Complete Converter flow (real CRUD)", () => {
     expect(page.url()).toContain("catalog");
   });
 
-  test("FLOW-03: Cleanup produk", async () => {
+  test("FLOW-03: Update product (PATCH price & stock)", async () => {
+    const { token } = await getAuthToken("converter");
+    const res = await fetch(`${PB_URL}/api/collections/products/records/${productId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ price: 450000, stock: 15 }),
+    });
+    expect(res.status).toBe(200);
+    const updated = await res.json() as { price: number; stock: number };
+    expect(updated.price).toBe(450000);
+    expect(updated.stock).toBe(15);
+    console.log(`  ✅ Updated products/${productId} → price 450000, stock 15`);
+  });
+
+  test("FLOW-04: Delete product via API", async () => {
+    await deleteRecord("products", productId, "converter");
+    console.log(`  🗑️ Deleted products/${productId}`);
+    const { token } = await getAuthToken("converter");
+    const check = await fetch(`${PB_URL}/api/collections/products/records/${productId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(check.status).toBe(404);
+    console.log(`  ✅ Verified deleted products/${productId}`);
+    productId = ""; // prevent double cleanup
+  });
+
+  test("FLOW-05: Cleanup produk (fallback)", async () => {
     if (productId) {
       await deleteRecord("products", productId, "converter");
       console.log(`  🗑️ Deleted products/${productId}`);

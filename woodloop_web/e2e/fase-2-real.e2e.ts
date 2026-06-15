@@ -410,6 +410,41 @@ test.describe("TC-FLOW: Complete Supplier→Generator flow (real CRUD)", () => {
     console.log(`  ✅ Created generator_products/${productId}`);
   });
 
+  test("S-CRUD-03: Update listing (PATCH price) via API", async () => {
+    const { token } = await getAuthToken("supplier");
+    const res = await fetch(`${PB_URL}/api/collections/raw_timber_listings/records/${timberId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ price: 2000000, volume: 4.0 }),
+    });
+    expect(res.status).toBe(200);
+    console.log(`  ✅ Updated raw_timber_listings/${timberId} → price 2000000`);
+  });
+
+  test("G-CRUD-01: Update product (PATCH price) via API", async () => {
+    const { token } = await getAuthToken("generator");
+    const res = await fetch(`${PB_URL}/api/collections/generator_products/records/${productId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ price: 300000 }),
+    });
+    expect(res.status).toBe(200);
+    console.log(`  ✅ Updated generator_products/${productId} → price 300000`);
+  });
+
+  test("G-CRUD-02: Delete waste listing via API", async () => {
+    if (!wasteId) return;
+    await deleteRecord("waste_listings", wasteId, "generator");
+    console.log(`  🗑️ Deleted waste_listings/${wasteId}`);
+    const { token } = await getAuthToken("generator");
+    const check = await fetch(`${PB_URL}/api/collections/waste_listings/records/${wasteId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(check.status).toBe(404);
+    console.log(`  ✅ Verified deleted waste_listings/${wasteId}`);
+    wasteId = ""; // prevent double-cleanup
+  });
+
   test("FLOW-05: Cleanup — semua dummy data terhapus", async () => {
     // Hapus semua dummy data
     for (const { id, collection, role } of [

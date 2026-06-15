@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
 
+test.use({ 
+  storageState: undefined,
+  screenshot: "on",
+});
+
 /**
  * Inspect the supplier inventory/new page:
  * - Login as supplier
@@ -11,10 +16,6 @@ import { test, expect } from "@playwright/test";
  */
 
 test.describe("Supplier Inventory New - Dimensions Inspection", () => {
-  test.use({ 
-    storageState: undefined,
-    screenshot: "on",
-  });
 
   test("Login and inspect dimension inputs for Balok and Papan shapes", async ({ page }) => {
     // Step 1: Go to login page
