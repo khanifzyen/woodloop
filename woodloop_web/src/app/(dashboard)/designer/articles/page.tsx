@@ -32,7 +32,9 @@ export default function DesignerArticlesPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleTogglePublish = (id: string, current: boolean) => {
-    updateArticle.mutate({ id, data: { published: !current } });
+    const formData = new FormData();
+    formData.append("published", String(!current));
+    updateArticle.mutate({ id, formData });
   };
 
   const handleDelete = (id: string) => {

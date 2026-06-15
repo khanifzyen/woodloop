@@ -28,13 +28,19 @@ See [deployment/taste.md](deployment/taste.md)
 - When migration scripts use custom field-checking logic (not the `upsertCollection` utility), they only add missing fields and don't update values on existing select fields — a separate migration script using the `upsertCollection` utility or direct field update is needed to modify existing select field values in PocketBase. Confidence: 0.70
 
 # agent-browser
-- When running agent-browser for web testing, target the local dev server at `localhost:3001` instead of production URLs. Confidence: 0.70
+- When running agent-browser for web testing, target the local dev server at `localhost:3000` instead of production URLs — production may be outdated. Confidence: 0.75
+
+# project
+- Use `bun run dev` (not `npm run dev`) to start the Next.js dev server. Confidence: 0.65
 
 # pdf-generation
 - For manual book PDF generation, create markdown source files (e.g., `00-cover.md`, `01-bab-*.md`) first following the master manual pattern, then generate HTML/PDF from them — not direct inline HTML. Users expect `.md` files to be created and reviewed before PDF generation. Confidence: 0.80
 
 # ui-layout
 - For template/question selection, use inline radio buttons shown directly (not hidden in a dropdown/Select). Users should be able to see all options at a glance and either pick one or write their own message. Confidence: 0.70
+
+# pocketbase
+- Some PocketBase collections (e.g., `design_articles`, `design_notes`, `design_consultations`) don't expose `created`/`updated` fields as sortable — using `sort: "-created"` returns HTTP 400. Use `sort: "-id"` as a chronological fallback since PocketBase IDs are time-sortable. Verify sortable fields via a quick `perPage=1` API call before writing queries. Confidence: 0.70
 
 # navigation
 - Place profile page links in the top-right navbar avatar dropdown, not in the sidebar navigation. Profile is accessed via the existing top menu (avatar dropdown with profile + logout), not as a dedicated sidebar link. Confidence: 0.70

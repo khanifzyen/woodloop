@@ -11,10 +11,12 @@ export const designerKeys = {
   consultations: () => [...designerKeys.all, "consultations"] as const,
 };
 
-function getDesignerId(): string {
-  const user = useAuthStore.getState().user;
-  if (!user || user.role !== "designer") throw new Error("Not a designer");
-  return user.id;
+function useDesignerId(): { designerId: string | null; isDesigner: boolean } {
+  const user = useAuthStore((s) => s.user);
+  const hydrated = useAuthStore((s) => s._hydrated);
+  if (!hydrated) return { designerId: null, isDesigner: false };
+  if (!user || user.role !== "designer") return { designerId: null, isDesigner: false };
+  return { designerId: user.id, isDesigner: true };
 }
 
 export interface DesignerDashboardData {
@@ -28,7 +30,7 @@ export interface DesignerDashboardData {
 }
 
 export function useDesignerDashboard() {
-  const designerId = getDesignerId();
+  const { designerId, isDesigner } = useDesignerId();
   const pb = getPB();
 
   return useQuery<DesignerDashboardData>({
@@ -37,15 +39,15 @@ export function useDesignerDashboard() {
       const [articles, notes, consultations] = await Promise.all([
         pb.collection<DesignArticle>("design_articles").getList(1, 200, {
           filter: `author="${designerId}"`,
-          sort: "-created",
+          sort: "-id",
         }),
         pb.collection<DesignNote>("design_notes").getList(1, 200, {
           filter: `designer="${designerId}"`,
-          sort: "-created",
+          sort: "-id",
         }),
         pb.collection<DesignConsultation>("design_consultations").getList(1, 200, {
           filter: `designer="${designerId}" && status="open"`,
-          sort: "-created",
+          sort: "-id",
         }),
       ]);
 
@@ -59,11 +61,12 @@ export function useDesignerDashboard() {
         recentNotes: notes.items.slice(0, 5),
       };
     },
+    enabled: isDesigner && !!designerId,
   });
 }
 
 export function useDesignerArticles() {
-  const designerId = getDesignerId();
+  const { designerId, isDesigner } = useDesignerId();
   const pb = getPB();
 
   return useQuery<DesignArticle[]>({
@@ -71,24 +74,23 @@ export function useDesignerArticles() {
     queryFn: async () => {
       const result = await pb.collection<DesignArticle>("design_articles").getList(1, 200, {
         filter: `author="${designerId}"`,
-        sort: "-created",
+        sort: "-id",
       });
       return result.items;
     },
+    enabled: isDesigner && !!designerId,
   });
 }
 
 export function useCreateArticle() {
-  const designerId = getDesignerId();
+  const { designerId } = useDesignerId();
   const pb = getPB();
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: Partial<DesignArticle>) => {
-      return pb.collection("design_articles").create({
-        ...data,
-        author: designerId,
-      });
+    mutationFn: async (formData: FormData) => {
+      formData.append("author", designerId ?? "");
+      return pb.collection("design_articles").create(formData);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: designerKeys.articles() });
@@ -102,8 +104,8 @@ export function useUpdateArticle() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<DesignArticle> }) => {
-      return pb.collection("design_articles").update(id, data);
+    mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
+      return pb.collection("design_articles").update(id, formData);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: designerKeys.articles() });
@@ -128,7 +130,7 @@ export function useDeleteArticle() {
 }
 
 export function useDesignerNotes() {
-  const designerId = getDesignerId();
+  const { designerId, isDesigner } = useDesignerId();
   const pb = getPB();
 
   return useQuery<DesignNote[]>({
@@ -136,25 +138,24 @@ export function useDesignerNotes() {
     queryFn: async () => {
       const result = await pb.collection<DesignNote>("design_notes").getList(1, 200, {
         filter: `designer="${designerId}"`,
-        sort: "-created",
+        sort: "-id",
         expand: "designer",
       });
       return result.items;
     },
+    enabled: isDesigner && !!designerId,
   });
 }
 
 export function useCreateDesignNote() {
-  const designerId = getDesignerId();
+  const { designerId } = useDesignerId();
   const pb = getPB();
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: Partial<DesignNote>) => {
-      return pb.collection("design_notes").create({
-        ...data,
-        designer: designerId,
-      });
+    mutationFn: async (formData: FormData) => {
+      formData.append("designer", designerId ?? "");
+      return pb.collection("design_notes").create(formData);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: designerKeys.designNotes() });
@@ -164,7 +165,7 @@ export function useCreateDesignNote() {
 }
 
 export function useDesignerConsultations() {
-  const designerId = getDesignerId();
+  const { designerId, isDesigner } = useDesignerId();
   const pb = getPB();
 
   return useQuery<DesignConsultation[]>({
@@ -172,10 +173,11 @@ export function useDesignerConsultations() {
     queryFn: async () => {
       const result = await pb.collection<DesignConsultation>("design_consultations").getList(1, 200, {
         filter: `designer="${designerId}"`,
-        sort: "-created",
+        sort: "-id",
         expand: "client",
       });
       return result.items;
     },
+    enabled: isDesigner && !!designerId,
   });
 }

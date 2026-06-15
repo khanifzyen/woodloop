@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { getPB } from "@/lib/pocketbase/client";
+import { FileDropzone } from "@/components/features/file-dropzone";
+import { getPB, getFileUrl } from "@/lib/pocketbase/client";
 import { useUpdateArticle, useDesignerArticles } from "@/lib/hooks/use-designer";
 import type { ArticleCategory, DesignArticle } from "@/lib/pocketbase/types";
 
@@ -41,6 +42,9 @@ export default function EditArticlePage() {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [published, setPublished] = useState(false);
+  const [existingCover, setExistingCover] = useState<string[]>([]);
+  const [coverImage, setCoverImage] = useState<File[]>([]);
+  const [tags, setTags] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -53,6 +57,10 @@ export default function EditArticlePage() {
         setExcerpt(article.excerpt || "");
         setContent(article.content);
         setPublished(article.published);
+        setTags(article.tags || "");
+        if (article.cover_image) {
+          setExistingCover([getFileUrl("design_articles", article.id, article.cover_image)]);
+        }
       } catch {
         toast.error("Gagal memuat artikel");
         router.push("/designer/articles");
@@ -69,8 +77,19 @@ export default function EditArticlePage() {
     if (!slug.trim()) { toast.error("Slug harus diisi"); return; }
     if (!content.trim()) { toast.error("Konten artikel harus diisi"); return; }
 
+    const formData = new FormData();
+    formData.append("title", title.trim());
+    formData.append("slug", slug.trim());
+    formData.append("category", category);
+    if (excerpt.trim()) formData.append("excerpt", excerpt.trim());
+    formData.append("content", content.trim());
+    if (tags.trim()) formData.append("tags", tags.trim());
+    if (coverImage.length > 0) {
+      formData.append("cover_image", coverImage[0]);
+    }
+
     updateArticle.mutate(
-      { id, data: { title: title.trim(), slug: slug.trim(), category, excerpt: excerpt.trim() || undefined, content } },
+      { id, formData },
       {
         onSuccess: () => {
           toast.success("Artikel berhasil diperbarui");
@@ -136,14 +155,32 @@ export default function EditArticlePage() {
               <Textarea id="content" rows={15} value={content} onChange={(e) => setContent(e.target.value)} className="font-mono text-sm" />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="tags">Tags</Label>
+              <Input id="tags" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Tag dipisah koma, contoh: upcycling, furnitur, jati" />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Gambar Sampul</Label>
+              <FileDropzone
+                maxFiles={1}
+                maxSizeMB={5}
+                onFilesChange={setCoverImage}
+                initialFiles={existingCover}
+              />
+              <p className="text-xs text-muted-foreground">Format JPG, PNG, atau WebP. Maks 5 MB.</p>
+            </div>
+
             <div className="flex items-center gap-2 pt-2">
               <Button
                 type="button"
                 variant={published ? "default" : "outline"}
                 size="sm"
                 onClick={() => {
+                  const formData = new FormData();
+                  formData.append("published", String(!published));
                   updateArticle.mutate(
-                    { id, data: { published: !published } },
+                    { id, formData },
                     { onSuccess: () => { setPublished(!published); toast.success(published ? "Artikel ditarik dari publikasi" : "Artikel dipublikasikan"); } },
                   );
                 }}

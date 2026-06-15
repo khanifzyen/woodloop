@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { FileDropzone } from "@/components/features/file-dropzone";
 import { useCreateArticle } from "@/lib/hooks/use-designer";
 import type { ArticleCategory } from "@/lib/pocketbase/types";
 
@@ -42,6 +43,8 @@ export default function NewArticlePage() {
   const [category, setCategory] = useState<ArticleCategory>("general");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
+  const [coverImage, setCoverImage] = useState<File[]>([]);
+  const [tags, setTags] = useState("");
   const [autoSlug, setAutoSlug] = useState(true);
 
   function handleTitleChange(value: string) {
@@ -60,22 +63,24 @@ export default function NewArticlePage() {
     if (!slug.trim()) { toast.error("Slug harus diisi"); return; }
     if (!content.trim()) { toast.error("Konten artikel harus diisi"); return; }
 
-    createArticle.mutate(
-      {
-        title: title.trim(),
-        slug: slug.trim(),
-        category,
-        excerpt: excerpt.trim() || undefined,
-        content,
-        published: false,
+    const formData = new FormData();
+    formData.append("title", title.trim());
+    formData.append("slug", slug.trim());
+    formData.append("category", category);
+    if (excerpt.trim()) formData.append("excerpt", excerpt.trim());
+    formData.append("content", content.trim());
+    formData.append("published", "false");
+    if (tags.trim()) formData.append("tags", tags.trim());
+    if (coverImage.length > 0) {
+      formData.append("cover_image", coverImage[0]);
+    }
+
+    createArticle.mutate(formData, {
+      onSuccess: () => {
+        toast.success("Artikel berhasil dibuat");
+        router.push("/designer/articles");
       },
-      {
-        onSuccess: () => {
-          toast.success("Artikel berhasil dibuat");
-          router.push("/designer/articles");
-        },
-      },
-    );
+    });
   }
 
   return (
@@ -130,6 +135,21 @@ export default function NewArticlePage() {
             <div className="space-y-2">
               <Label htmlFor="content">Konten <span className="text-destructive">*</span></Label>
               <Textarea id="content" rows={15} value={content} onChange={(e) => setContent(e.target.value)} placeholder="Tulis konten artikel di sini... (Markdown / HTML)" className="font-mono text-sm" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="tags">Tags</Label>
+              <Input id="tags" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Tag dipisah koma, contoh: upcycling, furnitur, jati" />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Gambar Sampul</Label>
+              <FileDropzone
+                maxFiles={1}
+                maxSizeMB={5}
+                onFilesChange={setCoverImage}
+              />
+              <p className="text-xs text-muted-foreground">Format JPG, PNG, atau WebP. Maks 5 MB.</p>
             </div>
           </CardContent>
         </Card>
