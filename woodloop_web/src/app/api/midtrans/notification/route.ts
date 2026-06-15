@@ -3,7 +3,7 @@
  *
  * Midtrans payment notification webhook.
  * Called by Midtrans after a payment is completed/cancelled/failed.
- * Supports both raw_timber_orders and orders collections.
+ * Supports raw_timber_orders, furniture_orders, and orders collections.
  *
  * Body (sent by Midtrans): { transaction_status, order_id, ... }
  */
@@ -22,7 +22,22 @@ async function tryFindAndUpdateOrder(pb: ReturnType<typeof import("@/lib/pocketb
       return true;
     }
   } catch {
-    // Not found in raw_timber_orders, try orders
+    // Not found in raw_timber_orders
+  }
+
+  // Try furniture_orders
+  try {
+    const order = await pb.collection("furniture_orders").getOne(orderId, { requestKey: null });
+    if (order) {
+      await pb.collection("furniture_orders").update(orderId, {
+        status: newStatus,
+        payment_method: paymentType || order.payment_method,
+      });
+      console.log(`Midtrans notification: furniture_orders ${orderId} → ${newStatus}`);
+      return true;
+    }
+  } catch {
+    // Not found in furniture_orders
   }
 
   try {

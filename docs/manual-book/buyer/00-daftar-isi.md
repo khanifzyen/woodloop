@@ -97,3 +97,13 @@ title: "Daftar Isi"
 - [13.4 Pembayaran Midtrans Gagal](./13-bab-13-troubleshooting.md#134-pembayaran-midtrans-gagal)
 - [13.5 QR Code Tidak Terbaca](./13-bab-13-troubleshooting.md#135-qr-code-tidak-terbaca)
 - [13.6 Kontak Bantuan](./13-bab-13-troubleshooting.md#136-kontak-bantuan)
+
+## Bab 14: Marketplace Furniture
+
+- [14.1 Menjelajahi Produk Furniture](./14-bab-14-furniture.md#141-menjelajahi-produk-furniture)
+- [14.2 Kategori Produk](./14-bab-14-furniture.md#142-kategori-produk)
+- [14.3 Pencarian & Filter](./14-bab-14-furniture.md#143-pencarian--filter)
+- [14.4 Detail Produk Furniture](./14-bab-14-furniture.md#144-detail-produk-furniture)
+- [14.5 Toko Generator](./14-bab-14-furniture.md#145-toko-generator)
+- [14.6 Keranjang & Checkout Furniture](./14-bab-14-furniture.md#146-keranjang--checkout-furniture)
+- [14.7 Pesanan Furniture](./14-bab-14-furniture.md#147-pesanan-furniture)

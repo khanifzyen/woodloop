@@ -74,7 +74,7 @@ async function migrateUsers() {
             listRule: '@request.auth.id != ""',
             viewRule: '@request.auth.id != ""',
             createRule: '',
-            updateRule: '@request.auth.id = id',
+            updateRule: '@request.auth.role = "enabler" || @request.auth.id = id',
             deleteRule: '@request.auth.id = id',
         });
         console.log(`   ✅ Users collection updated successfully!`);

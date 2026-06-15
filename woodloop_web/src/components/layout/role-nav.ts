@@ -84,6 +84,7 @@ const nav: Record<string, RoleNav> = {
     icon: "🛍️",
     sidebar: [
       { label: "Marketplace", href: "/buyer/marketplace", icon: Store },
+      { label: "Furniture", href: "/buyer/furniture", icon: ShoppingCart },
       { label: "Wishlist", href: "/buyer/wishlist", icon: Heart },
       { label: "Pesanan Saya", href: "/buyer/orders", icon: ClipboardList },
     ],

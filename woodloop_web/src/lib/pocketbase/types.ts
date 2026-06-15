@@ -221,6 +221,19 @@ export interface GeneratorProduct {
   name: string; description?: string; category: GenProductCategory;
   price: number; stock: number; photos: string[];
   wood_type?: string; status: GenProductStatus;
+  sold_count: number;
+  created: string; updated: string;
+}
+
+// ========== 17b. Furniture Orders (Buyer → Generator) ==========
+export interface FurnitureOrder {
+  id: string; buyer: string; product: string; seller: string;
+  expand?: { buyer?: User; product?: GeneratorProduct; seller?: User; };
+  quantity: number; total_price: number; status: OrderStatus;
+  shipping_address: string;
+  cancel_reason?: string;
+  snap_token?: string;
+  snap_redirect_url?: string; payment_method?: string;
   created: string; updated: string;
 }
 

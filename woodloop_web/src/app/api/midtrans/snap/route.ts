@@ -6,7 +6,8 @@ import { getPB } from "@/lib/pocketbase/client";
  * POST /api/midtrans/snap
  *
  * Generate a Midtrans Snap token for an order.
- * Supports both raw_timber_orders (Generator→Supplier) and orders (Buyer→Converter).
+ * Supports raw_timber_orders (Generator→Supplier), orders (Buyer→Converter),
+ * and furniture_orders (Buyer→Generator).
  *
  * Body: { orderId: string }
  */
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
     const pb = getPB();
     pb.autoCancellation(false);
 
-    // Try raw_timber_orders first (Generator → Supplier), fall back to orders (Buyer → Converter)
+    // Try raw_timber_orders first (Generator → Supplier), then furniture_orders (Buyer → Generator), fall back to orders (Buyer → Converter)
     let order: Record<string, unknown> | null = null;
     let collectionName = "raw_timber_orders";
 
@@ -37,15 +38,24 @@ export async function POST(request: NextRequest) {
         requestKey: null,
       }) as unknown as Record<string, unknown>;
     } catch {
-      // Not found in raw_timber_orders, try orders
+      // Not found in raw_timber_orders, try furniture_orders
       try {
-        order = await pb.collection("orders").getOne(orderId, {
-          expand: "buyer,product",
+        order = await pb.collection("furniture_orders").getOne(orderId, {
+          expand: "buyer,seller,product",
           requestKey: null,
         }) as unknown as Record<string, unknown>;
-        collectionName = "orders";
+        collectionName = "furniture_orders";
       } catch {
-        return NextResponse.json({ error: "Order not found" }, { status: 404 });
+        // Not found in furniture_orders, try orders
+        try {
+          order = await pb.collection("orders").getOne(orderId, {
+            expand: "buyer,product",
+            requestKey: null,
+          }) as unknown as Record<string, unknown>;
+          collectionName = "orders";
+        } catch {
+          return NextResponse.json({ error: "Order not found" }, { status: 404 });
+        }
       }
     }
 
@@ -57,9 +67,12 @@ export async function POST(request: NextRequest) {
     const buyerEmail = (buyer?.email as string) || "";
     const buyerPhone = (buyer?.phone as string) || "";
 
-    const itemName = collectionName === "orders"
-      ? ((buyerExpanded?.product as Record<string, unknown> | undefined)?.name as string) || `Order ${orderData.id}`
-      : `Order ${orderData.id}`;
+    let itemName = `Order ${orderData.id}`;
+    if (collectionName === "orders") {
+      itemName = ((buyerExpanded?.product as Record<string, unknown> | undefined)?.name as string) || itemName;
+    } else if (collectionName === "furniture_orders") {
+      itemName = ((buyerExpanded?.product as Record<string, unknown> | undefined)?.name as string) || itemName;
+    }
 
     const result = await createSnapTransaction({
       orderId: orderData.id as string,

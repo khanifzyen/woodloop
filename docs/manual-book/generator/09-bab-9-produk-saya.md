@@ -101,9 +101,11 @@ Klik pada nama produk untuk melihat detail lengkap:
 
 | Status | Arti |
 |--------|------|
-| 🟢 **Aktif** | Produk tampil dan bisa dibeli |
+| 🟢 **Aktif** | Produk tampil dan bisa dibeli oleh Buyer di **Marketplace Furniture** |
 | 🔴 **Sold Out** | Stok habis, produk masih tampil tapi tidak bisa dibeli |
 | ⚪ **Draft** | Produk tidak tampil, masih dalam penyusunan |
+
+> 💡 **Marketplace Furniture:** Produk dengan status **Aktif** akan otomatis muncul di marketplace furniture yang bisa diakses oleh Buyer melalui menu **Furniture** di sidebar mereka. Buyer bisa melihat, menambah ke keranjang, checkout, dan melacak pesanan furniture Anda.
 
 ---
 ➡️ **Lanjut ke [Bab 10: Profil Generator](./10-bab-10-profil.md)**

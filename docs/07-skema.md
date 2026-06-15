@@ -471,10 +471,45 @@ Produk jadi (mebel/furniture) yang dijual langsung oleh Generator. Terpisah dari
 | `photos` | file | image, max 5 files | Galeri foto produk |
 | `wood_type` | relation | → `wood_types` (single) | Jenis kayu utama |
 | `status` | select | `active`, `sold_out`, `draft` — default: `active` | Status listing |
+| `sold_count` | number | default: 0 | Jumlah terjual (untuk sorting terlaris) |
 
 **PocketBase API Rules:**
 - **List/View:** `""` (publik)
 - **Create/Update/Delete:** `@request.auth.id = generator`
+
+---
+
+## 17b. Koleksi: `furniture_orders` (Base Collection — Buyer ↔ Generator)
+
+Pembelian produk furniture oleh Buyer langsung dari Generator. Mirip dengan orders, tapi ke generator_products.
+
+| Field Name | Type | Options / Relation | Description |
+| :--- | :--- | :--- | :--- |
+| `buyer` | relation | → `users` (single, required) | Pembeli |
+| `product` | relation | → `generator_products` (single, required) | Produk furniture yang dibeli |
+| `seller` | relation | → `users` (single, required) | Generator penjual |
+| `quantity` | number | required, min: 1 | Jumlah beli |
+| `total_price` | number | required | Total harga |
+| `status` | select | `payment_pending`, `paid`, `processing`, `shipped`, `received`, `cancelled` — default: `payment_pending` | Status pesanan |
+| `shipping_address` | text | required | Alamat pengiriman |
+| `cancel_reason` | text | - | Alasan pembatalan (jika status = cancelled) |
+| `snap_token` | text | - | Token Midtrans Snap (untuk pembayaran) |
+| `snap_redirect_url` | url | - | URL redirect Midtrans |
+| `payment_method` | select | `qris`, `virtual_account`, `bank_transfer`, `cod` | Metode pembayaran |
+
+**PocketBase API Rules:**
+- **List/View:** `@request.auth.id = buyer || @request.auth.id = seller`
+- **Create:** `@request.auth.role = "buyer"`
+- **Update:** `@request.auth.id = buyer || @request.auth.id = seller`
+- **Delete:** `""` (tidak diizinkan)
+
+**Indexes:**
+```sql
+CREATE INDEX idx_furniture_orders_buyer ON furniture_orders (buyer);
+CREATE INDEX idx_furniture_orders_seller ON furniture_orders (seller);
+CREATE INDEX idx_furniture_orders_product ON furniture_orders (product);
+CREATE INDEX idx_furniture_orders_status ON furniture_orders (status);
+```
 
 ---
 
@@ -636,7 +671,7 @@ Tambahkan role `designer` sebagai penulis yang diizinkan:
 
 ---
 
-## Rangkuman Koleksi (23 Total)
+## Rangkuman Koleksi (24 Total)
 
 | # | Koleksi | Tipe PocketBase | Aktor Utama |
 | :--- | :--- | :--- | :--- |
@@ -659,4 +694,10 @@ Tambahkan role `designer` sebagai penulis yang diizinkan:
 | 15 | `design_recipes` | Base Collection | Converter / Enabler |
 | 16 | `bids` | Base Collection | Aggregator ↔ Generator |
 | 17 | `generator_products` | Base Collection | Generator |
+| 17b | `furniture_orders` | Base Collection | Buyer ↔ Generator |
 | 18 | `user_documents` | Base Collection | Semua (upload) / Enabler (verifikasi) |
+| 20 | `design_articles` | Base Collection | Desainer |
+| 21 | `design_notes` | Base Collection | Desainer |
+| 22 | `design_consultations` | Base Collection | Desainer ↔ Generator/Converter |
+| 23 | `reviews` | Base Collection | Buyer → Produk |
+| 24 | `wishlist` | Base Collection | Buyer |

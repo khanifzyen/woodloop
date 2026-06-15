@@ -152,6 +152,16 @@ async function seedData() {
         const genProdData = [
             { name: 'Kursi Lipat Jati Minimalis', description: 'Kursi lipat dari kayu Jati solid, cocok untuk teras atau ruang tamu minimalis.', category: 'furniture', price: 350000, stock: 10, wood_type: 'Jati', status: 'active' },
             { name: 'Rak Dinding Mahoni Potong', description: 'Rak dinding dari sisa potongan Mahoni — unik dan ramah lingkungan.', category: 'furniture', price: 150000, stock: 15, wood_type: 'Mahoni', status: 'active' },
+            { name: 'Lemari Pakaian Jati 3 Pintu', description: 'Lemari pakaian 3 pintu dari kayu Jati perhutani, finishing natural melamin.', category: 'furniture', price: 4500000, stock: 2, wood_type: 'Jati', status: 'active' },
+            { name: 'Meja Makan Trembesi Set 6 Kursi', description: 'Set meja makan dari kayu Trembesi solid dengan 6 kursi, desain modern minimalis.', category: 'furniture', price: 7500000, stock: 1, wood_type: 'Trembesi', status: 'active' },
+            { name: 'Tempat Tidur Jati Ukir Jepara', description: 'Tempat tidur ukuran king dengan ukiran khas Jepara, kayu Jati tua pilihan.', category: 'furniture', price: 8500000, stock: 1, wood_type: 'Jati', status: 'active' },
+            { name: 'Pintu Gebyok Jati Antik', description: 'Pintu gebyok Jati antik dengan ukiran penuh, cocok untuk dekorasi tradisional.', category: 'furniture', price: 12000000, stock: 1, wood_type: 'Jati', status: 'active' },
+            { name: 'Gazebo Kayu Kelapa Minimalis', description: 'Gazebo ukuran 3x3 meter dari kayu kelapa, cocok untuk taman atau kafe outdoor.', category: 'furniture', price: 5500000, stock: 2, wood_type: 'Lainnya', status: 'active' },
+            { name: 'Bufet TV Jati Minimalis 180cm', description: 'Bufet TV panjang 180cm dari kayu Jati, desain sliding door modern.', category: 'furniture', price: 3200000, stock: 3, wood_type: 'Jati', status: 'active' },
+            { name: 'Kursi Teras Akasia Set 4', description: 'Set 4 kursi teras dengan meja dari kayu Akasia, finishing weatherproof.', category: 'furniture', price: 2800000, stock: 3, wood_type: 'Akasia', status: 'active' },
+            { name: 'Partisi Ruangan Songkai Ukir', description: 'Partisi ruangan 3 panel lipat dari kayu Sungkai dengan ukiran Jepara.', category: 'furniture', price: 1800000, stock: 2, wood_type: 'Sungkai', status: 'active' },
+            { name: 'Nakas Jati 2 Laci', description: 'Nakas minimalis 2 laci dari kayu Jati, cocok di samping tempat tidur.', category: 'furniture', price: 750000, stock: 5, wood_type: 'Jati', status: 'active' },
+            { name: 'Meja Rias Mahoni Klasik', description: 'Meja rias dengan cermin oval dari kayu Mahoni, finishing klasik glossy.', category: 'furniture', price: 2200000, stock: 2, wood_type: 'Mahoni', status: 'active' },
         ];
         for (const p of genProdData) {
             try {
@@ -161,6 +171,7 @@ async function seedData() {
                 if (err.status === 404) {
                     await pb.collection('generator_products').create({
                         ...p, wood_type: woodTypesMap[p.wood_type], generator: usersMap['generator'],
+                        sold_count: Math.floor(Math.random() * 20),
                     });
                     console.log(`  + Created gen product "${p.name}"`);
                 }

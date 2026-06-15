@@ -7,6 +7,8 @@ import type {
   CartItem,
   Review,
   WishlistItem,
+  GeneratorProduct,
+  FurnitureOrder,
 } from "@/lib/pocketbase/types";
 
 export const buyerKeys = {
@@ -20,9 +22,17 @@ export const buyerKeys = {
     filters ? [...buyerKeys.all, "orders", filters] as const
             : [...buyerKeys.all, "orders"] as const,
   orderDetail: (id: string) => [...buyerKeys.all, "orders", id] as const,
+  furnitureOrders: (filters?: object) =>
+    filters ? [...buyerKeys.all, "furniture-orders", filters] as const
+            : [...buyerKeys.all, "furniture-orders"] as const,
+  furnitureOrderDetail: (id: string) => [...buyerKeys.all, "furniture-orders", id] as const,
   cart: () => [...buyerKeys.all, "cart"] as const,
   reviews: (productId: string) => ["reviews", productId] as const,
   wishlist: () => [...buyerKeys.all, "wishlist"] as const,
+  furniture: (filters?: object) =>
+    filters ? ["furniture", filters] as const
+            : ["furniture"] as const,
+  furnitureDetail: (id: string) => ["furniture", id] as const,
 };
 
 function getBuyerId(): string {
@@ -386,5 +396,198 @@ export function useSyncCart() {
       }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: buyerKeys.cart() }),
+  });
+}
+
+// ─── Furniture Marketplace (Generator Products for Buyers) ─────────────────
+export function useFurnitureProducts(filters?: {
+  category?: string; search?: string;
+  sort?: string; priceMin?: number; priceMax?: number;
+}) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: buyerKeys.furniture(filters),
+    queryFn: async () => {
+      const filterParts: string[] = ["stock>0 && status='active'"];
+      if (filters?.category) filterParts.push(`category="${filters.category}"`);
+      if (filters?.priceMin) filterParts.push(`price>=${filters.priceMin}`);
+      if (filters?.priceMax) filterParts.push(`price<=${filters.priceMax}`);
+
+      let sort = "-created";
+      if (filters?.sort === "price_asc") sort = "price";
+      else if (filters?.sort === "price_desc") sort = "-price";
+      else if (filters?.sort === "best_selling") sort = "-sold_count";
+
+      const result = await pb.collection("generator_products").getList(1, 50, {
+        filter: filterParts.join(" && "),
+        sort,
+        expand: "generator,wood_type",
+        fields: "id,name,price,photos,category,description,sold_count,expand.generator.name,expand.generator.id,expand.wood_type.name",
+      });
+
+      let items = (result as unknown as {
+        items: (GeneratorProduct & { expand?: { generator?: import("@/lib/pocketbase/types").User; wood_type?: import("@/lib/pocketbase/types").WoodType } })[];
+        page: number; perPage: number; totalItems: number; totalPages: number;
+      }).items;
+
+      if (filters?.search) {
+        const q = filters.search.toLowerCase();
+        items = items.filter((i) =>
+          i.name.toLowerCase().includes(q) ||
+          (i.description || "").toLowerCase().includes(q)
+        );
+      }
+      return { ...result, items };
+    },
+    staleTime: 60_000,
+  });
+}
+
+export function useFurnitureProductDetail(id: string) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: buyerKeys.furnitureDetail(id),
+    queryFn: async () => {
+      const product = await pb.collection("generator_products").getOne(id, {
+        expand: "generator,wood_type",
+      });
+      return product as unknown as GeneratorProduct & {
+        expand?: { generator?: import("@/lib/pocketbase/types").User; wood_type?: import("@/lib/pocketbase/types").WoodType };
+      };
+    },
+  });
+}
+
+export function useGeneratorProfile(id: string) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: [...buyerKeys.all, "generator", id],
+    queryFn: async () => {
+      const user = await pb.collection("users").getOne(id) as unknown as import("@/lib/pocketbase/types").User;
+      return user;
+    },
+  });
+}
+
+export function useGeneratorProducts(generatorId: string) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: [...buyerKeys.all, "generator", generatorId, "products"],
+    queryFn: async () => {
+      const result = await pb.collection("generator_products").getList(1, 50, {
+        filter: `generator="${generatorId}" && stock>0 && status='active'`,
+        sort: "-created",
+        expand: "wood_type",
+      });
+      return result as unknown as {
+        items: GeneratorProduct[];
+        page: number; perPage: number; totalItems: number; totalPages: number;
+      };
+    },
+    enabled: !!generatorId,
+  });
+}
+
+// ─── Furniture Orders ──────────────────────────────────────────────────────
+export function useBuyerFurnitureOrders(filters?: { status?: string }) {
+  const { user, isAuthenticated } = useAuthStore();
+  const pb = getPB();
+
+  return useQuery({
+    queryKey: buyerKeys.furnitureOrders(filters),
+    queryFn: async () => {
+      if (!isAuthenticated || !user || user.role !== "buyer") {
+        return { items: [], page: 1, perPage: 100, totalItems: 0, totalPages: 0 };
+      }
+      const filterParts = [`buyer="${user.id}"`];
+      if (filters?.status && filters.status !== "all") {
+        filterParts.push(`status="${filters.status}"`);
+      }
+      const result = await pb.collection("furniture_orders").getList(1, 100, {
+        filter: filterParts.join(" && "),
+        sort: "-created",
+        expand: "product,seller",
+      });
+      return result as unknown as {
+        items: (FurnitureOrder & { expand?: { product?: GeneratorProduct; seller?: import("@/lib/pocketbase/types").User } })[];
+        page: number; perPage: number; totalItems: number; totalPages: number;
+      };
+    },
+  });
+}
+
+export function useFurnitureOrderDetail(id: string) {
+  const pb = getPB();
+  return useQuery({
+    queryKey: buyerKeys.furnitureOrderDetail(id),
+    queryFn: async () => {
+      const order = await pb.collection("furniture_orders").getOne(id, {
+        expand: "product,seller",
+      });
+      return order as unknown as FurnitureOrder & {
+        expand?: { product?: GeneratorProduct; seller?: import("@/lib/pocketbase/types").User };
+      };
+    },
+  });
+}
+
+export function useCreateFurnitureOrders() {
+  const buyerId = getBuyerId();
+  const pb = getPB();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      items: { productId: string; sellerId: string; quantity: number; price: number }[];
+      shippingAddress: string;
+      paymentMethod?: string;
+    }) => {
+      const created: FurnitureOrder[] = [];
+      for (const item of data.items) {
+        const order = await pb.collection("furniture_orders").create({
+          buyer: buyerId,
+          product: item.productId,
+          seller: item.sellerId,
+          quantity: item.quantity,
+          total_price: item.price * item.quantity,
+          shipping_address: data.shippingAddress,
+          status: "payment_pending",
+          payment_method: data.paymentMethod || "bank_transfer",
+        });
+        created.push(order as unknown as FurnitureOrder);
+      }
+      return created;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: buyerKeys.furnitureOrders() });
+    },
+  });
+}
+
+export function useCancelFurnitureOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ orderId, reason }: { orderId: string; reason?: string }) => {
+      const pb = getPB();
+      await pb.collection("furniture_orders").update(orderId, {
+        status: "cancelled",
+        cancel_reason: reason || "",
+      });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: buyerKeys.furnitureOrders() });
+    },
+  });
+}
+
+export function useConfirmFurnitureReceived() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderId: string) => {
+      const pb = getPB();
+      await pb.collection("furniture_orders").update(orderId, { status: "received" });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: buyerKeys.furnitureOrders() });
+    },
   });
 }
