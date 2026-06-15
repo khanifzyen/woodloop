@@ -62,10 +62,7 @@ export function Navbar() {
   useRealtimeChat(true);
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 md:px-6 lg:ml-64">
-      {/* Hide breadcrumb sidebar spacer on mobile */}
-      <div className="md:hidden w-8" />
-
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background pl-12 pr-4 md:pl-6 md:pr-6">
       {/* Breadcrumb */}
       <Breadcrumb>
         <BreadcrumbList>

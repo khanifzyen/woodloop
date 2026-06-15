@@ -3,7 +3,21 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, MapPin, Loader2, Trash2, FileText } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  MapPin,
+  Loader2,
+  Trash2,
+  FileText,
+  User,
+  Building2,
+  Phone,
+  Home,
+  ShieldCheck,
+  Plus,
+  UserCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,6 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
 import { useAuthStore } from "@/lib/stores/auth-store";
@@ -103,7 +118,11 @@ export default function SupplierProfilePage() {
       return;
     }
     uploadDoc.mutate(
-      { doc_type: newDocType, doc_name: newDocName || undefined, file: newDocFile },
+      {
+        doc_type: newDocType,
+        doc_name: newDocName || undefined,
+        file: newDocFile,
+      },
       {
         onSuccess: () => {
           setNewDocFile(null);
@@ -118,15 +137,19 @@ export default function SupplierProfilePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <Button variant="ghost" size="icon" asChild className="self-start">
           <Link href="/supplier/dashboard">
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <div>
+        <div className="flex-1 space-y-1">
+          <div className="flex items-center gap-2 text-xs font-medium text-primary">
+            <UserCircle className="h-3.5 w-3.5" />
+            Profil Saya
+          </div>
           <h1 className="heading-2">Profil Supplier</h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground">
             Kelola data diri dan dokumen perizinan
           </p>
         </div>
@@ -136,64 +159,117 @@ export default function SupplierProfilePage() {
         {/* Left — Informasi Supplier */}
         <div className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Informasi Supplier</CardTitle>
+            <CardHeader className="-mt-4 border-b bg-muted/30">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <User className="h-4 w-4" />
+                </div>
+                <CardTitle className="text-lg">Informasi Supplier</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-6">
               <div className="space-y-2">
-                <Label htmlFor="name">Nama <span className="text-destructive">*</span></Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                <Label htmlFor="name">
+                  Nama <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative">
+                  <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="workshop">Nama Workshop</Label>
-                <Input id="workshop" value={workshop} onChange={(e) => setWorkshop(e.target.value)} />
+                <div className="relative">
+                  <Building2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="workshop"
+                    value={workshop}
+                    onChange={(e) => setWorkshop(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="phone">Telepon</Label>
-                <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <div className="relative">
+                  <Phone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="address">Alamat</Label>
-                <Textarea
-                  id="address"
-                  rows={3}
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
+                <div className="relative">
+                  <Home className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Textarea
+                    id="address"
+                    rows={3}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Lokasi */}
+          <Card>
+            <CardHeader className="-mt-4 border-b bg-muted/30">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600">
+                  <MapPin className="h-4 w-4" />
+                </div>
+                <CardTitle className="text-lg">Lokasi Workshop</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3 pt-6">
+              <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2 text-xs">
+                <MapPin className="h-3 w-3 text-primary" />
+                <span className="font-mono text-muted-foreground">
+                  Lat: {lat.toFixed(6)}, Lng: {lng.toFixed(6)}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="ml-auto gap-1"
+                  onClick={getCurrentLocation}
+                  disabled={gettingLocation}
+                >
+                  {gettingLocation ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <MapPin className="h-3 w-3" />
+                  )}
+                  {gettingLocation ? "Mendeteksi..." : "Pakai Lokasi Saya"}
+                </Button>
               </div>
 
-              <div className="space-y-2">
-                <Label>Lokasi (GPS)</Label>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs text-muted-foreground">
-                    Lat: {lat.toFixed(6)}, Lng: {lng.toFixed(6)}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1"
-                    onClick={getCurrentLocation}
-                    disabled={gettingLocation}
-                  >
-                    {gettingLocation ? (
-                      <Loader2 className="h-3 w-3 animate-spin" />
-                    ) : (
-                      <MapPin className="h-3 w-3" />
-                    )}
-                    {gettingLocation ? "Mendeteksi..." : "Pakai Lokasi Saya"}
-                  </Button>
-                </div>
-                <MapPicker lat={lat} lng={lng} onMove={(newLat, newLng) => {
-                  setLat(newLat);
-                  setLng(newLng);
-                }} />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Klik atau drag marker untuk mengatur lokasi workshop Anda
-                </p>
+              <div className="overflow-hidden rounded-lg border">
+                <MapPicker
+                  lat={lat}
+                  lng={lng}
+                  onMove={(newLat, newLng) => {
+                    setLat(newLat);
+                    setLng(newLng);
+                  }}
+                />
               </div>
+              <p className="text-xs text-muted-foreground">
+                💡 Klik atau drag marker untuk mengatur lokasi workshop Anda
+              </p>
             </CardContent>
           </Card>
 
@@ -201,7 +277,11 @@ export default function SupplierProfilePage() {
             <Button variant="outline" asChild>
               <Link href="/supplier/dashboard">Batal</Link>
             </Button>
-            <Button className="gap-2" onClick={handleSaveProfile} disabled={updateProfile.isPending}>
+            <Button
+              className="gap-2 bg-gradient-to-r from-primary to-primary/85 font-semibold shadow-md shadow-primary/20"
+              onClick={handleSaveProfile}
+              disabled={updateProfile.isPending}
+            >
               <Save className="h-4 w-4" />
               {updateProfile.isPending ? "Menyimpan..." : "Simpan Profil"}
             </Button>
@@ -211,43 +291,73 @@ export default function SupplierProfilePage() {
         {/* Right — Dokumen Perizinan */}
         <div className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Dokumen Perizinan</CardTitle>
+            <CardHeader className="-mt-4 border-b bg-muted/30">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600">
+                  <ShieldCheck className="h-4 w-4" />
+                </div>
+                <CardTitle className="text-lg">Dokumen Perizinan</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-6">
               {docsLoading ? (
-                <p className="text-sm text-muted-foreground">Memuat dokumen...</p>
+                <div className="space-y-2">
+                  {[1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className="h-14 w-full animate-pulse rounded-lg bg-muted"
+                    />
+                  ))}
+                </div>
               ) : documents && documents.length > 0 ? (
                 <div className="space-y-2">
                   {documents.map((doc) => (
                     <div
                       key={doc.id}
-                      className="flex items-center justify-between p-3 border rounded-lg"
+                      className="group flex items-center justify-between rounded-lg border bg-card p-3 transition-colors hover:border-primary/40 hover:bg-muted/30"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <FileText className="h-5 w-5 text-primary shrink-0" />
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600">
+                          <FileText className="h-5 w-5" />
+                        </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium truncate">
-                            {doc.doc_name || DOC_TYPE_LABELS[doc.doc_type] || doc.doc_type}
+                          <p className="truncate text-sm font-medium">
+                            {doc.doc_name ||
+                              DOC_TYPE_LABELS[doc.doc_type] ||
+                              doc.doc_type}
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            {DOC_TYPE_LABELS[doc.doc_type] || doc.doc_type}
+                          <div className="mt-0.5 flex items-center gap-2">
+                            <Badge variant="secondary" className="text-[10px]">
+                              {DOC_TYPE_LABELS[doc.doc_type] || doc.doc_type}
+                            </Badge>
                             {doc.verified && (
-                              <span className="ml-2 text-green-600">✓ Terverifikasi</span>
+                              <span className="flex items-center gap-1 text-[11px] font-medium text-emerald-600">
+                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                Terverifikasi
+                              </span>
                             )}
-                          </p>
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                          <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
+                          asChild
+                        >
+                          <a
+                            href={doc.fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <FileText className="h-4 w-4" />
                           </a>
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-destructive"
+                          className="h-8 w-8 text-destructive hover:bg-destructive/10"
                           onClick={() => {
                             if (confirm("Hapus dokumen ini?")) {
                               deleteDoc.mutate(doc.id);
@@ -261,23 +371,39 @@ export default function SupplierProfilePage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
-                  Belum ada dokumen. Unggah dokumen perizinan Anda di bawah.
-                </p>
+                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-8 text-center">
+                  <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                    <FileText className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Belum ada dokumen
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    Unggah dokumen perizinan Anda di bawah
+                  </p>
+                </div>
               )}
 
-              <div className="border-t pt-4 space-y-3">
-                <p className="text-sm font-medium">Tambah Dokumen Baru</p>
+              <div className="rounded-xl border bg-muted/20 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Plus className="h-4 w-4 text-primary" />
+                  <p className="text-sm font-semibold">Tambah Dokumen Baru</p>
+                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="doc_type">Jenis Dokumen</Label>
-                  <Select value={newDocType} onValueChange={(v) => setNewDocType(v as DocType)}>
-                    <SelectTrigger id="doc_type">
+                  <Select
+                    value={newDocType}
+                    onValueChange={(v) => setNewDocType(v as DocType)}
+                  >
+                    <SelectTrigger id="doc_type" className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(DOC_TYPE_LABELS).map(([val, label]) => (
-                        <SelectItem key={val} value={val}>{label}</SelectItem>
+                        <SelectItem key={val} value={val}>
+                          {label}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -300,7 +426,9 @@ export default function SupplierProfilePage() {
                     id="doc_file"
                     type="file"
                     accept=".pdf,application/pdf"
-                    onChange={(e) => setNewDocFile(e.target.files?.[0] || null)}
+                    onChange={(e) =>
+                      setNewDocFile(e.target.files?.[0] || null)
+                    }
                   />
                 </div>
 
@@ -310,7 +438,17 @@ export default function SupplierProfilePage() {
                   onClick={handleUploadDoc}
                   disabled={uploadDoc.isPending || !newDocFile}
                 >
-                  {uploadDoc.isPending ? "Mengunggah..." : "Upload Dokumen"}
+                  {uploadDoc.isPending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Mengunggah...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4" />
+                      Upload Dokumen
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>

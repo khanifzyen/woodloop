@@ -3,7 +3,19 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Trash2, ExternalLink } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Trash2,
+  TreePine,
+  Ruler,
+  DollarSign,
+  Image as ImageIcon,
+  ShieldCheck,
+  Edit3,
+  Loader2,
+  FileText,
+} from "lucide-react";
 import { PhotoLightbox } from "@/components/features/photo-lightbox";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +43,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { FileDropzone } from "@/components/features/file-dropzone";
 import { getPB, getFileUrl } from "@/lib/pocketbase/client";
@@ -40,7 +51,11 @@ import {
   useUpdateRawTimberListing,
   useDeleteRawTimberListing,
 } from "@/lib/hooks/use-supplier";
-import type { RawTimberListing, TimberShape, WoodType } from "@/lib/pocketbase/types";
+import type {
+  RawTimberListing,
+  TimberShape,
+  WoodType,
+} from "@/lib/pocketbase/types";
 
 interface ListingWithExpand extends RawTimberListing {
   expand?: { wood_type?: WoodType };
@@ -98,7 +113,12 @@ export default function EditTimberListingPage() {
         vol = Math.PI * r * r * panjangM;
       } else if (prev.shape === "square" && w > 0 && l > 0) {
         vol = (w / 100) * (w / 100) * (l / 100);
-      } else if ((prev.shape === "balok" || prev.shape === "papan") && l > 0 && w > 0 && h > 0) {
+      } else if (
+        (prev.shape === "balok" || prev.shape === "papan") &&
+        l > 0 &&
+        w > 0 &&
+        h > 0
+      ) {
         vol = (l / 100) * (w / 100) * (h / 100);
       }
 
@@ -127,15 +147,22 @@ export default function EditTimberListingPage() {
         const pb = getPB();
         const record = (await pb
           .collection("raw_timber_listings")
-          .getOne(id, { expand: "wood_type", requestKey: null })) as ListingWithExpand;
+          .getOne(id, {
+            expand: "wood_type",
+            requestKey: null,
+          })) as ListingWithExpand;
         setListing(record);
         // Convert photo filenames to full URLs
         const photoUrls = (record.photos || []).map((p: string) =>
-          getFileUrl("raw_timber_listings", record.id, p)
+          getFileUrl("raw_timber_listings", record.id, p),
         );
         setExistingPhotos(photoUrls);
         // Convert legality doc filename to full URL
-        setExistingDoc(record.legality_doc ? [getFileUrl("raw_timber_listings", record.id, record.legality_doc)] : []);
+        setExistingDoc(
+          record.legality_doc
+            ? [getFileUrl("raw_timber_listings", record.id, record.legality_doc)]
+            : [],
+        );
         setForm({
           wood_type: record.wood_type,
           shape: record.shape || "log",
@@ -153,7 +180,10 @@ export default function EditTimberListingPage() {
         });
       } catch (err) {
         console.error("Failed to load listing:", err);
-        toast.error("Gagal memuat data kayu: " + (err instanceof Error ? err.message : "Unknown error"));
+        toast.error(
+          "Gagal memuat data kayu: " +
+            (err instanceof Error ? err.message : "Unknown error"),
+        );
         router.push("/supplier/inventory");
       } finally {
         setLoading(false);
@@ -168,7 +198,8 @@ export default function EditTimberListingPage() {
     if (!form.shape) errs.shape = "Pilih bentuk kayu";
     if (!form.volume || Number(form.volume) <= 0)
       errs.volume = "Volume harus diisi";
-    if (!form.price || Number(form.price) <= 0) errs.price = "Harga harus diisi";
+    if (!form.price || Number(form.price) <= 0)
+      errs.price = "Harga harus diisi";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -212,7 +243,7 @@ export default function EditTimberListingPage() {
         onError: (err) => {
           toast.error("Gagal memperbarui: " + err.message);
         },
-      }
+      },
     );
   }
 
@@ -243,15 +274,15 @@ export default function EditTimberListingPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Skeleton className="h-10 w-10" />
-          <div>
-            <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-4 w-32 mt-1" />
+          <Skeleton className="h-10 w-10 rounded-lg" />
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-48" />
+            <Skeleton className="h-4 w-32" />
           </div>
         </div>
         <div className="grid gap-6 lg:grid-cols-2">
-          <Skeleton className="h-96" />
-          <Skeleton className="h-64" />
+          <Skeleton className="h-96 rounded-2xl" />
+          <Skeleton className="h-64 rounded-2xl" />
         </div>
       </div>
     );
@@ -262,27 +293,34 @@ export default function EditTimberListingPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" asChild className="self-start">
             <Link href="/supplier/inventory">
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs font-medium text-primary">
+              <Edit3 className="h-3.5 w-3.5" />
+              Edit Listing
+            </div>
             <h1 className="heading-2">Edit Kayu</h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground">
               Perbarui detail kayu gelondongan
             </p>
           </div>
         </div>
         <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-          <DialogTrigger asChild>
-            <Button variant="destructive" size="sm" className="gap-2">
-              <Trash2 className="h-4 w-4" />
-              Hapus
-            </Button>
-          </DialogTrigger>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 text-destructive hover:bg-destructive/10 hover:border-destructive/40"
+            onClick={() => setDeleteOpen(true)}
+          >
+            <Trash2 className="h-4 w-4" />
+            Hapus
+          </Button>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Hapus Kayu</DialogTitle>
@@ -300,7 +338,14 @@ export default function EditTimberListingPage() {
                 onClick={handleDelete}
                 disabled={deleteMutation.isPending}
               >
-                {deleteMutation.isPending ? "Menghapus..." : "Hapus"}
+                {deleteMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Menghapus...
+                  </>
+                ) : (
+                  "Hapus"
+                )}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -312,13 +357,16 @@ export default function EditTimberListingPage() {
           {/* Left */}
           <div className="space-y-6">
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Informasi Kayu</CardTitle>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <TreePine className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">Informasi Kayu</CardTitle>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Jenis Kayu, Bentuk Kayu, Grade Kayu — responsive 3→2→1 columns */}
+              <CardContent className="space-y-4 pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {/* Wood Type */}
                   <div className="space-y-2">
                     <Label htmlFor="wood_type">
                       Jenis Kayu <span className="text-destructive">*</span>
@@ -352,16 +400,20 @@ export default function EditTimberListingPage() {
                     )}
                   </div>
 
-                  {/* Shape */}
                   <div className="space-y-2">
                     <Label htmlFor="shape">
                       Bentuk Kayu <span className="text-destructive">*</span>
                     </Label>
                     <Select
                       value={form.shape}
-                      onValueChange={(v) => updateField("shape", v as TimberShape)}
+                      onValueChange={(v) =>
+                        updateField("shape", v as TimberShape)
+                      }
                     >
-                      <SelectTrigger id="shape" className={`w-full ${errors.shape ? "border-destructive" : ""}`}>
+                      <SelectTrigger
+                        id="shape"
+                        className={`w-full ${errors.shape ? "border-destructive" : ""}`}
+                      >
                         <SelectValue placeholder="Pilih bentuk kayu" />
                       </SelectTrigger>
                       <SelectContent>
@@ -372,16 +424,22 @@ export default function EditTimberListingPage() {
                       </SelectContent>
                     </Select>
                     {errors.shape && (
-                      <p className="text-xs text-destructive">{errors.shape}</p>
+                      <p className="text-xs text-destructive">
+                        {errors.shape}
+                      </p>
                     )}
                   </div>
 
-                  {/* Grade */}
                   <div className="space-y-2 md:col-span-2 lg:col-span-1">
                     <Label htmlFor="grade">Grade Kayu</Label>
                     <Select
                       value={form.grade}
-                      onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "hutan_rakyat" | "lainnya")}
+                      onValueChange={(v) =>
+                        updateField(
+                          "grade",
+                          v as "" | "perhutani" | "hutan_rakyat" | "lainnya",
+                        )
+                      }
                     >
                       <SelectTrigger id="grade" className="w-full">
                         <SelectValue placeholder="Pilih grade (opsional)" />
@@ -394,8 +452,19 @@ export default function EditTimberListingPage() {
                     </Select>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
 
-                {/* Dimensions — depends on shape */}
+            <Card>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Ruler className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">Dimensi & Volume</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-6">
                 {form.shape === "log" ? (
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -470,8 +539,7 @@ export default function EditTimberListingPage() {
                   </div>
                 )}
 
-                {/* Volume, Stock, Satuan */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="volume">
                       Volume <span className="text-destructive">*</span>
@@ -522,28 +590,48 @@ export default function EditTimberListingPage() {
                     />
                   </div>
                 </div>
+              </CardContent>
+            </Card>
 
-                {/* Price */}
+            <Card>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+                    <DollarSign className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">Harga & Status</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-6">
                 <div className="space-y-2">
                   <Label htmlFor="price">
                     Harga (Rp) <span className="text-destructive">*</span>
                   </Label>
-                  <Input
-                    id="price"
-                    type="text"
-                    inputMode="numeric"
-                    value={priceDisplay || (form.price ? Number(form.price).toLocaleString("id-ID") : "")}
-                    onChange={(e) => handlePriceChange(e.target.value)}
-                    className={errors.price ? "border-destructive" : ""}
-                  />
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">
+                      Rp
+                    </span>
+                    <Input
+                      id="price"
+                      type="text"
+                      inputMode="numeric"
+                      value={
+                        priceDisplay ||
+                        (form.price
+                          ? Number(form.price).toLocaleString("id-ID")
+                          : "")
+                      }
+                      onChange={(e) => handlePriceChange(e.target.value)}
+                      className={`h-11 pl-10 ${errors.price ? "border-destructive" : ""}`}
+                    />
+                  </div>
                   {errors.price && (
                     <p className="text-xs text-destructive">{errors.price}</p>
                   )}
                 </div>
 
-                {/* Status */}
                 <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
+                  <Label htmlFor="status">Status Listing</Label>
                   <Select
                     value={form.status}
                     onValueChange={(v) =>
@@ -560,7 +648,6 @@ export default function EditTimberListingPage() {
                   </Select>
                 </div>
 
-                {/* Description */}
                 <div className="space-y-2">
                   <Label htmlFor="description">Deskripsi</Label>
                   <Textarea
@@ -577,10 +664,15 @@ export default function EditTimberListingPage() {
           {/* Right */}
           <div className="space-y-6">
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Foto Kayu</CardTitle>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600">
+                    <ImageIcon className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">Foto Kayu</CardTitle>
+                </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <FileDropzone
                   maxFiles={5}
                   enableCamera
@@ -591,12 +683,16 @@ export default function EditTimberListingPage() {
               </CardContent>
             </Card>
 
-            {/* Legality Document */}
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Dokumen Legalitas</CardTitle>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600">
+                    <ShieldCheck className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">Dokumen Legalitas</CardTitle>
+                </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <FileDropzone
                   documentMode
                   accept=".pdf"
@@ -605,6 +701,10 @@ export default function EditTimberListingPage() {
                   initialFiles={existingDoc}
                   docUrl={existingDoc[0] || undefined}
                 />
+                <p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+                  <FileText className="h-3 w-3" />
+                  Unggah file baru untuk mengganti dokumen
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -616,24 +716,36 @@ export default function EditTimberListingPage() {
             photos={existingPhotos}
             currentIndex={lightboxIndex}
             onClose={() => setLightboxIndex(null)}
-            onNext={() => setLightboxIndex((prev) => prev !== null ? (prev + 1) % existingPhotos.length : 0)}
-            onPrev={() => setLightboxIndex((prev) => prev !== null ? (prev - 1 + existingPhotos.length) % existingPhotos.length : 0)}
+            onNext={() =>
+              setLightboxIndex((prev) =>
+                prev !== null ? (prev + 1) % existingPhotos.length : 0,
+              )
+            }
+            onPrev={() =>
+              setLightboxIndex((prev) =>
+                prev !== null
+                  ? (prev - 1 + existingPhotos.length) % existingPhotos.length
+                  : 0,
+              )
+            }
           />
         )}
 
-        {/* Submit */}
-        <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t">
-          <Button variant="outline" type="button" asChild>
-            <Link href="/supplier/inventory">Batal</Link>
-          </Button>
-          <Button
-            type="submit"
-            className="gap-2"
-            disabled={updateMutation.isPending}
-          >
-            <Save className="h-4 w-4" />
-            {updateMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
-          </Button>
+        {/* Sticky submit bar */}
+        <div className="sticky bottom-0 -mx-4 mt-6 border-t bg-card/95 px-4 py-4 backdrop-blur-sm sm:-mx-6 sm:px-6 md:-mx-8 md:px-8">
+          <div className="flex items-center justify-end gap-3">
+            <Button variant="outline" type="button" asChild>
+              <Link href="/supplier/inventory">Batal</Link>
+            </Button>
+            <Button
+              type="submit"
+              disabled={updateMutation.isPending}
+              className="gap-2 bg-gradient-to-r from-primary to-primary/85 font-semibold shadow-md shadow-primary/20"
+            >
+              <Save className="h-4 w-4" />
+              {updateMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
+            </Button>
+          </div>
         </div>
       </form>
     </div>

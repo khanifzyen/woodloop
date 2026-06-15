@@ -18,6 +18,7 @@ See [deployment/taste.md](deployment/taste.md)
 
 # ui-layout
 - In supplier inventory forms (new/edit), place Volume, Satuan, and Stok in a single 3-column grid (`grid-cols-3`) with equal width, ordered as Volume, Satuan, then Stok. Make sure SelectTrigger has `w-full` for consistent sizing. Confidence: 0.72
+- For card headers with side-by-side layouts (e.g., "Aktivitas Terbaru" and "Menu Cepat"), ensure consistent height alignment between cards. Confidence: 0.65
 
 # git
 - After completing code changes, stage all files (`git add .`), commit with a descriptive label, and push to remote. Confidence: 0.82

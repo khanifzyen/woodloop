@@ -3,7 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  TreePine,
+  Ruler,
+  DollarSign,
+  FileText,
+  ShieldCheck,
+  Image as ImageIcon,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -73,7 +83,12 @@ export default function NewTimberListingPage() {
       } else if (prev.shape === "square" && w > 0 && l > 0) {
         // Volume balok persegi: w × w × l (dalam m³)
         vol = (w / 100) * (w / 100) * (l / 100);
-      } else if ((prev.shape === "balok" || prev.shape === "papan") && l > 0 && w > 0 && h > 0) {
+      } else if (
+        (prev.shape === "balok" || prev.shape === "papan") &&
+        l > 0 &&
+        w > 0 &&
+        h > 0
+      ) {
         // Volume balok/papan: p × l × t (dalam m³)
         vol = (l / 100) * (w / 100) * (h / 100);
       }
@@ -118,7 +133,9 @@ export default function NewTimberListingPage() {
     if (!validate()) return;
 
     const pb = (await import("@/lib/pocketbase/client")).getPB();
-    const supplierId = (await import("@/lib/stores/auth-store")).useAuthStore.getState().user?.id;
+    const supplierId = (
+      await import("@/lib/stores/auth-store")
+    ).useAuthStore.getState().user?.id;
     if (!supplierId) {
       toast.error("Sesi habis, silakan login ulang");
       return;
@@ -150,18 +167,15 @@ export default function NewTimberListingPage() {
       formData.append("legality_doc", file);
     }
 
-    createMutation.mutate(
-      formData,
-      {
-        onSuccess: () => {
-          toast.success("Kayu berhasil didaftarkan!");
-          router.push("/supplier/inventory");
-        },
-        onError: (err) => {
-          toast.error("Gagal mendaftarkan: " + err.message);
-        },
-      }
-    );
+    createMutation.mutate(formData, {
+      onSuccess: () => {
+        toast.success("Kayu berhasil didaftarkan!");
+        router.push("/supplier/inventory");
+      },
+      onError: (err) => {
+        toast.error("Gagal mendaftarkan: " + err.message);
+      },
+    });
   }
 
   function updateField(key: string, value: string) {
@@ -178,15 +192,19 @@ export default function NewTimberListingPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <Button variant="ghost" size="icon" asChild className="self-start">
           <Link href="/supplier/inventory">
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <div>
+        <div className="flex-1 space-y-1">
+          <div className="flex items-center gap-2 text-xs font-medium text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            Listing Baru
+          </div>
           <h1 className="heading-2">Daftarkan Kayu Baru</h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground">
             Isi detail kayu gelondongan yang ingin Anda jual
           </p>
         </div>
@@ -198,10 +216,15 @@ export default function NewTimberListingPage() {
           <div className="space-y-6">
             {/* Basic Info */}
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Informasi Kayu</CardTitle>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <TreePine className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">Informasi Kayu</CardTitle>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 pt-6">
                 {/* Jenis Kayu, Bentuk Kayu, Grade Kayu — responsive 3→2→1 columns */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* Wood Type */}
@@ -247,7 +270,10 @@ export default function NewTimberListingPage() {
                       value={form.shape}
                       onValueChange={(v) => updateField("shape", v as TimberShape)}
                     >
-                      <SelectTrigger id="shape" className={`w-full ${errors.shape ? "border-destructive" : ""}`}>
+                      <SelectTrigger
+                        id="shape"
+                        className={`w-full ${errors.shape ? "border-destructive" : ""}`}
+                      >
                         <SelectValue placeholder="Pilih bentuk kayu" />
                       </SelectTrigger>
                       <SelectContent>
@@ -258,7 +284,9 @@ export default function NewTimberListingPage() {
                       </SelectContent>
                     </Select>
                     {errors.shape && (
-                      <p className="text-xs text-destructive">{errors.shape}</p>
+                      <p className="text-xs text-destructive">
+                        {errors.shape}
+                      </p>
                     )}
                   </div>
 
@@ -267,7 +295,12 @@ export default function NewTimberListingPage() {
                     <Label htmlFor="grade">Grade Kayu</Label>
                     <Select
                       value={form.grade}
-                      onValueChange={(v) => updateField("grade", v as "" | "perhutani" | "hutan_rakyat" | "lainnya")}
+                      onValueChange={(v) =>
+                        updateField(
+                          "grade",
+                          v as "" | "perhutani" | "hutan_rakyat" | "lainnya",
+                        )
+                      }
                     >
                       <SelectTrigger id="grade" className="w-full">
                         <SelectValue placeholder="Pilih grade (opsional)" />
@@ -280,7 +313,20 @@ export default function NewTimberListingPage() {
                     </Select>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
 
+            {/* Dimensions */}
+            <Card>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Ruler className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">Dimensi & Volume</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-6">
                 {/* Dimensions — depends on shape */}
                 {form.shape === "log" ? (
                   <div className="grid grid-cols-2 gap-4">
@@ -364,7 +410,7 @@ export default function NewTimberListingPage() {
                 )}
 
                 {/* Volume, Stock, Satuan */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="volume">
                       Volume <span className="text-destructive">*</span>
@@ -391,10 +437,7 @@ export default function NewTimberListingPage() {
                     <Select
                       value={form.unit}
                       onValueChange={(v) =>
-                        updateField(
-                          "unit",
-                          v as "m3" | "batang" | "ton"
-                        )
+                        updateField("unit", v as "m3" | "batang" | "ton")
                       }
                     >
                       <SelectTrigger id="unit" className="w-full">
@@ -419,36 +462,50 @@ export default function NewTimberListingPage() {
                     />
                   </div>
                 </div>
+              </CardContent>
+            </Card>
 
-                {/* Price */}
+            {/* Price */}
+            <Card>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+                    <DollarSign className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">Harga & Deskripsi</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-6">
                 <div className="space-y-2">
                   <Label htmlFor="price">
                     Harga (Rp) <span className="text-destructive">*</span>
                   </Label>
-                  <Input
-                    id="price"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="0"
-                    value={priceDisplay}
-                    onChange={(e) => handlePriceChange(e.target.value)}
-                    className={errors.price ? "border-destructive" : ""}
-                  />
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">
+                      Rp
+                    </span>
+                    <Input
+                      id="price"
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="0"
+                      value={priceDisplay}
+                      onChange={(e) => handlePriceChange(e.target.value)}
+                      className={`h-11 pl-10 ${errors.price ? "border-destructive" : ""}`}
+                    />
+                  </div>
                   {errors.price && (
                     <p className="text-xs text-destructive">{errors.price}</p>
                   )}
                 </div>
 
-                {/* Description */}
                 <div className="space-y-2">
                   <Label htmlFor="description">Deskripsi</Label>
                   <Textarea
                     id="description"
-                    placeholder="Deskripsi tambahan (opsional)"
+                    placeholder="Tambahkan deskripsi atau catatan (opsional)"
                     value={form.description}
-                    onChange={(e) =>
-                      updateField("description", e.target.value)
-                    }
+                    onChange={(e) => updateField("description", e.target.value)}
                     rows={3}
                   />
                 </div>
@@ -460,12 +517,17 @@ export default function NewTimberListingPage() {
           <div className="space-y-6">
             {/* Photos */}
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  Foto Kayu <span className="text-destructive">*</span>
-                </CardTitle>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600">
+                    <ImageIcon className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">
+                    Foto Kayu <span className="text-destructive">*</span>
+                  </CardTitle>
+                </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <FileDropzone
                   maxFiles={5}
                   enableCamera
@@ -481,38 +543,52 @@ export default function NewTimberListingPage() {
 
             {/* Legality Document */}
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  Dokumen Legalitas
-                </CardTitle>
+              <CardHeader className="-mt-4 border-b bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600">
+                    <ShieldCheck className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-lg">
+                    Dokumen Legalitas
+                  </CardTitle>
+                </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <FileDropzone
                   documentMode
                   accept=".pdf"
                   maxFiles={1}
                   onFilesChange={setLegalityDoc}
                 />
+                <p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+                  <FileText className="h-3 w-3" />
+                  Unggah SK Pengesahan atau sertifikat legal (PDF, maks 10MB)
+                </p>
               </CardContent>
             </Card>
           </div>
         </div>
 
-        {/* Submit */}
-        <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t">
-          <Button variant="outline" type="button" asChild>
-            <Link href="/supplier/inventory">Batal</Link>
-          </Button>
-          <Button
-            type="submit"
-            className="gap-2"
-            disabled={createMutation.isPending}
-          >
-            <Save className="h-4 w-4" />
-            {createMutation.isPending
-              ? "Menyimpan..."
-              : "Simpan Kayu"}
-          </Button>
+        {/* Sticky submit bar */}
+        <div className="sticky bottom-0 -mx-4 mt-6 border-t bg-card/95 px-4 py-4 backdrop-blur-sm sm:-mx-6 sm:px-6 md:-mx-8 md:px-8">
+          <div className="flex items-center justify-between gap-3">
+            <p className="hidden text-xs text-muted-foreground sm:block">
+              <span className="text-destructive">*</span> Wajib diisi
+            </p>
+            <div className="flex w-full items-center justify-end gap-3 sm:w-auto">
+              <Button variant="outline" type="button" asChild>
+                <Link href="/supplier/inventory">Batal</Link>
+              </Button>
+              <Button
+                type="submit"
+                disabled={createMutation.isPending}
+                className="gap-2 bg-gradient-to-r from-primary to-primary/85 font-semibold shadow-md shadow-primary/20"
+              >
+                <Save className="h-4 w-4" />
+                {createMutation.isPending ? "Menyimpan..." : "Simpan Kayu"}
+              </Button>
+            </div>
+          </div>
         </div>
       </form>
     </div>
