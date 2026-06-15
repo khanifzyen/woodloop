@@ -75,10 +75,15 @@ title: "Daftar Isi"
 - [10.1 Informasi Profil](./10-bab-10-profil.md#101-informasi-profil)
 - [10.2 Edit Profil](./10-bab-10-profil.md#102-edit-profil)
 
-## Bab 11: Troubleshooting
+## Bab 11: Klinik Desain
 
-- [11.1 Tidak Bisa Login](./11-bab-11-troubleshooting.md#111-tidak-bisa-login)
-- [11.2 Foto Gagal Upload](./11-bab-11-troubleshooting.md#112-foto-gagal-upload)
-- [11.3 Pembayaran Gagal](./11-bab-11-troubleshooting.md#113-pembayaran-gagal)
-- [11.4 Tidak Ada Penawaran Masuk](./11-bab-11-troubleshooting.md#114-tidak-ada-penawaran-masuk)
-- [11.5 Kontak Bantuan](./11-bab-11-troubleshooting.md#115-kontak-bantuan)
+- [11.1 Marketplace Desainer](./11-bab-11-klinik-desain.md#111-marketplace-desainer)
+- [11.2 Resep Desain](./11-bab-11-klinik-desain.md#112-resep-desain)
+
+## Bab 12: Troubleshooting
+
+- [12.1 Tidak Bisa Login](./12-bab-12-troubleshooting.md#121-tidak-bisa-login)
+- [12.2 Foto Gagal Upload](./12-bab-12-troubleshooting.md#122-foto-gagal-upload)
+- [12.3 Pembayaran Gagal](./12-bab-12-troubleshooting.md#123-pembayaran-gagal)
+- [12.4 Tidak Ada Penawaran Masuk](./12-bab-12-troubleshooting.md#124-tidak-ada-penawaran-masuk)
+- [12.5 Kontak Bantuan](./12-bab-12-troubleshooting.md#125-kontak-bantuan)

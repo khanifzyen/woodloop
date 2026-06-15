@@ -63,6 +63,7 @@ Setelah login, Anda akan melihat **sidebar navigasi** di sebelah kiri dengan men
 | **Beli Kayu** | 🪵 | `/generator/buy-timber` | Marketplace kayu dari Supplier |
 | **Produk Saya** | 📦 | `/generator/products` | Mengelola produk furnitur |
 | **Pesanan Kayu** | 📑 | `/generator/timber-orders` | Melacak pembelian kayu |
+| **Klinik Desain** | 📖 | `/design-clinic` | Konsultasi & resep desain |
 
 ### Elemen Antarmuka Lainnya:
 

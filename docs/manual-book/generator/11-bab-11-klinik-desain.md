@@ -1,19 +1,16 @@
 ---
-title: "Bab 9 — Klinik Desain"
+title: "Bab 11 — Klinik Desain"
 ---
 
-# Bab 9: Klinik Desain
-
----
-
-**Klinik Desain** adalah marketplace konsultasi desain yang menghubungkan Converter dengan para Desainer profesional. Di sini Anda bisa mencari inspirasi dari resep desain, berkonsultasi langsung dengan desainer, dan mendapatkan panduan untuk membuat produk upcycled berkualitas.
-
-![Klinik Desain](../screenshots/21-converter-design-clinic.png)
-*Gambar 9.1 — Halaman Klinik Desain*
+# Bab 11: Klinik Desain
 
 ---
 
-## 9.1 Marketplace Desainer
+**Klinik Desain** adalah marketplace konsultasi desain yang menghubungkan Generator dengan para Desainer profesional. Di sini Anda bisa mencari inspirasi dari resep desain, berkonsultasi langsung dengan desainer, dan mendapatkan panduan untuk membuat produk furnitur dari limbah kayu Anda.
+
+---
+
+## 11.1 Marketplace Desainer
 
 Halaman utama Klinik Desain menampilkan daftar **Desainer** yang siap membantu Anda. Setiap kartu desainer menampilkan:
 
@@ -25,13 +22,13 @@ Halaman utama Klinik Desain menampilkan daftar **Desainer** yang siap membantu A
 
 ### Cara Mengajukan Konsultasi
 
-1. Cari desainer yang sesuai dengan kebutuhan Anda
+1. Cari desainer yang sesuai dengan kebutuhan Anda di halaman Klinik Desain
 2. Klik tombol **"Hubungi"** pada kartu desainer
 3. Isi form konsultasi:
 
 | Field | Keterangan |
 |-------|------------|
-| **Judul Konsultasi** | Nama proyek atau topik (contoh: "Desain meja dari palet kayu") |
+| **Judul Konsultasi** | Nama proyek atau topik (contoh: "Desain meja dari limbah palet") |
 | **Deskripsi Kebutuhan** | Jelaskan secara detail apa yang ingin Anda buat |
 | **Anggaran** | Estimasi biaya yang disiapkan (opsional) |
 
@@ -50,11 +47,11 @@ Halaman utama Klinik Desain menampilkan daftar **Desainer** yang siap membantu A
 
 ---
 
-## 9.2 Resep Desain
+## 11.2 Resep Desain
 
-Klinik Desain juga menyediakan koleksi **resep desain** (*design recipes*) — panduan lengkap untuk membuat produk tertentu dari limbah kayu.
+Klinik Desain juga menyediakan koleksi **resep desain** (*design recipes*) — panduan lengkap untuk membuat produk furnitur dari limbah kayu.
 
-Akses resep desain melalui tombol **"Resep Desain"** di halaman Klinik Desain atau melalui sidebar Designer.
+Akses resep desain melalui tombol **"Resep Desain"** di halaman Klinik Desain.
 
 | Informasi | Keterangan |
 |-----------|------------|
@@ -71,7 +68,7 @@ Akses resep desain melalui tombol **"Resep Desain"** di halaman Klinik Desain at
 | 🔍 **Pencarian** | Cari resep berdasarkan judul atau deskripsi |
 | **Filter Tingkat Kesulitan** | Tampilkan resep berdasarkan tingkat kesulitan (Mudah, Sedang, Sulit) |
 
-> **📝 Catatan:** Resep desain dikelola oleh Desainer. Jika Anda memiliki ide desain yang ingin dibagikan, hubungi Desainer melalui fitur konsultasi di Klinik Desain.
+> **💡 Tips:** Konsultasikan resep desain yang Anda temukan dengan desainer melalui fitur konsultasi untuk mendapatkan panduan yang lebih personal dan disesuaikan dengan bahan yang Anda miliki.
 
 ---
-➡️ **Lanjut ke [Bab 10: Troubleshooting](./10-bab-10-troubleshooting.md)**
+➡️ **Lanjut ke [Bab 12: Troubleshooting](./12-bab-12-troubleshooting.md)**

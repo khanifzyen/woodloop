@@ -6,6 +6,7 @@ import type {
   MarketplaceTransaction,
   WarehouseInventory,
   DesignRecipe,
+  DesignConsultation,
   WoodType,
   User,
   ProductCategory,
@@ -345,5 +346,79 @@ export function useWoodTypes() {
       return result.items;
     },
     staleTime: Infinity,
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Design Clinic (Client View — Converter & Generator)
+// ---------------------------------------------------------------------------
+
+export interface DesignerProfile {
+  id: string;
+  name: string;
+  avatar?: string;
+  bio?: string;
+  workshop_name?: string;
+}
+
+export function useDesignClinicDesigners() {
+  const pb = getPB();
+  return useQuery<DesignerProfile[]>({
+    queryKey: ["design-clinic", "designers"],
+    queryFn: async () => {
+      const result = await pb.collection<User>("users").getList(1, 200, {
+        filter: 'role="designer"',
+        sort: "name",
+      });
+      return result.items.map((u) => ({
+        id: u.id,
+        name: u.name,
+        avatar: u.avatar,
+        bio: u.bio,
+        workshop_name: u.workshop_name,
+      }));
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useClientConsultations() {
+  const pb = getPB();
+  const userId = useAuthStore((s) => s.user?.id);
+
+  return useQuery<DesignConsultation[]>({
+    queryKey: ["design-clinic", "consultations", userId],
+    queryFn: async () => {
+      const result = await pb.collection<DesignConsultation>("design_consultations").getList(1, 200, {
+        filter: `client="${userId}"`,
+        sort: "-id",
+        expand: "designer",
+      });
+      return result.items;
+    },
+    enabled: !!userId,
+  });
+}
+
+export function useCreateConsultation() {
+  const pb = getPB();
+  const userId = useAuthStore((s) => s.user?.id);
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: { designer: string; title: string; description?: string; budget?: number }) => {
+      return pb.collection("design_consultations").create({
+        client: userId,
+        designer: data.designer,
+        title: data.title,
+        description: data.description || "",
+        budget: data.budget || 0,
+        status: "open",
+        type: "client_request",
+      });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["design-clinic", "consultations"] });
+    },
   });
 }

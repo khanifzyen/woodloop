@@ -1,12 +1,12 @@
 ---
-title: "Bab 11 — Troubleshooting"
+title: "Bab 12 — Troubleshooting"
 ---
 
-# Bab 11: Troubleshooting
+# Bab 12: Troubleshooting
 
 ---
 
-## 11.1 Tidak Bisa Login
+## 12.1 Tidak Bisa Login
 
 | Masalah | Solusi |
 |---------|--------|
@@ -19,7 +19,7 @@ title: "Bab 11 — Troubleshooting"
 
 ---
 
-## 11.2 Foto Gagal Upload
+## 12.2 Foto Gagal Upload
 
 | Masalah | Solusi |
 |---------|--------|
@@ -31,7 +31,7 @@ title: "Bab 11 — Troubleshooting"
 
 ---
 
-## 11.3 Pembayaran Gagal
+## 12.3 Pembayaran Gagal
 
 | Masalah | Solusi |
 |---------|--------|
@@ -45,7 +45,7 @@ title: "Bab 11 — Troubleshooting"
 
 ---
 
-## 11.4 Tidak Ada Penawaran Masuk
+## 12.4 Tidak Ada Penawaran Masuk
 
 | Kemungkinan | Saran |
 |-------------|-------|
@@ -62,7 +62,7 @@ title: "Bab 11 — Troubleshooting"
 
 ---
 
-## 11.5 Kontak Bantuan
+## 12.5 Kontak Bantuan
 
 Jika masalah tidak terselesaikan, hubungi tim WoodLoop melalui:
 

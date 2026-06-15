@@ -22,7 +22,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     }
     // Verify route matches user role
     const routeRole = pathname.split("/")[1];
-    if (routeRole && routeRole !== user.role && !["changelog", "chat", "notifications", "wallet"].includes(routeRole)) {
+    if (routeRole && routeRole !== user.role && !["changelog", "chat", "notifications", "wallet", "design-clinic"].includes(routeRole)) {
       router.push(`/${user.role}/dashboard`);
     }
   }, [_hydrated, isAuthenticated, user, router, pathname]);

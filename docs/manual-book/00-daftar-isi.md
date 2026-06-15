@@ -40,6 +40,7 @@ title: "Daftar Isi"
 - [5.3 Beli Kayu Mentah](./05-bab-5-generator.md#53-beli-kayu-mentah)
 - [5.4 Mengelola Pesanan Kayu](./05-bab-5-generator.md#54-mengelola-pesanan-kayu)
 - [5.5 Produk Saya](./05-bab-5-generator.md#55-produk-saya)
+- [5.6 Klinik Desain](./05-bab-5-generator.md#56-klinik-desain)
 
 ## Bab 6: Aggregator
 
@@ -56,6 +57,7 @@ title: "Daftar Isi"
 - [7.3 Checkout & Pembelian Bahan](./07-bab-7-converter.md#73-checkout--pembelian-bahan)
 - [7.4 Membuat Produk Upcycled](./07-bab-7-converter.md#74-membuat-produk-upcycled)
 - [7.5 Katalog Produk & QR Code](./07-bab-7-converter.md#75-katalog-produk--qr-code)
+- [7.6 Klinik Desain](./07-bab-7-converter.md#76-klinik-desain)
 
 ## Bab 8: Desainer
 

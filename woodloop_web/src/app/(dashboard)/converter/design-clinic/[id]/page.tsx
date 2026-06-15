@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function DesignClinicDetailRedirect() {
-  redirect("/designer/design-clinic");
+  redirect("/design-clinic");
 }

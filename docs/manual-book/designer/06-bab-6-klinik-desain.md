@@ -6,7 +6,7 @@ title: "Bab 6 — Klinik Desain"
 
 ---
 
-**Klinik Desain** adalah marketplace jasa konsultasi desain sirkular. Di halaman ini, Desainer dapat melihat permintaan konsultasi dari Generator/Converter, serta membuat penawaran jasa desain.
+**Klinik Desain** adalah marketplace jasa konsultasi desain sirkular. Di halaman ini, Desainer dapat melihat permintaan konsultasi dari Generator/Converter, serta membuat penawaran jasa desain. Generator dan Converter juga dapat mengakses Klinik Desain melalui menu mereka masing-masing untuk mencari dan menghubungi Desainer.
 
 ![Klinik Desain](04-desainer-design-clinic.png)
 *Gambar 6.1 — Halaman Klinik Desain*

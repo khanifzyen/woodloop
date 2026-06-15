@@ -58,8 +58,8 @@ title: "Daftar Isi"
 
 ## Bab 9: Klinik Desain
 
-- [9.1 Inspirasi Desain](./09-bab-9-klinik-desain.md#91-inspirasi-desain)
-- [9.2 Filter Resep Desain](./09-bab-9-klinik-desain.md#92-filter-resep-desain)
+- [9.1 Marketplace Desainer](./09-bab-9-klinik-desain.md#91-marketplace-desainer)
+- [9.2 Resep Desain](./09-bab-9-klinik-desain.md#92-resep-desain)
 
 ## Bab 10: Troubleshooting
 

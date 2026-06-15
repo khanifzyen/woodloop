@@ -46,6 +46,7 @@ const nav: Record<string, RoleNav> = {
       { label: "Beli Kayu", href: "/generator/buy-timber", icon: ShoppingCart },
       { label: "Produk Saya", href: "/generator/products", icon: Package },
       { label: "Pesanan Kayu", href: "/generator/timber-orders", icon: ClipboardList },
+      { label: "Klinik Desain", href: "/design-clinic", icon: BookOpen },
     ],
   },
   aggregator: {
@@ -67,7 +68,7 @@ const nav: Record<string, RoleNav> = {
       { label: "Pasar Bahan", href: "/converter/marketplace/materials", icon: Store },
       { label: "Katalog Produk", href: "/converter/catalog", icon: Package },
       { label: "Riwayat Transaksi", href: "/converter/marketplace/history", icon: Clock },
-      { label: "Klinik Desain", href: "/designer/design-clinic", icon: BookOpen },
+      { label: "Klinik Desain", href: "/design-clinic", icon: BookOpen },
     ],
   },
   enabler: {

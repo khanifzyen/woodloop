@@ -54,7 +54,8 @@ Sidebar menampilkan menu navigasi khusus Converter:
 | **Dashboard** | 📊 | `/converter/dashboard` | Ringkasan bisnis kreatif |
 | **Pasar Bahan** | 🏪 | `/converter/marketplace/materials` | Marketplace bahan limbah |
 | **Katalog Produk** | 📦 | `/converter/catalog` | Kelola produk upcycled & QR |
-| **Klinik Desain** | 📖 | `/designer/design-clinic` | Inspirasi & resep desain |
+| **Riwayat Transaksi** | 🕐 | `/converter/marketplace/history` | Riwayat pembelian bahan |
+| **Klinik Desain** | 📖 | `/design-clinic` | Konsultasi & resep desain |
 
 ### 2. Navigasi Atas (Navbar)
 

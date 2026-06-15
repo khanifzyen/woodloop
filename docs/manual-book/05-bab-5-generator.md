@@ -118,4 +118,26 @@ Generator juga bisa mendaftarkan **produk kayu/mebel** yang dijual sendiri.
 Klik **"Simpan"** setelah semua field terisi.
 
 ---
+
+## 5.6 Klinik Desain
+
+**Klinik Desain** adalah marketplace konsultasi desain yang menghubungkan Generator dengan Desainer profesional. Akses melalui menu **"Klinik Desain"** di sidebar.
+
+### Marketplace Desainer
+
+| Fitur | Fungsi |
+|-------|--------|
+| **Pencarian Desainer** | Cari desainer berdasarkan nama, bio, atau workshop |
+| **Kartu Desainer** | Foto, nama, workshop, dan bio singkat |
+| **Hubungi** | Klik untuk mengajukan konsultasi |
+
+### Mengajukan Konsultasi
+
+Isi form dengan **judul**, **deskripsi kebutuhan**, dan **anggaran** (opsional). Setelah dikirim, desainer akan merespon dan status konsultasi bisa dipantau di bagian **"Konsultasi Saya"**.
+
+### Resep Desain
+
+Klik tombol **"Resep Desain"** untuk melihat kumpulan panduan membuat produk furnitur dari limbah kayu — bisa difilter berdasarkan tingkat kesulitan (Mudah, Sedang, Sulit).
+
+---
 ➡️ **Lanjut ke [Bab 6: Panduan Aggregator](./06-bab-6-aggregator.md)**

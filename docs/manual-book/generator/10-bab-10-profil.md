@@ -47,4 +47,4 @@ Profil Generator dapat diakses melalui:
 - **URL langsung** — `/generator/profile`
 
 ---
-➡️ **Lanjut ke [Bab 11: Troubleshooting](./11-bab-11-troubleshooting.md)**
+➡️ **Lanjut ke [Bab 11: Klinik Desain](./11-bab-11-klinik-desain.md)**
