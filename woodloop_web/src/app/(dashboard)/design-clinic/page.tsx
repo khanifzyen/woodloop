@@ -46,12 +46,15 @@ function formatCurrency(val: number): string {
   }).format(val);
 }
 
-function formatDate(iso: string): string {
+function formatDate(iso: string | undefined | null): string {
+  if (!iso) return "-";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
     month: "short",
     year: "numeric",
-  }).format(new Date(iso));
+  }).format(d);
 }
 
 export default function DesignClinicClientPage() {

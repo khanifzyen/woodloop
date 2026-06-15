@@ -5,3 +5,4 @@
 - Use `bun run build` (not npm) to build the Next.js project before creating Docker images. Confidence: 0.50
 - When tagging local Docker images, use both the version tag (e.g., `v0.0.4`) and `latest` tag. Confidence: 0.50
 - Do a fresh/clean build before creating Docker images: remove previous build artifacts (`.next`, `node_modules`) or use `bun run build --no-cache` to avoid stale ISR/prerendered cache bleeding into the new image. Confidence: 0.70
+- When a Docker build hangs or fails (e.g., memory leak), diagnose the root cause first before retrying the build — don't blindly rebuild without understanding what went wrong. Confidence: 0.65

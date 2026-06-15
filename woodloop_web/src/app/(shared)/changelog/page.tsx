@@ -8,6 +8,41 @@ import { version } from "@/lib/version";
 
 const changelog = [
   {
+    version: "0.0.5",
+    date: "15 Juni 2026",
+    added: [
+      "Role Designer — full ekosistem: dashboard, artikel sirkular, catatan desain, klinik desain, resep desain",
+      "Role Enabler — detail user, review dokumen, dashboard recharts, export CSV",
+      "Role Aggregator — dashboard, treasure map, pickups, warehouse, log inventori, profil",
+      "Role Converter — halaman profil, checkout dengan QR code (download/share), katalog produk",
+      "Role Buyer — marketplace dengan filter kategori, detail produk, toko penjual, wishlist, ulasan, furniture (katalog, cart, checkout, orders)",
+      "Halaman Profil untuk semua role (Aggregator, Buyer, Converter, Designer, Enabler)",
+      "Klinik Desain dibuka untuk Converter & Generator — redesain tampilan client",
+      "Halaman Artikel Desain — CRUD artikel sirkular untuk Designer",
+      "Halaman Catatan Desain — CRUD catatan desain untuk Designer",
+      "Halaman Resep Desain — lihat resep dari desainer",
+      "Refactor halaman Supplier Dashboard — layout & navigasi baru",
+      "Tampilan baru halaman Onboarding, Login, Register, Reset Password, dan Role Selection",
+      "FileDropzone di semua form Designer",
+      "Midtrans payment — snap token, redirect URL, metode bayar, webhook notification",
+      "Multi-item checkout untuk Buyer, order lifecycle, konfirmasi pesanan",
+      "Buku Panduan (Manual Book) untuk 7 role — markdown, HTML, PDF: Supplier, Generator, Aggregator, Converter, Designer, Buyer, Enabler",
+      "Docker build dengan Bun untuk production deployment",
+      "E2E tests — Converter CRUD, Designer CRUD, Enabler, Aggregator, fase regression",
+      "Service worker auto-unregister di localhost (cegah cache lama)",
+      "Halaman UAT E2E report & hasil test Converter",
+    ],
+    fixed: [
+      "Hydration error & sort issues di hooks Designer",
+      "Turbopack dev cache nonaktifkan untuk mencegah memory crash",
+      "Konfigurasi Playwright test dan laporan UAT E2E",
+      "Manual Book global PDF — blockquote nesting dan marked parser styling",
+      "User verification flow dan dokumen",
+      "Cache tidak ter-invalidate di beberapa halaman",
+      "Race condition hydration di Design Clinic",
+    ],
+  },
+  {
     version: "0.0.4",
     date: "1 Juni 2026",
     added: [
