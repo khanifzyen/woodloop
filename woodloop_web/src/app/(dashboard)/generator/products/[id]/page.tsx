@@ -37,13 +37,7 @@ function formatCurrency(val: number): string {
   }).format(val);
 }
 
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(iso));
-}
+import { formatDate } from "@/lib/utils";
 
 const categoryLabels: Record<string, string> = {
   furniture: "Furniture",

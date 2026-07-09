@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -60,16 +61,6 @@ function formatCurrency(val: number): string {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(val);
-}
-
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(iso));
 }
 
 const statusConfig: Record<

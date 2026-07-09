@@ -8,6 +8,21 @@ import { version } from "@/lib/version";
 
 const changelog = [
   {
+    version: "0.0.6",
+    date: "9 Juli 2026",
+    added: [
+      "Zod validation schemas untuk semua role — generator, aggregator, converter, buyer, enabler, designer",
+      "Native abstraction layer — Camera, Geolocation (dengan haversineDistance), Notifications, QR Scanner (dengan parseQRCode untuk format PRD/BAT/NOP), Biometric auth — masing-masing dengan Capacitor-first + web fallback otomatis",
+      "Utility function formatDate yang aman — try-catch, tidak crash walau data timestamp invalid dari PocketBase",
+      "Unit test infrastructure — vitest config dengan resolve.alias untuk native module mocks, 227+ tests passing",
+    ],
+    fixed: [
+      "Designer login crash — RangeError: Invalid time value di formatDate karena data tanggal dari PocketBase tidak valid",
+      "30 fungsi formatDate inline di seluruh halaman (designer, supplier, generator, chat, design-clinic) — di-refactor jadi single import dari @/lib/utils dengan safe error handling",
+      "Dynamic import resolution Vitest untuk native-only Capacitor modules — via resolve.alias + stub mocks",
+    ],
+  },
+  {
     version: "0.0.5",
     date: "15 Juni 2026",
     added: [

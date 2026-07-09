@@ -36,14 +36,7 @@ function formatCurrency(val: number): string {
   }).format(val);
 }
 
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(iso));
-}
+import { formatDate } from "@/lib/utils";
 
 const activityStyle: Record<string, { icon: string; bg: string; color: string }> = {
   listing_created: { icon: "🪵", bg: "bg-amber-500/10", color: "text-amber-600" },

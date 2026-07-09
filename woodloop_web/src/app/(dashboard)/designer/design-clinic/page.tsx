@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useDesignerConsultations } from "@/lib/hooks/use-designer";
+import { formatDate } from "@/lib/utils";
 
 function formatCurrency(val: number): string {
   return new Intl.NumberFormat("id-ID", {
@@ -18,14 +19,6 @@ function formatCurrency(val: number): string {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(val);
-}
-
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(iso));
 }
 
 const statusLabels: Record<string, string> = {

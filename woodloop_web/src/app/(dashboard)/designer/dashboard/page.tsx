@@ -22,15 +22,7 @@ import {
   useDesignerDashboard,
   type DesignerDashboardData,
 } from "@/lib/hooks/use-designer";
-
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(iso));
-}
+import { formatDate } from "@/lib/utils";
 
 export default function DesignerDashboardPage() {
   const { data, isLoading, isError, error, refetch } = useDesignerDashboard();

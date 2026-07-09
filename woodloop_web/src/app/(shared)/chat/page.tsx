@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { formatDate } from "@/lib/utils";
 import {
   useConversations,
   useMessages,
@@ -29,14 +30,6 @@ const orderTemplates = [
   { value: "estimasi", label: "Kira-kira kapan selesai?" },
   { value: "pengiriman", label: "Bagaimana metode pengirimannya?" },
   { value: "pembayaran", label: "Apakah sudah menerima pembayaran?" },
-];
-
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(iso));
-}
 
 function ChatPageContent() {
   const { user, isAuthenticated } = useAuthStore();

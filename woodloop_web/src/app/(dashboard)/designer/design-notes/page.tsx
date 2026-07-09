@@ -11,13 +11,7 @@ import {
 } from "@/components/ui/card";
 import { useDesignerNotes } from "@/lib/hooks/use-designer";
 
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(iso));
-}
+import { formatDate } from "@/lib/utils";
 
 const targetTypeLabels: Record<string, string> = {
   generator_product: "Produk Generator",
