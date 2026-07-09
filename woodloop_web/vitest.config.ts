@@ -15,7 +15,7 @@ export default defineConfig({
         "src/**/*.test.*",
         "src/**/*.spec.*",
         "src/test/**",
-        "src/components/ui/**", // shadcn/ui sudah tested
+        "src/components/ui/**",
       ],
     },
   },

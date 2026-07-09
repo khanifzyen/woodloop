@@ -37,6 +37,22 @@ Fase terakhir! Fokus pada **native testing** (Capacitor di device sungguhan), **
 
 ---
 
+## Status Pengerjaan
+
+| Day | Progress | Status |
+|-----|----------|--------|
+| Day 36 — Capacitor Native Testing | 1/5 | ✅ **Native abstraction layer selesai** |
+| Day 37 — Push & QR | 1/5 | 🟡 **Stub code + fallback siap, butuh device fisik** |
+| Day 38 — PWA | 2/2 | ✅ **Selesai** |
+| Day 39 — SEO & Performance | 0/4 | ⏳ Belum dikerjakan |
+| Day 40 — Bug Fixing & Final | 0/5 | ⏳ Belum dikerjakan |
+| Day 41 — Build Release APK | 0/3 | ⏳ Belum dikerjakan |
+| Day 42 — Dokumentasi | 0/2 | ⏳ Belum dikerjakan |
+
+> **Update (June 2026):** FASE 7 dilaksanakan setelah gap closing. Zod validation schemas untuk semua 7 role + native abstraction layer (5 file) sudah selesai. 227 total unit tests.
+
+---
+
 ## 2. Prerequisites
 
 - [ ] Semua Fase 1–6 complete
